@@ -1,36 +1,76 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Loading Nudge prototype…</title>
-  <style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#216b4d" />
+  <title>Nudge — Interactive Product Prototype</title>
+  <style id="prototype-styles">
     body{margin:0;min-height:100vh;display:grid;place-items:center;background:#eef2ef;color:#17211b;font-family:system-ui,sans-serif}
-    main{text-align:center}.mark{width:64px;height:64px;margin:0 auto 16px;border-radius:20px;background:#216b4d;color:white;display:grid;place-items:center;font-size:30px;font-weight:900}
-    p{color:#667169}.error{max-width:520px;line-height:1.6;padding:24px}
+    #prototype-loading{text-align:center}.loading-mark{width:64px;height:64px;margin:0 auto 16px;border-radius:20px;background:#216b4d;color:white;display:grid;place-items:center;font-size:30px;font-weight:900}
   </style>
 </head>
 <body>
-  <main id="loading"><div class="mark">N</div><strong>Loading Nudge prototype…</strong><p>Assembling the tested review build.</p></main>
+  <div id="prototype-loading"><div class="loading-mark">N</div><strong>Loading Nudge prototype…</strong></div>
+  <div class="prototype-shell" id="prototype-app" hidden>
+    <aside class="review-panel" aria-label="Prototype controls">
+      <div class="brand-lockup">
+        <span class="brand-mark">N</span>
+        <div><strong>Nudge</strong><small>Interactive product prototype</small></div>
+      </div>
+      <p class="review-copy">Use the phone normally. Changes persist in this browser. The intervention button simulates the future Android redirect.</p>
+      <div class="review-actions">
+        <button class="review-button primary" data-action="simulate-intervention">Simulate 5-minute redirect</button>
+        <button class="review-button" data-action="open-quick-add">Open Quick Add</button>
+        <button class="review-button" data-route="onboarding">Preview onboarding</button>
+        <button class="review-button" data-route="gemini">Try Gemini flow</button>
+        <button class="review-button" data-route="settings">Open settings</button>
+        <button class="review-button subtle" data-action="reset-demo">Reset demo data</button>
+      </div>
+      <div class="prototype-note"><span></span><p><strong>Prototype only.</strong> Android usage detection, direct redirect permissions, notifications, and Gemini calls are simulated.</p></div>
+    </aside>
+
+    <main class="device" aria-label="Nudge mobile prototype">
+      <div class="camera-pill" aria-hidden="true"></div>
+      <header class="status-bar">
+        <span id="status-time">9:41</span>
+        <div class="status-icons" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 18h2v-3H4v3Zm4 0h2v-6H8v6Zm4 0h2V9h-2v9Zm4 0h2V6h-2v12Z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 18.5 4.5 11a10.6 10.6 0 0 1 15 0L12 18.5Zm0-4.2 3.2-3.2a4.5 4.5 0 0 0-6.4 0l3.2 3.2Z"/></svg>
+          <svg viewBox="0 0 28 14"><rect x="1" y="1" width="22" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><rect x="24" y="4" width="3" height="6" rx="1"/><rect x="3" y="3" width="17" height="8" rx="1.5"/></svg>
+        </div>
+      </header>
+      <section id="screen" class="screen" aria-live="polite"></section>
+      <nav id="bottom-nav" class="bottom-nav" aria-label="Primary navigation"></nav>
+      <button class="fab" data-action="open-quick-add" aria-label="Add an item">+</button>
+      <div id="overlay-root"></div>
+      <div id="toast-root" aria-live="assertive"></div>
+    </main>
+  </div>
+
   <script>
     (async () => {
+      const read = async path => {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error(`Unable to load ${path}`);
+        return response.text();
+      };
+
       try {
-        const names = ['parts/part-00.txt','parts/part-01.txt','parts/part-02.txt'];
-        const encoded = (await Promise.all(names.map(async path => {
-          const response = await fetch(path);
-          if (!response.ok) throw new Error(`Unable to load ${path}`);
-          return (await response.text()).trim();
-        }))).join('');
-        const binary = atob(encoded);
-        const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
-        const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-        const html = await new Response(stream).text();
-        document.open();
-        document.write(html);
-        document.close();
+        const [styles, ...appParts] = await Promise.all([
+          read('source/styles-00.txt'),
+          read('source/app-00.txt'),
+          read('source/app-01.txt'),
+          read('source/app-02.txt'),
+          read('source/app-03.txt')
+        ]);
+        document.getElementById('prototype-styles').textContent = styles;
+        document.getElementById('prototype-loading').remove();
+        document.getElementById('prototype-app').hidden = false;
+        Function(appParts.join(''))();
       } catch (error) {
-        document.getElementById('loading').className = 'error';
-        document.getElementById('loading').innerHTML = `<div class="mark">!</div><strong>The prototype could not be loaded.</strong><p>${error.message}</p><p>Serve this folder over HTTP rather than opening the loader through a restricted preview.</p>`;
+        document.getElementById('prototype-loading').innerHTML = `<div class="loading-mark">!</div><strong>The prototype could not be loaded.</strong><p>${error.message}</p><p>Run this directory through a local HTTP server.</p>`;
+        console.error(error);
       }
     })();
   </script>

@@ -4,7 +4,10 @@ Nudge is an Android-first, local-first productivity app that organizes household
 
 ## Current status
 
-This repository currently contains the product, UX, and technical design. Application implementation has not started yet.
+The interactive browser prototype is live and under active feature-by-feature development. The native Android implementation has not started yet.
+
+- [Live interactive prototype](https://arrow2851.github.io/Nudge/)
+- [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 
 ## Product pillars
 
@@ -19,12 +22,14 @@ This repository currently contains the product, UX, and technical design. Applic
 
 ## Documentation
 
+- [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Product requirements](docs/product-requirements.md)
 - [Screens and rough wireframes](docs/screens-and-wireframes.md)
 - [Technical architecture](docs/technical-architecture.md)
 - [Delivery roadmap](docs/roadmap.md)
 - [Open questions](docs/open-questions.md)
 - [Project decisions](docs/adr/README.md)
+- [Interactive prototype source](mockups/prototype/README.md)
 
 ## Proposed Android stack
 
@@ -40,13 +45,15 @@ This repository currently contains the product, UX, and technical design. Applic
 - UsageStatsManager for selected-app usage sessions
 - Optional Gemini backend integration
 
-## Planned repository structure
+## Repository structure
 
 ```text
 nudge/
 ├── app/                         # Android application module (future)
 ├── core/                        # Shared model, database, domain, UI (future)
 ├── feature/                     # Feature modules (future)
+├── mockups/
+│   └── prototype/               # Live browser prototype
 ├── docs/
 │   ├── adr/
 │   ├── wireframes/
@@ -55,6 +62,7 @@ nudge/
 │   ├── technical-architecture.md
 │   ├── roadmap.md
 │   └── open-questions.md
+├── PROJECT-STATUS.md            # Persistent editable progress tracker
 ├── .github/ISSUE_TEMPLATE/
 ├── CONTRIBUTING.md
 └── README.md
@@ -62,7 +70,7 @@ nudge/
 
 ## Immediate next step
 
-Turn the Priority 1 ASCII wireframes into low-fidelity mockups, then scaffold the Android project and implement the local data model and Quick Add flow.
+Continue the ordered build plan in [PROJECT-STATUS.md](PROJECT-STATUS.md), beginning with the Areas and Rooms feature batch.
 
 ## License
 

@@ -17,9 +17,7 @@ Then open:
 http://localhost:8080
 ```
 
-## Current foundation
-
-The first implementation batch provides:
+## Implemented foundation
 
 - Responsive mobile device shell
 - Desktop review controls
@@ -30,9 +28,24 @@ The first implementation batch provides:
 - Light and dark theme tokens
 - Reusable buttons, cards, chips, list rows, progress indicators, sheets, fields, empty states, and toasts
 - Bottom navigation and floating Quick Add action
-- Working Quick Add sheet
-- Working task completion and demo reset behavior
 - Connected placeholder routes for Areas, Lists, Tasks, and More
+
+## Completed Today workflow
+
+- Daily progress summary
+- Quick Win recommendation card
+- Cycle to another Quick Win
+- Start-task feedback
+- Due Today section
+- Expandable Overdue section
+- Active-list shortcuts
+- Recent activity feed
+- Natural-language Quick Add detection for type, area, room, cadence, duration, and grading
+- Task and chore creation
+- Binary task completion
+- Light, Moderate, and Deep completion grading
+- Undo for additions and completions
+- Persistent activity and progress updates
 
 ## Structure
 
@@ -43,7 +56,8 @@ mockups/prototype/
 ├── styles/
 │   ├── tokens.css
 │   ├── base.css
-│   └── components.css
+│   ├── components.css
+│   └── today.css
 └── scripts/
     ├── app.js
     ├── router.js
@@ -55,6 +69,7 @@ mockups/prototype/
 - `tokens.css` owns colors, typography sizes, spacing, radii, shadows, device dimensions, and motion timing.
 - `base.css` owns document reset, review layout, phone frame, status bar, scrolling behavior, navigation placement, and mobile breakpoints.
 - `components.css` owns reusable controls and feedback components.
+- `today.css` contains feature-specific styles for the Today dashboard and its sheets.
 
 Feature-specific styles should be added only when a shared component cannot express the design cleanly.
 
@@ -85,19 +100,18 @@ The following remain simulated until the Android build:
 | CSS design tokens | Material 3 theme tokens |
 | Hash router | Navigation Compose |
 | Bottom sheet | Material 3 `ModalBottomSheet` |
-| Toast | Snackbar |
+| Toast with Undo | Snackbar with action |
 | Simulated redirect | UsageStatsManager + intervention coordinator |
-| Local Gemini parser | Gemini function calling through a secure backend |
+| Local metadata parser | Deterministic parser with optional Gemini assistance |
 
 ## Next implementation batch
 
-The next focused batch is the complete Today experience:
+The next focused batch is the organization workflow:
 
-- Daily progress
-- Quick Win behavior
-- Due Today
-- Overdue section
-- Active lists
-- Recent activity
-- Quick Add metadata detection
-- Completion grading and Undo
+- Areas dashboard
+- Add and edit Area
+- Area detail
+- Optional subareas and rooms
+- Room detail
+- Chore and one-time task grouping
+- Room Reset entry point

@@ -8,6 +8,18 @@ The interactive browser prototype is live and under active feature-by-feature de
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
+- [Current Areas milestone notes](docs/progress/areas-and-rooms.md)
+
+### Implemented prototype slices
+
+- Today dashboard, Quick Win, overdue tasks, recent activity, grading, Quick Add, and Undo
+- Areas screen with shipped defaults
+- Template-conditioned House rooms
+- Nested Area and Room detail navigation
+- Add and edit Area
+- Add and edit Room
+- Contextual Quick Add from an Area or Room
+- Due-only Room Reset with completion, grading, skipping, and progress
 
 ## Product pillars
 
@@ -23,6 +35,7 @@ The interactive browser prototype is live and under active feature-by-feature de
 ## Documentation
 
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
+- [Current Areas milestone notes](docs/progress/areas-and-rooms.md)
 - [Product requirements](docs/product-requirements.md)
 - [Screens and rough wireframes](docs/screens-and-wireframes.md)
 - [Technical architecture](docs/technical-architecture.md)
@@ -56,6 +69,7 @@ nudge/
 │   └── prototype/               # Live browser prototype
 ├── docs/
 │   ├── adr/
+│   ├── progress/
 │   ├── wireframes/
 │   ├── product-requirements.md
 │   ├── screens-and-wireframes.md
@@ -70,7 +84,7 @@ nudge/
 
 ## Immediate next step
 
-Continue the ordered build plan in [PROJECT-STATUS.md](PROJECT-STATUS.md), beginning with the Areas and Rooms feature batch.
+Review and refine the first Areas vertical slice, then complete the second half of the milestone: stronger room management, task/chore detail navigation, reset-session persistence, and complete tracker reconciliation.
 
 ## License
 

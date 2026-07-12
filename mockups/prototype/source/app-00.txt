@@ -1,0 +1,100 @@
+(() => {
+  const STORAGE_KEY = 'nudge-prototype-v2';
+  const icons = {
+    today:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V21h-6v-6H9v6H3Z"/></svg>',
+    areas:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>',
+    lists:'<svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m4 6 1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>',
+    tasks:'<svg viewBox="0 0 24 24"><path d="M8 5h11v14H5V8Z"/><path d="M8 5v3H5M9 11h6M9 15h6"/></svg>',
+    search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
+    more:'<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>',
+    back:'<svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>',
+    chevron:'<svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>'
+  };
+
+  const seed = () => ({
+    route:'today', previousRoute:'today', selectedArea:null, selectedRoom:null, selectedList:'groceries', taskTab:'today', listSession:false,
+    onboardingStep:0, completionTarget:null, quickIndex:0, focusTask:null, resetRoom:null, resetIndex:0, resetQueue:[], geminiStage:'input', geminiText:'', theme:'light',
+    settings:{interventions:true,strength:'Balanced',cooldown:'15 minutes',dailyMaximum:6,combineApps:true,pauseDriving:true,pauseCalls:true,quietHours:'10 PM–7 AM',rememberItems:true,suggestions:true},
+    areas:[
+      {id:'house',name:'House',icon:'⌂',rooms:['Kitchen','Living Room','Main Bedroom','Bathroom','Garage']},
+      {id:'car',name:'Car',icon:'⌁',rooms:[]},
+      {id:'personal',name:'Personal',icon:'◎',rooms:[]}
+    ],
+    tasks:[
+      {id:'trash',title:'Take out kitchen trash',type:'chore',area:'House',room:'Kitchen',estimate:3,due:'today',priority:'normal',recurrence:'As needed',grading:false,status:'open',nudge:true},
+      {id:'mirror',title:'Clean bathroom mirror',type:'chore',area:'House',room:'Bathroom',estimate:5,due:'today',priority:'normal',recurrence:'Weekly',grading:true,status:'open',nudge:true},
+      {id:'package',title:'Return package',type:'task',area:'Personal',room:'',estimate:10,due:'today',priority:'normal',recurrence:'',grading:false,status:'open',nudge:true},
+      {id:'bins',title:'Put trash bins outside',type:'chore',area:'House',room:'',estimate:4,due:'today',priority:'high',recurrence:'Every Tuesday',grading:false,status:'open',nudge:true},
+      {id:'counters',title:'Wipe kitchen counters',type:'chore',area:'House',room:'Kitchen',estimate:5,due:'overdue',priority:'normal',recurrence:'Daily',grading:true,status:'open',nudge:true},
+      {id:'microwave',title:'Clean microwave',type:'chore',area:'House',room:'Kitchen',estimate:10,due:'overdue',priority:'low',recurrence:'Weekly',grading:true,status:'open',nudge:true},
+      {id:'dishes',title:'Put dishes away',type:'chore',area:'House',room:'Kitchen',estimate:5,due:'today',priority:'normal',recurrence:'Daily',grading:false,status:'open',nudge:true},
+      {id:'floor',title:'Sweep kitchen floor',type:'chore',area:'House',room:'Kitchen',estimate:8,due:'upcoming',priority:'normal',recurrence:'Every 3 days',grading:true,status:'open',nudge:true},
+      {id:'handle',title:'Replace cabinet handle',type:'task',area:'House',room:'Kitchen',estimate:20,due:'upcoming',priority:'normal',recurrence:'',grading:false,status:'open',nudge:false},
+      {id:'carrepair',title:'Take car for repairs',type:'task',area:'Car',room:'',estimate:60,due:'upcoming',priority:'high',recurrence:'',grading:false,status:'open',nudge:false},
+      {id:'registration',title:'Renew vehicle registration',type:'task',area:'Car',room:'',estimate:15,due:'upcoming',priority:'normal',recurrence:'',grading:false,status:'open',nudge:true},
+      {id:'shelf',title:'Replacement shelf delivery',type:'task',area:'House',room:'Garage',estimate:5,due:'waiting',priority:'low',recurrence:'',grading:false,status:'waiting',nudge:false}
+    ],
+    lists:[
+      {id:'groceries',name:'Groceries',icon:'🛒',lastUsed:'Yesterday',items:[
+        {id:'milk',name:'Milk',quantity:'1',checked:false,lastUsed:'9 days ago'},
+        {id:'eggs',name:'Eggs',quantity:'12',checked:false,lastUsed:'7 days ago'},
+        {id:'bananas',name:'Bananas',quantity:'6',checked:false,lastUsed:'5 days ago'},
+        {id:'chicken',name:'Chicken breast',quantity:'2 lb',checked:false,lastUsed:'11 days ago'},
+        {id:'soap',name:'Dish soap',quantity:'',checked:false,lastUsed:'40 days ago'},
+        {id:'yogurt',name:'Yogurt',quantity:'',checked:false,lastUsed:'12 days ago'}],
+       catalog:[{name:'Milk',lastUsed:'9 days ago'},{name:'Mini cucumbers',lastUsed:'21 days ago'},{name:'Mineral water',lastUsed:'32 days ago'},{name:'Bread',lastUsed:'6 days ago'},{name:'Rice',lastUsed:'18 days ago'},{name:'Olive oil',lastUsed:'45 days ago'}]},
+      {id:'costco',name:'Costco',icon:'🏬',lastUsed:'8 days ago',items:[{id:'water',name:'Water cases',quantity:'2',checked:false,lastUsed:'18 days ago'},{id:'paper',name:'Paper towels',quantity:'',checked:false,lastUsed:'30 days ago'},{id:'berries',name:'Berries',quantity:'2 packs',checked:false,lastUsed:'10 days ago'}],catalog:[]},
+      {id:'travel',name:'Travel Packing',icon:'🧳',lastUsed:'2 months ago',items:[{id:'passport',name:'Passport',quantity:'',checked:false,lastUsed:'2 months ago'},{id:'charger',name:'Phone charger',quantity:'',checked:false,lastUsed:'2 months ago'}],catalog:[]},
+      {id:'restock',name:'Household Restock',icon:'🧺',lastUsed:'12 days ago',items:[{id:'bags',name:'Trash bags',quantity:'',checked:false,lastUsed:'20 days ago'},{id:'detergent',name:'Laundry detergent',quantity:'',checked:false,lastUsed:'35 days ago'}],catalog:[]}
+    ],
+    history:[
+      {id:'h1',title:'Kitchen counters',detail:'Light',time:'8:40 AM',date:'Today'},
+      {id:'h2',title:'Bedroom reset',detail:'Moderate',time:'Yesterday',date:'Yesterday'},
+      {id:'h3',title:'Grocery trip',detail:'8 items',time:'Yesterday',date:'Yesterday'},
+      {id:'h4',title:'Wash car',detail:'Completed',time:'Jul 10',date:'July 10'}
+    ],
+    recentCatalog:['Bread','Rice','Olive oil','Paper towels','Dish sponges'],
+    completedTodayBase:4
+  });
+
+  let state = load();
+  let focusInterval = null;
+  let focusSeconds = 0;
+  const screen = document.getElementById('screen');
+  const nav = document.getElementById('bottom-nav');
+  const overlayRoot = document.getElementById('overlay-root');
+  const toastRoot = document.getElementById('toast-root');
+
+  function load(){ try { return {...seed(), ...JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')}; } catch { return seed(); } }
+  function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function esc(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+  function todayCompleted(){return state.completedTodayBase + state.tasks.filter(t=>t.status==='done'&&t.completedDate==='Today').length;}
+  function openTasks(){return state.tasks.filter(t=>t.status==='open');}
+  function taskById(id){return state.tasks.find(t=>t.id===id);}
+  function listById(id){return state.lists.find(l=>l.id===id);}
+  function route(next, opts={}){state.previousRoute=state.route;state.route=next;Object.assign(state,opts);save();render();}
+  function topbar(title, eyebrow='', actions=true, back=false){return `<div class="topbar"><div style="display:flex;gap:8px;align-items:flex-start">${back?`<button class="icon-button back-button" data-action="back">${icons.back}</button>`:''}<div>${eyebrow?`<p class="eyebrow">${esc(eyebrow)}</p>`:''}<h1 class="page-title">${esc(title)}</h1></div></div>${actions?`<div class="icon-actions"><button class="icon-button" data-action="search">${icons.search}</button><button class="icon-button" data-action="more">${icons.more}</button></div>`:''}</div>`}
+  function navHtml(){const items=[['today','Today'],['areas','Areas'],['lists','Lists'],['tasks','Tasks']];return items.map(([id,label],i)=>`<button class="nav-item ${state.route===id||state.route.startsWith(id+'-')?'active':''}" data-route="${id}" style="${i===2?'margin-left:42px':''}">${icons[id]}<span>${label}</span></button>`).join('');}
+  function taskRow(t, showArea=true){return `<div class="task-row" data-open-task="${t.id}"><button class="check ${t.status==='done'?'done':''}" data-complete-task="${t.id}" aria-label="Complete ${esc(t.title)}"></button><div><div class="task-title">${esc(t.title)}</div><div class="task-sub">${showArea?esc([t.area,t.room].filter(Boolean).join(' › ')):esc(t.recurrence||t.type)}${t.due==='overdue'?' · Overdue':''}</div></div><div class="task-time">${t.estimate} min</div></div>`}
+  function listCard(l){const active=l.items.filter(i=>!i.checked).length;return `<div class="card clickable list-card" data-open-list="${l.id}"><div class="list-icon">${l.icon}</div><div><div class="card-title">${esc(l.name)}</div><div class="card-sub">Last used ${esc(l.lastUsed)}</div></div><div><strong>${active}</strong><div class="small muted">active</div></div></div>`}
+
+  function renderToday(){const due=state.tasks.filter(t=>t.status==='open'&&t.due==='today').slice(0,4);const overdue=state.tasks.filter(t=>t.status==='open'&&t.due==='overdue');const quicks=state.tasks.filter(t=>t.status==='open'&&t.nudge&&t.estimate<=10);const q=quicks[state.quickIndex%Math.max(quicks.length,1)];const completed=todayCompleted(),total=Math.max(completed+due.length,7);return `${topbar('Good morning','Sunday, July 12')}
+    <div class="progress-card"><div class="progress-title">${completed} completed today</div><div class="progress-count">${completed} / ${total}</div><div class="progress-track"><div class="progress-value" style="width:${Math.min(100,completed/total*100)}%"></div></div></div>
+    <div class="section-head"><div class="section-title">Quick win</div><span class="status-chip">Suggested now</span></div>
+    ${q?`<article class="quick-win"><div class="quick-meta">Quick win · ${q.estimate} min</div><div class="quick-title">${esc(q.title)}</div><div class="quick-subtitle">${esc([q.area,q.room].filter(Boolean).join(' › '))} · ${q.due==='overdue'?'Overdue':'Due today'}</div><div class="quick-actions"><button class="button light" data-start-task="${q.id}">Start task</button><button class="button white-ghost icon-only" data-complete-task="${q.id}" title="Done">✓</button><button class="button white-ghost icon-only" data-action="another-quick" title="Another">↻</button></div></article>`:`<div class="card empty"><h3>All quick wins are done</h3><p>Add a short task or review your backlog.</p><button class="button soft" data-action="open-quick-add">Add a task</button></div>`}
+    <div class="section-head"><div class="section-title">Due today</div><span class="count-badge">${due.length}</span></div><div class="list">${due.map(t=>taskRow(t)).join('')||'<div class="empty"><p>Nothing else is due today.</p></div>'}</div>
+    ${overdue.length?`<div class="section-head"><div class="section-title">Overdue</div><span class="count-badge">${overdue.length}</span></div><div class="card clickable" data-route="tasks" data-task-tab="overdue"><div class="card-head"><div><div class="card-title">Review overdue tasks</div><div class="card-sub">Oldest item is ready for a quick reset.</div></div><span>${icons.chevron}</span></div></div>`:''}
+    <div class="section-head"><div class="section-title">Lists</div><button class="text-link" data-route="lists">View all</button></div>${state.lists.slice(0,2).map(listCard).join('')}
+    <div class="section-head"><div class="section-title">Recent</div></div>${state.history.slice(0,2).map(h=>`<div class="history-item"><span class="history-icon">✓</span><div><div class="task-title">${esc(h.title)}</div><div class="task-sub">${esc(h.detail)}</div></div><span class="history-time">${esc(h.time)}</span></div>`).join('')}`}
+
+  function renderAreas(){return `${topbar('Areas','Your spaces')}<div class="notice green">Tasks can live directly under an area or inside an optional room.</div>${state.areas.map(a=>{const tasks=state.tasks.filter(t=>t.status==='open'&&t.area===a.name);const rooms=a.rooms.map(r=>({r,count:tasks.filter(t=>t.room===r).length}));return `<div class="card clickable area-card" data-open-area="${a.id}"><div class="area-top"><div class="area-icon">${a.icon}</div><div><div class="card-title">${esc(a.name)}</div><div class="card-sub">${tasks.length} pending · ${a.rooms.length?a.rooms.length+' subareas':'No subareas required'}</div></div><span>${icons.chevron}</span></div>${rooms.length?`<div class="area-rooms">${rooms.slice(0,5).map(x=>`<span class="chip">${esc(x.r)} · ${x.count}</span>`).join('')}</div>`:''}</div>`}).join('')}<button class="button soft block" data-action="add-area">+ Add area</button>`}
+
+  function renderAreaDetail(){const area=state.areas.find(a=>a.id===state.selectedArea)||state.areas[0];const tasks=state.tasks.filter(t=>t.status==='open'&&t.area===area.name);return `${topbar(area.name,`${tasks.length} pending`,true,true)}<div class="chips"><button class="chip active">Due</button><button class="chip">All</button><button class="chip">Chores</button><button class="chip">Tasks</button></div><div class="spacer"></div>${area.rooms.map(r=>{const roomTasks=tasks.filter(t=>t.room===r);return `<div class="card clickable" data-open-room="${esc(r)}"><div class="card-head"><div><div class="card-title">${esc(r)}</div><div class="card-sub">${roomTasks.length} pending · Last reset ${r==='Kitchen'?'2 days ago':'this week'}</div></div><div><span class="count-badge">${roomTasks.length}</span></div></div></div>`}).join('')}<div class="section-head"><div class="section-title">General ${esc(area.name)}</div></div><div class="list">${tasks.filter(t=>!t.room).map(t=>taskRow(t,false)).join('')||'<div class="card"><div class="card-sub">No unassigned tasks.</div></div>'}</div>`}
+
+  function renderRoom(){const area=state.areas.find(a=>a.id===state.selectedArea)||state.areas[0], room=state.selectedRoom||'Kitchen';const tasks=state.tasks.filter(t=>t.status==='open'&&t.area===area.name&&t.room===room);const chores=tasks.filter(t=>t.type==='chore'), one=tasks.filter(t=>t.type==='task');return `${topbar(room,`${area.name} · ${tasks.length} pending`,true,true)}<div class="card room-reset"><div class="card-title">Room reset</div><div class="card-sub">Complete the short routine in one focused sequence.</div><div class="reset-progress"><span style="width:35%"></span></div><button class="button primary block" data-action="start-room-reset" data-room="${esc(room)}">Start ${esc(room)} reset</button></div><div class="section-head"><div class="section-title">Routine chores</div><span class="count-badge">${chores.length}</span></div><div class="list">${chores.map(t=>taskRow(t,false)).join('')||'<div class="card"><div class="card-sub">No routine chores yet.</div></div>'}</div><div class="section-head"><div class="section-title">One-time tasks</div><span class="count-badge">${one.length}</span></div><div class="list">${one.map(t=>taskRow(t,false)).join('')||'<div class="card"><div class="card-sub">No one-time tasks here.</div></div>'}</div>`}
+
+  function renderTasks(){const tabs=['inbox','today','upcoming','waiting','overdue'];const filtered=state.tasks.filter(t=>{if(state.taskTab==='inbox')return t.status==='open';if(state.taskTab==='waiting')return t.status==='waiting';return t.status==='open'&&t.due===state.taskTab;});return `${topbar('Tasks','One-time and recurring')}<div class="segmented">${tabs.map(x=>`<button class="segment ${state.taskTab===x?'active':''}" data-task-tab="${x}">${x[0].toUpperCase()+x.slice(1)}</button>`).join('')}</div><div class="list">${filtered.map(t=>taskRow(t)).join('')||`<div class="empty"><div class="empty-icon">✓</div><h3>No ${esc(state.taskTab)} tasks</h3><p>This section is clear.</p><button class="button soft" data-action="open-quick-add">Add something</button></div>`}</div>`}
+
+  function renderLists(){return `${topbar('Lists','Reusable checklists')}<div class="notice blue">Completed reusable items are remembered and suggested next time.</div>${state.lists.map(listCard).join('')}<button class="button soft block" data-action="new-list">+ New list</button>`}
+
+  function renderListDetail(){const l=listById(state.selectedList)||state.lists[0];const active=l.items.filter(i=>!i.checked), checked=l.items.filter(i=>i.checked);return `${topbar(l.name,`${active.length} active`,true,true)}<div class="input-wrap"><input id="list-add-input" class="text-input" placeholder="Add item…" autocomplete="off"><button class="button soft icon-only" data-action="add-list-from-input">+</button></div><div id="list-suggestions"></div><div class="section-head"><div class="section-title">Active</div><span class="count-badge">${active.length}</span></div><div class="list">${active.map(i=>`<div class="task-row"><button class="check" data-check-list-item="${i.id}"></button><div><div class="task-title">${esc(i.name)}</div><div class="task-sub">${i.lastUsed?'Last added '+esc(i.lastUsed):'New item'}</div></div><div class="task-time">${esc(i.quantity)}</div></div>`).join('')||'<div class="empty"><p>Your list is clear. Type above or reuse a recent item.</p></div>'}</div>${checked.length?`<div class="section-head"><div class="section-title">Checked</div><span class="count-badge">${checked.length}</span></div><div class="list">${checked.map(i=>`<div class="task-row"><button class="check done" data-check-list-item="${i.id}"></button><div><div class="task-title">${esc(i.name)}</div><div class="task-sub">Ready to finish</div></div><div></div></div>`).join('')}</div>`:''}<div class="section-head"><div class="section-title">Recently used</div></div><div class="chips">${(l.catalog||[]).slice(0,6).map(i=>`<button class="chip" data-add-catalog="${esc(i.name)}">+ ${esc(i.name)}</button>`).join('')}</div><div class="spacer"></div><button class="button primary block" 

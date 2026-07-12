@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Loading Nudge prototype…</title>
+  <style>
+    body{margin:0;min-height:100vh;display:grid;place-items:center;background:#eef2ef;color:#17211b;font-family:system-ui,sans-serif}
+    main{text-align:center}.mark{width:64px;height:64px;margin:0 auto 16px;border-radius:20px;background:#216b4d;color:white;display:grid;place-items:center;font-size:30px;font-weight:900}
+    p{color:#667169}.error{max-width:520px;line-height:1.6;padding:24px}
+  </style>
+</head>
+<body>
+  <main id="loading"><div class="mark">N</div><strong>Loading Nudge prototype…</strong><p>Assembling the tested review build.</p></main>
+  <script>
+    (async () => {
+      try {
+        const names = ['parts/part-00.txt','parts/part-01.txt','parts/part-02.txt'];
+        const encoded = (await Promise.all(names.map(async path => {
+          const response = await fetch(path);
+          if (!response.ok) throw new Error(`Unable to load ${path}`);
+          return (await response.text()).trim();
+        }))).join('');
+        const binary = atob(encoded);
+        const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+        const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+        const html = await new Response(stream).text();
+        document.open();
+        document.write(html);
+        document.close();
+      } catch (error) {
+        document.getElementById('loading').className = 'error';
+        document.getElementById('loading').innerHTML = `<div class="mark">!</div><strong>The prototype could not be loaded.</strong><p>${error.message}</p><p>Serve this folder over HTTP rather than opening the loader through a restricted preview.</p>`;
+      }
+    })();
+  </script>
+</body>
+</html>

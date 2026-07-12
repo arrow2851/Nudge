@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="styles/base.css">
   <link rel="stylesheet" href="styles/components.css">
   <link rel="stylesheet" href="styles/today.css">
+  <link rel="stylesheet" href="styles/areas.css">
 </head>
 <body>
   <div class="prototype-shell">
@@ -18,15 +19,16 @@
         <span class="brand-mark">N</span>
         <div><strong>Nudge</strong><small>Interactive product prototype</small></div>
       </div>
-      <p class="review-copy">The Today workflow is now interactive: complete tasks, choose cleaning depth, cycle Quick Wins, add parsed tasks, review lists and activity, and use Undo.</p>
+      <p class="review-copy">Today and the first Areas vertical slice are interactive. Review shipped defaults, template-conditioned rooms, nested area and room navigation, contextual Quick Add, and the due-only Room Reset.</p>
       <div class="review-actions">
-        <button class="review-button primary" data-route="today">Review Today</button>
+        <button class="review-button primary" data-route="areas">Review Areas</button>
+        <button class="review-button" data-route="areas/house">Open House</button>
+        <button class="review-button" data-route="areas/house/kitchen">Open Kitchen</button>
+        <button class="review-button" data-route="today">Review Today</button>
         <button class="review-button" data-action="open-quick-add">Open Quick Add</button>
-        <button class="review-button" data-action="cycle-quick-win">Cycle Quick Win</button>
-        <button class="review-button" data-route="areas">Areas route</button>
         <button class="review-button subtle" data-action="reset-demo">Reset demo data</button>
       </div>
-      <div class="prototype-note"><span></span><p><strong>Prototype only.</strong> Android usage detection, direct redirect permissions, notifications, and Gemini calls will remain simulated until native implementation.</p></div>
+      <div class="prototype-note"><span></span><p><strong>Prototype only.</strong> Android usage detection, direct redirect permissions, notifications, and Gemini calls remain simulated until native implementation.</p></div>
     </aside>
 
     <main class="device" aria-label="Nudge mobile prototype">

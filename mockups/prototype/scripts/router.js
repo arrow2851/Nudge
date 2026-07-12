@@ -1,8 +1,10 @@
-const VALID_ROUTES = new Set(['today', 'areas', 'lists', 'tasks', 'more']);
+const VALID_ROOTS = new Set(['today', 'areas', 'lists', 'tasks', 'more']);
 
 function normalizeRoute(value) {
-  const route = String(value || '').replace(/^#\/?/, '').split('/')[0];
-  return VALID_ROUTES.has(route) ? route : 'today';
+  const cleaned = String(value || '').replace(/^#\/?/, '').replace(/^\/+|\/+$/g, '');
+  if (!cleaned) return 'today';
+  const [root] = cleaned.split('/');
+  return VALID_ROOTS.has(root) ? cleaned : 'today';
 }
 
 let currentRoute = normalizeRoute(location.hash);
@@ -20,6 +22,10 @@ export const router = {
     return currentRoute;
   },
 
+  getParts() {
+    return currentRoute.split('/');
+  },
+
   go(route) {
     const next = normalizeRoute(route);
     if (next === currentRoute && location.hash) {
@@ -27,6 +33,11 @@ export const router = {
       return;
     }
     location.hash = `#/${next}`;
+  },
+
+  back(fallback = 'today') {
+    if (history.length > 1) history.back();
+    else this.go(fallback);
   },
 
   subscribe(listener) {

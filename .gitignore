@@ -1,0 +1,33 @@
+# Android Studio / IntelliJ
+*.iml
+.idea/
+.gradle/
+local.properties
+
+# Build output
+build/
+*/build/
+out/
+
+# Android
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Kotlin
+.kotlin/
+
+# Signing and secrets
+*.jks
+*.keystore
+keystore.properties
+secrets.properties
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

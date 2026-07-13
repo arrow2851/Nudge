@@ -28,8 +28,8 @@ export function completeItem(taskId, grade = '') {
   const completedAt = new Date().toISOString();
   const next = days ? new Date(Date.now() + days * 86400000) : null;
   const updated = days
-    ? { ...task, completed: false, completedAt, completionGrade: grade, due: dateLabel(next), nextDueLabel: dateLabel(next), urgency: 'upcoming', lastCompletedAt: completedAt, snoozedUntil: '', skippedAt: '' }
-    : { ...task, completed: true, completedAt, completionGrade: grade };
+    ? { ...task, status: 'planned', completed: false, completedAt, completionGrade: grade, due: dateLabel(next), nextDueLabel: dateLabel(next), urgency: 'upcoming', lastCompletedAt: completedAt, snoozedUntil: '', skippedAt: '' }
+    : { ...task, status: 'completed', completed: true, completedAt, completionGrade: grade, urgency: 'none' };
   store.setState(state => ({
     tasks: state.tasks.map(item => item.id === taskId ? updated : item),
     progress: task.urgency === 'today' ? { ...state.progress, completedToday: Math.min(state.progress.totalToday, state.progress.completedToday + 1) } : state.progress,
@@ -56,7 +56,7 @@ export function snoozeTask(taskId, option) {
   const map = { 'later-today': ['Later today', 0], tomorrow: ['Tomorrow', 1], weekend: ['This weekend', 3], 'next-week': ['Next week', 7] };
   const [label, days] = map[option] || ['Tomorrow', 1];
   const date = new Date(Date.now() + days * 86400000);
-  return updateTask(taskId, { due: label, urgency: days === 0 ? 'upcoming' : 'upcoming', snoozedUntil: date.toISOString() });
+  return updateTask(taskId, { status: 'planned', completed: false, due: label, urgency: 'upcoming', snoozedUntil: date.toISOString() });
 }
 
 export function rescheduleTask(taskId, isoDate) {
@@ -68,7 +68,7 @@ export function rescheduleTask(taskId, isoDate) {
   const diff = Math.round((target - today) / 86400000);
   const urgency = diff < 0 ? 'overdue' : diff === 0 ? 'today' : 'upcoming';
   const due = diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : dateLabel(date);
-  return updateTask(taskId, { due, dueDate: isoDate, urgency, snoozedUntil: '' });
+  return updateTask(taskId, { status: 'planned', completed: false, due, dueDate: isoDate, urgency, snoozedUntil: '' });
 }
 
 export function skipOccurrence(taskId) {
@@ -77,7 +77,7 @@ export function skipOccurrence(taskId) {
   if (!task || !task.recurrence) return false;
   const days = recurrenceDays(task.recurrence) || 7;
   const next = new Date(Date.now() + days * 86400000);
-  return updateTask(taskId, { due: dateLabel(next), nextDueLabel: dateLabel(next), urgency: 'upcoming', skippedAt: new Date().toISOString() });
+  return updateTask(taskId, { status: 'planned', due: dateLabel(next), nextDueLabel: dateLabel(next), urgency: 'upcoming', skippedAt: new Date().toISOString() });
 }
 
 export function togglePause(taskId) {
@@ -86,5 +86,5 @@ export function togglePause(taskId) {
 }
 
 export function reopenTask(taskId) {
-  return updateTask(taskId, { completed: false, completedAt: '', completionGrade: '', urgency: 'today', due: 'Today' });
+  return updateTask(taskId, { status: 'planned', completed: false, completedAt: '', completionGrade: '', urgency: 'today', due: 'Today' });
 }

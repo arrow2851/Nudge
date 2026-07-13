@@ -12,13 +12,15 @@
 - [x] There are no per-item controls on the right side.
 - [x] Checking an item removes it from the active list immediately.
 - [x] Checked items remain remembered for future reuse.
-- [x] Remembered suggestions remain small and optional.
+- [x] Remembered suggestions appear only while an item is being edited.
 - [x] Shopping/list sessions are not part of the product.
 - [x] Quantity, unit, category, and item-detail sheets are not part of the default list flow.
+- [x] The default checkbox position is the left side.
+- [x] A future Settings preference may move List checkboxes to the right side.
 
 ## Superseded design
 
-The earlier prototype included quantities, units, categories, duplicate-choice sheets, item-side controls, and an optional shopping session. That direction is no longer approved and has been removed from the active prototype.
+The earlier prototype included a permanent Add Item section, quantities, units, categories, duplicate-choice sheets, item-side controls, and an optional shopping session. That direction is no longer approved and has been removed from the active prototype.
 
 ## Implemented
 
@@ -33,15 +35,17 @@ The earlier prototype included quantities, units, categories, duplicate-choice s
 - [x] Empty collection state
 - [x] Create List sheet
 - [x] List name and icon selection
-- [x] Edit list name and icon
+- [x] Edit list name and icon by tapping the list title
 - [x] Direct routes such as `#/lists/groceries`
 - [x] Today shortcuts open their specific lists
 
 ### Simple list detail
 
-- [x] Dedicated Add Item field
-- [x] Enter-key submission
-- [x] Checkbox on the left of every active item
+- [x] Top-right `+` creates a blank inline-editable item
+- [x] Bottom `+ Add item` creates a blank inline-editable item
+- [x] No permanent Add Item input section
+- [x] Checkbox on the left of every active item by default
+- [x] Internal preference support for moving checkboxes to the right later
 - [x] Tap item text to edit inline
 - [x] Enter or focus loss saves item text
 - [x] Escape cancels editing
@@ -49,10 +53,10 @@ The earlier prototype included quantities, units, categories, duplicate-choice s
 - [x] Visible before/after drop indicator
 - [x] Checked item disappears from active items
 - [x] Checked item creates or updates its remembered record
-- [x] Compact remembered suggestions
+- [x] Clean history suggestions appear directly below the item being edited
 - [x] Suggestions filter while typing
 - [x] Suggestions rank primarily by reuse count and recency
-- [x] Add a remembered item again
+- [x] Selecting a history suggestion fills the item being edited
 - [x] Exact active duplicates are prevented with a simple message
 - [x] Empty active-list state
 - [x] Undo for add, edit, check, and move
@@ -63,14 +67,22 @@ The earlier prototype included quantities, units, categories, duplicate-choice s
 - [x] Remove session state from migrated list records
 - [x] Reduce active items to name, order, and timestamps
 - [x] Preserve remembered names and reuse history
+- [x] Add the future `listCheckboxOnRight` preference with a left-side default
 - [x] Seed realistic Groceries and Household Restock examples
+
+## Future Settings requirements
+
+- [ ] Place List checkboxes on the right
+- [ ] Apply the preference immediately to every reusable list
+- [ ] Keep text direction and editing behavior unchanged when checkbox placement changes
 
 ## Review targets
 
 - [ ] Review Lists collection density.
 - [ ] Review list-card visual styling.
-- [ ] Review Add Item field height and placement.
-- [ ] Review whether suggestions should appear when the field is empty.
+- [ ] Review the top and bottom Add Item controls.
+- [ ] Review history-suggestion spacing and visual weight.
+- [ ] Review whether suggestions should appear for an empty new item.
 - [ ] Review checkbox size and spacing.
 - [ ] Review item-row height and border treatment.
 - [ ] Review inline editing behavior with the mobile keyboard.
@@ -103,7 +115,7 @@ The earlier prototype included quantities, units, categories, duplicate-choice s
 
 ## Recommended next batch
 
-After reviewing this simplified list flow, the next major milestone is the Direct Intervention prototype:
+The next major milestone is the Direct Intervention prototype:
 
 1. Simulate Redirect control
 2. Intervention screen

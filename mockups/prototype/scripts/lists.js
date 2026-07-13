@@ -6,9 +6,10 @@ const overlayRoot = document.querySelector('#overlay-root');
 const toastRoot = document.querySelector('#toast-root');
 
 const ui = {
-  suggestionQuery: '',
   pendingFocusListId: '',
   editingItemId: '',
+  editingValue: '',
+  selectingSuggestion: false,
   toastTimer: null,
   undoTimer: null,
   drag: null,
@@ -65,8 +66,8 @@ function normalizeList(list, index) {
 
   const items = sourceItems.map((item, itemIndex) => ({
     id: item.id || `${list.id}-item-${itemIndex}`,
-    name: item.name || item.title || 'Item',
-    normalizedName: normalizeName(item.name || item.title || 'Item'),
+    name: item.name || item.title || '',
+    normalizedName: normalizeName(item.name || item.title || ''),
     order: Number.isFinite(item.order) ? item.order : itemIndex * 10,
     createdAt: item.createdAt || nowIso()
   }));
@@ -99,13 +100,17 @@ function ensureListsModel() {
   const state = store.getState();
   const version = Number(state.preferences?.listsModelVersion || 0);
   const normalized = (state.lists || []).map(normalizeList);
-  const changed = version < 2 || JSON.stringify(normalized) !== JSON.stringify(state.lists);
+  const preferences = {
+    ...state.preferences,
+    listsModelVersion: 3,
+    listCheckboxOnRight: state.preferences?.listCheckboxOnRight === true
+  };
+  const changed = version < 3
+    || JSON.stringify(normalized) !== JSON.stringify(state.lists)
+    || JSON.stringify(preferences) !== JSON.stringify(state.preferences);
   if (!changed) return;
   ensuringModel = true;
-  store.setState({
-    lists: normalized,
-    preferences: { ...state.preferences, listsModelVersion: 2 }
-  });
+  store.setState({ lists: normalized, preferences });
   ensuringModel = false;
 }
 
@@ -143,8 +148,10 @@ function renderCollection() {
     <button class="lists-bottom-add" data-action="open-create-list"><span>+</span> New list</button>`;
 }
 
-function suggestionMatches(list, query) {
-  const activeNames = new Set(list.items.map(item => item.normalizedName));
+function suggestionMatches(list, query, editingItemId) {
+  const activeNames = new Set(list.items
+    .filter(item => item.id !== editingItemId)
+    .map(item => item.normalizedName));
   const normalized = normalizeName(query);
   return [...list.catalog]
     .filter(item => !activeNames.has(item.normalizedName))
@@ -154,19 +161,24 @@ function suggestionMatches(list, query) {
     .slice(0, 5);
 }
 
-function suggestionMarkup(list) {
-  const suggestions = suggestionMatches(list, ui.suggestionQuery);
+function historySuggestionsMarkup(list, itemId, query) {
+  const suggestions = suggestionMatches(list, query, itemId);
   if (!suggestions.length) return '';
-  return `<div class="remembered-suggestions"><small>${ui.suggestionQuery ? 'Suggestions' : 'Add again'}</small><div>${suggestions.map(item => `<button data-action="add-remembered-item" data-list-id="${list.id}" data-catalog-id="${item.id}"><span>+</span>${esc(item.name)}</button>`).join('')}</div></div>`;
+  return `<div class="history-suggestions"><small>${query.trim() ? 'From history' : 'Used before'}</small><div>${suggestions.map(item => `<button data-action="apply-history-suggestion" data-list-id="${list.id}" data-item-id="${itemId}" data-catalog-id="${item.id}">${esc(item.name)}</button>`).join('')}</div></div>`;
 }
 
 function listItemRow(list, item) {
   const editing = ui.editingItemId === item.id;
-  return `<div class="simple-list-item" data-list-row data-list-id="${list.id}" data-item-id="${item.id}">
-    <button class="simple-list-check" data-action="check-list-item" data-list-id="${list.id}" data-item-id="${item.id}" aria-label="Check off ${esc(item.name)}"></button>
-    ${editing
-      ? `<input class="simple-list-item-input" data-list-item-input data-list-id="${list.id}" data-item-id="${item.id}" value="${esc(item.name)}" aria-label="Edit ${esc(item.name)}">`
-      : `<button class="simple-list-item-text" data-action="edit-list-item" data-list-id="${list.id}" data-item-id="${item.id}">${esc(item.name)}</button>`}
+  const checkboxRight = store.getState().preferences?.listCheckboxOnRight === true;
+  const value = editing ? ui.editingValue : item.name;
+  return `<div class="simple-list-item-shell" data-list-shell data-list-id="${list.id}" data-item-id="${item.id}">
+    <div class="simple-list-item ${checkboxRight ? 'checkbox-right' : ''}" data-list-row data-list-id="${list.id}" data-item-id="${item.id}">
+      <button class="simple-list-check" data-action="check-list-item" data-list-id="${list.id}" data-item-id="${item.id}" aria-label="Check off ${esc(item.name || 'item')}"></button>
+      ${editing
+        ? `<input class="simple-list-item-input" data-list-item-input data-list-id="${list.id}" data-item-id="${item.id}" value="${esc(value)}" placeholder="New item" aria-label="Edit ${esc(item.name || 'item')}">`
+        : `<button class="simple-list-item-text" data-action="edit-list-item" data-list-id="${list.id}" data-item-id="${item.id}">${esc(item.name || 'New item')}</button>`}
+    </div>
+    ${editing ? `<div class="history-suggestions-slot">${historySuggestionsMarkup(list, item.id, value)}</div>` : ''}
   </div>`;
 }
 
@@ -180,10 +192,10 @@ function renderListDetail() {
   }
   const items = orderedItems(list);
   screen.innerHTML = `<div class="list-detail-screen">
-    <header class="list-detail-header"><button class="icon-button" data-route="lists" aria-label="Back">←</button><div><p class="eyebrow">${esc(list.icon)} Reusable list</p><h1>${esc(list.name)}</h1><p>${items.length} active</p></div><button class="icon-button" data-action="open-list-settings" data-list-id="${list.id}" aria-label="List settings">•••</button></header>
-    <div class="list-add-box"><div class="list-add-row"><input id="list-item-input" value="${esc(ui.suggestionQuery)}" placeholder="Add an item" autocomplete="off" aria-label="Add item to ${esc(list.name)}"><button data-action="add-list-item" data-list-id="${list.id}" aria-label="Add item">+</button></div>${suggestionMarkup(list)}</div>
-    <div class="list-simple-summary"><span>${items.length} ${items.length === 1 ? 'item' : 'items'}</span><small>Hold an item to move it</small></div>
-    <div class="simple-list-items">${items.map(item => listItemRow(list, item)).join('') || `<div class="list-detail-empty"><span>✓</span><h2>List is clear</h2><p>Add something new or reuse a remembered item above.</p></div>`}</div>
+    <header class="list-detail-header"><button class="icon-button" data-route="lists" aria-label="Back">←</button><button class="list-title-button" data-action="open-list-settings" data-list-id="${list.id}" aria-label="Edit ${esc(list.name)}"><p class="eyebrow">${esc(list.icon)} Reusable list</p><h1>${esc(list.name)}</h1><span>${items.length} active</span></button><button class="icon-button list-top-add" data-action="add-empty-list-item" data-list-id="${list.id}" aria-label="Add item">+</button></header>
+    <div class="list-simple-summary"><span>${items.length} ${items.length === 1 ? 'item' : 'items'}</span><small>Tap to edit · hold to move</small></div>
+    <div class="simple-list-items">${items.map(item => listItemRow(list, item)).join('') || `<div class="list-detail-empty"><span>✓</span><h2>List is clear</h2><p>Add something new or reuse a remembered item while typing.</p></div>`}</div>
+    <button class="lists-bottom-add list-item-bottom-add" data-action="add-empty-list-item" data-list-id="${list.id}"><span>+</span> Add item</button>
   </div>`;
   focusPendingInput(list.id);
 }
@@ -249,7 +261,6 @@ function saveNewList() {
     lastUndo: { label: `${name} created`, snapshot: clone(current) }
   });
   closeSheet();
-  ui.pendingFocusListId = id;
   router.go(`lists/${id}`);
   showToast(`${name} created.`, true);
 }
@@ -258,42 +269,20 @@ function nextItemOrder(list) {
   return list.items.length ? Math.max(...list.items.map(item => Number(item.order || 0))) + 10 : 0;
 }
 
-function addNameToList(listId, name) {
+function addBlankListItem(listId) {
   const current = store.getState();
   const list = current.lists.find(entry => entry.id === listId);
-  const trimmed = String(name || '').trim();
-  if (!list || !trimmed) return;
-  const normalized = normalizeName(trimmed);
-  if (list.items.some(item => item.normalizedName === normalized)) {
-    showToast('That item is already on the list.');
-    return;
-  }
-  const catalogItem = list.catalog.find(item => item.normalizedName === normalized);
-  const displayName = catalogItem?.name || trimmed;
-  const item = makeItem(`list-item-${Date.now()}`, displayName, nextItemOrder(list));
-  store.setState(state => ({
-    lists: state.lists.map(entry => entry.id === listId ? { ...entry, items: [...entry.items, item] } : entry),
-    activity: [{ id: `activity-${Date.now()}`, title: item.name, detail: `Added to ${list.name}`, time: 'Just now', icon: '+' }, ...state.activity].slice(0, 8),
-    lastUndo: { label: `${item.name} added`, snapshot: clone(current) }
-  }));
-  ui.suggestionQuery = '';
-  showToast(`${item.name} added.`, true);
-}
-
-function addTypedItem(listId) {
-  const input = document.querySelector('#list-item-input');
-  const name = input?.value.trim();
-  if (!name) {
-    input?.focus();
-    return;
-  }
-  addNameToList(listId, name);
-}
-
-function addRememberedItem(listId, catalogId) {
-  const list = store.getState().lists.find(entry => entry.id === listId);
-  const item = list?.catalog.find(entry => entry.id === catalogId);
-  if (item) addNameToList(listId, item.name);
+  if (!list) return;
+  const id = `list-item-${Date.now()}`;
+  const item = makeItem(id, '', nextItemOrder(list));
+  store.setState({
+    lists: current.lists.map(entry => entry.id === listId ? { ...entry, items: [...entry.items, item] } : entry),
+    lastUndo: { label: 'List item added', snapshot: clone(current) }
+  });
+  ui.editingItemId = id;
+  ui.editingValue = '';
+  ui.pendingFocusListId = listId;
+  requestAnimationFrame(renderListDetail);
 }
 
 function checkListItem(listId, itemId) {
@@ -302,14 +291,16 @@ function checkListItem(listId, itemId) {
   const item = list?.items.find(entry => entry.id === itemId);
   if (!list || !item) return;
   const existingCatalog = list.catalog.find(entry => entry.normalizedName === item.normalizedName);
-  const remembered = existingCatalog
-    ? list.catalog.map(entry => entry.id === existingCatalog.id ? {
-        ...entry,
-        name: item.name,
-        timesUsed: Number(entry.timesUsed || 0) + 1,
-        lastUsedAt: nowIso()
-      } : entry)
-    : [...list.catalog, makeCatalogItem(`catalog-${Date.now()}`, item.name, 1)];
+  const remembered = item.name
+    ? existingCatalog
+      ? list.catalog.map(entry => entry.id === existingCatalog.id ? {
+          ...entry,
+          name: item.name,
+          timesUsed: Number(entry.timesUsed || 0) + 1,
+          lastUsedAt: nowIso()
+        } : entry)
+      : [...list.catalog, makeCatalogItem(`catalog-${Date.now()}`, item.name, 1)]
+    : list.catalog;
   store.setState(state => ({
     lists: state.lists.map(entry => entry.id === listId ? {
       ...entry,
@@ -317,33 +308,48 @@ function checkListItem(listId, itemId) {
       catalog: remembered,
       lastUsedAt: nowIso()
     } : entry),
-    activity: [{ id: `activity-${Date.now()}`, title: item.name, detail: `Checked off ${list.name}`, time: 'Just now', icon: '✓' }, ...state.activity].slice(0, 8),
-    lastUndo: { label: `${item.name} checked`, snapshot: clone(current) }
+    activity: item.name ? [{ id: `activity-${Date.now()}`, title: item.name, detail: `Checked off ${list.name}`, time: 'Just now', icon: '✓' }, ...state.activity].slice(0, 8) : state.activity,
+    lastUndo: { label: `${item.name || 'Item'} checked`, snapshot: clone(current) }
   }));
-  showToast(`${item.name} checked off.`, true);
+  if (ui.editingItemId === itemId) {
+    ui.editingItemId = '';
+    ui.editingValue = '';
+  }
+  showToast(`${item.name || 'Item'} checked off.`, true);
 }
 
 function beginEditing(listId, itemId) {
+  const list = store.getState().lists.find(entry => entry.id === listId);
+  const item = list?.items.find(entry => entry.id === itemId);
+  if (!item) return;
   ui.editingItemId = itemId;
+  ui.editingValue = item.name;
+  ui.pendingFocusListId = listId;
   renderListDetail();
-  requestAnimationFrame(() => {
-    const input = document.querySelector(`[data-list-item-input][data-item-id="${itemId}"]`);
-    input?.focus();
-    input?.setSelectionRange(input.value.length, input.value.length);
-  });
 }
 
-function saveItemName(input) {
-  const { listId, itemId } = input.dataset;
+function removeBlankItem(listId, itemId) {
+  store.setState(state => ({
+    lists: state.lists.map(list => list.id === listId
+      ? { ...list, items: list.items.filter(item => item.id !== itemId) }
+      : list)
+  }));
+}
+
+function commitItemName(listId, itemId, rawName) {
   const current = store.getState();
   const list = current.lists.find(entry => entry.id === listId);
   const item = list?.items.find(entry => entry.id === itemId);
   if (!list || !item) return;
-  const name = input.value.trim();
+  const name = String(rawName || '').trim();
   ui.editingItemId = '';
+  ui.editingValue = '';
   if (!name) {
-    showToast('Item name cannot be empty.');
-    renderListDetail();
+    if (!item.name) removeBlankItem(listId, itemId);
+    else {
+      showToast('Item name cannot be empty.');
+      renderListDetail();
+    }
     return;
   }
   const normalizedName = normalizeName(name);
@@ -357,14 +363,28 @@ function saveItemName(input) {
     renderListDetail();
     return;
   }
+  const wasBlank = !item.name;
   store.setState(state => ({
     lists: state.lists.map(entry => entry.id === listId ? {
       ...entry,
       items: entry.items.map(active => active.id === itemId ? { ...active, name, normalizedName } : active)
     } : entry),
+    activity: wasBlank ? [{ id: `activity-${Date.now()}`, title: name, detail: `Added to ${list.name}`, time: 'Just now', icon: '+' }, ...state.activity].slice(0, 8) : state.activity,
     lastUndo: { label: `${name} updated`, snapshot: clone(current) }
   }));
-  showToast('Item updated.', true);
+  showToast(wasBlank ? `${name} added.` : 'Item updated.', true);
+}
+
+function saveItemName(input) {
+  commitItemName(input.dataset.listId, input.dataset.itemId, input.value);
+}
+
+function applyHistorySuggestion(listId, itemId, catalogId) {
+  const list = store.getState().lists.find(entry => entry.id === listId);
+  const suggestion = list?.catalog.find(item => item.id === catalogId);
+  ui.selectingSuggestion = false;
+  if (!suggestion) return;
+  commitItemName(listId, itemId, suggestion.name);
 }
 
 function saveListSettings(listId) {
@@ -383,9 +403,21 @@ function saveListSettings(listId) {
 }
 
 function focusPendingInput(listId) {
-  if (ui.pendingFocusListId !== listId) return;
-  requestAnimationFrame(() => document.querySelector('#list-item-input')?.focus());
+  if (ui.pendingFocusListId !== listId || !ui.editingItemId) return;
+  requestAnimationFrame(() => {
+    const input = document.querySelector(`[data-list-item-input][data-item-id="${ui.editingItemId}"]`);
+    if (!input) return;
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
+  });
   ui.pendingFocusListId = '';
+}
+
+function refreshHistorySuggestions(input) {
+  ui.editingValue = input.value;
+  const list = store.getState().lists.find(entry => entry.id === input.dataset.listId);
+  const slot = input.closest('[data-list-shell]')?.querySelector('.history-suggestions-slot');
+  if (list && slot) slot.innerHTML = historySuggestionsMarkup(list, input.dataset.itemId, input.value);
 }
 
 function moveItem(listId, draggedId, targetId, placeAfter) {
@@ -415,12 +447,10 @@ function clearDropClasses() {
 
 function beginDrag() {
   if (!ui.drag || ui.drag.active) return;
-  const row = ui.drag.row;
   ui.drag.active = true;
-  row.classList.add('list-dragging-item');
-  row.setPointerCapture?.(ui.drag.pointerId);
+  ui.drag.row.classList.add('list-dragging-item');
+  try { ui.drag.row.setPointerCapture?.(ui.drag.pointerId); } catch (_) { /* capture may be unavailable */ }
   document.body.classList.add('list-item-dragging');
-  document.activeElement?.blur();
 }
 
 function cancelPendingDrag() {
@@ -453,7 +483,7 @@ function endDrag(event) {
   clearTimeout(ui.drag.timer);
   const drag = ui.drag;
   if (drag.active) {
-    try { drag.row.releasePointerCapture?.(event.pointerId); } catch (_) { /* pointer capture may already be released */ }
+    try { drag.row.releasePointerCapture?.(event.pointerId); } catch (_) { /* capture may already be released */ }
     clearDropClasses();
     document.body.classList.remove('list-item-dragging');
     ui.suppressClickUntil = Date.now() + 300;
@@ -463,6 +493,11 @@ function endDrag(event) {
 }
 
 document.addEventListener('pointerdown', event => {
+  const suggestion = event.target.closest('[data-action="apply-history-suggestion"]');
+  if (suggestion) {
+    ui.selectingSuggestion = true;
+    return;
+  }
   if (router.getRoute().split('/')[0] !== 'lists') return;
   const row = event.target.closest('[data-list-row]');
   if (!row || event.target.closest('.simple-list-check') || event.target.matches('[data-list-item-input]')) return;
@@ -476,7 +511,7 @@ document.addEventListener('pointerdown', event => {
     startY: event.clientY,
     targetId: '',
     placeAfter: false,
-    timer: setTimeout(beginDrag, 220)
+    timer: setTimeout(beginDrag, 170)
   };
 });
 
@@ -494,34 +529,29 @@ document.addEventListener('pointerup', endDrag);
 document.addEventListener('pointercancel', endDrag);
 
 document.addEventListener('input', event => {
-  if (event.target.id !== 'list-item-input') return;
-  ui.suggestionQuery = event.target.value;
-  renderListDetail();
-  requestAnimationFrame(() => {
-    const input = document.querySelector('#list-item-input');
-    input?.focus();
-    input?.setSelectionRange(ui.suggestionQuery.length, ui.suggestionQuery.length);
-  });
+  if (event.target.matches('[data-list-item-input]')) refreshHistorySuggestions(event.target);
 });
 
 document.addEventListener('focusout', event => {
-  if (event.target.matches('[data-list-item-input]')) saveItemName(event.target);
+  if (!event.target.matches('[data-list-item-input]')) return;
+  if (ui.selectingSuggestion) return;
+  saveItemName(event.target);
 });
 
 document.addEventListener('keydown', event => {
-  if (event.target.id === 'list-item-input' && event.key === 'Enter') {
-    event.preventDefault();
-    const list = currentList();
-    if (list) addTypedItem(list.id);
-  }
   if (!event.target.matches('[data-list-item-input]')) return;
   if (event.key === 'Enter') {
     event.preventDefault();
     event.target.blur();
   }
   if (event.key === 'Escape') {
+    const listId = event.target.dataset.listId;
+    const itemId = event.target.dataset.itemId;
+    const item = store.getState().lists.find(list => list.id === listId)?.items.find(entry => entry.id === itemId);
     ui.editingItemId = '';
-    renderListDetail();
+    ui.editingValue = '';
+    if (item && !item.name) removeBlankItem(listId, itemId);
+    else renderListDetail();
   }
 });
 
@@ -548,16 +578,16 @@ document.addEventListener('click', event => {
     document.querySelectorAll('.list-icon-picker button').forEach(button => button.classList.toggle('selected', button === target));
   }
   if (action === 'save-list-settings') saveListSettings(target.dataset.listId);
-  if (action === 'add-list-item') addTypedItem(target.dataset.listId);
-  if (action === 'add-remembered-item') addRememberedItem(target.dataset.listId, target.dataset.catalogId);
+  if (action === 'add-empty-list-item') addBlankListItem(target.dataset.listId);
   if (action === 'check-list-item') checkListItem(target.dataset.listId, target.dataset.itemId);
   if (action === 'edit-list-item') beginEditing(target.dataset.listId, target.dataset.itemId);
+  if (action === 'apply-history-suggestion') applyHistorySuggestion(target.dataset.listId, target.dataset.itemId, target.dataset.catalogId);
   if (action === 'lists-undo' && store.undoLast()) showToast('Last change undone.');
 });
 
 window.addEventListener('hashchange', () => {
-  ui.suggestionQuery = '';
   ui.editingItemId = '';
+  ui.editingValue = '';
   requestAnimationFrame(renderLists);
 });
 

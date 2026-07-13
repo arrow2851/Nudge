@@ -1,6 +1,6 @@
 # Nudge
 
-Nudge is an Android-first, local-first productivity app that organizes chores, one-time tasks, and reusable lists, then redirects excessive time in selected distracting apps toward a small useful action.
+Nudge is an Android-first, local-first productivity app that organizes recurring chores, one-time tasks, and reusable lists, then redirects excessive time in selected distracting apps toward a small useful action.
 
 ## Current status
 
@@ -19,30 +19,32 @@ The interactive browser prototype is live and under active feature-by-feature de
 - Simplified Today screen with Due Today, Overdue, Lists, Recent Activity, grading, and Undo
 - Optional Daily Progress and Quick Win preference flags, both off by default
 - Four-destination bottom navigation without a global floating add action
-- Areas screen with shipped defaults and template-conditioned House Sections
-- Nested Area and Section navigation with contextual task/chore creation
-- Due-only Section Reset with completion, grading, skipping, and progress
+- Areas redesigned as a recurring-chore and maintenance system
+- One-time Tasks kept separate from Areas
+- Areas overview showing where attention is needed
+- Area-level quick completion before Section navigation
+- Dense Section routine checklists grouped by Needs Attention, Coming Up, As Needed, and Paused
+- Top and bottom chore-add controls with Add & another for rapid setup
+- House and Car templates that add missing Sections and starter chores without duplicating existing setup
+- Staggered starter due dates so applying a template does not make every routine immediately due
+- Reusable As-needed chores that remain available after completion
 - Task and Chore details with recurrence-aware Chore behavior
 - Single checklist-style Tasks destination
 - Reusable Lists collection and list-detail routes
 - Shared Task/List item behavior: inline-only creation, tap-to-edit sheets, hold-to-reorder, and swipe-right indentation
-- Automatic Main item creation when an item is swiped under the item above
 - Main Task and Main List item subitems with thin completion progress
 - Parent completion cascades to children; child completion recalculates the parent
-- Completed root items move to the bottom
-- Show Completed / Hide Completed controls for Tasks and Lists
-- Completed children remain visible beneath unfinished parents
+- Completed root items move to the bottom with Show/Hide Completed controls
 - Task-only Due Date and optional gray due shorthand
 - List history suggestions during creation and existing-item editing
-- Left-side List checkboxes by default with future right-side preference support
 
 ## Product pillars
 
-- Areas and optional Sections such as `House > Kitchen`
+- Areas and optional Sections for recurring chores and maintenance
+- A separate lightweight checklist for one-time Tasks
 - Recurring chores with calendar-based or completion-based cadence
 - Optional Light, Moderate, and Deep completion grading
 - Reusable lists that remember completed items for future suggestions
-- A lightweight checklist for one-time tasks
 - Direct app-usage intervention with compatibility fallbacks
 - Contextual, destination-specific creation flows instead of one global add action
 - Widgets, voice, and Gemini-assisted entry where they add real value
@@ -104,7 +106,7 @@ nudge/
 
 ## Immediate next step
 
-Review the unified Tasks and Lists interactions after deployment. The next major build milestone is the Direct Intervention prototype: simulated redirect, intervention choices, alternative tasks, Not Now behavior, Focus Mode, and intervention settings/compatibility previews.
+Review the redesigned Areas, House, and Kitchen flows on a phone. The next major build milestone after this review is the Direct Intervention prototype.
 
 ## License
 

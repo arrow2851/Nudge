@@ -1,6 +1,6 @@
 # Nudge
 
-Nudge is an Android-first, local-first productivity app that organizes household chores, one-time tasks, and reusable lists, then redirects excessive time in selected distracting apps toward a small useful action.
+Nudge is an Android-first, local-first productivity app that organizes chores, one-time tasks, and reusable lists, then redirects excessive time in selected distracting apps toward a small useful action.
 
 ## Current status
 
@@ -8,34 +8,43 @@ The interactive browser prototype is live and under active feature-by-feature de
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
-- [Current Areas milestone notes](docs/progress/areas-and-rooms.md)
+- [Current product-direction amendments](docs/progress/product-direction-amendments.md)
+- [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
+- [Task and Chore detail milestone notes](docs/progress/task-and-chore-details.md)
 
 ### Implemented prototype slices
 
-- Today dashboard, Quick Win, overdue tasks, recent activity, grading, Quick Add, and Undo
+- Simplified Today screen with Due Today, Overdue, Lists, Recent Activity, grading, and Undo
+- Optional Daily Progress and Quick Win preference flags, both off by default
+- Four-destination bottom navigation without a global floating add action
 - Areas screen with shipped defaults
-- Template-conditioned House rooms
-- Nested Area and Room detail navigation
+- Template-conditioned House Sections
+- Nested Area and Section detail navigation
 - Add and edit Area
-- Add and edit Room
-- Contextual Quick Add from an Area or Room
-- Due-only Room Reset with completion, grading, skipping, and progress
+- Add and edit Section
+- Contextual task/chore creation from an Area or Section
+- Due-only Section Reset with completion, grading, skipping, and progress
+- Task and Chore detail screens
+- Snooze, reschedule, skip occurrence, pause/resume recurrence, reopen, and recurrence-aware completion
 
 ## Product pillars
 
-- Areas and optional subareas such as `House > Kitchen`
+- Areas and optional Sections such as `House > Kitchen`
 - Recurring chores with calendar-based or completion-based cadence
 - Optional Light, Moderate, and Deep completion grading
 - Reusable lists that remember completed items for future suggestions
 - One-time tasks for repairs, errands, orders, and other TODOs
 - Direct app-usage intervention with compatibility fallbacks
-- Fast Quick Add, gestures, widgets, voice, and Gemini-assisted entry
+- Contextual, destination-specific creation flows instead of one global add action
+- Widgets, voice, and Gemini-assisted entry where they add real value
 - Local-first core functionality with optional cloud features later
 
 ## Documentation
 
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
-- [Current Areas milestone notes](docs/progress/areas-and-rooms.md)
+- [Current product-direction amendments](docs/progress/product-direction-amendments.md)
+- [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
+- [Task and Chore detail milestone notes](docs/progress/task-and-chore-details.md)
 - [Product requirements](docs/product-requirements.md)
 - [Screens and rough wireframes](docs/screens-and-wireframes.md)
 - [Technical architecture](docs/technical-architecture.md)
@@ -84,7 +93,7 @@ nudge/
 
 ## Immediate next step
 
-Review and refine the first Areas vertical slice, then complete the second half of the milestone: stronger room management, task/chore detail navigation, reset-session persistence, and complete tracker reconciliation.
+Implement the full Tasks destination with Inbox, Today, Upcoming, Waiting, Blocked, Completed, filtering, sorting, grouping, task-detail integration, empty states, and a Tasks-specific creation flow.
 
 ## License
 

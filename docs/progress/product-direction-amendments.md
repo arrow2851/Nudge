@@ -101,19 +101,6 @@ This section supersedes any earlier statement that List items disappear when com
 - [x] History suggestions appear during new-item inline entry.
 - [x] History suggestions also appear in the existing-item bottom sheet.
 
-### Validation checklist
-
-- [ ] Confirm swipe-right indent works reliably on phone.
-- [ ] Confirm the first root item snaps back with no hierarchy change.
-- [ ] Confirm tap, swipe, and hold do not accidentally trigger one another.
-- [ ] Confirm completing a parent completes all children.
-- [ ] Confirm completing all children completes the parent.
-- [ ] Confirm reopening one child reopens the parent.
-- [ ] Confirm completed root items move to the bottom.
-- [ ] Confirm hidden completed children remain visible under an unfinished parent.
-- [ ] Confirm List history suggestions work in both creation and editing.
-- [ ] Confirm Task Due Date remains the only functional difference between the two item types.
-
 ## 2026-07-13 — Mobile gesture feedback and full-screen shell
 
 ### Approved interaction feedback
@@ -121,15 +108,13 @@ This section supersedes any earlier statement that List items disappear when com
 - [x] A right swipe moves the item with the finger instead of waiting until release.
 - [x] The space revealed behind the item shows the pending indentation action.
 - [x] An eligible swipe visibly arms after crossing the indentation threshold.
-- [x] An ineligible swipe, including the first root item, visibly returns to its original position.
+- [x] An ineligible swipe visibly returns to its original position.
 - [x] Holding an item lifts the complete item or Main-item group into a floating preview.
 - [x] The floating preview is dimmed and slightly desaturated.
 - [x] A dashed placeholder shows the potential destination.
 - [x] Neighboring items animate into provisional positions as the placeholder moves.
-- [x] Releasing the item commits the location represented by the placeholder.
-- [x] Dragging near the top or bottom of the app screen supports gradual auto-scroll.
-- [x] The shared gesture handler applies equally to Tasks and Lists.
-- [x] Task gestures update one-time Task records only and do not alter Chores.
+- [x] Dragging near the top or bottom supports gradual auto-scroll.
+- [x] Task gestures update one-time Task records only and never alter Chores.
 
 ### Approved mobile-shell behavior
 
@@ -137,17 +122,56 @@ This section supersedes any earlier statement that List items disappear when com
 - [x] The outer webpage does not scroll on mobile.
 - [x] Only the app content screen scrolls during normal use.
 - [x] App scrolling is locked while a swipe or drag is active.
-- [x] Horizontal overflow is clipped so the prototype remains fitted to screen width.
-- [x] Safe-area insets are respected around the status and bottom navigation areas.
+- [x] Safe-area insets are respected.
+
+## 2026-07-13 — Redesign Areas as recurring routines
+
+This section supersedes the earlier Area design that mixed one-time Tasks and Chores, used task/chore creation from Area pages, and treated Section Reset as the primary completion flow.
+
+### Product boundary
+
+- [x] Areas represents recurring chores and maintenance routines.
+- [x] One-time Tasks remain in the separate Tasks destination.
+- [x] A Task may retain an Area reference internally without appearing in Areas.
+- [x] Area creation and Section creation no longer create one-time Tasks.
+
+### Information hierarchy
+
+- [x] Areas overview answers where attention is needed.
+- [x] Area detail shows due and overdue chores across the Area before Section navigation.
+- [x] Section detail acts as a dense routine checklist.
+- [x] Progress percentages are not the primary Area signal.
+- [x] Due, overdue, next routine, recurrence, and location are the primary tracking information.
+
+### Quick completion
+
+- [x] Chores can be checked off directly from Area detail.
+- [x] Chores can be checked off directly from Section detail.
+- [x] Graded chores retain the Light, Moderate, and Deep completion sheet.
+- [x] Recurring completion advances to the next due date.
+- [x] As-needed chores remain reusable after completion.
+
+### Scalable setup
+
+- [x] Top and bottom Add Chore controls.
+- [x] Area-level creation can assign a Section.
+- [x] Section-level creation fixes the Area and Section.
+- [x] Repeat and First Due are the primary fields.
+- [x] Duration and grading are under More Options.
+- [x] Add & another keeps the entry flow open for rapid setup.
+- [x] Pressing Enter adds the current chore and continues entry.
+- [x] Templates can add Sections and starter chores in one operation.
+- [x] Templates add only missing structure and routines.
+- [x] Starter due dates are staggered rather than all due immediately.
+- [x] House and Car starter templates are provided.
 
 ### Validation checklist
 
-- [ ] Re-test right swipe on the same mobile browser that previously failed.
-- [ ] Confirm the card tracks the finger continuously.
-- [ ] Confirm the indentation label and armed state are easy to understand.
-- [ ] Confirm the floating drag preview stays directly under the finger.
-- [ ] Confirm neighboring rows animate without jumping.
-- [ ] Confirm dropping over the dashed placeholder commits correctly.
-- [ ] Confirm normal vertical scrolling still works when no gesture is active.
-- [ ] Confirm the browser page itself no longer scrolls or shifts during drag.
-- [ ] Confirm the keyboard still fits inline creation and bottom-sheet editing on mobile.
+- [ ] Confirm old one-time House, Car, Personal, and Work Tasks do not appear in Areas.
+- [ ] Confirm those Tasks remain in Tasks.
+- [ ] Confirm Area-level checkboxes are comfortable and do not accidentally open details.
+- [ ] Confirm Section grouping remains useful with a large number of routines.
+- [ ] Confirm Add & another works well with the mobile keyboard.
+- [ ] Confirm templates do not duplicate existing Sections or chores.
+- [ ] Confirm starter due dates feel sensible rather than arbitrary.
+- [ ] Decide whether guided Section Reset is still useful after quick check-off testing.

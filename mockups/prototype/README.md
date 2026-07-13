@@ -61,36 +61,42 @@ http://localhost:8080
 
 ## Task and Chore details
 
-- Task and Chore detail routes
-- Edit title, status, priority, Area, Section, duration, recurrence, notes, and Nudge eligibility
-- Snooze and reschedule
-- Skip occurrence
-- Pause and resume recurrence
-- Reopen completed tasks
-- Recurrence-aware completion
+- Lightweight one-time Task detail with completion and a return to the checklist
+- Richer Chore detail with recurrence, snooze, reschedule, skip, pause, and grading behavior
+- Recurrence-aware Chore completion
+- Reopen completed items
 
-## Tasks destination
+## Tasks checklist
 
-- Inbox, Today, Upcoming, Waiting, Blocked, and Completed views
-- Dedicated one-time task creation
-- Starting status, due date, priority, Area, Section, duration, notes, and Nudge eligibility
-- View-specific counts
-- Local search
-- Area, type, priority, and duration filters
-- Due, priority, duration, date-added, and title sorting
-- Due-date, Area, and priority grouping
-- Quick completion
-- Status changes
-- Shared detail-screen integration
-- View-specific and filtered empty states
-- One-time model upgrade for existing prototype data
+- One checklist instead of workflow tabs
+- `+` at the top right
+- `+ Add task` below the checklist
+- Both controls create a blank focused task
+- Inline task-name editing
+- Separate drag handle and completion checkbox
+- Compact details cell with optional due shorthand and `>`
+- Manual ordering by default
+- Alphabetical ordering
+- Due-date ordering with alphabetical secondary sorting
+- Main-task toggle
+- Separate subtask-add segment for main tasks
+- Nested subtasks
+- Thin main-task progress bar based on completed subtasks
+- Hold-and-drag reordering
+- Drag onto a main task to create a subtask
+- Drag a subtask back among root tasks to release it
+- Turning off Main Task releases all subtasks into the root checklist
+- Simple task settings containing Main Task and Due Date only
+- Due-date Set, Change, and Clear actions
+- Preference flags for due shorthand and reversed row layout
+- Completed tasks remain visible below active tasks for the current review version
 
 ## Creation-flow rule
 
 Each main destination owns its own creation experience:
 
 - Areas and Sections create tasks or chores in context.
-- Tasks creates one-time tasks through its dedicated form.
+- Tasks creates blank checklist items inline.
 - Lists will receive a dedicated list and list-item creation flow.
 - The former generic Quick Add flow is intentionally removed.
 
@@ -130,7 +136,7 @@ mockups/prototype/
 - `state.js` is the temporary browser equivalent of a future Android `ViewModel + StateFlow + Room/DataStore` implementation.
 - `router.js` provides hash routes that can later map to Navigation Compose destinations.
 - `app.js` renders the shell and coordinates cross-feature interactions.
-- `tasks.js` owns the Tasks route, task-view state, creation, filtering, sorting, grouping, and task-specific status controls.
+- `tasks.js` owns inline checklist rendering, task ordering, main/subtask relationships, task-row settings, and drag behavior.
 - The internal field name `subareas` remains temporarily for stored-data compatibility; the user-facing term is Section.
 
 ## Prototype limitations
@@ -144,6 +150,8 @@ The following remain simulated until the Android build:
 - Room database and DataStore persistence
 - Driving, call, meeting, and device-context detection
 
+Checklist drag behavior is implemented for phone review, but still requires broader device, accessibility, auto-scroll, and edge-case testing.
+
 ## Android translation map
 
 | Prototype | Android implementation |
@@ -155,12 +163,12 @@ The following remain simulated until the Android build:
 | Hash router | Navigation Compose |
 | Bottom sheet | Material 3 `ModalBottomSheet` |
 | Toast with Undo | Snackbar with action |
+| Pointer-based checklist drag | Compose reorderable list and gesture handling |
 | Simulated redirect | UsageStatsManager + intervention coordinator |
-| Local metadata parser | Deterministic parser with optional Gemini assistance |
 
 ## Next implementation batch
 
-The next focused batch is reusable Lists:
+Review the simplified Tasks checklist after deployment. Once enough task feedback has accumulated, the next focused batch is reusable Lists:
 
 - Lists collection screen
 - Dedicated Create List flow

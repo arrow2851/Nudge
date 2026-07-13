@@ -51,15 +51,48 @@ export function completeItem(taskId, grade = '') {
   if (!task || task.completed) return false;
   const previous = clone(current);
   const days = recurrenceDays(task.recurrence);
+  const asNeeded = task.type === 'chore' && task.recurrence?.toLowerCase() === 'as needed';
   const completedAt = new Date().toISOString();
   const next = days ? new Date(Date.now() + days * 86400000) : null;
-  const updated = days
-    ? { ...task, status: 'planned', completed: false, completedAt, completionGrade: grade, due: dateLabel(next), nextDueLabel: dateLabel(next), urgency: 'upcoming', lastCompletedAt: completedAt, snoozedUntil: '', skippedAt: '' }
-    : { ...task, status: 'completed', completed: true, completedAt, completionGrade: grade, urgency: 'none', nudge: false };
+  const updated = asNeeded
+    ? {
+        ...task,
+        status: 'planned',
+        completed: false,
+        completedAt,
+        completionGrade: grade,
+        due: 'As needed',
+        dueDate: '',
+        nextDueLabel: 'As needed',
+        urgency: 'upcoming',
+        lastCompletedAt: completedAt,
+        snoozedUntil: '',
+        skippedAt: ''
+      }
+    : days
+      ? {
+          ...task,
+          status: 'planned',
+          completed: false,
+          completedAt,
+          completionGrade: grade,
+          due: dateLabel(next),
+          nextDueLabel: dateLabel(next),
+          urgency: 'upcoming',
+          lastCompletedAt: completedAt,
+          snoozedUntil: '',
+          skippedAt: ''
+        }
+      : { ...task, status: 'completed', completed: true, completedAt, completionGrade: grade, urgency: 'none', nudge: false };
+  const detail = asNeeded
+    ? `${grade ? `${grade} · ` : ''}Completed · Available as needed`
+    : days
+      ? `${grade ? `${grade} · ` : ''}Completed · Next ${dateLabel(next)}`
+      : grade ? `${grade} completion` : 'Completed';
   store.setState(state => ({
     tasks: state.tasks.map(item => item.id === taskId ? updated : item),
     progress: task.urgency === 'today' ? { ...state.progress, completedToday: Math.min(state.progress.totalToday, state.progress.completedToday + 1) } : state.progress,
-    activity: addActivity(state, task, days ? `${grade ? `${grade} · ` : ''}Completed · Next ${dateLabel(next)}` : grade ? `${grade} completion` : 'Completed', '✓'),
+    activity: addActivity(state, task, detail, '✓'),
     lastUndo: { label: `${task.title} completed`, snapshot: previous }
   }));
   return true;

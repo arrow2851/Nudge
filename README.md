@@ -12,6 +12,7 @@ The interactive browser prototype is live and under active feature-by-feature de
 - [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
 - [Task and Chore detail milestone notes](docs/progress/task-and-chore-details.md)
 - [Tasks checklist milestone notes](docs/progress/tasks-destination.md)
+- [Reusable Lists milestone notes](docs/progress/lists-destination.md)
 
 ### Implemented prototype slices
 
@@ -30,10 +31,16 @@ The interactive browser prototype is live and under active feature-by-feature de
 - Single checklist-style Tasks destination
 - Top and bottom task-add controls that create blank inline-editable tasks
 - Drag handles, completion checkboxes, inline task titles, and compact settings controls
-- Manual, alphabetical, and due-date ordering
+- Manual, alphabetical, and due-date task ordering
 - Main tasks, nested subtasks, subtask progress, drag-to-nest, and release-to-root behavior
 - Simple task settings for Main Task and Due Date
 - Preference flags for optional due shorthand and reversed task-row order
+- Reusable Lists collection and list-detail routes
+- Dedicated list creation and list-item entry
+- Remembered suggestions ranked by reuse history
+- Quantity, unit, category, and duplicate handling
+- Checked items removed from active lists and retained in the remembered catalog
+- Optional persisted shopping/list sessions with completion summaries
 
 ## Product pillars
 
@@ -54,6 +61,7 @@ The interactive browser prototype is live and under active feature-by-feature de
 - [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
 - [Task and Chore detail milestone notes](docs/progress/task-and-chore-details.md)
 - [Tasks checklist milestone notes](docs/progress/tasks-destination.md)
+- [Reusable Lists milestone notes](docs/progress/lists-destination.md)
 - [Product requirements](docs/product-requirements.md)
 - [Screens and rough wireframes](docs/screens-and-wireframes.md)
 - [Technical architecture](docs/technical-architecture.md)
@@ -102,7 +110,7 @@ nudge/
 
 ## Immediate next step
 
-Review the simplified Tasks checklist after deployment. Once enough task feedback has accumulated, implement the reusable Lists destination with a dedicated Create List flow, remembered-item suggestions, quantities, categories, duplicate handling, shopping/list sessions, and list history.
+Review the first reusable Lists slice after deployment. The next major build milestone is the Direct Intervention prototype: simulated redirect, intervention choices, alternative tasks, Not Now behavior, Focus Mode, and intervention settings/compatibility previews.
 
 ## License
 

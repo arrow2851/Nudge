@@ -107,10 +107,6 @@
   font-size: 1.25rem;
 }
 
-.list-item-bottom-add {
-  margin-bottom: 1.1rem;
-}
-
 .lists-empty,
 .list-detail-empty {
   min-height: 230px;
@@ -173,10 +169,6 @@
   cursor: pointer;
 }
 
-.list-title-button .eyebrow {
-  margin: .1rem 0 0;
-}
-
 .list-title-button h1 {
   margin: .1rem 0 0;
   overflow: hidden;
@@ -195,122 +187,203 @@
 }
 
 .list-simple-summary {
-  min-height: 30px;
+  min-height: 34px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: .7rem;
   color: var(--color-muted);
   font-size: var(--font-size-xs);
 }
 
-.list-simple-summary small {
-  font-size: inherit;
-}
-
 .simple-list-items {
   display: grid;
-  gap: .48rem;
+  gap: .55rem;
 }
 
+.list-item-tree,
 .simple-list-item-shell {
   position: relative;
   display: grid;
-  gap: .28rem;
+  gap: .38rem;
+  border-radius: var(--radius-md);
 }
 
 .simple-list-item {
   position: relative;
   min-height: 54px;
-  display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
+  display: flex;
   align-items: stretch;
+  overflow: hidden;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   box-shadow: var(--shadow-sm);
-  transition: transform 120ms ease, opacity 120ms ease, border-color 120ms ease;
+  transition: transform 150ms ease, opacity 150ms ease, border-color 150ms ease;
   touch-action: pan-y;
 }
 
-.simple-list-item.checkbox-right {
-  grid-template-columns: minmax(0, 1fr) 42px;
+.simple-list-item.completed {
+  opacity: .58;
 }
 
-.simple-list-item.checkbox-right .simple-list-check {
-  grid-column: 2;
-  grid-row: 1;
+.simple-list-item.completed .simple-list-item-text,
+.simple-list-item.completed .simple-list-item-input {
+  text-decoration: line-through;
 }
 
-.simple-list-item.checkbox-right .simple-list-item-text,
-.simple-list-item.checkbox-right .simple-list-item-input {
-  grid-column: 1;
-  grid-row: 1;
-  padding-left: .8rem;
-  padding-right: .2rem;
+.simple-list-item.list-dragging-item {
+  z-index: 4;
+  opacity: .68;
+  transform: scale(.99);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.simple-list-item.list-swiping-right {
+  border-color: color-mix(in srgb, var(--color-primary) 55%, var(--color-border));
+  box-shadow: var(--shadow-md);
+  touch-action: none;
+}
+
+.simple-list-item.list-drop-before::before {
+  content: '';
+  position: absolute;
+  z-index: 5;
+  left: 8px;
+  right: 8px;
+  top: -5px;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+}
+
+.list-subitem-progress {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  height: 3px;
+  max-width: 100%;
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+  background: var(--color-primary);
+  transition: width var(--motion-normal);
 }
 
 .simple-list-check {
-  width: 25px;
-  height: 25px;
+  order: 1;
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
   align-self: center;
-  justify-self: center;
-  border: 2px solid color-mix(in srgb, var(--color-primary) 46%, var(--color-border));
+  display: grid;
+  place-items: center;
+  margin: 0 10px;
+  padding: 0;
+  border: 1.5px solid color-mix(in srgb, var(--color-primary) 48%, var(--color-border));
   border-radius: 8px;
-  background: transparent;
+  background: var(--color-surface);
+  color: white;
   cursor: pointer;
+  font-size: .84rem;
+  font-weight: 900;
 }
 
-.simple-list-check:active {
-  background: var(--color-primary-soft);
+.simple-list-check.checked {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
 }
 
 .simple-list-item-text,
 .simple-list-item-input {
+  order: 2;
   min-width: 0;
-  width: 100%;
+  flex: 1 1 auto;
   min-height: 52px;
-  padding: .72rem .8rem .72rem .2rem;
+  padding: .72rem .75rem .72rem 0;
   border: 0;
   outline: 0;
   background: transparent;
   color: var(--color-text);
   text-align: left;
   font: inherit;
-  font-size: .98rem;
+  font-size: .97rem;
 }
 
 .simple-list-item-text {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  cursor: text;
+  cursor: pointer;
 }
 
 .simple-list-item-input {
   box-shadow: inset 0 -2px 0 var(--color-primary);
 }
 
-.history-suggestions-slot:empty {
-  display: none;
+.simple-list-item.checkbox-right .simple-list-check {
+  order: 3;
+}
+
+.simple-list-item.checkbox-right .simple-list-item-text,
+.simple-list-item.checkbox-right .simple-list-item-input {
+  order: 2;
+  padding-left: .75rem;
+  padding-right: 0;
+}
+
+.list-subitem-add {
+  order: 3;
+  width: 43px;
+  flex: 0 0 43px;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 850;
+}
+
+.simple-list-item.checkbox-right .list-subitem-add {
+  order: 1;
+  border-left: 0;
+  border-right: 1px solid var(--color-border);
+}
+
+.list-subitems {
+  display: grid;
+  gap: .38rem;
+  margin-left: 31px;
+  padding-left: 10px;
+  border-left: 2px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
+}
+
+.list-subitem-shell .simple-list-item {
+  box-shadow: none;
+}
+
+.list-subitem-shell .simple-list-item-text,
+.list-subitem-shell .simple-list-item-input {
+  font-size: .89rem;
+}
+
+.history-suggestions-slot,
+#list-item-sheet-suggestions {
+  min-width: 0;
 }
 
 .history-suggestions {
-  margin-left: 42px;
-  padding: .55rem .62rem .62rem;
+  padding: .55rem .7rem .65rem;
   border: 1px solid color-mix(in srgb, var(--color-primary) 15%, var(--color-border));
   border-radius: var(--radius-sm);
   background: color-mix(in srgb, var(--color-primary-soft) 34%, var(--color-surface));
 }
 
-.simple-list-item.checkbox-right + .history-suggestions-slot .history-suggestions {
-  margin-left: 0;
-  margin-right: 42px;
-}
-
-.history-suggestions small {
+.history-suggestions > small {
   display: block;
-  margin-bottom: .42rem;
+  margin-bottom: .4rem;
   color: var(--color-muted);
   font-size: .67rem;
   font-weight: 800;
@@ -320,12 +393,18 @@
 
 .history-suggestions > div {
   display: flex;
-  flex-wrap: wrap;
-  gap: .38rem;
+  gap: .4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.history-suggestions > div::-webkit-scrollbar {
+  display: none;
 }
 
 .history-suggestions button {
-  min-height: 31px;
+  flex: 0 0 auto;
+  min-height: 32px;
   padding: 0 .62rem;
   border: 1px solid color-mix(in srgb, var(--color-primary) 18%, var(--color-border));
   border-radius: var(--radius-pill);
@@ -336,40 +415,8 @@
   font-weight: 740;
 }
 
-.simple-list-item.list-dragging-item {
-  z-index: 3;
-  opacity: .72;
-  transform: scale(.99);
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-md);
-}
-
-.simple-list-item.list-drop-before::before,
-.simple-list-item.list-drop-after::after {
-  content: '';
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  height: 3px;
-  border-radius: 3px;
-  background: var(--color-primary);
-}
-
-.simple-list-item.list-drop-before::before {
-  top: -5px;
-}
-
-.simple-list-item.list-drop-after::after {
-  bottom: -5px;
-}
-
-body.list-item-dragging {
-  user-select: none;
-  cursor: grabbing;
-}
-
-body.list-item-dragging .simple-list-item {
-  touch-action: none;
+.list-item-bottom-add {
+  margin-top: .25rem;
 }
 
 .list-icon-picker {
@@ -394,6 +441,15 @@ body.list-item-dragging .simple-list-item {
   box-shadow: inset 0 0 0 1px var(--color-primary);
 }
 
+body.list-item-dragging {
+  user-select: none;
+  cursor: grabbing;
+}
+
+body.list-item-dragging .simple-list-item {
+  touch-action: none;
+}
+
 @media (max-width: 390px) {
   .reusable-list-card {
     grid-template-columns: 42px minmax(0, 1fr) auto 16px;
@@ -406,15 +462,17 @@ body.list-item-dragging .simple-list-item {
     height: 42px;
   }
 
-  .list-simple-summary small {
-    display: none;
+  .simple-list-check {
+    margin-inline: 8px;
   }
 
-  .history-suggestions {
-    margin-left: 34px;
+  .list-subitem-add {
+    width: 39px;
+    flex-basis: 39px;
   }
 
-  .simple-list-item.checkbox-right + .history-suggestions-slot .history-suggestions {
-    margin-right: 34px;
+  .list-subitems {
+    margin-left: 24px;
+    padding-left: 7px;
   }
 }

@@ -29,18 +29,20 @@ The interactive browser prototype is live and under active feature-by-feature de
 - Task and Chore detail screens
 - Snooze, reschedule, skip occurrence, pause/resume recurrence, reopen, and recurrence-aware Chore completion
 - Single checklist-style Tasks destination
-- Top and bottom task-add controls that create blank inline-editable tasks
-- Drag handles, completion checkboxes, inline task titles, and compact settings controls
+- Top and bottom task-add controls that create a blank task and open its bottom-sheet editor
+- Checkbox-first Task rows with tappable text, optional due shorthand, and no permanent chevron or drag handle
+- Whole-row hold-and-drag Task ordering
 - Manual, alphabetical, and due-date task ordering
 - Main tasks, nested subtasks, subtask progress, drag-to-nest, and release-to-root behavior
-- Simple task settings for Main Task and Due Date
+- Simple Task editor for name, Main Task, and Due Date
 - Preference flags for optional due shorthand and reversed task-row order
 - Reusable Lists collection and list-detail routes
-- Dedicated list creation and list-item entry
+- Top and bottom inline List item creation
 - Checkbox-left, editable-text reusable list items with no right-side item controls
-- Hold-and-drag active list ordering
-- Checked items removed from active lists and retained as remembered suggestions
-- Simple exact-duplicate prevention
+- Hold-and-drag active List ordering
+- Editing-only history suggestions ranked by reuse history
+- Checked items removed from active Lists and retained as remembered suggestions
+- Future preference support for moving List checkboxes to the right
 
 ## Product pillars
 
@@ -110,7 +112,7 @@ nudge/
 
 ## Immediate next step
 
-Review the simplified reusable Lists slice after deployment. The next major build milestone is the Direct Intervention prototype: simulated redirect, intervention choices, alternative tasks, Not Now behavior, Focus Mode, and intervention settings/compatibility previews.
+Review the revised Tasks and Lists interactions after deployment. The next major build milestone is the Direct Intervention prototype: simulated redirect, intervention choices, alternative tasks, Not Now behavior, Focus Mode, and intervention settings/compatibility previews.
 
 ## License
 

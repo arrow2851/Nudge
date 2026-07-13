@@ -32,8 +32,8 @@
 - `[x]` Reopen a completed task
 - `[x]` Undo for task-management changes
 - `[x]` Today task rows open details
-- `[x]` Area and Room task rows open details
-- `[x]` Room Reset uses the same recurrence-aware completion logic
+- `[x]` Area and Section task rows open details
+- `[x]` Section Reset uses the same recurrence-aware completion logic
 
 ## Current prototype limitations
 
@@ -41,7 +41,7 @@
 - `[~]` Monthly recurrence currently advances by 30 days in the prototype
 - `[~]` Calendar-based versus completion-based scheduling is displayed but not fully configurable
 - `[~]` Snooze labels use simplified prototype dates
-- `[ ]` Move item between Areas or Rooms
+- `[ ]` Move item between Areas or Sections
 - `[ ]` Change item type between Task and Chore
 - `[ ]` Priority
 - `[ ]` Waiting status
@@ -71,8 +71,8 @@ Test these flows after deployment:
 7. Pause and resume a recurring chore.
 8. Skip an occurrence.
 9. Edit title, duration, recurrence, notes, and Nudge eligibility.
-10. Open House > Kitchen and confirm item rows navigate to details.
-11. Run Room Reset and confirm recurring chores advance correctly.
+10. Open House > Kitchen Section and confirm item rows navigate to details.
+11. Run Section Reset and confirm recurring chores advance correctly.
 
 ## Recommended next batch
 
@@ -88,4 +88,5 @@ The next batch should implement the full Tasks destination:
 - Sorting
 - Grouping
 - Task-detail integration
+- Task-specific creation flow
 - Empty states

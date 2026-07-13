@@ -21,7 +21,7 @@ Then open `http://localhost:8080`.
 - Four primary destinations: Today, Areas, Lists, and Tasks
 - No global floating add action
 - Mobile safe-area support
-- Outer-page scrolling disabled on mobile; normal scrolling is contained inside the app screen
+- Outer-page scrolling disabled on mobile; normal scrolling stays inside the app screen
 
 ## Today
 
@@ -34,11 +34,25 @@ Then open `http://localhost:8080`.
 
 ## Areas and Sections
 
-- Shipped default Areas
-- Template-conditioned Sections
-- Area and Section detail
-- Contextual task/chore creation
-- Due-only Section Reset
+Areas is now the recurring-routine system, not a second Tasks manager.
+
+- Only recurring Chores and maintenance appear in Areas
+- One-time Tasks remain in the Tasks destination
+- Areas overview shows total routines, due/overdue state, and the next relevant routine
+- Area detail starts with due and overdue chores across all Sections
+- Area-level checkboxes allow completion before navigating into a Section
+- Section cards show routine counts and attention state
+- Section detail groups Needs Attention, Coming Up, As Needed, and Paused
+- Large left-side checkboxes support quick completion
+- Tapping a routine opens richer Chore detail
+- Top and bottom Add Chore controls
+- Area-level entry can assign a Section
+- `Add & another` and Enter-key submission support rapid setup
+- Repeat and First Due are the primary creation controls
+- Duration and completion grading are under More Options
+- House and Car templates add missing Sections and starter chores
+- Template due dates are staggered to avoid making every starter routine due at once
+- As-needed chores remain reusable after completion
 
 ## Task and Chore details
 
@@ -61,25 +75,15 @@ Tasks and reusable List items share the same core interaction model:
 - Hold the row to lift it into a floating, dimmed reorder preview
 - A dashed placeholder shows the prospective drop position
 - Neighboring rows animate into provisional positions
-- Dragging near the screen edges supports gradual auto-scroll
-- The item above automatically becomes a Main item after successful indentation
-- Main items have a separate `+` for adding subitems
-- Subitems appear indented
-- Main items show a thin completion bar
-- Completing a Main item completes all subitems
-- Completing all subitems completes the Main item
-- Reopening one subitem reopens the Main item
-- Completed root items move below active root items
-- Completed children move below active children inside their parent
-- Show Completed / Hide Completed controls
-- Completed children remain visible beneath unfinished parents
+- Dragging near screen edges supports gradual auto-scroll
+- Main items support nested subitems and completion progress
+- Completed root items move below active items with Show/Hide Completed controls
 
 ## Task-only behavior
 
 - Task name, Main Task, and Due Date in one editor
 - Manual, A–Z, and Due ordering
 - Optional light-gray due shorthand
-- Future reversed row-order preference
 - Reorder and indent operations affect one-time Tasks only, never Chores
 
 ## List-only behavior
@@ -87,7 +91,6 @@ Tasks and reusable List items share the same core interaction model:
 - List item name, history suggestions, and Main Item in one editor
 - History suggestions during inline creation and existing-item editing
 - Completing an item updates remembered history
-- Exact active duplicates are prevented simply
 - Future preference for right-side List checkboxes
 - No sessions, quantities, units, or categories
 
@@ -110,6 +113,7 @@ mockups/prototype/
 └── scripts/
     ├── app.js
     ├── areas.js
+    ├── areas-controller.js
     ├── router.js
     ├── state.js
     ├── task-actions.js
@@ -130,17 +134,8 @@ The following remain simulated until Android development:
 - Room/DataStore persistence
 - Driving, call, meeting, and device-context detection
 
-Swipe distance, hold duration, gesture conflict handling, keyboard behavior, accessibility alternatives, and final visual polish still require native-device review.
+Phone interaction, keyboard behavior, accessibility alternatives, and final visual polish still require native-device review.
 
 ## Next implementation batch
 
-The next focused batch is the Direct Intervention prototype:
-
-- Simulate Redirect
-- Intervention screen
-- Start Task
-- Already Done
-- Different Task
-- Not Now
-- Focus Mode
-- Intervention settings and compatibility preview
+Review the redesigned Areas, House, and Kitchen paths. The next focused milestone is the Direct Intervention prototype.

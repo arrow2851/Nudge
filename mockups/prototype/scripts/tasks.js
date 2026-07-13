@@ -1,289 +1,164 @@
 import { store } from './state.js';
 import { router } from './router.js';
-import { completeItem, updateTask } from './task-actions.js';
+import { updateTask } from './task-actions.js';
 
 const screen = document.querySelector('#screen');
 const overlayRoot = document.querySelector('#overlay-root');
 const toastRoot = document.querySelector('#toast-root');
 
 const ui = {
-  search: '',
-  area: 'all',
-  type: 'all',
-  priority: 'all',
-  duration: 'all',
-  sort: 'due',
-  group: 'none',
   toastTimer: null,
-  undoTimer: null
+  undoTimer: null,
+  pendingFocusId: '',
+  drag: null
 };
 
-const views = [
-  ['inbox', 'Inbox'],
-  ['today', 'Today'],
-  ['upcoming', 'Upcoming'],
-  ['waiting', 'Waiting'],
-  ['blocked', 'Blocked'],
-  ['completed', 'Completed']
-];
+const removedPrototypeSeeds = new Set([
+  'tasks-inbox-dentist',
+  'tasks-waiting-repair',
+  'tasks-blocked-shelf',
+  'tasks-completed-filter'
+]);
 
-const priorityWeight = { high: 0, medium: 1, low: 2 };
-const dueWeight = { overdue: 0, today: 1, upcoming: 2, none: 3 };
 const esc = value => String(value ?? '').replace(/[&<>'"]/g, character => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
 }[character]));
 
-function clone(value) {
-  return JSON.parse(JSON.stringify(value));
-}
+const clone = value => JSON.parse(JSON.stringify(value));
 
-function normalizedStatus(task) {
-  if (task.completed || task.status === 'completed') return 'completed';
-  if (['inbox', 'planned', 'waiting', 'blocked'].includes(task.status)) return task.status;
-  if (task.type === 'task' && !task.due && !task.dueDate) return 'inbox';
-  return 'planned';
-}
-
-function normalizeTask(task, index = 0) {
-  const status = normalizedStatus(task);
+function normalizeChecklistTask(task, index, validIds) {
+  const invalidDue = ['Waiting', 'Blocked', 'Completed'].includes(task.due);
+  const parentTaskId = task.parentTaskId && validIds.has(task.parentTaskId) ? task.parentTaskId : '';
   return {
-    priority: 'medium',
-    status,
-    createdAt: task.createdAt || `2026-07-${String(Math.min(index + 1, 28)).padStart(2, '0')}T12:00:00.000Z`,
-    archived: false,
     ...task,
-    status,
-    completed: status === 'completed' || Boolean(task.completed)
+    status: task.completed ? 'completed' : 'planned',
+    due: invalidDue ? '' : task.due || '',
+    dueDate: invalidDue ? '' : task.dueDate || '',
+    urgency: task.completed ? 'none' : invalidDue ? 'none' : task.urgency || 'none',
+    parentTaskId,
+    isMainTask: Boolean(task.isMainTask),
+    checklistOrder: Number.isFinite(task.checklistOrder) ? task.checklistOrder : index * 10,
+    createdAt: task.createdAt || new Date(Date.now() + index).toISOString()
   };
 }
 
-function seedTasks() {
-  return [
-    {
-      id: 'tasks-inbox-dentist', title: 'Book annual dental appointment', type: 'task',
-      areaId: 'personal', subareaId: '', area: 'Personal', subarea: '', minutes: 10,
-      due: '', urgency: 'none', status: 'inbox', priority: 'medium', completed: false,
-      grading: false, recurrence: '', nudge: true, notes: '', prototypeSeed: true,
-      createdAt: '2026-07-12T14:00:00.000Z'
-    },
-    {
-      id: 'tasks-waiting-repair', title: 'Confirm car repair appointment', type: 'task',
-      areaId: 'car', subareaId: '', area: 'Car', subarea: '', minutes: 5,
-      due: 'Waiting', urgency: 'none', status: 'waiting', priority: 'medium', completed: false,
-      grading: false, recurrence: '', nudge: false, notes: 'Waiting for the mechanic to call back.', prototypeSeed: true,
-      createdAt: '2026-07-10T15:30:00.000Z'
-    },
-    {
-      id: 'tasks-blocked-shelf', title: 'Install garage storage shelf', type: 'task',
-      areaId: 'house', subareaId: 'garage', area: 'House', subarea: 'Garage', minutes: 45,
-      due: 'Blocked', urgency: 'none', status: 'blocked', priority: 'high', completed: false,
-      grading: false, recurrence: '', nudge: false, notes: 'Need wall anchors before starting.', prototypeSeed: true,
-      createdAt: '2026-07-08T18:00:00.000Z'
-    },
-    {
-      id: 'tasks-completed-filter', title: 'Order replacement air filters', type: 'task',
-      areaId: 'house', subareaId: 'general', area: 'House', subarea: 'General House', minutes: 8,
-      due: 'Completed', urgency: 'none', status: 'completed', priority: 'low', completed: true,
-      completedAt: '2026-07-11T19:20:00.000Z', grading: false, recurrence: '', nudge: false,
-      notes: '', prototypeSeed: true, createdAt: '2026-07-05T16:00:00.000Z'
-    }
-  ];
-}
-
 let ensuringModel = false;
-function ensureTaskModel() {
+function ensureChecklistModel() {
   if (ensuringModel) return;
   const state = store.getState();
-  const version = Number(state.preferences?.tasksModelVersion || 0);
-  const normalized = state.tasks.map(normalizeTask);
-  const shouldSeed = version < 1;
-  const existing = new Set(normalized.map(task => task.id));
-  const additions = shouldSeed ? seedTasks().filter(task => !existing.has(task.id)) : [];
-  const changed = shouldSeed || normalized.some((task, index) => JSON.stringify(task) !== JSON.stringify(state.tasks[index]));
+  const version = Number(state.preferences?.checklistModelVersion || 0);
+  const retained = state.tasks.filter(task => !removedPrototypeSeeds.has(task.id));
+  const validIds = new Set(retained.map(task => task.id));
+  const normalized = retained.map((task, index) => normalizeChecklistTask(task, index, validIds));
+  const mainIds = new Set(normalized.filter(task => task.isMainTask).map(task => task.id));
+  const repaired = normalized.map(task => task.parentTaskId && !mainIds.has(task.parentTaskId)
+    ? { ...task, parentTaskId: '' }
+    : task);
+  const preferences = {
+    ...state.preferences,
+    checklistModelVersion: 2,
+    taskSortMode: state.preferences?.taskSortMode || 'manual',
+    showTaskDueShorthand: state.preferences?.showTaskDueShorthand === true,
+    reverseTaskItemLayout: state.preferences?.reverseTaskItemLayout === true
+  };
+  const changed = version < 2
+    || retained.length !== state.tasks.length
+    || JSON.stringify(repaired) !== JSON.stringify(state.tasks)
+    || JSON.stringify(preferences) !== JSON.stringify(state.preferences);
   if (!changed) return;
   ensuringModel = true;
-  store.setState(current => ({
-    tasks: [...normalized, ...additions],
-    preferences: { ...current.preferences, tasksModelVersion: 1 }
-  }));
+  store.setState({ tasks: repaired, preferences });
   ensuringModel = false;
 }
 
-function currentView() {
-  const [, view] = router.getRoute().split('/');
-  return views.some(([key]) => key === view) ? view : 'today';
+function taskRecords(state = store.getState()) {
+  return state.tasks.filter(task => task.type === 'task' && !task.archived);
 }
 
-function countForView(tasks, view) {
-  return tasks.filter(task => matchesView(task, view)).length;
+function dueTimestamp(task) {
+  if (task.dueDate) return new Date(`${task.dueDate}T12:00:00`).getTime();
+  if (task.due === 'Today') return new Date().setHours(12, 0, 0, 0);
+  if (task.due === 'Tomorrow') return new Date(Date.now() + 86400000).setHours(12, 0, 0, 0);
+  return Number.MAX_SAFE_INTEGER;
 }
 
-function matchesView(task, view) {
-  const status = normalizedStatus(task);
-  if (view === 'inbox') return status === 'inbox' && !task.archived;
-  if (view === 'today') return status === 'planned' && !task.paused && ['today', 'overdue'].includes(task.urgency);
-  if (view === 'upcoming') return status === 'planned' && !task.paused && task.urgency === 'upcoming';
-  if (view === 'waiting') return status === 'waiting';
-  if (view === 'blocked') return status === 'blocked';
-  if (view === 'completed') return status === 'completed';
-  return false;
+function sortedSiblings(tasks, parentTaskId = '') {
+  const mode = store.getState().preferences?.taskSortMode || 'manual';
+  return tasks
+    .filter(task => (task.parentTaskId || '') === parentTaskId)
+    .sort((a, b) => {
+      const completion = Number(a.completed) - Number(b.completed);
+      if (completion) return completion;
+      if (mode === 'alphabetical') return (a.title || '').localeCompare(b.title || '');
+      if (mode === 'due') return dueTimestamp(a) - dueTimestamp(b) || (a.title || '').localeCompare(b.title || '');
+      return Number(a.checklistOrder || 0) - Number(b.checklistOrder || 0)
+        || new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+    });
 }
 
-function matchesFilters(task) {
-  const text = `${task.title} ${task.area || ''} ${task.subarea || ''} ${task.notes || ''}`.toLowerCase();
-  if (ui.search && !text.includes(ui.search.toLowerCase())) return false;
-  if (ui.area !== 'all' && task.areaId !== ui.area) return false;
-  if (ui.type !== 'all' && task.type !== ui.type) return false;
-  if (ui.priority !== 'all' && task.priority !== ui.priority) return false;
-  if (ui.duration === 'quick' && Number(task.minutes || 0) > 10) return false;
-  if (ui.duration === 'medium' && (Number(task.minutes || 0) <= 10 || Number(task.minutes || 0) > 30)) return false;
-  if (ui.duration === 'long' && Number(task.minutes || 0) <= 30) return false;
-  return true;
-}
-
-function dueSortValue(task) {
-  const urgency = dueWeight[task.urgency] ?? 3;
-  const date = task.dueDate ? new Date(`${task.dueDate}T12:00:00`).getTime() : Number.MAX_SAFE_INTEGER;
-  return urgency * 1e15 + date;
-}
-
-function sortTasks(tasks) {
-  return [...tasks].sort((a, b) => {
-    if (ui.sort === 'priority') return (priorityWeight[a.priority] ?? 1) - (priorityWeight[b.priority] ?? 1) || dueSortValue(a) - dueSortValue(b);
-    if (ui.sort === 'shortest') return Number(a.minutes || 0) - Number(b.minutes || 0) || dueSortValue(a) - dueSortValue(b);
-    if (ui.sort === 'newest') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-    if (ui.sort === 'title') return a.title.localeCompare(b.title);
-    return dueSortValue(a) - dueSortValue(b) || (priorityWeight[a.priority] ?? 1) - (priorityWeight[b.priority] ?? 1);
-  });
-}
-
-function groupLabel(task) {
-  if (ui.group === 'area') return task.area || 'Unassigned';
-  if (ui.group === 'priority') return `${task.priority[0].toUpperCase()}${task.priority.slice(1)} priority`;
-  if (ui.group === 'date') {
-    if (task.urgency === 'overdue') return 'Overdue';
-    if (task.urgency === 'today') return 'Today';
-    if (task.urgency === 'upcoming') return task.due || 'Upcoming';
-    return 'No due date';
+function dueShorthand(task) {
+  if (store.getState().preferences?.showTaskDueShorthand !== true) return '';
+  if (!task.dueDate) {
+    if (task.due === 'Today') return 'Today';
+    if (task.due === 'Tomorrow') return '1d';
+    return '';
   }
-  return '';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const due = new Date(`${task.dueDate}T00:00:00`);
+  const days = Math.round((due - today) / 86400000);
+  if (days < 0) return `${Math.abs(days)}d late`;
+  if (days === 0) return 'Today';
+  if (days < 14) return `${days}d`;
+  return `${Math.ceil(days / 7)}w`;
 }
 
-function groupTasks(tasks) {
-  if (ui.group === 'none') return [['', tasks]];
-  const map = new Map();
-  tasks.forEach(task => {
-    const label = groupLabel(task);
-    if (!map.has(label)) map.set(label, []);
-    map.get(label).push(task);
-  });
-  return [...map.entries()];
+function progressFor(task, allTasks) {
+  const children = allTasks.filter(item => item.parentTaskId === task.id);
+  if (!children.length) return { children, percent: 0 };
+  return {
+    children,
+    percent: Math.round(children.filter(item => item.completed).length / children.length * 100)
+  };
 }
 
-function statusLabel(task) {
-  const status = normalizedStatus(task);
-  return { inbox: 'Inbox', planned: task.urgency === 'overdue' ? 'Overdue' : task.due || 'Planned', waiting: 'Waiting', blocked: 'Blocked', completed: 'Completed' }[status];
-}
-
-function taskCard(task) {
-  const location = [task.area, task.subarea].filter(Boolean).join(' › ') || 'Unassigned';
-  const canComplete = !task.completed && !['waiting', 'blocked'].includes(normalizedStatus(task));
-  return `<article class="task-card-row ${task.urgency === 'overdue' ? 'overdue' : ''}">
-    <button class="task-card-main" data-route="item/${task.id}">
-      <span class="priority-marker ${esc(task.priority)}" aria-label="${esc(task.priority)} priority"></span>
-      <span class="task-card-copy"><strong>${esc(task.title)}</strong><small>${esc(location)} · ${Number(task.minutes || 0)} min</small><span class="task-badge-row"><i>${esc(statusLabel(task))}</i><i>${task.type === 'chore' ? 'Chore' : 'Task'}</i>${task.priority === 'high' ? '<i class="high">High priority</i>' : ''}</span></span>
-      <span class="task-card-arrow">›</span>
-    </button>
-    <div class="task-card-actions">
-      ${canComplete ? `<button class="task-row-action complete" data-action="tasks-complete" data-task-id="${task.id}" aria-label="Complete ${esc(task.title)}">✓</button>` : ''}
-      <button class="task-row-action" data-action="open-task-status" data-task-id="${task.id}" aria-label="Change status for ${esc(task.title)}">•••</button>
+function checklistRow(task, allTasks, isSubtask = false) {
+  const { children, percent } = progressFor(task, allTasks);
+  const reversed = store.getState().preferences?.reverseTaskItemLayout === true;
+  const shorthand = dueShorthand(task);
+  return `<div class="checklist-card ${task.completed ? 'completed' : ''} ${isSubtask ? 'subtask-card' : ''} ${reversed ? 'reverse-layout' : ''}">
+    ${task.isMainTask && children.length ? `<span class="subtask-progress" style="width:${percent}%"></span>` : ''}
+    <div class="checklist-row">
+      <button class="task-drag-handle" data-drag-handle data-task-id="${task.id}" aria-label="Hold and drag ${esc(task.title || 'task')}"><span></span><span></span><span></span></button>
+      <button class="task-checkbox ${task.completed ? 'checked' : ''}" data-action="toggle-checklist-complete" data-task-id="${task.id}" aria-label="${task.completed ? 'Reopen' : 'Complete'} ${esc(task.title || 'task')}">${task.completed ? '✓' : ''}</button>
+      <input class="task-inline-title" data-task-title-input data-task-id="${task.id}" value="${esc(task.title || '')}" placeholder="New task" aria-label="Task name">
+      <button class="task-details-cell" data-action="open-checklist-settings" data-task-id="${task.id}" aria-label="Task settings"><span>${esc(shorthand)}</span><b>›</b></button>
+      ${task.isMainTask ? `<button class="task-subtask-add" data-action="add-subtask" data-task-id="${task.id}" aria-label="Add subtask to ${esc(task.title || 'main task')}">+</button>` : ''}
     </div>
-  </article>`;
+  </div>`;
 }
 
-function emptyState(view, filtered) {
-  const copy = filtered
-    ? ['No matching items', 'Try clearing a filter or changing your search.']
-    : {
-        inbox: ['Inbox is clear', 'New unscheduled tasks will appear here.'],
-        today: ['Nothing due today', 'There are no open or overdue items in this view.'],
-        upcoming: ['Nothing upcoming', 'Scheduled work will appear here.'],
-        waiting: ['Nothing waiting', 'Tasks that depend on someone else will appear here.'],
-        blocked: ['Nothing blocked', 'Tasks that cannot proceed will appear here.'],
-        completed: ['No completed items', 'Finished work will appear here.']
-      }[view];
-  return `<div class="tasks-empty"><span>✓</span><h2>${copy[0]}</h2><p>${copy[1]}</p>${filtered ? '<button class="button" data-action="clear-task-filters">Clear filters</button>' : ''}</div>`;
-}
-
-function activeFilterCount() {
-  return [ui.area, ui.type, ui.priority, ui.duration].filter(value => value !== 'all').length;
+function taskTree(task, allTasks) {
+  const children = sortedSiblings(allTasks, task.id);
+  return `<div class="checklist-shell ${task.isMainTask ? 'main-task-shell' : ''}" data-task-id="${task.id}">
+    ${checklistRow(task, allTasks)}
+    ${children.length ? `<div class="subtask-list">${children.map(child => `<div class="checklist-shell" data-task-id="${child.id}">${checklistRow(child, allTasks, true)}</div>`).join('')}</div>` : ''}
+  </div>`;
 }
 
 function renderTasks() {
   if (router.getRoute().split('/')[0] !== 'tasks') return;
   const state = store.getState();
-  const view = currentView();
-  const allTasks = state.tasks.filter(task => !task.archived);
-  const viewTasks = allTasks.filter(task => matchesView(task, view));
-  const visible = sortTasks(viewTasks.filter(matchesFilters));
-  const groups = groupTasks(visible);
-  const filtered = Boolean(ui.search || activeFilterCount());
-  const date = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
-
-  screen.innerHTML = `<header class="page-header tasks-header"><div><p class="eyebrow">${date}</p><h1>Tasks</h1><p>Plan, track, and resolve actionable work.</p></div><button class="button primary compact-button" data-action="open-task-create">+ Add task</button></header>
-    <nav class="task-view-tabs" aria-label="Task views">${views.map(([key, label]) => `<button class="${view === key ? 'active' : ''}" data-route="tasks/${key}"><span>${label}</span><b>${countForView(allTasks, key)}</b></button>`).join('')}</nav>
-    <div class="task-search-row"><label class="task-search"><span>⌕</span><input id="task-search-input" value="${esc(ui.search)}" placeholder="Search this view" aria-label="Search tasks"></label><button class="task-control ${activeFilterCount() ? 'active' : ''}" data-action="open-task-filters">Filter${activeFilterCount() ? ` (${activeFilterCount()})` : ''}</button><button class="task-control" data-action="open-task-sort">Sort</button></div>
-    <div class="tasks-result-summary"><span>${visible.length} ${visible.length === 1 ? 'item' : 'items'}</span><span>${esc(ui.sort === 'due' ? 'Due order' : ui.sort)}${ui.group !== 'none' ? ` · Grouped by ${esc(ui.group)}` : ''}</span></div>
-    <div class="task-groups">${visible.length ? groups.map(([label, tasks]) => `<section class="task-group">${label ? `<div class="task-group-heading"><h2>${esc(label)}</h2><span>${tasks.length}</span></div>` : ''}<div class="task-card-list">${tasks.map(taskCard).join('')}</div></section>`).join('') : emptyState(view, filtered)}</div>`;
-}
-
-function sectionOptions(state, areaId, selected = '') {
-  const area = state.areas.find(item => item.id === areaId);
-  return `<option value="">No section</option>${(area?.subareas || []).filter(item => !item.archived).map(item => `<option value="${item.id}" ${item.id === selected ? 'selected' : ''}>${item.icon} ${esc(item.name)}</option>`).join('')}`;
-}
-
-function taskCreateSheet() {
-  const state = store.getState();
-  return `<div class="sheet-backdrop" data-action="close-sheet"><section class="sheet task-create-sheet" data-sheet role="dialog" aria-modal="true"><div class="sheet-handle"></div><header class="sheet-header"><div><p class="eyebrow">Tasks</p><h2>Add a one-time task</h2></div><button class="icon-button" data-action="close-sheet" aria-label="Close">✕</button></header>
-    <div class="field"><label for="create-task-title">Task</label><input class="input" id="create-task-title" placeholder="Return package" autocomplete="off"></div>
-    <div class="two-field-grid"><div class="field"><label for="create-task-status">Starting status</label><select class="input" id="create-task-status"><option value="inbox">Inbox</option><option value="planned">Planned</option><option value="waiting">Waiting</option><option value="blocked">Blocked</option></select></div><div class="field"><label for="create-task-priority">Priority</label><select class="input" id="create-task-priority"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select></div></div>
-    <div class="two-field-grid"><div class="field"><label for="create-task-due">Due</label><select class="input" id="create-task-due"><option value="none">No due date</option><option value="today">Today</option><option value="tomorrow">Tomorrow</option><option value="weekend">This weekend</option><option value="custom">Choose date</option></select></div><div class="field"><label for="create-task-date">Date</label><input class="input" id="create-task-date" type="date" disabled></div></div>
-    <div class="two-field-grid"><div class="field"><label for="create-task-area">Area</label><select class="input" id="create-task-area"><option value="">Unassigned</option>${state.areas.filter(area => !area.archived).map(area => `<option value="${area.id}">${area.icon} ${esc(area.name)}</option>`).join('')}</select></div><div class="field"><label for="create-task-section">Section</label><select class="input" id="create-task-section" disabled><option value="">No section</option></select></div></div>
-    <div class="field"><label for="create-task-minutes">Estimated minutes</label><input class="input" id="create-task-minutes" type="number" min="1" value="10"></div>
-    <div class="field"><label for="create-task-notes">Notes</label><textarea class="input textarea" id="create-task-notes" placeholder="Optional context"></textarea></div>
-    <label class="toggle-row"><span><strong>Include in nudges</strong><small>Allow this task to be suggested later</small></span><input id="create-task-nudge" type="checkbox" checked></label>
-    <button class="button primary block" data-action="save-created-task">Add task</button>
-  </section></div>`;
-}
-
-function filterSheet() {
-  const state = store.getState();
-  return `<div class="sheet-backdrop" data-action="close-sheet"><section class="sheet" data-sheet><div class="sheet-handle"></div><header class="sheet-header"><div><p class="eyebrow">Tasks</p><h2>Filter this view</h2></div><button class="icon-button" data-action="close-sheet">✕</button></header>
-    <div class="field"><label for="task-filter-area">Area</label><select class="input" id="task-filter-area"><option value="all">All areas</option>${state.areas.filter(area => !area.archived).map(area => `<option value="${area.id}" ${ui.area === area.id ? 'selected' : ''}>${area.icon} ${esc(area.name)}</option>`).join('')}</select></div>
-    <div class="field"><label for="task-filter-type">Type</label><select class="input" id="task-filter-type"><option value="all">Tasks and chores</option><option value="task" ${ui.type === 'task' ? 'selected' : ''}>Tasks only</option><option value="chore" ${ui.type === 'chore' ? 'selected' : ''}>Chores only</option></select></div>
-    <div class="field"><label for="task-filter-priority">Priority</label><select class="input" id="task-filter-priority"><option value="all">All priorities</option>${['high', 'medium', 'low'].map(value => `<option value="${value}" ${ui.priority === value ? 'selected' : ''}>${value[0].toUpperCase()}${value.slice(1)}</option>`).join('')}</select></div>
-    <div class="field"><label for="task-filter-duration">Duration</label><select class="input" id="task-filter-duration"><option value="all">Any duration</option><option value="quick" ${ui.duration === 'quick' ? 'selected' : ''}>10 minutes or less</option><option value="medium" ${ui.duration === 'medium' ? 'selected' : ''}>11–30 minutes</option><option value="long" ${ui.duration === 'long' ? 'selected' : ''}>More than 30 minutes</option></select></div>
-    <div class="sheet-action-row"><button class="button" data-action="clear-task-filters">Clear</button><button class="button primary" data-action="apply-task-filters">Apply filters</button></div>
-  </section></div>`;
-}
-
-function sortSheet() {
-  return `<div class="sheet-backdrop" data-action="close-sheet"><section class="sheet" data-sheet><div class="sheet-handle"></div><header class="sheet-header"><div><p class="eyebrow">Tasks</p><h2>Sort and group</h2></div><button class="icon-button" data-action="close-sheet">✕</button></header>
-    <div class="field"><label for="task-sort">Sort by</label><select class="input" id="task-sort">${[['due', 'Due date'], ['priority', 'Priority'], ['shortest', 'Shortest first'], ['newest', 'Recently added'], ['title', 'Title']].map(([value, label]) => `<option value="${value}" ${ui.sort === value ? 'selected' : ''}>${label}</option>`).join('')}</select></div>
-    <div class="field"><label for="task-group">Group by</label><select class="input" id="task-group">${[['none', 'No grouping'], ['date', 'Due date'], ['area', 'Area'], ['priority', 'Priority']].map(([value, label]) => `<option value="${value}" ${ui.group === value ? 'selected' : ''}>${label}</option>`).join('')}</select></div>
-    <button class="button primary block" data-action="apply-task-sort">Apply</button>
-  </section></div>`;
-}
-
-function statusSheet(taskId) {
-  const task = store.getState().tasks.find(item => item.id === taskId);
-  if (!task) return '';
-  const options = [['inbox', 'Inbox', 'Remove the due date'], ['planned', 'Planned', 'Keep it active'], ['waiting', 'Waiting', 'Depends on someone else'], ['blocked', 'Blocked', 'Cannot proceed yet']];
-  return `<div class="sheet-backdrop" data-action="close-sheet"><section class="sheet" data-sheet><div class="sheet-handle"></div><header class="sheet-header"><div><p class="eyebrow">${esc(task.title)}</p><h2>Change status</h2></div><button class="icon-button" data-action="close-sheet">✕</button></header>${options.map(([value, label, copy]) => `<button class="grade-option" data-action="set-task-status" data-task-id="${taskId}" data-status="${value}"><span class="grade-badge">${label[0]}</span><span><strong>${label}</strong><small>${copy}</small></span></button>`).join('')}</section></div>`;
-}
-
-function closeSheet() {
-  overlayRoot.innerHTML = '';
+  const tasks = taskRecords(state);
+  const roots = sortedSiblings(tasks);
+  const mode = state.preferences?.taskSortMode || 'manual';
+  screen.innerHTML = `<header class="page-header checklist-header"><div><p class="eyebrow">Checklist</p><h1>Tasks</h1><p>${tasks.filter(task => !task.completed).length} remaining</p></div><button class="icon-button checklist-top-add" data-action="add-empty-task" aria-label="Add task">+</button></header>
+    <div class="checklist-sort" role="group" aria-label="Task order">
+      ${[['manual', 'Manual'], ['alphabetical', 'A–Z'], ['due', 'Due']].map(([value, label]) => `<button class="${mode === value ? 'active' : ''}" data-action="set-checklist-sort" data-sort="${value}">${label}</button>`).join('')}
+    </div>
+    <div class="checklist-list" data-checklist-list>${roots.map(task => taskTree(task, tasks)).join('')}</div>
+    <button class="checklist-bottom-add" data-action="add-empty-task"><span>+</span> Add task</button>`;
+  focusPendingTask();
 }
 
 function showToast(message, allowUndo = false) {
@@ -294,206 +169,316 @@ function showToast(message, allowUndo = false) {
   if (allowUndo) ui.undoTimer = setTimeout(() => store.clearUndo(), 5500);
 }
 
-function dueFromForm() {
-  const choice = document.querySelector('#create-task-due')?.value || 'none';
-  const custom = document.querySelector('#create-task-date')?.value || '';
-  if (choice === 'today') return { due: 'Today', urgency: 'today', dueDate: new Date().toISOString().slice(0, 10) };
-  if (choice === 'tomorrow') {
-    const date = new Date(Date.now() + 86400000);
-    return { due: 'Tomorrow', urgency: 'upcoming', dueDate: date.toISOString().slice(0, 10) };
-  }
-  if (choice === 'weekend') return { due: 'This weekend', urgency: 'upcoming', dueDate: '' };
-  if (choice === 'custom' && custom) {
-    const target = new Date(`${custom}T12:00:00`);
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    const compare = new Date(target); compare.setHours(0, 0, 0, 0);
-    const diff = Math.round((compare - today) / 86400000);
-    return { due: diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(target), urgency: diff < 0 ? 'overdue' : diff === 0 ? 'today' : 'upcoming', dueDate: custom };
-  }
-  return { due: '', urgency: 'none', dueDate: '' };
+function closeSheet() {
+  overlayRoot.innerHTML = '';
 }
 
-function saveCreatedTask() {
-  const title = document.querySelector('#create-task-title')?.value.trim();
-  if (!title) {
-    document.querySelector('#create-task-title')?.focus();
-    showToast('Enter a task name.');
-    return;
-  }
-  let status = document.querySelector('#create-task-status')?.value || 'inbox';
-  const due = dueFromForm();
-  if (status === 'planned' && due.urgency === 'none') status = 'inbox';
-  if (status === 'inbox' && due.urgency !== 'none') status = 'planned';
-  if (['waiting', 'blocked'].includes(status)) {
-    due.due = status === 'waiting' ? 'Waiting' : 'Blocked';
-    due.urgency = 'none';
-    due.dueDate = '';
-  }
-  const state = store.getState();
-  const areaId = document.querySelector('#create-task-area')?.value || '';
-  const subareaId = document.querySelector('#create-task-section')?.value || '';
-  const area = state.areas.find(item => item.id === areaId);
-  const section = area?.subareas.find(item => item.id === subareaId);
-  store.addTask({
-    id: `task-${Date.now()}`,
-    title,
+function nextOrder(parentTaskId = '') {
+  const siblings = taskRecords().filter(task => (task.parentTaskId || '') === parentTaskId);
+  return siblings.length ? Math.max(...siblings.map(task => Number(task.checklistOrder || 0))) + 10 : 0;
+}
+
+function addBlankTask(parentTaskId = '') {
+  const current = store.getState();
+  const id = `task-${Date.now()}`;
+  const parent = current.tasks.find(task => task.id === parentTaskId);
+  const newTask = {
+    id,
+    title: '',
     type: 'task',
-    areaId,
-    subareaId,
-    area: area?.name || '',
-    subarea: section?.name || '',
-    minutes: Math.max(1, Number(document.querySelector('#create-task-minutes')?.value) || 10),
-    ...due,
-    status,
-    priority: document.querySelector('#create-task-priority')?.value || 'medium',
+    areaId: '',
+    subareaId: '',
+    area: '',
+    subarea: '',
+    minutes: 0,
+    due: '',
+    dueDate: '',
+    urgency: 'none',
+    status: 'planned',
     completed: false,
     grading: false,
     recurrence: '',
-    nudge: ['waiting', 'blocked'].includes(status) ? false : Boolean(document.querySelector('#create-task-nudge')?.checked),
-    notes: document.querySelector('#create-task-notes')?.value.trim() || '',
+    nudge: true,
+    notes: '',
+    parentTaskId: parent?.isMainTask ? parentTaskId : '',
+    isMainTask: false,
+    checklistOrder: nextOrder(parent?.isMainTask ? parentTaskId : ''),
     createdAt: new Date().toISOString()
+  };
+  store.setState({
+    tasks: [...current.tasks, newTask],
+    lastUndo: { label: 'Task added', snapshot: clone(current) }
   });
-  closeSheet();
-  router.go(status === 'inbox' ? 'tasks/inbox' : status === 'waiting' ? 'tasks/waiting' : status === 'blocked' ? 'tasks/blocked' : due.urgency === 'upcoming' ? 'tasks/upcoming' : 'tasks/today');
-  showToast(`${title} added.`, true);
+  ui.pendingFocusId = id;
+  requestAnimationFrame(renderTasks);
 }
 
-function setStatus(taskId, status) {
-  const changes = { status, completed: status === 'completed' };
-  if (status === 'inbox') Object.assign(changes, { due: '', dueDate: '', urgency: 'none', snoozedUntil: '' });
-  if (status === 'planned') {
-    const task = store.getState().tasks.find(item => item.id === taskId);
-    Object.assign(changes, task?.due ? { urgency: task.urgency === 'none' ? 'today' : task.urgency } : { due: 'Today', urgency: 'today' });
-  }
-  if (status === 'waiting') Object.assign(changes, { due: 'Waiting', dueDate: '', urgency: 'none', nudge: false });
-  if (status === 'blocked') Object.assign(changes, { due: 'Blocked', dueDate: '', urgency: 'none', nudge: false });
-  updateTask(taskId, changes);
-  closeSheet();
-  showToast('Status updated.', true);
+function focusPendingTask() {
+  if (!ui.pendingFocusId) return;
+  const input = screen.querySelector(`[data-task-title-input][data-task-id="${ui.pendingFocusId}"]`);
+  if (!input) return;
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+  ui.pendingFocusId = '';
 }
 
-function saveExtendedEdit(taskId) {
-  const title = document.querySelector('#edit-task-title')?.value.trim();
-  if (!title) {
-    showToast('Enter a title.');
+function saveInlineTitle(input) {
+  const taskId = input.dataset.taskId;
+  const task = store.getState().tasks.find(item => item.id === taskId);
+  if (!task || input.value === task.title) return;
+  updateTask(taskId, { title: input.value });
+}
+
+function toggleComplete(taskId) {
+  const current = store.getState();
+  const task = current.tasks.find(item => item.id === taskId);
+  if (!task) return;
+  const completed = !task.completed;
+  const updated = {
+    ...task,
+    completed,
+    status: completed ? 'completed' : 'planned',
+    completedAt: completed ? new Date().toISOString() : '',
+    urgency: completed ? 'none' : task.dueDate ? task.urgency || 'upcoming' : task.due === 'Today' ? 'today' : task.due === 'Tomorrow' ? 'upcoming' : 'none'
+  };
+  store.setState(state => ({
+    tasks: state.tasks.map(item => item.id === taskId ? updated : item),
+    activity: [{ id: `activity-${Date.now()}`, title: task.title || 'Untitled task', detail: completed ? 'Completed' : 'Reopened', time: 'Just now', icon: completed ? '✓' : '↶' }, ...state.activity].slice(0, 8),
+    lastUndo: { label: completed ? 'Task completed' : 'Task reopened', snapshot: clone(current) }
+  }));
+  showToast(completed ? 'Task completed.' : 'Task reopened.', true);
+}
+
+function checklistSettingsSheet(taskId) {
+  const task = store.getState().tasks.find(item => item.id === taskId);
+  if (!task) return '';
+  const hasDue = Boolean(task.dueDate || task.due);
+  const isSubtask = Boolean(task.parentTaskId);
+  return `<div class="sheet-backdrop" data-action="close-sheet"><section class="sheet checklist-settings-sheet" data-sheet role="dialog" aria-modal="true"><div class="sheet-handle"></div><header class="sheet-header"><div><p class="eyebrow">Task settings</p><h2>${esc(task.title || 'Untitled task')}</h2></div><button class="icon-button" data-action="close-sheet" aria-label="Close">✕</button></header>
+    <label class="toggle-row ${isSubtask ? 'disabled-setting' : ''}"><span><strong>Main task</strong><small>${isSubtask ? 'Move this task out before making it a main task.' : task.isMainTask ? 'This task can contain subtasks.' : 'Allow subtasks under this task.'}</small></span><input type="checkbox" data-action="toggle-main-task" data-task-id="${task.id}" ${task.isMainTask ? 'checked' : ''} ${isSubtask ? 'disabled' : ''}></label>
+    <div class="simple-setting-block"><div><strong>Due date</strong><small>${hasDue ? esc(task.due || task.dueDate) : 'No due date'}</small></div>${hasDue ? `<div class="simple-setting-actions"><button class="button" data-action="clear-task-due" data-task-id="${task.id}">Clear</button><button class="button primary" data-action="open-task-date-picker" data-task-id="${task.id}">Change</button></div>` : `<button class="button primary block" data-action="open-task-date-picker" data-task-id="${task.id}">Set due date</button>`}</div>
+  </section></div>`;
+}
+
+function datePickerSheet(taskId) {
+  const task = store.getState().tasks.find(item => item.id === taskId);
+  if (!task) return '';
+  return `<div class="sheet-backdrop" data-action="close-sheet"><section class="sheet" data-sheet role="dialog" aria-modal="true"><div class="sheet-handle"></div><header class="sheet-header"><div><p class="eyebrow">Due date</p><h2>${esc(task.title || 'Untitled task')}</h2></div><button class="icon-button" data-action="close-sheet">✕</button></header><div class="field"><label for="checklist-due-date">Date</label><input class="input" id="checklist-due-date" type="date" value="${esc(task.dueDate || '')}"></div><button class="button primary block" data-action="save-task-due" data-task-id="${task.id}">Save due date</button></section></div>`;
+}
+
+function dateLabel(isoDate) {
+  const date = new Date(`${isoDate}T12:00:00`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const compare = new Date(date);
+  compare.setHours(0, 0, 0, 0);
+  const days = Math.round((compare - today) / 86400000);
+  if (days === 0) return { due: 'Today', urgency: 'today' };
+  if (days === 1) return { due: 'Tomorrow', urgency: 'upcoming' };
+  return {
+    due: new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(date),
+    urgency: days < 0 ? 'overdue' : 'upcoming'
+  };
+}
+
+function saveDueDate(taskId) {
+  const isoDate = document.querySelector('#checklist-due-date')?.value;
+  if (!isoDate) {
+    showToast('Choose a date.');
     return;
   }
-  const state = store.getState();
-  const areaId = document.querySelector('#edit-task-area')?.value || '';
-  const subareaId = document.querySelector('#edit-task-section')?.value || '';
-  const area = state.areas.find(item => item.id === areaId);
-  const section = area?.subareas.find(item => item.id === subareaId);
-  const status = document.querySelector('#edit-task-status')?.value || normalizedStatus(state.tasks.find(item => item.id === taskId) || {});
-  updateTask(taskId, {
-    title,
-    minutes: Math.max(1, Number(document.querySelector('#edit-task-minutes')?.value) || 5),
-    recurrence: document.querySelector('#edit-task-recurrence')?.value || '',
-    notes: document.querySelector('#edit-task-notes')?.value.trim() || '',
-    nudge: Boolean(document.querySelector('#edit-task-nudge')?.checked),
-    priority: document.querySelector('#edit-task-priority')?.value || 'medium',
-    status,
-    completed: status === 'completed',
-    areaId,
-    subareaId,
-    area: area?.name || '',
-    subarea: section?.name || ''
+  const label = dateLabel(isoDate);
+  updateTask(taskId, { dueDate: isoDate, due: label.due, urgency: label.urgency, status: 'planned', completed: false });
+  closeSheet();
+  showToast('Due date saved.', true);
+}
+
+function clearDueDate(taskId) {
+  updateTask(taskId, { dueDate: '', due: '', urgency: 'none' });
+  closeSheet();
+  showToast('Due date cleared.', true);
+}
+
+function toggleMainTask(taskId, enabled) {
+  const current = store.getState();
+  const task = current.tasks.find(item => item.id === taskId);
+  if (!task || task.parentTaskId) return;
+  const children = current.tasks.filter(item => item.parentTaskId === taskId);
+  const rootOrder = Number(task.checklistOrder || 0);
+  const updatedTasks = current.tasks.map(item => {
+    if (item.id === taskId) return { ...item, isMainTask: enabled };
+    if (!enabled && item.parentTaskId === taskId) {
+      const offset = children.findIndex(child => child.id === item.id) + 1;
+      return { ...item, parentTaskId: '', checklistOrder: rootOrder + offset };
+    }
+    return item;
+  });
+  store.setState({
+    tasks: updatedTasks,
+    lastUndo: { label: enabled ? 'Main task enabled' : 'Subtasks released', snapshot: clone(current) }
   });
   closeSheet();
-  showToast('Changes saved.', true);
+  showToast(enabled ? 'Main task enabled.' : children.length ? 'Subtasks moved into the main checklist.' : 'Main task disabled.', true);
 }
 
-function refreshSectionSelect(areaSelectId, sectionSelectId, selected = '') {
-  const areaId = document.querySelector(`#${areaSelectId}`)?.value || '';
-  const select = document.querySelector(`#${sectionSelectId}`);
-  if (!select) return;
-  select.innerHTML = sectionOptions(store.getState(), areaId, selected);
-  select.disabled = !areaId;
+function reindex(tasks, parentTaskId) {
+  const siblings = tasks
+    .filter(task => (task.parentTaskId || '') === parentTaskId)
+    .sort((a, b) => Number(a.checklistOrder || 0) - Number(b.checklistOrder || 0));
+  const order = new Map(siblings.map((task, index) => [task.id, index * 10]));
+  return tasks.map(task => order.has(task.id) ? { ...task, checklistOrder: order.get(task.id) } : task);
 }
 
-function clearFilters() {
-  ui.area = 'all';
-  ui.type = 'all';
-  ui.priority = 'all';
-  ui.duration = 'all';
-  ui.search = '';
-  closeSheet();
-  renderTasks();
+function moveTask(draggedId, targetId, dropAsChild) {
+  const current = store.getState();
+  const dragged = current.tasks.find(task => task.id === draggedId);
+  const target = current.tasks.find(task => task.id === targetId);
+  if (!dragged || !target || dragged.id === target.id) return;
+  const draggedChildren = current.tasks.filter(task => task.parentTaskId === dragged.id);
+  if (dropAsChild && dragged.isMainTask && draggedChildren.length) {
+    showToast('A main task with subtasks cannot become a subtask.');
+    return;
+  }
+  const oldParent = dragged.parentTaskId || '';
+  const newParent = dropAsChild && target.isMainTask
+    ? target.id
+    : target.parentTaskId || '';
+  let tasks = current.tasks.map(task => task.id === draggedId ? { ...task, parentTaskId: newParent, isMainTask: newParent ? false : task.isMainTask } : task);
+  const siblings = tasks
+    .filter(task => task.id !== draggedId && (task.parentTaskId || '') === newParent)
+    .sort((a, b) => Number(a.checklistOrder || 0) - Number(b.checklistOrder || 0));
+  const targetIndex = siblings.findIndex(task => task.id === targetId);
+  const insertion = dropAsChild && target.isMainTask ? siblings.length : Math.max(0, targetIndex);
+  siblings.splice(insertion, 0, tasks.find(task => task.id === draggedId));
+  const newOrders = new Map(siblings.map((task, index) => [task.id, index * 10]));
+  tasks = tasks.map(task => newOrders.has(task.id) ? { ...task, checklistOrder: newOrders.get(task.id) } : task);
+  tasks = reindex(tasks, oldParent);
+  store.setState({
+    tasks,
+    preferences: { ...current.preferences, taskSortMode: 'manual' },
+    lastUndo: { label: 'Task moved', snapshot: clone(current) }
+  });
+  showToast(newParent ? 'Task moved under main task.' : 'Task moved.', true);
 }
 
-function handleClick(event) {
-  const target = event.target.closest('[data-action]');
-  if (!target) return;
-  const action = target.dataset.action;
-  if (action === 'open-task-create') {
-    overlayRoot.innerHTML = taskCreateSheet();
-    requestAnimationFrame(() => document.querySelector('#create-task-title')?.focus());
-  }
-  if (action === 'save-created-task') saveCreatedTask();
-  if (action === 'open-task-filters') overlayRoot.innerHTML = filterSheet();
-  if (action === 'apply-task-filters') {
-    ui.area = document.querySelector('#task-filter-area')?.value || 'all';
-    ui.type = document.querySelector('#task-filter-type')?.value || 'all';
-    ui.priority = document.querySelector('#task-filter-priority')?.value || 'all';
-    ui.duration = document.querySelector('#task-filter-duration')?.value || 'all';
-    closeSheet();
-    renderTasks();
-  }
-  if (action === 'clear-task-filters') clearFilters();
-  if (action === 'open-task-sort') overlayRoot.innerHTML = sortSheet();
-  if (action === 'apply-task-sort') {
-    ui.sort = document.querySelector('#task-sort')?.value || 'due';
-    ui.group = document.querySelector('#task-group')?.value || 'none';
-    closeSheet();
-    renderTasks();
-  }
-  if (action === 'open-task-status') overlayRoot.innerHTML = statusSheet(target.dataset.taskId);
-  if (action === 'set-task-status') setStatus(target.dataset.taskId, target.dataset.status);
-  if (action === 'tasks-complete') {
-    const task = store.getState().tasks.find(item => item.id === target.dataset.taskId);
-    if (task && completeItem(task.id)) showToast(`${task.title} completed.`, true);
-  }
-  if (action === 'tasks-undo') {
-    if (store.undoLast()) showToast('Last change undone.');
-  }
+function clearDropClasses() {
+  screen.querySelectorAll('.drop-before, .drop-child, .dragging').forEach(element => element.classList.remove('drop-before', 'drop-child', 'dragging'));
 }
 
-document.addEventListener('click', handleClick);
-document.addEventListener('click', event => {
-  const target = event.target.closest('[data-action="save-task-edit"]');
-  if (!target) return;
+function beginDrag(taskId, pointerId, source) {
+  const shell = source.closest('.checklist-shell');
+  if (!shell) return;
+  ui.drag = { taskId, pointerId, source, shell, targetId: '', dropAsChild: false, active: true };
+  shell.classList.add('dragging');
+  source.setPointerCapture?.(pointerId);
+  document.body.classList.add('checklist-dragging');
+}
+
+function updateDrag(event) {
+  if (!ui.drag?.active || event.pointerId !== ui.drag.pointerId) return;
   event.preventDefault();
-  event.stopImmediatePropagation();
-  saveExtendedEdit(target.dataset.taskId);
-}, true);
+  screen.querySelectorAll('.drop-before, .drop-child').forEach(element => element.classList.remove('drop-before', 'drop-child'));
+  const element = document.elementFromPoint(event.clientX, event.clientY);
+  const shell = element?.closest('.checklist-shell[data-task-id]');
+  if (!shell || shell.dataset.taskId === ui.drag.taskId) {
+    ui.drag.targetId = '';
+    return;
+  }
+  const target = store.getState().tasks.find(task => task.id === shell.dataset.taskId);
+  const card = shell.querySelector(':scope > .checklist-card');
+  const rect = card?.getBoundingClientRect();
+  const dropAsChild = Boolean(target?.isMainTask && rect && event.clientY > rect.top + rect.height * .55);
+  shell.classList.add(dropAsChild ? 'drop-child' : 'drop-before');
+  ui.drag.targetId = shell.dataset.taskId;
+  ui.drag.dropAsChild = dropAsChild;
+}
 
-document.addEventListener('input', event => {
-  if (event.target.id === 'task-search-input') {
-    ui.search = event.target.value;
-    renderTasks();
-    requestAnimationFrame(() => {
-      const input = document.querySelector('#task-search-input');
-      if (input) {
-        input.focus();
-        input.setSelectionRange(ui.search.length, ui.search.length);
-      }
-    });
+function endDrag(event) {
+  if (!ui.drag || event.pointerId !== ui.drag.pointerId) return;
+  clearTimeout(ui.drag.timer);
+  const { active, taskId, targetId, dropAsChild, source } = ui.drag;
+  source.releasePointerCapture?.(event.pointerId);
+  clearDropClasses();
+  document.body.classList.remove('checklist-dragging');
+  ui.drag = null;
+  if (active && targetId) moveTask(taskId, targetId, dropAsChild);
+}
+
+function cancelPendingDrag() {
+  if (!ui.drag || ui.drag.active) return;
+  clearTimeout(ui.drag.timer);
+  ui.drag = null;
+}
+
+document.addEventListener('pointerdown', event => {
+  const handle = event.target.closest('[data-drag-handle]');
+  if (!handle || router.getRoute().split('/')[0] !== 'tasks') return;
+  const taskId = handle.dataset.taskId;
+  ui.drag = {
+    active: false,
+    taskId,
+    pointerId: event.pointerId,
+    source: handle,
+    startX: event.clientX,
+    startY: event.clientY,
+    timer: setTimeout(() => beginDrag(taskId, event.pointerId, handle), 180)
+  };
+});
+
+document.addEventListener('pointermove', event => {
+  if (!ui.drag) return;
+  if (!ui.drag.active) {
+    const distance = Math.hypot(event.clientX - ui.drag.startX, event.clientY - ui.drag.startY);
+    if (distance > 8) cancelPendingDrag();
+    return;
+  }
+  updateDrag(event);
+}, { passive: false });
+
+document.addEventListener('pointerup', endDrag);
+document.addEventListener('pointercancel', endDrag);
+
+document.addEventListener('focusout', event => {
+  if (event.target.matches('[data-task-title-input]')) saveInlineTitle(event.target);
+});
+
+document.addEventListener('keydown', event => {
+  if (!event.target.matches('[data-task-title-input]')) return;
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    event.target.blur();
+  }
+  if (event.key === 'Escape') {
+    const task = store.getState().tasks.find(item => item.id === event.target.dataset.taskId);
+    event.target.value = task?.title || '';
+    event.target.blur();
   }
 });
 
-document.addEventListener('change', event => {
-  if (event.target.id === 'create-task-area') refreshSectionSelect('create-task-area', 'create-task-section');
-  if (event.target.id === 'create-task-due') {
-    const date = document.querySelector('#create-task-date');
-    if (date) date.disabled = event.target.value !== 'custom';
+document.addEventListener('click', event => {
+  const target = event.target.closest('[data-action]');
+  if (!target || router.getRoute().split('/')[0] !== 'tasks') return;
+  const action = target.dataset.action;
+  if (action === 'add-empty-task') addBlankTask();
+  if (action === 'add-subtask') addBlankTask(target.dataset.taskId);
+  if (action === 'toggle-checklist-complete') toggleComplete(target.dataset.taskId);
+  if (action === 'open-checklist-settings') overlayRoot.innerHTML = checklistSettingsSheet(target.dataset.taskId);
+  if (action === 'toggle-main-task') toggleMainTask(target.dataset.taskId, target.checked);
+  if (action === 'open-task-date-picker') overlayRoot.innerHTML = datePickerSheet(target.dataset.taskId);
+  if (action === 'save-task-due') saveDueDate(target.dataset.taskId);
+  if (action === 'clear-task-due') clearDueDate(target.dataset.taskId);
+  if (action === 'set-checklist-sort') {
+    store.updatePreferences({ taskSortMode: target.dataset.sort });
+    renderTasks();
   }
-  if (event.target.id === 'edit-task-area') refreshSectionSelect('edit-task-area', 'edit-task-section');
+  if (action === 'tasks-undo' && store.undoLast()) showToast('Last change undone.');
 });
 
 window.addEventListener('hashchange', () => requestAnimationFrame(renderTasks));
 store.subscribe(() => {
-  ensureTaskModel();
+  ensureChecklistModel();
   requestAnimationFrame(renderTasks);
 });
 
-ensureTaskModel();
+ensureChecklistModel();
 requestAnimationFrame(renderTasks);

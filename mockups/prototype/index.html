@@ -20,16 +20,17 @@
   <div class="prototype-shell">
     <aside class="review-panel" aria-label="Prototype controls">
       <div class="brand-lockup"><span class="brand-mark">N</span><div><strong>Nudge</strong><small>Interactive product prototype</small></div></div>
-      <p class="review-copy">Tasks and List items now use visible mobile gestures: swipe right to indent, and hold to lift an item into a floating reorder preview with a live placeholder.</p>
+      <p class="review-copy">Areas now focus only on recurring chores and maintenance: see where attention is needed, check routines off quickly, and use templates or Add & another for larger setup.</p>
       <div class="review-actions">
-        <button class="review-button primary" data-route="lists/groceries">Review Groceries</button>
+        <button class="review-button primary" data-route="areas">Review Areas redesign</button>
+        <button class="review-button" data-route="areas/house">Review House</button>
+        <button class="review-button" data-route="areas/house/kitchen">Review Kitchen</button>
         <button class="review-button" data-route="tasks">Review Tasks checklist</button>
-        <button class="review-button" data-route="lists">Review Lists</button>
-        <button class="review-button" data-route="areas">Review Areas</button>
+        <button class="review-button" data-route="lists/groceries">Review Groceries</button>
         <button class="review-button" data-route="today">Review Today</button>
         <button class="review-button subtle" data-action="reset-demo">Reset demo data</button>
       </div>
-      <div class="prototype-note"><span></span><p><strong>Prototype only.</strong> The mobile shell now uses the full dynamic viewport and locks app scrolling while a gesture is active.</p></div>
+      <div class="prototype-note"><span></span><p><strong>Product boundary:</strong> one-time Tasks remain in Tasks even when they reference an Area. Areas displays and creates recurring chores only.</p></div>
     </aside>
     <main class="device" aria-label="Nudge mobile prototype">
       <div class="camera-pill" aria-hidden="true"></div>
@@ -40,6 +41,7 @@
     </main>
   </div>
   <script type="module" src="scripts/app.js"></script>
+  <script type="module" src="scripts/areas-controller.js"></script>
   <script type="module" src="scripts/tasks.js"></script>
   <script type="module" src="scripts/lists.js"></script>
   <script type="module" src="scripts/checklist-gestures-v3.js"></script>

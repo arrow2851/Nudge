@@ -37,10 +37,10 @@ The interactive browser prototype is live and under active feature-by-feature de
 - Preference flags for optional due shorthand and reversed task-row order
 - Reusable Lists collection and list-detail routes
 - Dedicated list creation and list-item entry
-- Remembered suggestions ranked by reuse history
-- Quantity, unit, category, and duplicate handling
-- Checked items removed from active lists and retained in the remembered catalog
-- Optional persisted shopping/list sessions with completion summaries
+- Checkbox-left, editable-text reusable list items with no right-side item controls
+- Hold-and-drag active list ordering
+- Checked items removed from active lists and retained as remembered suggestions
+- Simple exact-duplicate prevention
 
 ## Product pillars
 
@@ -110,7 +110,7 @@ nudge/
 
 ## Immediate next step
 
-Review the first reusable Lists slice after deployment. The next major build milestone is the Direct Intervention prototype: simulated redirect, intervention choices, alternative tasks, Not Now behavior, Focus Mode, and intervention settings/compatibility previews.
+Review the simplified reusable Lists slice after deployment. The next major build milestone is the Direct Intervention prototype: simulated redirect, intervention choices, alternative tasks, Not Now behavior, Focus Mode, and intervention settings/compatibility previews.
 
 ## License
 

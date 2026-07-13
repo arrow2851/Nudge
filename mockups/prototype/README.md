@@ -71,10 +71,15 @@ http://localhost:8080
 - One checklist instead of workflow tabs
 - `+` at the top right
 - `+ Add task` below the checklist
-- Both controls create a blank focused task
-- Inline task-name editing
-- Separate drag handle and completion checkbox
-- Compact details cell with optional due shorthand and `>`
+- Both controls create a blank task and open the bottom-sheet editor
+- Checkbox on the left by default
+- Tappable task text area
+- No permanent drag handle
+- No permanent `>` details button
+- Task name, Main Task, and Due Date share one bottom-sheet editor
+- Optional light-gray due shorthand on the far right of the task text area
+- Task title and due shorthand use separate layout columns and do not overlap
+- Hold the task row to reorder it
 - Manual ordering by default
 - Alphabetical ordering
 - Due-date ordering with alphabetical secondary sorting
@@ -82,11 +87,9 @@ http://localhost:8080
 - Separate subtask-add segment for main tasks
 - Nested subtasks
 - Thin main-task progress bar based on completed subtasks
-- Hold-and-drag reordering
 - Drag onto a main task to create a subtask
 - Drag a subtask back among root tasks to release it
 - Turning off Main Task releases all subtasks into the root checklist
-- Simple task settings containing Main Task and Due Date only
 - Due-date Set, Change, and Clear actions
 - Preference flags for due shorthand and reversed row layout
 - Completed tasks remain visible below active tasks for the current review version
@@ -94,14 +97,19 @@ http://localhost:8080
 ## Reusable Lists
 
 - Reusable-list collection with top and bottom New List actions
-- Dedicated list-item entry field
-- Checkbox on the left of every active item
+- `+` at the top right of each list
+- `+ Add item` below the active items
+- Both controls create a blank inline-editable item
+- No permanent Add Item input section
+- Checkbox on the left of every active item by default
+- Future preference support for moving List checkboxes to the right
 - No right-side per-item controls
 - Tap item text to edit inline
+- Clean remembered-history suggestions appear directly below the item being edited
+- Suggestions filter while typing and fill the active row when selected
 - Hold an item to reorder it
 - Checked items disappear from the active list
 - Checked names remain remembered for later suggestions
-- Compact remembered suggestions
 - Simple exact-duplicate prevention
 - No shopping or list-session mode
 - No quantity, unit, category, or active-item detail sheet
@@ -111,8 +119,8 @@ http://localhost:8080
 Each main destination owns its own creation experience:
 
 - Areas and Sections create tasks or chores in context.
-- Tasks creates blank checklist items inline.
-- Lists creates reusable lists and simple active list items.
+- Tasks creates blank checklist items and opens their lightweight editor.
+- Lists creates reusable lists and blank inline list items.
 - The former generic Quick Add flow is intentionally removed.
 
 ## Structure
@@ -154,8 +162,8 @@ mockups/prototype/
 - `state.js` is the temporary browser equivalent of a future Android `ViewModel + StateFlow + Room/DataStore` implementation.
 - `router.js` provides hash routes that can later map to Navigation Compose destinations.
 - `app.js` renders the shell and coordinates cross-feature interactions.
-- `tasks.js` owns inline task-checklist rendering, ordering, main/subtask relationships, settings, and drag behavior.
-- `lists.js` owns reusable-list creation, active-item editing, checking, remembered suggestions, and item reordering.
+- `tasks.js` owns task-checklist rendering, bottom-sheet editing, ordering, main/subtask relationships, due settings, and hold-to-drag behavior.
+- `lists.js` owns reusable-list creation, top/bottom blank-item creation, inline editing, history suggestions, checking, and item reordering.
 - `lists-integration.js` keeps Today list shortcuts synchronized with richer list records.
 - The internal field name `subareas` remains temporarily for stored-data compatibility; the user-facing term is Section.
 
@@ -170,7 +178,7 @@ The following remain simulated until the Android build:
 - Room database and DataStore persistence
 - Driving, call, meeting, and device-context detection
 
-Checklist drag behavior is implemented for phone review, but still requires broader device, accessibility, auto-scroll, and edge-case testing.
+Checklist drag behavior is implemented for phone review, but still requires broader device, accessibility, auto-scroll, and edge-case testing. Hold duration is a prototype value and should be tuned during native Android testing.
 
 ## Android translation map
 
@@ -188,7 +196,7 @@ Checklist drag behavior is implemented for phone review, but still requires broa
 
 ## Next implementation batch
 
-Review the simplified Lists flow after deployment. The next focused batch is the Direct Intervention prototype:
+Review the revised Tasks and Lists flows after deployment. The next focused batch is the Direct Intervention prototype:
 
 - Simulate Redirect
 - Intervention screen

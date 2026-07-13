@@ -17,7 +17,7 @@ This file records approved changes that override older roadmap or wireframe lang
 - [x] Give Areas a contextual task/chore creation flow.
 - [x] Give Sections a contextual task/chore creation flow.
 - [ ] Give Lists a dedicated list and list-item creation flow.
-- [ ] Give Tasks a dedicated task creation flow.
+- [x] Give Tasks a dedicated checklist creation flow.
 - [x] Use `Area → Section` as the user-facing hierarchy.
 - [x] Stop using “Room” as the generic product term.
 - [x] Keep the internal `subareas` storage field temporarily for migration compatibility.
@@ -43,3 +43,50 @@ When Settings is implemented, add:
 - [ ] Confirm Lists does not expose the former generic Quick Add flow.
 - [ ] Confirm Tasks does not expose the former generic Quick Add flow.
 - [ ] Confirm all visible Area hierarchy wording uses “Section.”
+
+## 2026-07-12 — Replace task manager with a checklist
+
+### Superseded
+
+The earlier Tasks design with Inbox, Today, Upcoming, Waiting, Blocked, Completed, filters, priorities, grouping, and a dense creation form is no longer approved.
+
+### Approved
+
+- [x] Use one checklist instead of multiple workflow views.
+- [x] Add a task using `+` at the top right or `+ Add task` below the checklist.
+- [x] Create an empty inline-editable task rather than opening a form.
+- [x] Use a separate drag handle, checkbox, editable title, compact details cell, and optional subtask-add segment.
+- [x] Keep enough spacing between drag and completion controls to reduce accidental taps.
+- [x] Use manual order by default.
+- [x] Support alphabetical ordering.
+- [x] Support due-date ordering with alphabetical secondary sorting.
+- [x] Support main tasks and nested subtasks.
+- [x] Show subtask completion using a thin progress bar attached to the main task card.
+- [x] Turning off Main Task releases its subtasks into the root checklist.
+- [x] Dragging onto the lower portion of a main task can create a subtask.
+- [x] Dragging a subtask onto a regular root task returns it to the root checklist.
+- [x] Use only Main Task and Due Date as the simple per-task settings.
+- [x] When a due date exists, show Clear and Change actions.
+- [x] Remove workflow status and priority from one-time Task detail.
+- [x] Keep richer recurrence controls for Chores only.
+
+### Settings backlog
+
+- [ ] `Show task due-date shorthand`
+- [ ] `Reverse task-row control order`
+- [ ] Persist the selected Manual / A–Z / Due ordering mode
+- [ ] Decide whether completed tasks remain visible, collapse, or can be hidden
+
+### Validation checklist
+
+- [ ] Confirm both add controls create an empty focused task.
+- [ ] Confirm inline title editing persists.
+- [ ] Confirm completion and reopening work.
+- [ ] Confirm manual drag ordering works on a phone.
+- [ ] Confirm dragging into and out of main tasks works on a phone.
+- [ ] Confirm turning off Main Task releases every subtask.
+- [ ] Confirm the progress bar matches completed subtasks.
+- [ ] Confirm due-date Set, Change, and Clear work.
+- [ ] Confirm alphabetical and due-date ordering match the approved rules.
+- [ ] Confirm due shorthand stays blank while its preference is off.
+- [ ] Confirm reversing the row later does not reverse text entry direction.

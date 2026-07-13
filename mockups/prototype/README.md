@@ -62,20 +62,36 @@ http://localhost:8080
 ## Task and Chore details
 
 - Task and Chore detail routes
-- Edit title, duration, recurrence, notes, and Nudge eligibility
+- Edit title, status, priority, Area, Section, duration, recurrence, notes, and Nudge eligibility
 - Snooze and reschedule
 - Skip occurrence
 - Pause and resume recurrence
 - Reopen completed tasks
 - Recurrence-aware completion
 
+## Tasks destination
+
+- Inbox, Today, Upcoming, Waiting, Blocked, and Completed views
+- Dedicated one-time task creation
+- Starting status, due date, priority, Area, Section, duration, notes, and Nudge eligibility
+- View-specific counts
+- Local search
+- Area, type, priority, and duration filters
+- Due, priority, duration, date-added, and title sorting
+- Due-date, Area, and priority grouping
+- Quick completion
+- Status changes
+- Shared detail-screen integration
+- View-specific and filtered empty states
+- One-time model upgrade for existing prototype data
+
 ## Creation-flow rule
 
 Each main destination owns its own creation experience:
 
 - Areas and Sections create tasks or chores in context.
+- Tasks creates one-time tasks through its dedicated form.
 - Lists will receive a dedicated list and list-item creation flow.
-- Tasks will receive a dedicated task creation flow.
 - The former generic Quick Add flow is intentionally removed.
 
 ## Structure
@@ -90,14 +106,16 @@ mockups/prototype/
 │   ├── components.css
 │   ├── today.css
 │   ├── areas.css
-│   └── task-detail.css
+│   ├── task-detail.css
+│   └── tasks.css
 └── scripts/
     ├── app.js
     ├── areas.js
     ├── router.js
     ├── state.js
     ├── task-actions.js
-    └── task-details.js
+    ├── task-details.js
+    └── tasks.js
 ```
 
 ## Design-system responsibilities
@@ -112,6 +130,7 @@ mockups/prototype/
 - `state.js` is the temporary browser equivalent of a future Android `ViewModel + StateFlow + Room/DataStore` implementation.
 - `router.js` provides hash routes that can later map to Navigation Compose destinations.
 - `app.js` renders the shell and coordinates cross-feature interactions.
+- `tasks.js` owns the Tasks route, task-view state, creation, filtering, sorting, grouping, and task-specific status controls.
 - The internal field name `subareas` remains temporarily for stored-data compatibility; the user-facing term is Section.
 
 ## Prototype limitations
@@ -141,15 +160,13 @@ The following remain simulated until the Android build:
 
 ## Next implementation batch
 
-The next focused batch is the full Tasks destination:
+The next focused batch is reusable Lists:
 
-- Inbox
-- Today
-- Upcoming
-- Waiting
-- Blocked
-- Completed
-- Filters, sorting, and grouping
-- Task-specific creation flow
-- Task-detail integration
-- Empty states
+- Lists collection screen
+- Dedicated Create List flow
+- Reusable List detail
+- Remembered-item suggestions
+- Quantities and categories
+- Duplicate handling
+- Shopping/list session
+- List history and remembered-item catalog

@@ -113,3 +113,41 @@ This section supersedes any earlier statement that List items disappear when com
 - [ ] Confirm hidden completed children remain visible under an unfinished parent.
 - [ ] Confirm List history suggestions work in both creation and editing.
 - [ ] Confirm Task Due Date remains the only functional difference between the two item types.
+
+## 2026-07-13 — Mobile gesture feedback and full-screen shell
+
+### Approved interaction feedback
+
+- [x] A right swipe moves the item with the finger instead of waiting until release.
+- [x] The space revealed behind the item shows the pending indentation action.
+- [x] An eligible swipe visibly arms after crossing the indentation threshold.
+- [x] An ineligible swipe, including the first root item, visibly returns to its original position.
+- [x] Holding an item lifts the complete item or Main-item group into a floating preview.
+- [x] The floating preview is dimmed and slightly desaturated.
+- [x] A dashed placeholder shows the potential destination.
+- [x] Neighboring items animate into provisional positions as the placeholder moves.
+- [x] Releasing the item commits the location represented by the placeholder.
+- [x] Dragging near the top or bottom of the app screen supports gradual auto-scroll.
+- [x] The shared gesture handler applies equally to Tasks and Lists.
+- [x] Task gestures update one-time Task records only and do not alter Chores.
+
+### Approved mobile-shell behavior
+
+- [x] The mobile prototype uses the full dynamic viewport height.
+- [x] The outer webpage does not scroll on mobile.
+- [x] Only the app content screen scrolls during normal use.
+- [x] App scrolling is locked while a swipe or drag is active.
+- [x] Horizontal overflow is clipped so the prototype remains fitted to screen width.
+- [x] Safe-area insets are respected around the status and bottom navigation areas.
+
+### Validation checklist
+
+- [ ] Re-test right swipe on the same mobile browser that previously failed.
+- [ ] Confirm the card tracks the finger continuously.
+- [ ] Confirm the indentation label and armed state are easy to understand.
+- [ ] Confirm the floating drag preview stays directly under the finger.
+- [ ] Confirm neighboring rows animate without jumping.
+- [ ] Confirm dropping over the dashed placeholder commits correctly.
+- [ ] Confirm normal vertical scrolling still works when no gesture is active.
+- [ ] Confirm the browser page itself no longer scrolls or shifts during drag.
+- [ ] Confirm the keyboard still fits inline creation and bottom-sheet editing on mobile.

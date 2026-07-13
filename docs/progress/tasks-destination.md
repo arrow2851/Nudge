@@ -1,127 +1,85 @@
 # Tasks Checklist Milestone
 
-**Status:** Simplified checklist direction implemented; visual review and refinement pending.
+**Status:** Unified checklist behavior implemented; visual and gesture review pending.
 
 ## Superseded direction
 
-The earlier multi-view Tasks design is intentionally discarded. The following are no longer part of the default Tasks experience:
-
-- Inbox, Today, Upcoming, Waiting, Blocked, and Completed tabs
-- Search and filtering
-- Priority and workflow-status controls
-- Grouping and bulk workflow actions
-- Dense Add Task form
-- Task cards with badges and metadata rows
-- Permanent drag handle
-- Permanent chevron/details button
-- Always-visible inline text input
-
-Historical commits may still contain those implementations, but they are not the approved product direction.
+The earlier multi-view Tasks manager and the earlier row with a permanent drag handle or chevron are no longer approved.
 
 ## Approved product direction
 
-- [x] Tasks is a single checklist.
-- [x] Tasks has no global Quick Add dependency.
-- [x] A `+` button appears at the top right.
-- [x] Another `+ Add task` control appears below the current checklist.
-- [x] Either add control creates a blank task and opens its bottom-sheet editor.
+- [x] Tasks is one checklist.
+- [x] Top-right `+` and bottom `+ Add task` both create a blank inline-editable task.
+- [x] Inline editing is used only during creation.
+- [x] Tapping an existing task opens its bottom-sheet editor.
+- [x] Existing task editing contains Task name, Main Task, and Due Date.
+- [x] The normal row is Checkbox → Task text → optional gray due shorthand → optional Main Task `+`.
+- [x] There is no permanent drag handle or chevron.
+- [x] Holding the row reorders it.
+- [x] Swiping a root task to the right makes it a subtask of the task immediately above.
+- [x] If there is no eligible task above, the row returns to its position without changing hierarchy.
+- [x] The item above automatically becomes a Main Task when indentation succeeds.
 - [x] Manual order is the default.
-- [x] Tasks can also be ordered alphabetically.
-- [x] Tasks can also be ordered by due date, then alphabetically.
-- [x] Default row order is Checkbox → Task text area with optional due shorthand → Optional Subtask Add.
-- [x] The task row has no permanent drag handle.
-- [x] The task row has no permanent `>` control.
-- [x] Tapping the task text area opens the bottom-sheet editor.
-- [x] Holding the task row allows it to be dragged and reordered.
-- [x] Due-date shorthand is the only optional information on the right side of the text area.
-- [x] Due shorthand remains visually separate from the task title and does not overlap it.
-- [x] A future Settings option can reverse the task-row control order.
-- [x] A future Settings option controls due-date shorthand visibility.
+- [x] Alphabetical and Due Date ordering remain available.
 
-## Implemented checklist row
+## Parent and subtask behavior
 
-- [x] Completion checkbox on the left by default
-- [x] Tappable task text area
-- [x] Bottom-sheet task-name editing
-- [x] Bottom-sheet Main Task setting
-- [x] Bottom-sheet Due Date setting
-- [x] Optional light-gray due shorthand on the far right of the text area
-- [x] Separate `+` segment for main tasks
-- [x] Hold the row to begin dragging
-- [x] Completed tasks remain visible and move below active tasks
-- [x] Persistent browser state
-- [x] Undo for supported checklist changes
+- [x] Main Tasks have a separate `+` for adding a subtask.
+- [x] Subtasks appear indented under their Main Task.
+- [x] A thin bar above a Main Task shows subtask completion.
+- [x] Completing a Main Task completes every subtask.
+- [x] Reopening a Main Task reopens every subtask.
+- [x] Completing every subtask automatically completes the Main Task.
+- [x] Reopening any subtask automatically reopens the Main Task.
+- [x] Turning off Main Task releases its subtasks into the root checklist.
+- [x] Long-dragging a subtask among root tasks releases it to the root level.
+- [x] A Main Task containing subtasks cannot be indented beneath another item.
 
-## Main tasks and subtasks
+## Completed items
 
-- [x] A regular root task can be marked as a main task.
-- [x] A main task receives a dedicated subtask-add control.
-- [x] Subtasks appear visually nested under the main task.
-- [x] Main-task progress is shown with a thin bar attached to the top of the card.
-- [x] Progress is calculated from completed subtasks.
-- [x] Turning off Main Task releases all subtasks into the root checklist.
-- [x] Released subtasks retain their task records.
-- [x] A subtask cannot become a main task until moved back to the root.
-- [x] Holding and dragging a task over the lower part of a main task nests it as a subtask.
-- [x] Dragging a subtask onto a normal root task returns it to the root checklist.
-- [x] Dragging or nesting switches ordering back to Manual.
-- [x] A main task that already contains subtasks cannot itself become a subtask.
+- [x] Completed root tasks move below active root tasks.
+- [x] Completed subtasks move below active subtasks within their parent.
+- [x] Tasks includes a Hide Completed / Show Completed toggle.
+- [x] Hiding completed tasks hides completed root groups.
+- [x] Completed subtasks under an unfinished Main Task remain visible at the bottom of that Main Task.
+- [x] The completed-item visibility preference persists locally.
 
 ## Due dates
 
-- [x] Task editing shows `Set due date` when no date exists.
-- [x] Setting a due date opens the native date picker.
-- [x] When a date exists, editing shows Clear and Change.
-- [x] Clear removes the due date.
-- [x] Change reopens the date picker.
-- [x] Due ordering places undated tasks last and uses alphabetical order as the secondary sort.
+- [x] Due Date exists only for Tasks, not reusable List items.
+- [x] Set, Change, and Clear Due Date actions are supported.
 - [x] Optional shorthand supports Today, days remaining, weeks remaining, and days late.
-- [ ] Expose the shorthand preference in Settings.
+- [x] Due shorthand is light gray and separate from the title.
+- [ ] Expose `Show task due-date shorthand` in Settings.
 
 ## Future Settings requirements
 
-- [ ] Show task due-date shorthand
-- [ ] Reverse task-row control order
-- [ ] Remember selected task ordering mode
-- [ ] Decide whether completed tasks remain visible, collapse, or can be hidden
-
-## One-time Task detail behavior
-
-- [x] One-time Task detail no longer exposes the discarded workflow-status and priority system.
-- [x] One-time Task detail shows a lightweight summary.
-- [x] One-time Task detail links back to the checklist for editing and organization.
-- [x] Rich recurrence controls remain available for Chores only.
+- [ ] Show task due-date shorthand.
+- [ ] Reverse task-row control order.
+- [ ] Persist selected Manual / A–Z / Due ordering mode.
+- [x] Persist Show Completed / Hide Completed.
 
 ## Review targets
 
-- [ ] Review checkbox size and left padding.
-- [ ] Review row height and text readability.
-- [ ] Review the bottom-sheet title-editing flow.
-- [ ] Review whether completed tasks should remain visible by default.
-- [ ] Review the Manual / A–Z / Due control placement.
-- [ ] Review the visual distinction of the main-task `+` segment.
-- [ ] Review subtask indentation.
+- [ ] Review right-swipe distance and snap-back animation.
+- [ ] Review hold duration before drag begins.
+- [ ] Review conflict prevention between tap, swipe, and hold.
+- [ ] Review parent/subtask indentation.
 - [ ] Review thin progress-bar visibility.
-- [ ] Review hold duration before dragging begins.
-- [ ] Review drag-to-nest behavior on a phone.
-- [ ] Review drag-to-root behavior on a phone.
-- [ ] Review whether completing a main task should affect its subtasks.
-- [ ] Review whether completing every subtask should automatically complete the main task.
-- [ ] Review long task names and narrow screens.
-- [ ] Review reversed layout once Settings exposes it.
+- [ ] Review automatic parent completion.
+- [ ] Review completed-item visibility toggle placement.
+- [ ] Review long names and narrow screens.
 - [ ] Review due shorthand once Settings exposes it.
+- [ ] Review the overall visual polish later.
 
 ## Pending refinements
 
-- [ ] Add an explicit root drop zone at the end of the checklist.
-- [ ] Add keyboard-accessible reorder alternatives.
-- [ ] Add non-drag controls for moving a task into or out of a main task.
-- [ ] Add stronger drag preview and auto-scroll near screen edges.
-- [ ] Decide how abandoned blank tasks should be cleaned up.
-- [ ] Add archive/delete behavior if still needed.
-- [ ] Add full accessibility review.
-- [ ] Add automated checklist interaction tests.
-- [ ] Reconcile this approved direction into `PROJECT-STATUS.md`.
+- [ ] Add stronger drag preview and edge auto-scroll.
+- [ ] Add keyboard-accessible reordering and hierarchy controls.
+- [ ] Add an explicit accessible way to release one subtask without dragging.
+- [ ] Add archive/delete behavior only if still needed.
+- [ ] Add automated interaction tests.
+- [ ] Reconcile the master `PROJECT-STATUS.md` during the next tracker consolidation pass.
 
 ## Prototype path
 
@@ -129,13 +87,4 @@ Historical commits may still contain those implementations, but they are not the
 
 ## Recommended next batch
 
-The next major milestone is the Direct Intervention prototype:
-
-1. Simulate Redirect control
-2. Intervention screen
-3. Start Task
-4. Already Done
-5. Different Task
-6. Not Now
-7. Focus Mode
-8. Intervention settings and compatibility preview
+The next major milestone remains the Direct Intervention prototype.

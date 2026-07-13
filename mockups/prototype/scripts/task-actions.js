@@ -26,13 +26,12 @@ function normalizeStatusChanges(task, changes) {
     Object.assign(next, { completed: false, due: '', dueDate: '', urgency: 'none', snoozedUntil: '' });
   }
   if (changes.status === 'planned') {
-    const invalidDue = !task.due || ['Waiting', 'Blocked', 'Completed'].includes(task.due);
-    Object.assign(next, {
-      completed: false,
-      due: invalidDue ? 'Today' : task.due,
-      dueDate: invalidDue ? '' : task.dueDate || '',
-      urgency: invalidDue || task.urgency === 'none' ? 'today' : task.urgency
-    });
+    const oldDueInvalid = !task.due || ['Waiting', 'Blocked', 'Completed'].includes(task.due);
+    const explicitDue = typeof changes.due === 'string' && changes.due && !['Waiting', 'Blocked', 'Completed'].includes(changes.due);
+    const due = explicitDue ? changes.due : oldDueInvalid ? 'Today' : task.due;
+    const urgency = changes.urgency || (oldDueInvalid || task.urgency === 'none' ? 'today' : task.urgency);
+    const dueDate = changes.dueDate !== undefined ? changes.dueDate : oldDueInvalid ? '' : task.dueDate || '';
+    Object.assign(next, { completed: false, due, dueDate, urgency });
   }
   if (changes.status === 'waiting') {
     Object.assign(next, { completed: false, due: 'Waiting', dueDate: '', urgency: 'none', nudge: false });

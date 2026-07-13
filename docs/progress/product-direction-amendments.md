@@ -16,7 +16,7 @@ This file records approved changes that override older roadmap or wireframe lang
 - [x] Use four equal primary destinations: Today, Areas, Lists, and Tasks.
 - [x] Give Areas a contextual task/chore creation flow.
 - [x] Give Sections a contextual task/chore creation flow.
-- [ ] Give Lists a dedicated list and list-item creation flow.
+- [x] Give Lists a dedicated list and list-item creation flow.
 - [x] Give Tasks a dedicated checklist creation flow.
 - [x] Use `Area → Section` as the user-facing hierarchy.
 - [x] Stop using “Room” as the generic product term.
@@ -90,3 +90,35 @@ The earlier Tasks design with Inbox, Today, Upcoming, Waiting, Blocked, Complete
 - [ ] Confirm alphabetical and due-date ordering match the approved rules.
 - [ ] Confirm due shorthand stays blank while its preference is off.
 - [ ] Confirm reversing the row later does not reverse text entry direction.
+
+## 2026-07-12 — Simplify reusable Lists
+
+### Superseded
+
+The earlier Lists design with quantity, unit, category, item-detail controls, duplicate-choice sheets, and shopping/list sessions is no longer approved.
+
+### Approved
+
+- [x] Use one simple active checklist per reusable list.
+- [x] Place only a checkbox on the left and item text beside it.
+- [x] Do not place item controls or a chevron on the right.
+- [x] Tap item text to edit it inline.
+- [x] Hold an item to drag it into a different position.
+- [x] Checking an item removes it from the active list.
+- [x] Preserve the checked name in remembered history for future suggestions.
+- [x] Keep remembered suggestions compact and optional.
+- [x] Prevent an exact active duplicate with a simple message instead of a decision sheet.
+- [x] Remove session mode completely.
+- [x] Remove quantity, unit, and category from the default active-item experience.
+
+### Validation checklist
+
+- [ ] Confirm every active item contains only the checkbox and item text.
+- [ ] Confirm tapping text enters inline editing.
+- [ ] Confirm edited text persists after Enter or focus loss.
+- [ ] Confirm checking removes the item immediately.
+- [ ] Confirm checked items can later be suggested again.
+- [ ] Confirm holding and dragging changes item order on a phone.
+- [ ] Confirm there is no Start Session or Finish Session action.
+- [ ] Confirm there are no right-side per-item controls.
+- [ ] Confirm migrated browser state no longer retains active session behavior.

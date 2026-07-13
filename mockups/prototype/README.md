@@ -27,25 +27,56 @@ http://localhost:8080
 - Shared design tokens
 - Light and dark theme tokens
 - Reusable buttons, cards, chips, list rows, progress indicators, sheets, fields, empty states, and toasts
-- Bottom navigation and floating Quick Add action
-- Connected placeholder routes for Areas, Lists, Tasks, and More
+- Four-destination bottom navigation: Today, Areas, Lists, and Tasks
+- No global floating add action
+- Connected routes for Today, Areas, Area detail, Section detail, Item detail, Lists, Tasks, and More
 
-## Completed Today workflow
+## Current Today workflow
 
-- Daily progress summary
-- Quick Win recommendation card
-- Cycle to another Quick Win
-- Start-task feedback
+- Simple list-first default layout
 - Due Today section
 - Expandable Overdue section
 - Active-list shortcuts
 - Recent activity feed
-- Natural-language Quick Add detection for type, area, room, cadence, duration, and grading
-- Task and chore creation
+- Optional Daily Progress preference, off by default
+- Optional Quick Win preference, off by default
 - Binary task completion
 - Light, Moderate, and Deep completion grading
-- Undo for additions and completions
-- Persistent activity and progress updates
+- Undo for supported changes
+- Persistent activity and progress data
+
+## Areas and Sections
+
+- Shipped default Areas
+- Template-conditioned Sections
+- Area overview and detail
+- Section overview and detail
+- Add and edit Area
+- Add and edit Section
+- Contextual task/chore creation from an Area
+- Optional Section assignment when adding from an Area
+- Contextual task/chore creation from a Section
+- Due-only Section Reset
+- Section Reset completion, grading, skipping, and progress
+
+## Task and Chore details
+
+- Task and Chore detail routes
+- Edit title, duration, recurrence, notes, and Nudge eligibility
+- Snooze and reschedule
+- Skip occurrence
+- Pause and resume recurrence
+- Reopen completed tasks
+- Recurrence-aware completion
+
+## Creation-flow rule
+
+Each main destination owns its own creation experience:
+
+- Areas and Sections create tasks or chores in context.
+- Lists will receive a dedicated list and list-item creation flow.
+- Tasks will receive a dedicated task creation flow.
+- The former generic Quick Add flow is intentionally removed.
 
 ## Structure
 
@@ -57,11 +88,16 @@ mockups/prototype/
 │   ├── tokens.css
 │   ├── base.css
 │   ├── components.css
-│   └── today.css
+│   ├── today.css
+│   ├── areas.css
+│   └── task-detail.css
 └── scripts/
     ├── app.js
+    ├── areas.js
     ├── router.js
-    └── state.js
+    ├── state.js
+    ├── task-actions.js
+    └── task-details.js
 ```
 
 ## Design-system responsibilities
@@ -69,15 +105,14 @@ mockups/prototype/
 - `tokens.css` owns colors, typography sizes, spacing, radii, shadows, device dimensions, and motion timing.
 - `base.css` owns document reset, review layout, phone frame, status bar, scrolling behavior, navigation placement, and mobile breakpoints.
 - `components.css` owns reusable controls and feedback components.
-- `today.css` contains feature-specific styles for the Today dashboard and its sheets.
-
-Feature-specific styles should be added only when a shared component cannot express the design cleanly.
+- Feature styles contain only layout and interaction rules that are specific to their screens.
 
 ## State and routing
 
 - `state.js` is the temporary browser equivalent of a future Android `ViewModel + StateFlow + Room/DataStore` implementation.
-- `router.js` provides simple hash routes that can later map to Navigation Compose destinations.
-- `app.js` renders the shell and coordinates interactions.
+- `router.js` provides hash routes that can later map to Navigation Compose destinations.
+- `app.js` renders the shell and coordinates cross-feature interactions.
+- The internal field name `subareas` remains temporarily for stored-data compatibility; the user-facing term is Section.
 
 ## Prototype limitations
 
@@ -87,7 +122,7 @@ The following remain simulated until the Android build:
 - Background/direct activity launch permissions
 - Android notifications and widgets
 - Real Gemini API requests
-- Room and DataStore persistence
+- Room database and DataStore persistence
 - Driving, call, meeting, and device-context detection
 
 ## Android translation map
@@ -106,12 +141,15 @@ The following remain simulated until the Android build:
 
 ## Next implementation batch
 
-The next focused batch is the organization workflow:
+The next focused batch is the full Tasks destination:
 
-- Areas dashboard
-- Add and edit Area
-- Area detail
-- Optional subareas and rooms
-- Room detail
-- Chore and one-time task grouping
-- Room Reset entry point
+- Inbox
+- Today
+- Upcoming
+- Waiting
+- Blocked
+- Completed
+- Filters, sorting, and grouping
+- Task-specific creation flow
+- Task-detail integration
+- Empty states

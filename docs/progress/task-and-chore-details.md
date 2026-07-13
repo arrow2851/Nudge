@@ -7,14 +7,34 @@
 - `[ ]` Pending
 - `[s]` Simulated until Android
 
-## Completed in this batch
+## Current product split
+
+One-time Tasks and recurring Chores intentionally use different levels of detail:
+
+- One-time Tasks are lightweight checklist items.
+- Chores retain richer scheduling, recurrence, grading, snooze, skip, and pause controls.
+
+## One-time Task detail
 
 - `[x]` Task detail route: `#/item/:taskId`
+- `[x]` Lightweight title and status summary
+- `[x]` Due-date summary
+- `[x]` Regular, Main Task, or Subtask placement summary
+- `[x]` Complete and reopen actions
+- `[x]` Return to the Tasks checklist
+- `[x]` Remove workflow status and priority management from Task detail
+- `[x]` Preserve an undated task as undated when it is reopened
+- `[ ]` Decide whether the standalone Task detail route is still necessary long term
+
+Task naming, ordering, Main Task behavior, subtasks, and due-date changes are managed from the Tasks checklist.
+
+## Chore detail
+
 - `[x]` Chore detail route
-- `[x]` Deep links for sample task and chore
-- `[x]` Detail header with item type and status
-- `[x]` Location, estimate, due, recurrence, schedule basis, next due, completion style, and notes
-- `[x]` Edit task or chore title
+- `[x]` Detail header and due status
+- `[x]` Location and estimate
+- `[x]` Due date, recurrence, schedule basis, next due, completion style, and notes
+- `[x]` Edit chore title
 - `[x]` Edit estimated duration
 - `[x]` Edit recurrence preset
 - `[x]` Edit notes
@@ -22,17 +42,15 @@
 - `[x]` Binary completion
 - `[x]` Light, Moderate, and Deep completion
 - `[x]` Recurrence-aware completion for daily, weekly, monthly, and every-N-days chores
-- `[x]` One-time tasks remain completed
 - `[x]` Recurring chores advance to a future due date
 - `[x]` Snooze to later today, tomorrow, this weekend, or next week
 - `[x]` Reschedule using a date picker
 - `[x]` Skip one recurring occurrence
 - `[x]` Pause recurring chore
 - `[x]` Resume recurring chore
-- `[x]` Reopen a completed task
-- `[x]` Undo for task-management changes
-- `[x]` Today task rows open details
-- `[x]` Area and Section task rows open details
+- `[x]` Reopen a completed chore
+- `[x]` Undo for supported changes
+- `[x]` Today and Area/Section rows open detail
 - `[x]` Section Reset uses the same recurrence-aware completion logic
 
 ## Current prototype limitations
@@ -41,11 +59,7 @@
 - `[~]` Monthly recurrence currently advances by 30 days in the prototype
 - `[~]` Calendar-based versus completion-based scheduling is displayed but not fully configurable
 - `[~]` Snooze labels use simplified prototype dates
-- `[ ]` Move item between Areas or Sections
-- `[ ]` Change item type between Task and Chore
-- `[ ]` Priority
-- `[ ]` Waiting status
-- `[ ]` Blocked status
+- `[ ]` Move chores between Areas or Sections from detail
 - `[ ]` Reminder time
 - `[ ]` Attachments
 - `[ ]` Full completion-history timeline
@@ -60,33 +74,25 @@
 
 ## Review targets
 
-Test these flows after deployment:
-
-1. Open Today and tap a task row.
-2. Open `#/item/mirror` and record a graded completion.
-3. Confirm the weekly chore advances instead of disappearing permanently.
-4. Use Undo.
-5. Snooze a task.
-6. Reschedule a task with the date picker.
-7. Pause and resume a recurring chore.
-8. Skip an occurrence.
-9. Edit title, duration, recurrence, notes, and Nudge eligibility.
-10. Open House > Kitchen Section and confirm item rows navigate to details.
-11. Run Section Reset and confirm recurring chores advance correctly.
+1. Open Today and tap a one-time Task.
+2. Confirm the Task detail is lightweight and links to the checklist.
+3. Complete and reopen an undated Task; confirm it remains undated.
+4. Open `#/item/mirror` and record a graded Chore completion.
+5. Confirm the weekly Chore advances instead of disappearing permanently.
+6. Use Undo.
+7. Snooze and reschedule a Chore.
+8. Pause, resume, and skip a recurring Chore.
+9. Edit Chore title, duration, recurrence, notes, and Nudge eligibility.
+10. Run Section Reset and confirm recurring Chores advance correctly.
 
 ## Recommended next batch
 
-The next batch should implement the full Tasks destination:
+After enough review of the simplified Tasks checklist, proceed to reusable Lists:
 
-- Inbox
-- Today
-- Upcoming
-- Waiting
-- Blocked
-- Completed
-- Filters
-- Sorting
-- Grouping
-- Task-detail integration
-- Task-specific creation flow
-- Empty states
+- Lists collection
+- Dedicated list creation
+- Reusable List detail
+- Remembered suggestions
+- Quantities and categories
+- Duplicate handling
+- Shopping/list session

@@ -1,4 +1,4 @@
-const VALID_ROOTS = new Set(['today', 'areas', 'lists', 'tasks', 'more']);
+const VALID_ROOTS = new Set(['today', 'areas', 'item', 'lists', 'tasks', 'more']);
 
 function normalizeRoute(value) {
   const cleaned = String(value || '').replace(/^#\/?/, '').replace(/^\/+|\/+$/g, '');
@@ -18,30 +18,16 @@ function emit() {
 window.addEventListener('hashchange', emit);
 
 export const router = {
-  getRoute() {
-    return currentRoute;
-  },
-
-  getParts() {
-    return currentRoute.split('/');
-  },
-
+  getRoute() { return currentRoute; },
+  getParts() { return currentRoute.split('/'); },
   go(route) {
     const next = normalizeRoute(route);
-    if (next === currentRoute && location.hash) {
-      emit();
-      return;
-    }
+    if (next === currentRoute && location.hash) { emit(); return; }
     location.hash = `#/${next}`;
   },
-
   back(fallback = 'today') {
     if (history.length > 1) history.back();
     else this.go(fallback);
   },
-
-  subscribe(listener) {
-    listeners.add(listener);
-    return () => listeners.delete(listener);
-  }
+  subscribe(listener) { listeners.add(listener); return () => listeners.delete(listener); }
 };

@@ -1,111 +1,96 @@
 # Reusable Lists Milestone
 
-**Status:** Simplified checklist version implemented; visual review and refinement pending.
+**Status:** Unified checklist behavior implemented; visual and gesture review pending.
 
 ## Approved direction
 
-- [x] Lists has its own purpose-built creation and item-entry flow.
-- [x] Lists does not use the former global Quick Add action.
-- [x] Each active item contains only a checkbox and editable text.
-- [x] Tapping item text edits it inline.
-- [x] Holding an item allows it to be dragged into a new position.
-- [x] There are no per-item controls on the right side.
-- [x] Checking an item removes it from the active list immediately.
-- [x] Checked items remain remembered for future reuse.
-- [x] Remembered suggestions appear only while an item is being edited.
-- [x] Shopping/list sessions are not part of the product.
-- [x] Quantity, unit, category, and item-detail sheets are not part of the default list flow.
-- [x] The default checkbox position is the left side.
-- [x] A future Settings preference may move List checkboxes to the right side.
+- [x] Lists has its own List creation flow.
+- [x] List items now behave like Task items except they have no Due Date.
+- [x] Top-right `+` and bottom `+ Add item` both create a blank inline-editable item.
+- [x] Inline editing is used only during creation.
+- [x] Tapping an existing item opens a bottom-sheet editor.
+- [x] The editor contains Item name, history suggestions, and Main Item.
+- [x] The normal row is Checkbox → Item text → optional Main Item `+`.
+- [x] There are no permanent right-side item options.
+- [x] Checkbox is on the left by default.
+- [x] A future preference may place List checkboxes on the right.
+- [x] Holding the row reorders it.
+- [x] Swiping a root item to the right makes it a subitem of the item immediately above.
+- [x] If there is no eligible item above, the row returns to its position without changing hierarchy.
+- [x] The item above automatically becomes a Main Item when indentation succeeds.
 
-## Superseded design
+## Parent and subitem behavior
 
-The earlier prototype included a permanent Add Item section, quantities, units, categories, duplicate-choice sheets, item-side controls, and an optional shopping session. That direction is no longer approved and has been removed from the active prototype.
+- [x] Main Items have a separate `+` for adding a subitem.
+- [x] Subitems appear indented under their Main Item.
+- [x] A thin bar above a Main Item shows subitem completion.
+- [x] Completing a Main Item completes every subitem.
+- [x] Reopening a Main Item reopens every subitem.
+- [x] Completing every subitem automatically completes the Main Item.
+- [x] Reopening any subitem automatically reopens the Main Item.
+- [x] Turning off Main Item releases its subitems into the root list.
+- [x] Long-dragging a subitem among root items releases it to the root level.
+- [x] A Main Item containing subitems cannot be indented beneath another item.
 
-## Implemented
+## Completed items and history
 
-### List collection
+- [x] Completed items remain stored instead of disappearing.
+- [x] Completed root items move below active root items.
+- [x] Completed subitems move below active subitems within their parent.
+- [x] Lists includes a Hide Completed / Show Completed toggle.
+- [x] Hiding completed items hides completed root groups.
+- [x] Completed subitems under an unfinished Main Item remain visible at the bottom of that Main Item.
+- [x] Completing an item updates remembered history.
+- [x] History suggestions appear during inline creation and in the existing-item editor.
+- [x] Suggestions filter from remembered history as text changes.
+- [x] Exact active duplicates are prevented with a simple message.
 
-- [x] Lists destination
-- [x] Reusable-list cards
-- [x] Live active-item counts
-- [x] Remembered-item counts
-- [x] Top-right New List action
-- [x] Bottom New List action
-- [x] Empty collection state
-- [x] Create List sheet
-- [x] List name and icon selection
-- [x] Edit list name and icon by tapping the list title
-- [x] Direct routes such as `#/lists/groceries`
-- [x] Today shortcuts open their specific lists
+## List collection
 
-### Simple list detail
+- [x] Lists destination and reusable-list cards.
+- [x] Active counts exclude completed items.
+- [x] Remembered-item counts.
+- [x] Top and bottom New List controls.
+- [x] List name and icon creation/editing.
+- [x] Today shortcuts open the selected list and show active counts only.
 
-- [x] Top-right `+` creates a blank inline-editable item
-- [x] Bottom `+ Add item` creates a blank inline-editable item
-- [x] No permanent Add Item input section
-- [x] Checkbox on the left of every active item by default
-- [x] Internal preference support for moving checkboxes to the right later
-- [x] Tap item text to edit inline
-- [x] Enter or focus loss saves item text
-- [x] Escape cancels editing
-- [x] Hold and drag an item to reorder it
-- [x] Visible before/after drop indicator
-- [x] Checked item disappears from active items
-- [x] Checked item creates or updates its remembered record
-- [x] Clean history suggestions appear directly below the item being edited
-- [x] Suggestions filter while typing
-- [x] Suggestions rank primarily by reuse count and recency
-- [x] Selecting a history suggestion fills the item being edited
-- [x] Exact active duplicates are prevented with a simple message
-- [x] Empty active-list state
-- [x] Undo for add, edit, check, and move
+## Removed concepts
 
-### Migration and persistence
-
-- [x] Upgrade earlier list records without clearing local storage
-- [x] Remove session state from migrated list records
-- [x] Reduce active items to name, order, and timestamps
-- [x] Preserve remembered names and reuse history
-- [x] Add the future `listCheckboxOnRight` preference with a left-side default
-- [x] Seed realistic Groceries and Household Restock examples
+- [x] No shopping/list sessions.
+- [x] No quantity, unit, or category fields.
+- [x] No duplicate-choice sheet.
+- [x] No permanent Add Item input section.
+- [x] No permanent per-item chevron or option cell.
 
 ## Future Settings requirements
 
-- [ ] Place List checkboxes on the right
-- [ ] Apply the preference immediately to every reusable list
-- [ ] Keep text direction and editing behavior unchanged when checkbox placement changes
+- [ ] Place List checkboxes on the right.
+- [ ] Apply checkbox placement immediately to every reusable list.
+- [x] Persist Show Completed / Hide Completed.
 
 ## Review targets
 
-- [ ] Review Lists collection density.
-- [ ] Review list-card visual styling.
-- [ ] Review the top and bottom Add Item controls.
-- [ ] Review history-suggestion spacing and visual weight.
-- [ ] Review whether suggestions should appear for an empty new item.
-- [ ] Review checkbox size and spacing.
-- [ ] Review item-row height and border treatment.
-- [ ] Review inline editing behavior with the mobile keyboard.
-- [ ] Review hold duration before dragging begins.
-- [ ] Review drag feedback and drop-target visibility.
-- [ ] Review whether checked items need a temporary animation before disappearing.
-- [ ] Review the overall visual polish after more features exist.
+- [ ] Review right-swipe distance and snap-back animation.
+- [ ] Review hold duration before drag begins.
+- [ ] Review conflict prevention between tap, swipe, and hold.
+- [ ] Review history suggestions in the bottom sheet.
+- [ ] Review Main Item terminology.
+- [ ] Review parent/subitem indentation.
+- [ ] Review thin progress-bar visibility.
+- [ ] Review automatic parent completion.
+- [ ] Review completed-item visibility toggle placement.
+- [ ] Review the overall visual polish later.
 
 ## Pending refinements
 
-- [ ] Drag ordering for the list collection itself.
-- [ ] Pin and unpin lists.
-- [ ] Archive list.
-- [ ] Delete list with confirmation.
-- [ ] Decide how an active item is deleted without adding a permanent right-side control.
-- [ ] Full remembered-catalog management, only if later proven necessary.
-- [ ] Remove a remembered item.
-- [ ] Merge duplicate remembered records.
-- [ ] Fuzzy and typo-tolerant suggestion matching.
-- [ ] Drag auto-scroll for long lists.
-- [ ] Keyboard-accessible move-up and move-down alternatives.
-- [ ] Accessibility review.
-- [ ] Automated interaction tests.
+- [ ] Drag ordering for the List collection itself.
+- [ ] Pin, archive, and delete Lists only if later needed.
+- [ ] Add stronger drag preview and edge auto-scroll.
+- [ ] Add keyboard-accessible reordering and hierarchy controls.
+- [ ] Add an explicit accessible way to release one subitem without dragging.
+- [ ] Add fuzzy and typo-tolerant history matching.
+- [ ] Add automated interaction tests.
+- [ ] Reconcile the master `PROJECT-STATUS.md` during the next tracker consolidation pass.
 
 ## Prototype paths
 
@@ -115,13 +100,4 @@ The earlier prototype included a permanent Add Item section, quantities, units, 
 
 ## Recommended next batch
 
-The next major milestone is the Direct Intervention prototype:
-
-1. Simulate Redirect control
-2. Intervention screen
-3. Start Task
-4. Already Done
-5. Different Task
-6. Not Now
-7. Focus Mode
-8. Intervention settings and compatibility preview
+The next major milestone remains the Direct Intervention prototype.

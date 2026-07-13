@@ -9,8 +9,8 @@ const toastRoot = document.querySelector('#toast-root');
 const ui = {
   toastTimer: null,
   undoTimer: null,
-  pendingFocusId: '',
-  drag: null
+  drag: null,
+  suppressClickUntil: 0
 };
 
 const removedPrototypeSeeds = new Set([
@@ -56,12 +56,12 @@ function ensureChecklistModel() {
     : task);
   const preferences = {
     ...state.preferences,
-    checklistModelVersion: 2,
+    checklistModelVersion: 3,
     taskSortMode: state.preferences?.taskSortMode || 'manual',
     showTaskDueShorthand: state.preferences?.showTaskDueShorthand === true,
     reverseTaskItemLayout: state.preferences?.reverseTaskItemLayout === true
   };
-  const changed = version < 2
+  const changed = version < 3
     || retained.length !== state.tasks.length
     || JSON.stringify(repaired) !== JSON.stringify(state.tasks)
     || JSON.stringify(preferences) !== JSON.stringify(state.preferences);
@@ -126,13 +126,14 @@ function checklistRow(task, allTasks, isSubtask = false) {
   const { children, percent } = progressFor(task, allTasks);
   const reversed = store.getState().preferences?.reverseTaskItemLayout === true;
   const shorthand = dueShorthand(task);
-  return `<div class="checklist-card ${task.completed ? 'completed' : ''} ${isSubtask ? 'subtask-card' : ''} ${reversed ? 'reverse-layout' : ''}">
+  return `<div class="checklist-card ${task.completed ? 'completed' : ''} ${isSubtask ? 'subtask-card' : ''} ${reversed ? 'reverse-layout' : ''}" data-task-drag-source data-task-id="${task.id}">
     ${task.isMainTask && children.length ? `<span class="subtask-progress" style="width:${percent}%"></span>` : ''}
     <div class="checklist-row">
-      <button class="task-drag-handle" data-drag-handle data-task-id="${task.id}" aria-label="Hold and drag ${esc(task.title || 'task')}"><span></span><span></span><span></span></button>
       <button class="task-checkbox ${task.completed ? 'checked' : ''}" data-action="toggle-checklist-complete" data-task-id="${task.id}" aria-label="${task.completed ? 'Reopen' : 'Complete'} ${esc(task.title || 'task')}">${task.completed ? '✓' : ''}</button>
-      <input class="task-inline-title" data-task-title-input data-task-id="${task.id}" value="${esc(task.title || '')}" placeholder="New task" aria-label="Task name">
-      <button class="task-details-cell" data-action="open-checklist-settings" data-task-id="${task.id}" aria-label="Task settings"><span>${esc(shorthand)}</span><b>›</b></button>
+      <button class="task-content" data-action="open-checklist-settings" data-task-id="${task.id}" aria-label="Edit ${esc(task.title || 'new task')}">
+        <span class="task-title">${esc(task.title || 'New task')}</span>
+        <span class="task-due-shorthand">${esc(shorthand)}</span>
+      </button>
       ${task.isMainTask ? `<button class="task-subtask-add" data-action="add-subtask" data-task-id="${task.id}" aria-label="Add subtask to ${esc(task.title || 'main task')}">+</button>` : ''}
     </div>
   </div>`;
@@ -158,7 +159,6 @@ function renderTasks() {
     </div>
     <div class="checklist-list" data-checklist-list>${roots.map(task => taskTree(task, tasks)).join('')}</div>
     <button class="checklist-bottom-add" data-action="add-empty-task"><span>+</span> Add task</button>`;
-  focusPendingTask();
 }
 
 function showToast(message, allowUndo = false) {
@@ -178,10 +178,25 @@ function nextOrder(parentTaskId = '') {
   return siblings.length ? Math.max(...siblings.map(task => Number(task.checklistOrder || 0))) + 10 : 0;
 }
 
+function focusTaskSheetTitle() {
+  requestAnimationFrame(() => {
+    const input = document.querySelector('#checklist-task-title');
+    if (!input) return;
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
+  });
+}
+
+function openTaskSheet(taskId, focusTitle = false) {
+  overlayRoot.innerHTML = checklistSettingsSheet(taskId);
+  if (focusTitle) focusTaskSheetTitle();
+}
+
 function addBlankTask(parentTaskId = '') {
   const current = store.getState();
   const id = `task-${Date.now()}`;
   const parent = current.tasks.find(task => task.id === parentTaskId);
+  const actualParentId = parent?.isMainTask ? parentTaskId : '';
   const newTask = {
     id,
     title: '',
@@ -200,33 +215,16 @@ function addBlankTask(parentTaskId = '') {
     recurrence: '',
     nudge: true,
     notes: '',
-    parentTaskId: parent?.isMainTask ? parentTaskId : '',
+    parentTaskId: actualParentId,
     isMainTask: false,
-    checklistOrder: nextOrder(parent?.isMainTask ? parentTaskId : ''),
+    checklistOrder: nextOrder(actualParentId),
     createdAt: new Date().toISOString()
   };
   store.setState({
     tasks: [...current.tasks, newTask],
     lastUndo: { label: 'Task added', snapshot: clone(current) }
   });
-  ui.pendingFocusId = id;
-  requestAnimationFrame(renderTasks);
-}
-
-function focusPendingTask() {
-  if (!ui.pendingFocusId) return;
-  const input = screen.querySelector(`[data-task-title-input][data-task-id="${ui.pendingFocusId}"]`);
-  if (!input) return;
-  input.focus();
-  input.setSelectionRange(input.value.length, input.value.length);
-  ui.pendingFocusId = '';
-}
-
-function saveInlineTitle(input) {
-  const taskId = input.dataset.taskId;
-  const task = store.getState().tasks.find(item => item.id === taskId);
-  if (!task || input.value === task.title) return;
-  updateTask(taskId, { title: input.value });
+  openTaskSheet(id, true);
 }
 
 function toggleComplete(taskId) {
@@ -249,12 +247,22 @@ function toggleComplete(taskId) {
   showToast(completed ? 'Task completed.' : 'Task reopened.', true);
 }
 
+function saveTaskSheetTitle(input) {
+  const taskId = input.dataset.taskId;
+  const task = store.getState().tasks.find(item => item.id === taskId);
+  if (!task) return;
+  const title = input.value.trim();
+  if (title === task.title) return;
+  updateTask(taskId, { title });
+}
+
 function checklistSettingsSheet(taskId) {
   const task = store.getState().tasks.find(item => item.id === taskId);
   if (!task) return '';
   const hasDue = Boolean(task.dueDate || task.due);
   const isSubtask = Boolean(task.parentTaskId);
-  return `<div class="sheet-backdrop" data-action="close-sheet"><section class="sheet checklist-settings-sheet" data-sheet role="dialog" aria-modal="true"><div class="sheet-handle"></div><header class="sheet-header"><div><p class="eyebrow">Task settings</p><h2>${esc(task.title || 'Untitled task')}</h2></div><button class="icon-button" data-action="close-sheet" aria-label="Close">✕</button></header>
+  return `<div class="sheet-backdrop" data-action="close-sheet"><section class="sheet checklist-settings-sheet" data-sheet role="dialog" aria-modal="true"><div class="sheet-handle"></div><header class="sheet-header"><div><p class="eyebrow">Task</p><h2>Edit task</h2></div><button class="icon-button" data-action="close-sheet" aria-label="Close">✕</button></header>
+    <div class="field task-title-field"><label for="checklist-task-title">Task name</label><input class="input" id="checklist-task-title" data-task-id="${task.id}" value="${esc(task.title || '')}" placeholder="New task"></div>
     <label class="toggle-row ${isSubtask ? 'disabled-setting' : ''}"><span><strong>Main task</strong><small>${isSubtask ? 'Move this task out before making it a main task.' : task.isMainTask ? 'This task can contain subtasks.' : 'Allow subtasks under this task.'}</small></span><input type="checkbox" data-action="toggle-main-task" data-task-id="${task.id}" ${task.isMainTask ? 'checked' : ''} ${isSubtask ? 'disabled' : ''}></label>
     <div class="simple-setting-block"><div><strong>Due date</strong><small>${hasDue ? esc(task.due || task.dueDate) : 'No due date'}</small></div>${hasDue ? `<div class="simple-setting-actions"><button class="button" data-action="clear-task-due" data-task-id="${task.id}">Clear</button><button class="button primary" data-action="open-task-date-picker" data-task-id="${task.id}">Change</button></div>` : `<button class="button primary block" data-action="open-task-date-picker" data-task-id="${task.id}">Set due date</button>`}</div>
   </section></div>`;
@@ -340,10 +348,12 @@ function moveTask(draggedId, targetId, dropAsChild) {
     return;
   }
   const oldParent = dragged.parentTaskId || '';
-  const newParent = dropAsChild && target.isMainTask
-    ? target.id
-    : target.parentTaskId || '';
-  let tasks = current.tasks.map(task => task.id === draggedId ? { ...task, parentTaskId: newParent, isMainTask: newParent ? false : task.isMainTask } : task);
+  const newParent = dropAsChild && target.isMainTask ? target.id : target.parentTaskId || '';
+  let tasks = current.tasks.map(task => task.id === draggedId ? {
+    ...task,
+    parentTaskId: newParent,
+    isMainTask: newParent ? false : task.isMainTask
+  } : task);
   const siblings = tasks
     .filter(task => task.id !== draggedId && (task.parentTaskId || '') === newParent)
     .sort((a, b) => Number(a.checklistOrder || 0) - Number(b.checklistOrder || 0));
@@ -362,15 +372,16 @@ function moveTask(draggedId, targetId, dropAsChild) {
 }
 
 function clearDropClasses() {
-  screen.querySelectorAll('.drop-before, .drop-child, .dragging').forEach(element => element.classList.remove('drop-before', 'drop-child', 'dragging'));
+  screen.querySelectorAll('.drop-before, .drop-child, .dragging').forEach(element => {
+    element.classList.remove('drop-before', 'drop-child', 'dragging');
+  });
 }
 
-function beginDrag(taskId, pointerId, source) {
-  const shell = source.closest('.checklist-shell');
-  if (!shell) return;
-  ui.drag = { taskId, pointerId, source, shell, targetId: '', dropAsChild: false, active: true };
-  shell.classList.add('dragging');
-  source.setPointerCapture?.(pointerId);
+function beginDrag() {
+  if (!ui.drag || ui.drag.active) return;
+  ui.drag.active = true;
+  ui.drag.shell.classList.add('dragging');
+  try { ui.drag.source.setPointerCapture?.(ui.drag.pointerId); } catch (_) { /* capture may be unavailable */ }
   document.body.classList.add('checklist-dragging');
 }
 
@@ -396,12 +407,15 @@ function updateDrag(event) {
 function endDrag(event) {
   if (!ui.drag || event.pointerId !== ui.drag.pointerId) return;
   clearTimeout(ui.drag.timer);
-  const { active, taskId, targetId, dropAsChild, source } = ui.drag;
-  source.releasePointerCapture?.(event.pointerId);
-  clearDropClasses();
-  document.body.classList.remove('checklist-dragging');
+  const drag = ui.drag;
+  if (drag.active) {
+    try { drag.source.releasePointerCapture?.(event.pointerId); } catch (_) { /* capture may already be released */ }
+    clearDropClasses();
+    document.body.classList.remove('checklist-dragging');
+    ui.suppressClickUntil = Date.now() + 300;
+    if (drag.targetId) moveTask(drag.taskId, drag.targetId, drag.dropAsChild);
+  }
   ui.drag = null;
-  if (active && targetId) moveTask(taskId, targetId, dropAsChild);
 }
 
 function cancelPendingDrag() {
@@ -411,17 +425,22 @@ function cancelPendingDrag() {
 }
 
 document.addEventListener('pointerdown', event => {
-  const handle = event.target.closest('[data-drag-handle]');
-  if (!handle || router.getRoute().split('/')[0] !== 'tasks') return;
-  const taskId = handle.dataset.taskId;
+  if (router.getRoute().split('/')[0] !== 'tasks') return;
+  const card = event.target.closest('[data-task-drag-source]');
+  if (!card || event.target.closest('.task-checkbox') || event.target.closest('.task-subtask-add')) return;
+  const shell = card.closest('.checklist-shell');
+  if (!shell) return;
   ui.drag = {
     active: false,
-    taskId,
+    taskId: card.dataset.taskId,
     pointerId: event.pointerId,
-    source: handle,
+    source: card,
+    shell,
     startX: event.clientX,
     startY: event.clientY,
-    timer: setTimeout(() => beginDrag(taskId, event.pointerId, handle), 180)
+    targetId: '',
+    dropAsChild: false,
+    timer: setTimeout(beginDrag, 170)
   };
 });
 
@@ -439,11 +458,11 @@ document.addEventListener('pointerup', endDrag);
 document.addEventListener('pointercancel', endDrag);
 
 document.addEventListener('focusout', event => {
-  if (event.target.matches('[data-task-title-input]')) saveInlineTitle(event.target);
+  if (event.target.id === 'checklist-task-title') saveTaskSheetTitle(event.target);
 });
 
 document.addEventListener('keydown', event => {
-  if (!event.target.matches('[data-task-title-input]')) return;
+  if (event.target.id !== 'checklist-task-title') return;
   if (event.key === 'Enter') {
     event.preventDefault();
     event.target.blur();
@@ -456,13 +475,17 @@ document.addEventListener('keydown', event => {
 });
 
 document.addEventListener('click', event => {
+  if (Date.now() < ui.suppressClickUntil) {
+    event.preventDefault();
+    return;
+  }
   const target = event.target.closest('[data-action]');
   if (!target || router.getRoute().split('/')[0] !== 'tasks') return;
   const action = target.dataset.action;
   if (action === 'add-empty-task') addBlankTask();
   if (action === 'add-subtask') addBlankTask(target.dataset.taskId);
   if (action === 'toggle-checklist-complete') toggleComplete(target.dataset.taskId);
-  if (action === 'open-checklist-settings') overlayRoot.innerHTML = checklistSettingsSheet(target.dataset.taskId);
+  if (action === 'open-checklist-settings') openTaskSheet(target.dataset.taskId);
   if (action === 'toggle-main-task') toggleMainTask(target.dataset.taskId, target.checked);
   if (action === 'open-task-date-picker') overlayRoot.innerHTML = datePickerSheet(target.dataset.taskId);
   if (action === 'save-task-due') saveDueDate(target.dataset.taskId);

@@ -19,30 +19,22 @@ The interactive browser prototype is live and under active feature-by-feature de
 - Simplified Today screen with Due Today, Overdue, Lists, Recent Activity, grading, and Undo
 - Optional Daily Progress and Quick Win preference flags, both off by default
 - Four-destination bottom navigation without a global floating add action
-- Areas screen with shipped defaults
-- Template-conditioned House Sections
-- Nested Area and Section detail navigation
-- Add and edit Area
-- Add and edit Section
-- Contextual task/chore creation from an Area or Section
+- Areas screen with shipped defaults and template-conditioned House Sections
+- Nested Area and Section navigation with contextual task/chore creation
 - Due-only Section Reset with completion, grading, skipping, and progress
-- Task and Chore detail screens
-- Snooze, reschedule, skip occurrence, pause/resume recurrence, reopen, and recurrence-aware Chore completion
+- Task and Chore details with recurrence-aware Chore behavior
 - Single checklist-style Tasks destination
-- Top and bottom task-add controls that create a blank task and open its bottom-sheet editor
-- Checkbox-first Task rows with tappable text, optional due shorthand, and no permanent chevron or drag handle
-- Whole-row hold-and-drag Task ordering
-- Manual, alphabetical, and due-date task ordering
-- Main tasks, nested subtasks, subtask progress, drag-to-nest, and release-to-root behavior
-- Simple Task editor for name, Main Task, and Due Date
-- Preference flags for optional due shorthand and reversed task-row order
 - Reusable Lists collection and list-detail routes
-- Top and bottom inline List item creation
-- Checkbox-left, editable-text reusable list items with no right-side item controls
-- Hold-and-drag active List ordering
-- Editing-only history suggestions ranked by reuse history
-- Checked items removed from active Lists and retained as remembered suggestions
-- Future preference support for moving List checkboxes to the right
+- Shared Task/List item behavior: inline-only creation, tap-to-edit sheets, hold-to-reorder, and swipe-right indentation
+- Automatic Main item creation when an item is swiped under the item above
+- Main Task and Main List item subitems with thin completion progress
+- Parent completion cascades to children; child completion recalculates the parent
+- Completed root items move to the bottom
+- Show Completed / Hide Completed controls for Tasks and Lists
+- Completed children remain visible beneath unfinished parents
+- Task-only Due Date and optional gray due shorthand
+- List history suggestions during creation and existing-item editing
+- Left-side List checkboxes by default with future right-side preference support
 
 ## Product pillars
 
@@ -112,7 +104,7 @@ nudge/
 
 ## Immediate next step
 
-Review the revised Tasks and Lists interactions after deployment. The next major build milestone is the Direct Intervention prototype: simulated redirect, intervention choices, alternative tasks, Not Now behavior, Focus Mode, and intervention settings/compatibility previews.
+Review the unified Tasks and Lists interactions after deployment. The next major build milestone is the Direct Intervention prototype: simulated redirect, intervention choices, alternative tasks, Not Now behavior, Focus Mode, and intervention settings/compatibility previews.
 
 ## License
 

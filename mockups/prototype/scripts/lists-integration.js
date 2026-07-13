@@ -24,7 +24,9 @@ function patchTodayShortcuts() {
     if (icon) icon.textContent = list.icon || '☷';
     if (title) title.textContent = list.name;
     if (meta) {
-      const count = Array.isArray(list.items) ? list.items.length : Number(list.activeCount || 0);
+      const count = Array.isArray(list.items)
+        ? list.items.filter(item => !item.completed).length
+        : Number(list.activeCount || 0);
       const remembered = Array.isArray(list.catalog) ? list.catalog.length : 0;
       meta.textContent = `${count} active${remembered ? ` · ${remembered} remembered` : ''}`;
     }

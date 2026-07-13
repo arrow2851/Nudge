@@ -36,7 +36,7 @@ http://localhost:8080
 - Simple list-first default layout
 - Due Today section
 - Expandable Overdue section
-- Active-list shortcuts that open the selected reusable list
+- Active-list shortcuts
 - Recent activity feed
 - Optional Daily Progress preference, off by default
 - Optional Quick Win preference, off by default
@@ -93,26 +93,18 @@ http://localhost:8080
 
 ## Reusable Lists
 
-- Lists collection screen
-- Top and bottom New List controls
-- Create and edit reusable list name and icon
-- Direct routes such as `#/lists/groceries`
-- Dedicated inline Add Item field
+- Reusable-list collection with top and bottom New List actions
+- Dedicated list-item entry field
+- Checkbox on the left of every active item
+- No right-side per-item controls
+- Tap item text to edit inline
+- Hold an item to reorder it
+- Checked items disappear from the active list
+- Checked names remain remembered for later suggestions
 - Compact remembered suggestions
-- Suggestions filtered while typing
-- Suggestions ranked by reuse history
-- Active item checklist
-- Checked items leave the active list immediately
-- Checked items create or update remembered catalog entries
-- Quantity, unit, and category fields
-- Compact item metadata
-- Exact normalized duplicate detection
-- Increase quantity or keep a separate duplicate line
-- Optional persisted shopping/list session
-- Checked and remaining session counts
-- Finish-session summary
-- Undo for supported list changes
-- Existing summary-only list data upgraded without clearing local storage
+- Simple exact-duplicate prevention
+- No shopping or list-session mode
+- No quantity, unit, category, or active-item detail sheet
 
 ## Creation-flow rule
 
@@ -120,7 +112,7 @@ Each main destination owns its own creation experience:
 
 - Areas and Sections create tasks or chores in context.
 - Tasks creates blank checklist items inline.
-- Lists creates reusable lists and adds items inside the selected list.
+- Lists creates reusable lists and simple active list items.
 - The former generic Quick Add flow is intentionally removed.
 
 ## Structure
@@ -141,13 +133,13 @@ mockups/prototype/
 └── scripts/
     ├── app.js
     ├── areas.js
-    ├── lists.js
-    ├── lists-integration.js
     ├── router.js
     ├── state.js
     ├── task-actions.js
     ├── task-details.js
-    └── tasks.js
+    ├── tasks.js
+    ├── lists.js
+    └── lists-integration.js
 ```
 
 ## Design-system responsibilities
@@ -162,9 +154,9 @@ mockups/prototype/
 - `state.js` is the temporary browser equivalent of a future Android `ViewModel + StateFlow + Room/DataStore` implementation.
 - `router.js` provides hash routes that can later map to Navigation Compose destinations.
 - `app.js` renders the shell and coordinates cross-feature interactions.
-- `tasks.js` owns inline checklist rendering, task ordering, main/subtask relationships, task-row settings, and drag behavior.
-- `lists.js` owns list migration, collection/detail rendering, remembered suggestions, duplicate handling, item checking, and shopping sessions.
-- `lists-integration.js` keeps Today shortcuts synchronized without coupling Today to Lists internals.
+- `tasks.js` owns inline task-checklist rendering, ordering, main/subtask relationships, settings, and drag behavior.
+- `lists.js` owns reusable-list creation, active-item editing, checking, remembered suggestions, and item reordering.
+- `lists-integration.js` keeps Today list shortcuts synchronized with richer list records.
 - The internal field name `subareas` remains temporarily for stored-data compatibility; the user-facing term is Section.
 
 ## Prototype limitations
@@ -178,7 +170,7 @@ The following remain simulated until the Android build:
 - Room database and DataStore persistence
 - Driving, call, meeting, and device-context detection
 
-Checklist drag behavior and reusable-list interactions still require broader device, accessibility, keyboard, and edge-case testing.
+Checklist drag behavior is implemented for phone review, but still requires broader device, accessibility, auto-scroll, and edge-case testing.
 
 ## Android translation map
 
@@ -192,14 +184,13 @@ Checklist drag behavior and reusable-list interactions still require broader dev
 | Bottom sheet | Material 3 `ModalBottomSheet` |
 | Toast with Undo | Snackbar with action |
 | Pointer-based checklist drag | Compose reorderable list and gesture handling |
-| Remembered list catalog | Room catalog entity and suggestion query |
 | Simulated redirect | UsageStatsManager + intervention coordinator |
 
 ## Next implementation batch
 
-After review of Lists, the next major milestone is the Direct Intervention prototype:
+Review the simplified Lists flow after deployment. The next focused batch is the Direct Intervention prototype:
 
-- Simulate Redirect control
+- Simulate Redirect
 - Intervention screen
 - Start Task
 - Already Done

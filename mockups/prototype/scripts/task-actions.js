@@ -26,11 +26,11 @@ function normalizeStatusChanges(task, changes) {
     Object.assign(next, { completed: false, due: '', dueDate: '', urgency: 'none', snoozedUntil: '' });
   }
   if (changes.status === 'planned') {
-    const oldDueInvalid = !task.due || ['Waiting', 'Blocked', 'Completed'].includes(task.due);
+    const invalidDueLabel = ['Waiting', 'Blocked', 'Completed'].includes(task.due);
     const explicitDue = typeof changes.due === 'string' && changes.due && !['Waiting', 'Blocked', 'Completed'].includes(changes.due);
-    const due = explicitDue ? changes.due : oldDueInvalid ? 'Today' : task.due;
-    const urgency = changes.urgency || (oldDueInvalid || task.urgency === 'none' ? 'today' : task.urgency);
-    const dueDate = changes.dueDate !== undefined ? changes.dueDate : oldDueInvalid ? '' : task.dueDate || '';
+    const due = explicitDue ? changes.due : invalidDueLabel ? '' : task.due || '';
+    const urgency = changes.urgency || (due ? task.urgency === 'none' ? 'upcoming' : task.urgency : 'none');
+    const dueDate = changes.dueDate !== undefined ? changes.dueDate : invalidDueLabel ? '' : task.dueDate || '';
     Object.assign(next, { completed: false, due, dueDate, urgency });
   }
   if (changes.status === 'waiting') {
@@ -113,5 +113,24 @@ export function togglePause(taskId) {
 }
 
 export function reopenTask(taskId) {
-  return updateTask(taskId, { status: 'planned', completed: false, completedAt: '', completionGrade: '', urgency: 'today', due: 'Today' });
+  const task = store.getState().tasks.find(item => item.id === taskId);
+  if (!task) return false;
+  let urgency = 'none';
+  if (task.dueDate) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(`${task.dueDate}T00:00:00`);
+    const diff = Math.round((due - today) / 86400000);
+    urgency = diff < 0 ? 'overdue' : diff === 0 ? 'today' : 'upcoming';
+  } else if (task.due === 'Today') urgency = 'today';
+  else if (task.due) urgency = 'upcoming';
+  return updateTask(taskId, {
+    status: 'planned',
+    completed: false,
+    completedAt: '',
+    completionGrade: '',
+    urgency,
+    due: task.due === 'Completed' ? '' : task.due || '',
+    nudge: true
+  });
 }

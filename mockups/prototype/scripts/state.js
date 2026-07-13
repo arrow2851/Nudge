@@ -1,6 +1,6 @@
 const STORAGE_KEY = 'nudge.prototype.v4';
 
-const houseRooms = [
+const houseSections = [
   ['kitchen', 'Kitchen', '🍳'],
   ['living-room', 'Living Room', '🛋️'],
   ['dining-room', 'Dining Room', '🍽️'],
@@ -18,7 +18,9 @@ export const defaultState = Object.freeze({
   preferences: {
     compact: true,
     interventionsEnabled: true,
-    interventionStrength: 'balanced'
+    interventionStrength: 'balanced',
+    showTodayProgress: false,
+    showQuickWin: false
   },
   progress: { completedToday: 4, totalToday: 9 },
   quickWinIndex: 0,
@@ -27,14 +29,14 @@ export const defaultState = Object.freeze({
       id: 'default-house',
       name: 'House',
       icon: '🏠',
-      description: 'Common rooms for a typical home.',
-      suggestedSubareas: houseRooms.map(([id, name, icon]) => ({ id, name, icon }))
+      description: 'Common sections for a typical home.',
+      suggestedSubareas: houseSections.map(([id, name, icon]) => ({ id, name, icon }))
     },
     {
       id: 'default-car',
       name: 'Car',
       icon: '🚗',
-      description: 'A simple area without required subdivisions.',
+      description: 'A simple area without required sections.',
       suggestedSubareas: []
     },
     {
@@ -59,7 +61,7 @@ export const defaultState = Object.freeze({
       icon: '🏠',
       templateId: 'default-house',
       archived: false,
-      subareas: houseRooms.map(([id, name, icon], index) => ({ id, name, icon, order: index, archived: false }))
+      subareas: houseSections.map(([id, name, icon], index) => ({ id, name, icon, order: index, archived: false }))
     },
     { id: 'car', name: 'Car', icon: '🚗', templateId: 'default-car', archived: false, subareas: [] },
     { id: 'personal', name: 'Personal', icon: '👤', templateId: 'default-personal', archived: false, subareas: [] },
@@ -160,6 +162,11 @@ export const store = {
     notify();
   },
 
+  updatePreferences(changes) {
+    state = { ...state, preferences: { ...state.preferences, ...changes } };
+    notify();
+  },
+
   subscribe(listener) {
     listeners.add(listener);
     return () => listeners.delete(listener);
@@ -210,14 +217,15 @@ export const store = {
     return true;
   },
 
-  addArea({ name, icon = '📍', templateId = '', includeSuggestedSubareas = false }) {
+  addArea({ name, icon = '📍', templateId = '', includeSuggestedSections = false, includeSuggestedSubareas = false }) {
     const previous = snapshot();
     const idBase = slug(name);
     let id = idBase;
     let suffix = 2;
     while (state.areas.some(area => area.id === id)) id = `${idBase}-${suffix++}`;
     const template = state.templates.find(item => item.id === templateId);
-    const subareas = includeSuggestedSubareas && template
+    const includeSuggested = includeSuggestedSections || includeSuggestedSubareas;
+    const subareas = includeSuggested && template
       ? template.suggestedSubareas.map((item, index) => ({ ...item, order: index, archived: false }))
       : [];
     const area = { id, name, icon, templateId, archived: false, subareas };
@@ -268,7 +276,7 @@ export const store = {
         ? { ...area, subareas: area.subareas.map(item => item.id === subareaId ? { ...item, ...changes } : item) }
         : area),
       tasks: state.tasks.map(task => task.areaId === areaId && task.subareaId === subareaId ? { ...task, subarea: changes.name || task.subarea } : task),
-      lastUndo: { label: 'Room updated', snapshot: previous }
+      lastUndo: { label: 'Section updated', snapshot: previous }
     };
     notify();
   },

@@ -11,6 +11,7 @@ The interactive browser prototype is live and under active feature-by-feature de
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 - [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
 - [Task and Chore detail milestone notes](docs/progress/task-and-chore-details.md)
+- [Tasks destination milestone notes](docs/progress/tasks-destination.md)
 
 ### Implemented prototype slices
 
@@ -26,6 +27,9 @@ The interactive browser prototype is live and under active feature-by-feature de
 - Due-only Section Reset with completion, grading, skipping, and progress
 - Task and Chore detail screens
 - Snooze, reschedule, skip occurrence, pause/resume recurrence, reopen, and recurrence-aware completion
+- Full Tasks destination with Inbox, Today, Upcoming, Waiting, Blocked, and Completed views
+- Tasks-specific creation with status, due date, priority, Area, Section, duration, notes, and Nudge eligibility
+- Task search, filtering, sorting, grouping, quick completion, status changes, empty states, and shared detail integration
 
 ## Product pillars
 
@@ -45,6 +49,7 @@ The interactive browser prototype is live and under active feature-by-feature de
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 - [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
 - [Task and Chore detail milestone notes](docs/progress/task-and-chore-details.md)
+- [Tasks destination milestone notes](docs/progress/tasks-destination.md)
 - [Product requirements](docs/product-requirements.md)
 - [Screens and rough wireframes](docs/screens-and-wireframes.md)
 - [Technical architecture](docs/technical-architecture.md)
@@ -93,7 +98,7 @@ nudge/
 
 ## Immediate next step
 
-Implement the full Tasks destination with Inbox, Today, Upcoming, Waiting, Blocked, Completed, filtering, sorting, grouping, task-detail integration, empty states, and a Tasks-specific creation flow.
+Implement the reusable Lists destination with a dedicated Create List flow, remembered item suggestions, quantities, categories, duplicate handling, shopping/list sessions, and list history.
 
 ## License
 

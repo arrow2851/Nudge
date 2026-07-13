@@ -1,16 +1,24 @@
 # Reusable Lists Milestone
 
-**Status:** First end-to-end browser-prototype slice implemented; visual review and refinement pending.
+**Status:** Simplified checklist version implemented; visual review and refinement pending.
 
 ## Approved direction
 
 - [x] Lists has its own purpose-built creation and item-entry flow.
 - [x] Lists does not use the former global Quick Add action.
-- [x] Reusable lists are intentionally simpler than Tasks and Areas.
-- [x] Checked items leave the active list immediately.
-- [x] Checked items remain in a remembered catalog for future suggestions.
-- [x] Suggestions remain compact and do not obstruct typing.
-- [x] A shopping/list session is optional rather than required for normal checking.
+- [x] Each active item contains only a checkbox and editable text.
+- [x] Tapping item text edits it inline.
+- [x] Holding an item allows it to be dragged into a new position.
+- [x] There are no per-item controls on the right side.
+- [x] Checking an item removes it from the active list immediately.
+- [x] Checked items remain remembered for future reuse.
+- [x] Remembered suggestions remain small and optional.
+- [x] Shopping/list sessions are not part of the product.
+- [x] Quantity, unit, category, and item-detail sheets are not part of the default list flow.
+
+## Superseded design
+
+The earlier prototype included quantities, units, categories, duplicate-choice sheets, item-side controls, and an optional shopping session. That direction is no longer approved and has been removed from the active prototype.
 
 ## Implemented
 
@@ -24,95 +32,66 @@
 - [x] Bottom New List action
 - [x] Empty collection state
 - [x] Create List sheet
-- [x] List name
-- [x] List icon selection
+- [x] List name and icon selection
 - [x] Edit list name and icon
 - [x] Direct routes such as `#/lists/groceries`
 - [x] Today shortcuts open their specific lists
 
-### Reusable list detail
+### Simple list detail
 
-- [x] Active item list
-- [x] Dedicated inline Add Item field
+- [x] Dedicated Add Item field
 - [x] Enter-key submission
-- [x] Compact remembered suggestions
-- [x] Suggestions filtered as the user types
-- [x] Suggestions ranked by favorite, frequency, and recency fields
-- [x] Add a remembered item again
-- [x] Check an item off
+- [x] Checkbox on the left of every active item
+- [x] Tap item text to edit inline
+- [x] Enter or focus loss saves item text
+- [x] Escape cancels editing
+- [x] Hold and drag an item to reorder it
+- [x] Visible before/after drop indicator
 - [x] Checked item disappears from active items
-- [x] Checked item creates or updates its remembered catalog record
-- [x] Usage count and last-used time update
+- [x] Checked item creates or updates its remembered record
+- [x] Compact remembered suggestions
+- [x] Suggestions filter while typing
+- [x] Suggestions rank primarily by reuse count and recency
+- [x] Add a remembered item again
+- [x] Exact active duplicates are prevented with a simple message
 - [x] Empty active-list state
-- [x] Undo for supported changes
-
-### Item details
-
-- [x] Edit item name
-- [x] Quantity
-- [x] Unit
-- [x] Category
-- [x] Delete active item
-- [x] Display compact quantity/category metadata
-
-### Duplicate handling
-
-- [x] Normalize names for exact duplicate detection
-- [x] Increase quantity
-- [x] Keep a separate line
-- [x] Cancel by dismissing the sheet
-
-### Shopping/list session
-
-- [x] Start session
-- [x] Persist active session in browser state
-- [x] Track items checked during the session
-- [x] Show checked and remaining counts
-- [x] Finish-session summary
-- [x] Preserve unchecked items
-- [x] Move checked items into remembered history
-- [x] Save last-session summary
-- [x] Undo session start and finish
+- [x] Undo for add, edit, check, and move
 
 ### Migration and persistence
 
-- [x] Upgrade the earlier summary-only list cards without clearing local storage
+- [x] Upgrade earlier list records without clearing local storage
+- [x] Remove session state from migrated list records
+- [x] Reduce active items to name, order, and timestamps
+- [x] Preserve remembered names and reuse history
 - [x] Seed realistic Groceries and Household Restock examples
-- [x] Persist active items, catalog, quantities, categories, and sessions
 
 ## Review targets
 
 - [ ] Review Lists collection density.
-- [ ] Review whether list cards should be rows or a grid.
+- [ ] Review list-card visual styling.
 - [ ] Review Add Item field height and placement.
-- [ ] Review suggestion-chip density.
 - [ ] Review whether suggestions should appear when the field is empty.
 - [ ] Review checkbox size and spacing.
-- [ ] Review whether item details should open from the whole row or only the chevron.
-- [ ] Review quantity/unit formatting.
-- [ ] Review category usefulness.
-- [ ] Review whether normal checking and Session mode feel sufficiently different.
-- [ ] Review Finish Session wording and summary.
-- [ ] Review mobile keyboard behavior.
-- [ ] Review the visual treatment after more of the prototype is available.
+- [ ] Review item-row height and border treatment.
+- [ ] Review inline editing behavior with the mobile keyboard.
+- [ ] Review hold duration before dragging begins.
+- [ ] Review drag feedback and drop-target visibility.
+- [ ] Review whether checked items need a temporary animation before disappearing.
+- [ ] Review the overall visual polish after more features exist.
 
 ## Pending refinements
 
-- [ ] Drag ordering for active list items.
-- [ ] Drag ordering for lists.
+- [ ] Drag ordering for the list collection itself.
 - [ ] Pin and unpin lists.
 - [ ] Archive list.
 - [ ] Delete list with confirmation.
-- [ ] Full remembered-catalog management screen.
-- [ ] Favorite and unfavorite remembered items.
+- [ ] Decide how an active item is deleted without adding a permanent right-side control.
+- [ ] Full remembered-catalog management, only if later proven necessary.
 - [ ] Remove a remembered item.
 - [ ] Merge duplicate remembered records.
-- [ ] Fuzzy and typo-tolerant matching.
-- [ ] Custom category management.
-- [ ] Optional store field.
-- [ ] Optional item notes.
-- [ ] Recent-session history.
-- [ ] Resume/recover interrupted session messaging.
+- [ ] Fuzzy and typo-tolerant suggestion matching.
+- [ ] Drag auto-scroll for long lists.
+- [ ] Keyboard-accessible move-up and move-down alternatives.
 - [ ] Accessibility review.
 - [ ] Automated interaction tests.
 
@@ -124,7 +103,7 @@
 
 ## Recommended next batch
 
-After this first Lists slice, the next major milestone is the Direct Intervention prototype:
+After reviewing this simplified list flow, the next major milestone is the Direct Intervention prototype:
 
 1. Simulate Redirect control
 2. Intervention screen

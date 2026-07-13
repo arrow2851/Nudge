@@ -19,6 +19,33 @@ function dateLabel(date) {
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined }).format(date);
 }
 
+function normalizeStatusChanges(task, changes) {
+  const next = { ...changes };
+  if (!changes.status) return next;
+  if (changes.status === 'inbox') {
+    Object.assign(next, { completed: false, due: '', dueDate: '', urgency: 'none', snoozedUntil: '' });
+  }
+  if (changes.status === 'planned') {
+    const invalidDue = !task.due || ['Waiting', 'Blocked', 'Completed'].includes(task.due);
+    Object.assign(next, {
+      completed: false,
+      due: invalidDue ? 'Today' : task.due,
+      dueDate: invalidDue ? '' : task.dueDate || '',
+      urgency: invalidDue || task.urgency === 'none' ? 'today' : task.urgency
+    });
+  }
+  if (changes.status === 'waiting') {
+    Object.assign(next, { completed: false, due: 'Waiting', dueDate: '', urgency: 'none', nudge: false });
+  }
+  if (changes.status === 'blocked') {
+    Object.assign(next, { completed: false, due: 'Blocked', dueDate: '', urgency: 'none', nudge: false });
+  }
+  if (changes.status === 'completed') {
+    Object.assign(next, { completed: true, urgency: 'none', nudge: false, completedAt: changes.completedAt || new Date().toISOString() });
+  }
+  return next;
+}
+
 export function completeItem(taskId, grade = '') {
   const current = store.getState();
   const task = current.tasks.find(item => item.id === taskId);
@@ -29,7 +56,7 @@ export function completeItem(taskId, grade = '') {
   const next = days ? new Date(Date.now() + days * 86400000) : null;
   const updated = days
     ? { ...task, status: 'planned', completed: false, completedAt, completionGrade: grade, due: dateLabel(next), nextDueLabel: dateLabel(next), urgency: 'upcoming', lastCompletedAt: completedAt, snoozedUntil: '', skippedAt: '' }
-    : { ...task, status: 'completed', completed: true, completedAt, completionGrade: grade, urgency: 'none' };
+    : { ...task, status: 'completed', completed: true, completedAt, completionGrade: grade, urgency: 'none', nudge: false };
   store.setState(state => ({
     tasks: state.tasks.map(item => item.id === taskId ? updated : item),
     progress: task.urgency === 'today' ? { ...state.progress, completedToday: Math.min(state.progress.totalToday, state.progress.completedToday + 1) } : state.progress,
@@ -44,8 +71,9 @@ export function updateTask(taskId, changes) {
   const task = current.tasks.find(item => item.id === taskId);
   if (!task) return false;
   const previous = clone(current);
+  const normalizedChanges = normalizeStatusChanges(task, changes);
   store.setState(state => ({
-    tasks: state.tasks.map(item => item.id === taskId ? { ...item, ...changes } : item),
+    tasks: state.tasks.map(item => item.id === taskId ? { ...item, ...normalizedChanges } : item),
     activity: addActivity(state, task, 'Updated', '✎'),
     lastUndo: { label: `${task.title} updated`, snapshot: previous }
   }));

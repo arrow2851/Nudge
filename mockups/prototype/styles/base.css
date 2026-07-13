@@ -67,11 +67,11 @@ select:focus-visible,
   height: min(var(--device-height), calc(100dvh - 2rem));
   min-height: 680px;
   overflow: hidden;
+  overscroll-behavior: none;
   border: 10px solid #101713;
   border-radius: 42px;
   background: var(--color-surface);
   box-shadow: var(--shadow-lg);
-  contain: layout paint;
 }
 
 .camera-pill {

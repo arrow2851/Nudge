@@ -75,27 +75,18 @@ select:focus-visible,
 .screen {
   height: calc(100% - 48px - var(--nav-height));
   overflow-y: auto;
-  padding: 0 var(--space-5) calc(var(--space-8) + 52px);
+  padding: 0 var(--space-5) var(--space-8);
   scrollbar-width: none;
 }
 .screen::-webkit-scrollbar { display: none; }
 
 .bottom-nav {
   position: absolute; inset: auto 0 0; z-index: 10;
-  height: var(--nav-height); display: grid; grid-template-columns: repeat(5, 1fr);
+  height: var(--nav-height); display: grid; grid-template-columns: repeat(4, 1fr);
   align-items: center; padding: 8px 10px 12px;
   border-top: 1px solid var(--color-border); background: color-mix(in srgb, var(--color-surface) 94%, transparent);
   backdrop-filter: blur(18px);
 }
-
-.fab {
-  position: absolute; z-index: 14; bottom: 38px; left: 50%; transform: translate(-50%, 50%);
-  width: 56px; height: 56px; border: 0; border-radius: 20px;
-  background: var(--color-primary); color: white; font-size: 1.75rem; cursor: pointer;
-  box-shadow: 0 10px 28px rgb(33 107 77 / 0.35);
-  transition: transform var(--motion-fast), background var(--motion-fast);
-}
-.fab:hover { transform: translate(-50%, 50%) scale(1.04); background: var(--color-primary-strong); }
 
 #overlay-root { position: absolute; inset: 0; z-index: 30; pointer-events: none; }
 #toast-root { position: absolute; left: 16px; right: 16px; bottom: 92px; z-index: 50; pointer-events: none; }

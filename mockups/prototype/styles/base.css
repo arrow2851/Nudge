@@ -1,15 +1,22 @@
 * { box-sizing: border-box; }
 
-html, body { margin: 0; min-height: 100%; }
+html, body {
+  width: 100%;
+  margin: 0;
+  min-height: 100%;
+  overflow-x: hidden;
+}
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   background:
     radial-gradient(circle at 18% 12%, rgb(33 107 77 / 0.12), transparent 30rem),
     var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior-x: none;
 }
 
 button, input, textarea, select { font: inherit; }
@@ -25,7 +32,9 @@ select:focus-visible,
 }
 
 .prototype-shell {
+  width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   grid-template-columns: minmax(250px, 320px) minmax(0, var(--device-width));
   justify-content: center;
@@ -50,15 +59,19 @@ select:focus-visible,
 .prototype-note p { margin: 0; }
 
 .device {
+  --status-total: 48px;
+  --nav-total: var(--nav-height);
   position: relative;
   width: min(100%, var(--device-width));
   height: min(var(--device-height), calc(100vh - 2rem));
+  height: min(var(--device-height), calc(100dvh - 2rem));
   min-height: 680px;
   overflow: hidden;
   border: 10px solid #101713;
   border-radius: 42px;
   background: var(--color-surface);
   box-shadow: var(--shadow-lg);
+  contain: layout paint;
 }
 
 .camera-pill {
@@ -66,33 +79,94 @@ select:focus-visible,
   width: 92px; height: 26px; border-radius: var(--radius-pill); background: #0c100e;
 }
 .status-bar {
-  height: 48px; padding: 14px 22px 0; display: flex; justify-content: space-between;
+  height: var(--status-total); padding: 14px 22px 0; display: flex; justify-content: space-between;
   align-items: center; font-size: 0.78rem; font-weight: 750;
 }
 .status-icons { display: flex; align-items: center; gap: 5px; }
 .status-icons svg { width: 15px; height: 15px; fill: currentColor; }
 
 .screen {
-  height: calc(100% - 48px - var(--nav-height));
+  width: 100%;
+  max-width: 100%;
+  height: calc(100% - var(--status-total) - var(--nav-total));
+  overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
   padding: 0 var(--space-5) var(--space-8);
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 .screen::-webkit-scrollbar { display: none; }
 
 .bottom-nav {
   position: absolute; inset: auto 0 0; z-index: 10;
-  height: var(--nav-height); display: grid; grid-template-columns: repeat(4, 1fr);
+  height: var(--nav-total); display: grid; grid-template-columns: repeat(4, 1fr);
   align-items: center; padding: 8px 10px 12px;
   border-top: 1px solid var(--color-border); background: color-mix(in srgb, var(--color-surface) 94%, transparent);
   backdrop-filter: blur(18px);
 }
 
 #overlay-root { position: absolute; inset: 0; z-index: 30; pointer-events: none; }
-#toast-root { position: absolute; left: 16px; right: 16px; bottom: 92px; z-index: 50; pointer-events: none; }
+#toast-root { position: absolute; left: 16px; right: 16px; bottom: calc(var(--nav-total) + 16px); z-index: 50; pointer-events: none; }
 
 @media (max-width: 860px) {
-  .prototype-shell { display: block; padding: 0; }
+  html, body {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .prototype-shell {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
   .review-panel { display: none; }
-  .device { width: 100%; max-width: none; height: 100vh; min-height: 100vh; border: 0; border-radius: 0; }
+
+  .device {
+    --status-total: calc(48px + env(safe-area-inset-top));
+    --nav-total: calc(var(--nav-height) + env(safe-area-inset-bottom));
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .camera-pill { display: none; }
+
+  .status-bar {
+    height: var(--status-total);
+    padding-top: calc(14px + env(safe-area-inset-top));
+  }
+
+  .bottom-nav {
+    height: var(--nav-total);
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .screen {
+    min-width: 0;
+    padding-left: max(var(--space-5), env(safe-area-inset-left));
+    padding-right: max(var(--space-5), env(safe-area-inset-right));
+  }
 }

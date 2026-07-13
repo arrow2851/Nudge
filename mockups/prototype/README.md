@@ -36,7 +36,7 @@ http://localhost:8080
 - Simple list-first default layout
 - Due Today section
 - Expandable Overdue section
-- Active-list shortcuts
+- Active-list shortcuts that open the selected reusable list
 - Recent activity feed
 - Optional Daily Progress preference, off by default
 - Optional Quick Win preference, off by default
@@ -91,13 +91,36 @@ http://localhost:8080
 - Preference flags for due shorthand and reversed row layout
 - Completed tasks remain visible below active tasks for the current review version
 
+## Reusable Lists
+
+- Lists collection screen
+- Top and bottom New List controls
+- Create and edit reusable list name and icon
+- Direct routes such as `#/lists/groceries`
+- Dedicated inline Add Item field
+- Compact remembered suggestions
+- Suggestions filtered while typing
+- Suggestions ranked by reuse history
+- Active item checklist
+- Checked items leave the active list immediately
+- Checked items create or update remembered catalog entries
+- Quantity, unit, and category fields
+- Compact item metadata
+- Exact normalized duplicate detection
+- Increase quantity or keep a separate duplicate line
+- Optional persisted shopping/list session
+- Checked and remaining session counts
+- Finish-session summary
+- Undo for supported list changes
+- Existing summary-only list data upgraded without clearing local storage
+
 ## Creation-flow rule
 
 Each main destination owns its own creation experience:
 
 - Areas and Sections create tasks or chores in context.
 - Tasks creates blank checklist items inline.
-- Lists will receive a dedicated list and list-item creation flow.
+- Lists creates reusable lists and adds items inside the selected list.
 - The former generic Quick Add flow is intentionally removed.
 
 ## Structure
@@ -113,10 +136,13 @@ mockups/prototype/
 │   ├── today.css
 │   ├── areas.css
 │   ├── task-detail.css
-│   └── tasks.css
+│   ├── tasks.css
+│   └── lists.css
 └── scripts/
     ├── app.js
     ├── areas.js
+    ├── lists.js
+    ├── lists-integration.js
     ├── router.js
     ├── state.js
     ├── task-actions.js
@@ -137,6 +163,8 @@ mockups/prototype/
 - `router.js` provides hash routes that can later map to Navigation Compose destinations.
 - `app.js` renders the shell and coordinates cross-feature interactions.
 - `tasks.js` owns inline checklist rendering, task ordering, main/subtask relationships, task-row settings, and drag behavior.
+- `lists.js` owns list migration, collection/detail rendering, remembered suggestions, duplicate handling, item checking, and shopping sessions.
+- `lists-integration.js` keeps Today shortcuts synchronized without coupling Today to Lists internals.
 - The internal field name `subareas` remains temporarily for stored-data compatibility; the user-facing term is Section.
 
 ## Prototype limitations
@@ -150,7 +178,7 @@ The following remain simulated until the Android build:
 - Room database and DataStore persistence
 - Driving, call, meeting, and device-context detection
 
-Checklist drag behavior is implemented for phone review, but still requires broader device, accessibility, auto-scroll, and edge-case testing.
+Checklist drag behavior and reusable-list interactions still require broader device, accessibility, keyboard, and edge-case testing.
 
 ## Android translation map
 
@@ -164,17 +192,18 @@ Checklist drag behavior is implemented for phone review, but still requires broa
 | Bottom sheet | Material 3 `ModalBottomSheet` |
 | Toast with Undo | Snackbar with action |
 | Pointer-based checklist drag | Compose reorderable list and gesture handling |
+| Remembered list catalog | Room catalog entity and suggestion query |
 | Simulated redirect | UsageStatsManager + intervention coordinator |
 
 ## Next implementation batch
 
-Review the simplified Tasks checklist after deployment. Once enough task feedback has accumulated, the next focused batch is reusable Lists:
+After review of Lists, the next major milestone is the Direct Intervention prototype:
 
-- Lists collection screen
-- Dedicated Create List flow
-- Reusable List detail
-- Remembered-item suggestions
-- Quantities and categories
-- Duplicate handling
-- Shopping/list session
-- List history and remembered-item catalog
+- Simulate Redirect control
+- Intervention screen
+- Start Task
+- Already Done
+- Different Task
+- Not Now
+- Focus Mode
+- Intervention settings and compatibility preview

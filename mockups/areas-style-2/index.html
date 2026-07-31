@@ -1,0 +1,48 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#303840" name="theme-color"/>
+<meta content="Nudge Areas Style 2 — an area-first interactive product concept." name="description"/>
+<title>Nudge — Areas Style 2</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="prototype-shell">
+<aside class="review-panel">
+<div class="brand-lockup"><span class="brand-mark">N</span><div><strong>Nudge</strong><small>Areas comparison prototype</small></div></div>
+<div class="style-badge">Style 2 · Area first</div>
+<h1>One home for every area.</h1>
+<p>This concept starts with Kitchen, Bathroom, Living Room, and other real-world areas. Frequency remains chore metadata rather than splitting each area into Light, Moderate, and Deep libraries.</p>
+<div class="review-actions">
+<button class="review-button primary" data-review-route="areas">Review Areas overview</button>
+<button class="review-button" data-review-route="area/house-kitchen">Review Kitchen</button>
+<button class="review-button" data-review-route="section/house-kitchen/appliances">Review Appliances</button>
+<button class="review-button" data-review-route="section/house-bedroom/bed-surfaces">Review empty-section setup</button>
+<button class="review-button subtle" data-action="reset-demo">Reset Style 2 demo data</button>
+</div>
+<div class="comparison-note"><strong>Safe comparison:</strong> this page uses a separate route and separate local storage. <a href="../../mockups/prototype/">Open the current Style 1 prototype.</a></div>
+</aside>
+<main aria-label="Nudge Areas Style 2 mobile prototype" class="device">
+<div class="status-bar"><span id="status-time">9:41</span><span class="status-icons">▮▮▮ ◉ ▰</span></div>
+<div class="app">
+<section aria-live="polite" class="screen" id="screen"></section>
+<nav aria-label="Primary navigation" class="bottom-nav">
+<button class="nav-item" data-nav="today"><span>⌂</span>Today</button>
+<button class="nav-item active" data-nav="areas"><span>▦</span>Areas</button>
+<button class="nav-item" data-nav="lists"><span>☷</span>Lists</button>
+<button class="nav-item" data-nav="tasks"><span>✓</span>Tasks</button>
+</nav>
+<div id="overlay-root"></div>
+<div id="toast-root"></div>
+</div>
+</main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

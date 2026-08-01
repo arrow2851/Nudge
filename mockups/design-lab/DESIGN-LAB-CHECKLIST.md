@@ -3,8 +3,8 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.6.1`  
-**Purpose:** Compare genuinely different design systems for the same Nudge product before selecting or synthesizing a final direction.
+**Current version:** `0.7.0`  
+**Purpose:** Compare genuinely different visual systems for the same Nudge product before selecting or synthesizing a final direction.
 
 This file is the source of truth for scope, order, progress, review gates, and decisions.
 
@@ -22,14 +22,15 @@ This file is the source of truth for scope, order, progress, review gates, and d
 
 # 0. Change-control agreement
 
-A hard stop is required before any change that alters:
+A hard stop is required before changing:
 
 - [ ] The shortlisted Looks
 - [ ] The three shared Round 1 screens
 - [ ] Shared scenario meaning or comparison fairness
 - [ ] Core Nudge hierarchy or behavior
-- [ ] Branch, routing, storage, deployment, or scoring architecture
-- [ ] A review gate or Round 2 participants
+- [ ] Branch, routing, storage, or deployment architecture materially
+- [ ] Scoring criteria after scoring begins
+- [ ] Review gates or Round 2 participants
 - [ ] Any merge into `main`
 - [ ] Promotion of a deferred aesthetic
 - [ ] A major omitted phase or newly discovered technical limitation
@@ -38,7 +39,7 @@ Required one-line response:
 
 > **Hard stop: review the Design Lab decision required before I continue.**
 
-After approval, update this checklist and `DECISIONS.md` before implementation resumes. Minor bugs, accessibility fixes, copy changes, validation infrastructure, and visual refinements may proceed without a hard stop.
+After approval, update this checklist and `DECISIONS.md` before implementation resumes. Minor bugs, accessibility fixes, copy changes, test infrastructure, capture tooling, and visual refinements may proceed without a hard stop.
 
 ---
 
@@ -50,7 +51,7 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 - [x] Add visible Experimental Design Lab and build labels
 - [x] Keep Design Lab state separate from Look #1
 - [x] Confirm the branch remains ahead of and not behind `main` during implementation
-- [ ] Recheck divergence before Round 1 scoring
+- [ ] Recheck divergence immediately before Round 1 scoring
 - [ ] Define how later Look #1 functionality changes are incorporated
 - [ ] Add a branch-specific preview deployment
 - [ ] Confirm preview deployment cannot replace production GitHub Pages
@@ -64,8 +65,7 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 
 ## Structure and behavior
 
-- [x] Landing page and shared review shell
-- [x] Desktop and mobile review controls
+- [x] Landing page, shared shell, and desktop/mobile controls
 - [x] Shared immutable fixtures and seven scenarios
 - [x] Query routing for Look, screen, scenario, and Area
 - [x] Browser Back/Forward implementation
@@ -74,11 +74,9 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 - [x] Per-Look renderer boundaries
 - [x] Separate Look-specific stylesheets
 - [x] README, scenarios, decisions, changelog, direction documents, quality notes, and progress logs
-- [x] Dependency-free validation harness in `validate-design-lab.mjs`
-- [x] Validation documentation in `VALIDATION.md`
-- [x] Shared browser route matrix in `ROUND-1-ROUTES.md`
-- [ ] Add screenshot-friendly presentation mode
-- [ ] Add `screenshots/` when canonical captures begin
+- [x] Add dependency-free route and fixture validation harness
+- [x] Add screenshot-friendly labelled and phone-only presentation modes
+- [ ] Add `screenshots/` when canonical captures actually begin
 - [ ] Add shared assets only when truly reused across Looks
 
 ## Comparison fairness
@@ -90,8 +88,8 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 - [x] Same simulated Round 1 actions
 - [x] Presentation and tone may change without changing meaning
 - [x] Direction and intentional differences documented for Looks #2, #3, #4, and #6
-- [x] Fixture counts, labels, required fields, and statuses covered programmatically
-- [x] No aesthetic-specific fixture exception exists
+- [~] Programmatic fixture-count and label verification is implemented; complete-checkout execution pending
+- [~] Programmatic check for aesthetic-specific fixture exceptions is implemented; execution pending
 
 ---
 
@@ -161,10 +159,10 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 ## Round 1 review
 
 - [ ] Canonical screenshots
-- [ ] Shared scorecard
-- [ ] Best feature, biggest weakness, confusing element, distinctive element, and borrowable components
-- [ ] Best and worst scenario
-- [ ] Finalist, revise, hold, or reject status
+- [ ] Complete shared scorecard
+- [ ] Record best feature, biggest weakness, confusing element, distinctive element, and borrowable components
+- [ ] Record best and worst scenario
+- [ ] Assign Finalist, Revise, Hold, Reject, or Components-only status
 
 ---
 
@@ -189,10 +187,10 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 ## Round 1 review
 
 - [ ] Canonical screenshots
-- [ ] Shared scorecard
-- [ ] Best feature, biggest weakness, confusing element, distinctive element, and borrowable components
-- [ ] Best and worst scenario
-- [ ] Finalist, revise, hold, or reject status
+- [ ] Complete shared scorecard
+- [ ] Record best feature, biggest weakness, confusing element, distinctive element, and borrowable components
+- [ ] Record best and worst scenario
+- [ ] Assign Finalist, Revise, Hold, Reject, or Components-only status
 
 ---
 
@@ -221,10 +219,10 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 ## Round 1 review
 
 - [ ] Canonical screenshots
-- [ ] Shared scorecard
-- [ ] Best feature, biggest weakness, confusing element, distinctive element, and borrowable components
-- [ ] Best and worst scenario
-- [ ] Finalist, revise, hold, or reject status
+- [ ] Complete shared scorecard
+- [ ] Record best feature, biggest weakness, confusing element, distinctive element, and borrowable components
+- [ ] Record best and worst scenario
+- [ ] Assign Finalist, Revise, Hold, Reject, or Components-only status
 
 ---
 
@@ -253,45 +251,37 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 ## Round 1 review
 
 - [ ] Canonical screenshots
-- [ ] Shared scorecard
-- [ ] Best feature, biggest weakness, confusing element, distinctive element, and borrowable components
-- [ ] Best and worst scenario
-- [ ] Finalist, revise, hold, or reject status
+- [ ] Complete shared scorecard
+- [ ] Record best feature, biggest weakness, confusing element, distinctive element, and borrowable components
+- [ ] Record best and worst scenario
+- [ ] Assign Finalist, Revise, Hold, Reject, or Components-only status
 
 ---
 
-# 9. Shared static, fixture, import, and route validation
+# 9. Shared static and route validation
 
-## Automated harness
+## Validation tooling
 
-- [x] Add a no-dependency Node validation script
-- [x] Verify every required file exists
-- [x] Verify every local JavaScript import target exists
-- [x] Verify every linked stylesheet and script exists
-- [x] Verify stylesheet loading order
-- [x] Verify all Look IDs have renderer exports and routing branches
-- [x] Verify all seven scenario IDs resolve
-- [x] Verify every scenario includes required Area, routine, and Intervention fields
-- [x] Verify supported routine statuses and positive durations
-- [x] Verify expected attention counts and Large Household size
-- [x] Verify scenario cloning and unknown-scenario fallback
-- [x] Generate and validate 84 Look/screen/scenario route combinations
-- [x] Verify Area query serialization and removal from non-Area routes
-- [x] Verify invalid route fallbacks
-- [x] Verify push/replace history behavior and isolated session storage
-- [x] Verify version consistency across core metadata files
-- [x] Check CSS brace balance
+- [x] Add `validate-design-lab.mjs` without external dependencies
+- [x] Cover required files and local import targets
+- [x] Cover linked stylesheets and required DOM hooks
+- [x] Cover all Look IDs, renderer exports, and `app.js` routing
+- [x] Cover scenario IDs, required fields, statuses, durations, counts, and clone behavior
+- [x] Cover 84 Look/screen/scenario route combinations
+- [x] Cover representative Area routes and invalid-route fallbacks
+- [x] Cover history methods and isolated session storage
+- [x] Cover version consistency, stylesheet order, HTML references, and CSS brace balance
 - [x] Syntax-check the validator itself
-- [x] Document the browser/device checks that static validation cannot replace
-- [~] Execute the validator against a complete local or CI checkout; this session cannot resolve GitHub for cloning
+- [~] Execute the validator against a complete checkout; unavailable in this session because GitHub cloning could not resolve
 
-## Browser review preparation
+## Browser-required validation
 
-- [x] Document canonical and stress routes for all four Looks
-- [x] Document invalid-route checks
-- [x] Document browser Back/Forward procedure
-- [x] Document required phone, short, landscape, and desktop viewports
-- [x] Document evidence fields to capture
+- [ ] Confirm no console errors during all core routes
+- [ ] Verify direct routes load in a real browser
+- [ ] Verify Back/Forward in a real browser
+- [ ] Verify Reset Review State in a real browser
+- [ ] Verify Look/scenario switching in a real browser
+- [ ] Verify invalid-route fallback presentation in a real browser
 
 ---
 
@@ -300,22 +290,23 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 ## Responsive and device
 
 - [~] Static 360 px, 390 px, and 412 px rules complete; visual walkthrough pending
-- [ ] Tall Android-like viewport
-- [ ] Short constrained viewport
-- [ ] Desktop review panel
-- [ ] Mobile review selector
-- [ ] Portrait walkthrough
-- [ ] Landscape smoke test
+- [ ] 360 × 800 narrow Android-like viewport
+- [ ] 390 × 844 canonical phone viewport
+- [ ] 412 × 915 large Android-like viewport
+- [ ] 390 × 700 short constrained viewport
+- [ ] 844 × 390 landscape smoke test
+- [ ] 1440 × 900 desktop review panel
+- [ ] Mobile review selector walkthrough
 
 ## Browser behavior
 
-- [ ] Run `node validate-design-lab.mjs` in a complete checkout
 - [ ] No console errors during core routes
 - [ ] Direct links load correctly
 - [ ] Browser Back and Forward work correctly
 - [ ] Reset Review State works correctly
 - [ ] Look and scenario switching preserve equivalent state
 - [ ] Invalid routes fall back safely
+- [ ] Simulated actions produce readable toast feedback
 
 ## Accessibility
 
@@ -330,63 +321,61 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 - [ ] Logical tab order verification
 - [ ] Screen-reader smoke test
 - [ ] Forced-colors visual inspection
+- [ ] Reduced-motion browser inspection
 - [ ] Intervention actions remain unambiguous in every Look
 
 ## Stress content
 
 - [x] Required stress states exist in the fixture
 - [x] Every Look has code-level dense-data and overflow handling
-- [ ] Visually verify every stress scenario in every Look
+- [ ] Visually verify Heavy Backlog in every Look
+- [ ] Visually verify New User in every Look
+- [ ] Visually verify All Clear in every Look
+- [ ] Visually verify Large Household in every Look
+- [ ] Visually verify Long Content in every Look
+- [ ] Visually verify Large Text in every Look
 
 ---
 
 # 11. Review preparation and evidence capture
 
-## Canonical screenshots
+## Capture tooling
 
-- [ ] Define exact viewport and capture rules
-- [ ] Add screenshot-friendly mode
+- [x] Define exact viewport and capture rules
+- [x] Add `capture=labelled` stable evidence mode
+- [x] Add `capture=phone` clean phone mode
+- [x] Add automatic Look, screen, scenario, and version label
+- [x] Fix capture time at 9:41
+- [x] Keep capture mode presentation-only and separate from demo state
+- [x] Define evidence filename convention
 - [ ] Capture Areas Normal Day for Looks #1, #2, #3, #4, and #6
 - [ ] Capture Kitchen Heavy Backlog
 - [ ] Capture Intervention Normal Day
-- [ ] Capture New User, All Clear, Large Household, Long Content, and Large Text evidence
-- [ ] Store captures under `screenshots/`
-- [ ] Label every image with Look, screen, scenario, viewport, and version
+- [ ] Capture concern-specific New User, All Clear, Large Household, Long Content, Large Text, narrow, short, and forced-colors evidence
+- [ ] Store approved captures under `screenshots/`
 
 ## Shared scorecard
 
-Score each Look from 1–5 for:
+- [x] Add Markdown scorecard for Look #1 and Looks #2, #3, #4, and #6
+- [x] Define 1–5 anchors
+- [x] Include Clarity, Calmness, Speed, Personality, Density, Scalability, Intervention suitability, Accessibility, Versatility, and Daily preference
+- [x] Include qualitative findings and borrowable-component fields
+- [x] Include ranking, finalist, disposition, focused-revision, and synthesis fields
+- [x] Keep scores separate from demo state
+- [x] Keep the Markdown scorecard directly copyable
+- [d] In-app score persistence, export, and Reset Scores unless Markdown proves insufficient
+- [ ] Fill all scores and qualitative fields
 
-- [ ] Clarity
-- [ ] Calmness
-- [ ] Speed
-- [ ] Personality
-- [ ] Density
-- [ ] Scalability
-- [ ] Intervention suitability
-- [ ] Accessibility
-- [ ] Versatility across Home, Car, Personal, and Work
-- [ ] Daily preference
+## Review protocol
 
-Record for every Look:
-
-- [ ] Best feature
-- [ ] Biggest problem
-- [ ] Most confusing element
-- [ ] Most distinctive element
-- [ ] Component worth borrowing
-- [ ] Best-performing scenario
-- [ ] Worst-performing scenario
-- [ ] Final Round 1 recommendation
-
-## Review tooling
-
-- [ ] Add Markdown or in-app scorecard
-- [ ] Add documented notes workflow
-- [ ] Allow score copying or export
-- [ ] Keep scores separate from demo state
-- [ ] Preserve scores across Look switching
-- [ ] Add Reset Scores confirmation if scores are stored in-app
+- [x] Document local setup and validation command
+- [x] Document canonical and stress route order
+- [x] Document viewport matrix
+- [x] Document browser-history, switching, reset, invalid-route, and console checks
+- [x] Document keyboard and screen-reader smoke tests
+- [x] Document forced-colors and reduced-motion checks
+- [x] Document evidence-record fields
+- [ ] Execute the protocol and record results
 
 ---
 
@@ -396,12 +385,12 @@ Do not begin Round 2 until:
 
 - [x] All four shortlisted Looks have equivalent screens and scenarios
 - [ ] Quality limitations are documented and review evidence is sufficient
-- [ ] Look #1 and all shortlisted Looks have scorecards
+- [ ] Look #1 and all shortlisted Looks have completed scorecards
 - [ ] Findings and borrowable components are summarized
 - [ ] Approximately two or three finalists are selected
-- [ ] Non-finalists are marked hold, reject, or components-only
+- [ ] Non-finalists are marked Hold, Reject, or Components only
 - [ ] Focused finalist revisions, if any, are defined
-- [ ] Synthesis remains allowed or is rejected
+- [ ] Synthesis remains allowed, rejected, or explicitly deferred
 - [ ] Checklist and decision log are updated
 
 When the selection decision is required, use the one-line hard stop and wait for review.
@@ -410,7 +399,7 @@ When the selection decision is required, use the one-line hard stop and wait for
 
 # 13. Round 2 — Interactive vertical slices
 
-Each finalist must support:
+Each selected finalist must support:
 
 - [ ] Today → Areas → Kitchen → representative Section → Chore detail
 - [ ] Graded completion and Light/Moderate/Deep selection
@@ -502,8 +491,8 @@ Detailed decisions live in [`DECISIONS.md`](DECISIONS.md).
 - [x] `0.3.0` — Modular per-Look architecture
 - [x] `0.4.0–0.4.1` — Precision Minimal implementation and quality
 - [x] `0.5.0–0.5.1` — Zen Focus implementation and quality
-- [x] `0.6.0–0.6.1` — Tactile Household implementation and quality
-- [x] `0.6.1 validation foundation` — Automated fixture, import, renderer, route, version, and CSS checks plus browser route matrix
+- [x] `0.6.0–0.6.1` — Tactile Household implementation, quality, and validation foundation
+- [x] `0.7.0` — Capture modes, review protocol, and shared scorecard
 
 ---
 
@@ -511,10 +500,11 @@ Detailed decisions live in [`DECISIONS.md`](DECISIONS.md).
 
 - [x] Implement and code-review Looks #2, #3, #4, and #6
 - [x] Add shared static, fixture, import, and route validation tooling
-- [x] Prepare browser/device/accessibility review routes
-- [~] Execute automated validation against a complete checkout
-- [ ] Perform browser, device, keyboard, screen-reader, and forced-colors review
-- [ ] Add scorecards and screenshot-friendly mode
+- [x] Prepare browser/device/accessibility review routes and protocol
+- [x] Add scorecard and screenshot-friendly modes
+- [ ] Execute the validator in a complete checkout
+- [ ] Execute browser/device/keyboard/screen-reader/forced-colors evidence review
 - [ ] Capture canonical comparison evidence
-- [ ] Score Look #1 and all shortlisted Looks
+- [ ] Map and capture equivalent Look #1 evidence
+- [ ] Fill the scorecard and summarize borrowable components
 - [!] Hold the mandatory Round 1 selection gate before any full-app expansion

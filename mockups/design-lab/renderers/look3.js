@@ -1,20 +1,24 @@
 import { attentionCount, dueLabel, esc, nextRoutine, statusFor } from '../utils.js';
 
 function statusToken(item) {
-  return `<span class="pm-status pm-${esc(item.status)}">${esc(dueLabel(item.status))}</span>`;
+  const label = dueLabel(item.status);
+  return `<span class="pm-status pm-${esc(item.status)}" aria-label="Status: ${esc(label)}">${esc(label)}</span>`;
 }
 
 function areaRows(areas) {
   return areas.map(area => {
     const status = statusFor(area);
     const next = nextRoutine(area);
+    const nextTitle = next ? next.title : 'No routines configured';
+    const structure = area.sections ? `${area.sections} sections` : 'standalone area';
+    const ariaLabel = `${area.name}. ${status.label}. Next routine: ${nextTitle}. ${area.routines.length} routines, ${structure}.`;
     return `
-      <button class="pm-area-row ${status.className}" data-area-id="${esc(area.id)}">
+      <button class="pm-area-row ${status.className}" data-area-id="${esc(area.id)}" aria-label="${esc(ariaLabel)}">
         <span class="pm-area-main">
           <strong>${esc(area.name)}</strong>
           <small>${area.routines.length} routines${area.sections ? ` / ${area.sections} sections` : ' / standalone'}</small>
         </span>
-        <span class="pm-area-next">${next ? esc(next.title) : 'No routines configured'}</span>
+        <span class="pm-area-next">${esc(nextTitle)}</span>
         <span class="pm-area-state"><b>${esc(status.count)}</b><small>${esc(status.label)}</small></span>
         <span class="pm-arrow" aria-hidden="true">→</span>
       </button>`;
@@ -31,7 +35,7 @@ export function renderAreasPrecision(data) {
           <p>Recurring care, organized by place.</p>
         </header>
         <div class="pm-empty">
-          <span class="pm-index">00</span>
+          <span class="pm-index" aria-hidden="true">00</span>
           <h2>No areas configured</h2>
           <p>Add Home, Car, Personal, Work, or another place you want to maintain.</p>
           <button class="pm-primary" data-action="demo-add-area">Add first area</button>
@@ -41,6 +45,9 @@ export function renderAreasPrecision(data) {
 
   const attention = data.areas.reduce((sum, area) => sum + attentionCount(area), 0);
   const affected = data.areas.filter(area => attentionCount(area)).length;
+  const summaryLabel = attention
+    ? `${attention} routines need attention across ${affected} ${affected === 1 ? 'area' : 'areas'}.`
+    : 'All important routines are current.';
   return `
     <section class="pm-page">
       <header class="pm-header pm-header-grid">
@@ -49,12 +56,12 @@ export function renderAreasPrecision(data) {
           <h1>Areas</h1>
           <p>Recurring care, organized by place.</p>
         </div>
-        <div class="pm-summary">
+        <div class="pm-summary" aria-label="${esc(summaryLabel)}">
           <strong>${String(attention).padStart(2, '0')}</strong>
           <span>${attention ? `attention / ${affected} areas` : 'all current'}</span>
         </div>
       </header>
-      <div class="pm-column-head"><span>Area</span><span>Next routine</span><span>Status</span><span></span></div>
+      <div class="pm-column-head" aria-hidden="true"><span>Area</span><span>Next routine</span><span>Status</span><span></span></div>
       <div class="pm-area-table">${areaRows(data.areas)}</div>
       <button class="pm-add" data-action="demo-add-area">+ Add area</button>
     </section>`;
@@ -63,7 +70,7 @@ export function renderAreasPrecision(data) {
 function routineRows(items, areaName) {
   return items.map(item => `
     <div class="pm-routine-row">
-      <button class="pm-check" data-action="complete-demo" aria-label="Complete ${esc(item.title)}"><span></span></button>
+      <button class="pm-check" data-action="complete-demo" aria-label="Complete ${esc(item.title)}"><span aria-hidden="true"></span></button>
       <span class="pm-routine-main"><strong>${esc(item.title)}</strong><small>${esc(item.section || areaName)} / ${esc(item.repeat)} / ${item.minutes} min</small></span>
       ${statusToken(item)}
     </div>`).join('');
@@ -83,7 +90,7 @@ export function renderAreaDetailPrecision(data, requestedAreaId, renderUnsupport
       <button class="pm-back" data-action="back-areas">← Areas</button>
       <header class="pm-detail-header">
         <div><div class="pm-kicker">AREA / ${esc(area.id).toUpperCase()}</div><h1>${esc(area.name)}</h1><p>${area.routines.length} recurring routines</p></div>
-        <div class="pm-detail-metrics"><span><b>${String(attention.length).padStart(2, '0')}</b><small>attention</small></span><span><b>${String(sections.length).padStart(2, '0')}</b><small>sections</small></span></div>
+        <div class="pm-detail-metrics" aria-label="${attention.length} routines need attention. ${sections.length} sections."><span><b>${String(attention.length).padStart(2, '0')}</b><small>attention</small></span><span><b>${String(sections.length).padStart(2, '0')}</b><small>sections</small></span></div>
       </header>
       <section class="pm-block">
         <div class="pm-block-title"><h2>Needs attention</h2><span>${attention.length}</span></div>
@@ -93,8 +100,9 @@ export function renderAreaDetailPrecision(data, requestedAreaId, renderUnsupport
         <div class="pm-block-title"><h2>Sections</h2><span>${sections.length}</span></div>
         ${sections.map(name => {
           const count = area.routines.filter(item => item.section === name).length;
-          return `<button class="pm-section-row" data-action="section-demo"><span><strong>${esc(name)}</strong><small>${count ? `${count} routines` : 'Not configured'}</small></span><span>${String(count).padStart(2, '0')} →</span></button>`;
-        }).join('') || '<button class="pm-section-row" data-action="section-demo"><span><strong>General</strong><small>Standalone routines</small></span><span>→</span></button>'}
+          const sectionState = count ? `${count} routines` : 'Not configured';
+          return `<button class="pm-section-row" data-action="section-demo" aria-label="${esc(name)}. ${esc(sectionState)}."><span><strong>${esc(name)}</strong><small>${sectionState}</small></span><span aria-hidden="true">${String(count).padStart(2, '0')} →</span></button>`;
+        }).join('') || '<button class="pm-section-row" data-action="section-demo" aria-label="General. Standalone routines."><span><strong>General</strong><small>Standalone routines</small></span><span aria-hidden="true">→</span></button>'}
       </section>
       <section class="pm-block">
         <div class="pm-block-title"><h2>Later</h2><span>${later.length}</span></div>
@@ -112,9 +120,9 @@ export function renderInterventionPrecision(data) {
         <div class="pm-signal" aria-hidden="true"></div>
         <h1>Pause here?</h1>
         <p>You have been in ${esc(item.app)} for ${item.minutes} minutes. No judgment—this may be a useful time to switch context.</p>
-        <article class="pm-suggestion">
+        <article class="pm-suggestion" aria-labelledby="pm-suggestion-title">
           <span>Suggested action</span>
-          <h2>${esc(item.task)}</h2>
+          <h2 id="pm-suggestion-title">${esc(item.task)}</h2>
           <div><b>${esc(item.location)}</b><b>${item.duration} min</b></div>
         </article>
       </div>

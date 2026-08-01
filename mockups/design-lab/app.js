@@ -3,6 +3,7 @@ import { getScenario } from './fixtures.js';
 import { renderReviewControls } from './controls.js';
 import { clearStoredState, commitState, defaultState, readStateFromLocation } from './state.js';
 import { renderAreaDetail, renderAreasEditorial, renderInterventionEditorial } from './renderers/look2.js';
+import { renderAreaDetailPrecision, renderAreasPrecision, renderInterventionPrecision } from './renderers/look3.js';
 import { renderFutureLook, renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
@@ -16,23 +17,29 @@ const elements = {
   toastRoot: document.querySelector('#toast-root')
 };
 
+function renderLook(look, data) {
+  if (look.id === 2) {
+    if (state.view === 'intervention') return renderInterventionEditorial(data);
+    if (state.view === 'area') return renderAreaDetail(data, state.areaId, renderUnsupported);
+    if (state.view === 'areas') return renderAreasEditorial(data);
+  }
+
+  if (look.id === 3) {
+    if (state.view === 'intervention') return renderInterventionPrecision(data);
+    if (state.view === 'area') return renderAreaDetailPrecision(data, state.areaId, renderUnsupported);
+    if (state.view === 'areas') return renderAreasPrecision(data);
+  }
+
+  if (look.id === 4 || look.id === 6) return renderFutureLook(look);
+  return renderUnsupported('The requested screen is not part of the Round 1 audition.');
+}
+
 function render({ routeAction = 'none' } = {}) {
   const data = getScenario(state.scenario);
   const look = renderReviewControls(state, data, elements);
   document.documentElement.dataset.textScale = data.textScale || 'normal';
-
-  if (look.id !== 2) {
-    elements.screen.innerHTML = renderFutureLook(look);
-  } else if (state.view === 'intervention') {
-    elements.screen.innerHTML = renderInterventionEditorial(data);
-  } else if (state.view === 'area') {
-    elements.screen.innerHTML = renderAreaDetail(data, state.areaId, renderUnsupported);
-  } else if (state.view === 'areas') {
-    elements.screen.innerHTML = renderAreasEditorial(data);
-  } else {
-    elements.screen.innerHTML = renderUnsupported('The requested screen is not part of the Round 1 audition.');
-  }
-
+  document.documentElement.dataset.look = String(look.id);
+  elements.screen.innerHTML = renderLook(look, data);
   elements.screen.scrollTop = 0;
   if (routeAction === 'push') commitState(state);
   if (routeAction === 'replace') commitState(state, { replace: true });

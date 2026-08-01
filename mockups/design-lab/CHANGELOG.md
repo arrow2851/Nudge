@@ -1,5 +1,19 @@
 # Design Lab Changelog
 
+## 0.7.0 — 2026-08-01
+
+### Round 1 review preparation
+
+- Added `capture=labelled` evidence mode with a stable 390 × 844 desktop phone frame
+- Added `capture=phone` clean phone-frame mode
+- Added automatic Look, screen, scenario, and version evidence labels
+- Fixed capture-mode status time at 9:41 for comparable screenshots
+- Added `ROUND-1-REVIEW-PROTOCOL.md` with browser, device, keyboard, screen-reader, forced-colors, reduced-motion, stress, and screenshot procedures
+- Added `ROUND-1-SCORECARD.md` with shared 1–5 criteria and qualitative decision fields for Look #1 and Looks #2, #3, #4, and #6
+- Added exact viewport and evidence filename conventions
+- Kept capture mode presentation-only and separate from demo state
+- Updated the Design Lab to `0.7.0`
+
 ## 0.6.1 — 2026-08-01
 
 ### Shared validation foundation

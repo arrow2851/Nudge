@@ -38,7 +38,7 @@ function areaCards(areas) {
 export function renderAreasZen(data) {
   if (!data.areas.length) {
     return `
-      <section class="zen-page zen-empty-page">
+      <section class="zen-page zen-empty-page" aria-label="Areas empty state">
         <header class="zen-header">
           <span class="zen-eyebrow">Areas</span>
           <h1>Begin with one place.</h1>
@@ -52,22 +52,23 @@ export function renderAreasZen(data) {
   const attention = data.areas.reduce((sum, area) => sum + attentionCount(area), 0);
   const affected = data.areas.filter(area => attentionCount(area)).length;
   const focus = priorityRoutine(data.areas);
+  const focusLabel = attention ? 'A gentle place to start' : 'Available when useful';
   return `
-    <section class="zen-page">
+    <section class="zen-page" aria-label="Zen Focus Areas overview">
       <header class="zen-header">
         <span class="zen-eyebrow">Your spaces</span>
         <h1>${attention ? 'A few things are asking for attention.' : 'Everything important can rest.'}</h1>
         <p>${attention ? `${attention} routines across ${affected} ${affected === 1 ? 'area' : 'areas'}. You only need to begin with one.` : 'As-needed routines remain nearby without creating urgency.'}</p>
       </header>
       ${focus ? `
-        <article class="zen-focus-card ${esc(focus.status)}">
-          <span class="zen-focus-label">A gentle place to start</span>
+        <article class="zen-focus-card ${esc(focus.status)}" aria-label="${esc(`${focusLabel}: ${focus.title} in ${focus.areaName}, about ${focus.minutes} minutes`)}">
+          <span class="zen-focus-label">${focusLabel}</span>
           <h2>${esc(focus.title)}</h2>
           <p>${esc(focus.areaName)} · about ${focus.minutes} minutes</p>
-          <button data-area-id="${esc(focus.areaId)}">Open ${esc(focus.areaName)}</button>
+          <button data-area-id="${esc(focus.areaId)}" aria-label="${esc(`Open ${focus.areaName} to view ${focus.title}`)}">Open ${esc(focus.areaName)}</button>
         </article>` : ''}
       <section class="zen-area-list" aria-label="All areas">
-        <div class="zen-section-heading"><span>All areas</span><small>${data.areas.length}</small></div>
+        <div class="zen-section-heading"><span>All areas</span><small aria-label="${data.areas.length} areas">${data.areas.length}</small></div>
         ${areaCards(data.areas)}
       </section>
       <button class="zen-add" data-action="demo-add-area">Add another area</button>
@@ -75,12 +76,13 @@ export function renderAreasZen(data) {
 }
 
 function routineRow(item, areaName) {
-  const label = `${item.title}. ${dueLabel(item.status)}. ${item.section || areaName}. ${item.repeat}. About ${item.minutes} minutes.`;
+  const status = dueLabel(item.status);
+  const details = `${item.section || areaName}. ${item.repeat}. About ${item.minutes} minutes.`;
   return `
-    <div class="zen-routine-row ${esc(item.status)}">
-      <button class="zen-check" data-action="complete-demo" aria-label="Complete ${esc(item.title)}"><span></span></button>
+    <div class="zen-routine-row ${esc(item.status)}" aria-label="${esc(`${item.title}. ${status}. ${details}`)}">
+      <button class="zen-check" data-action="complete-demo" aria-label="Complete ${esc(item.title)}"><span aria-hidden="true"></span></button>
       <span class="zen-routine-copy"><strong>${esc(item.title)}</strong><small>${esc(item.section || areaName)} · ${esc(item.repeat)} · ${item.minutes} min</small></span>
-      <span class="zen-routine-status" aria-label="${esc(label)}">${esc(dueLabel(item.status))}</span>
+      <span class="zen-routine-status" aria-hidden="true">${esc(status)}</span>
     </div>`;
 }
 
@@ -92,11 +94,12 @@ export function renderAreaDetailZen(data, requestedAreaId, renderUnsupported) {
   const later = area.routines.filter(item => item.status !== 'overdue' && item.status !== 'today');
   const focus = attention[0] || later[0] || null;
   const remainingAttention = focus ? attention.filter(item => item !== focus) : attention;
+  const remainingLater = later.filter(item => item !== focus);
   const sections = [...new Set(area.routines.map(item => item.section).filter(Boolean))];
   if (area.unconfigured && !sections.includes(area.unconfigured)) sections.push(area.unconfigured);
 
   return `
-    <section class="zen-page zen-detail-page">
+    <section class="zen-page zen-detail-page" aria-label="${esc(`${area.name} area detail`)}">
       <button class="zen-back" data-action="back-areas">← All areas</button>
       <header class="zen-detail-header">
         <span class="zen-eyebrow">Area</span>
@@ -104,27 +107,28 @@ export function renderAreaDetailZen(data, requestedAreaId, renderUnsupported) {
         <p>${attention.length ? `${attention.length} need attention` : 'Nothing pressing'} · ${area.routines.length} recurring routines</p>
       </header>
       ${focus ? `
-        <section class="zen-start-card ${esc(focus.status)}">
+        <section class="zen-start-card ${esc(focus.status)}" aria-label="${esc(`${attention.length ? 'Start here' : 'Available when useful'}: ${focus.title}. ${focus.section || area.name}. ${focus.repeat}. About ${focus.minutes} minutes.`)}">
           <span>${attention.length ? 'Start here' : 'Available when useful'}</span>
           <h2>${esc(focus.title)}</h2>
           <p>${esc(focus.section || area.name)} · ${esc(focus.repeat)} · about ${focus.minutes} minutes</p>
-          <button class="zen-primary" data-action="complete-demo">Mark complete</button>
+          <button class="zen-primary" data-action="complete-demo" aria-label="Complete ${esc(focus.title)}">Mark complete</button>
         </section>` : ''}
       ${remainingAttention.length ? `
-        <section class="zen-group">
-          <div class="zen-section-heading"><span>Also needs attention</span><small>${remainingAttention.length}</small></div>
+        <section class="zen-group" aria-label="Also needs attention">
+          <div class="zen-section-heading"><span>Also needs attention</span><small aria-label="${remainingAttention.length} routines">${remainingAttention.length}</small></div>
           ${remainingAttention.map(item => routineRow(item, area.name)).join('')}
         </section>` : ''}
-      <section class="zen-group">
-        <div class="zen-section-heading"><span>Sections</span><small>${sections.length}</small></div>
+      <section class="zen-group" aria-label="Sections">
+        <div class="zen-section-heading"><span>Sections</span><small aria-label="${sections.length} sections">${sections.length}</small></div>
         ${sections.map(name => {
           const count = area.routines.filter(item => item.section === name).length;
-          return `<button class="zen-section-row" data-action="section-demo"><span><strong>${esc(name)}</strong><small>${count ? `${count} routines` : 'Not configured yet'}</small></span><span aria-hidden="true">›</span></button>`;
-        }).join('') || '<button class="zen-section-row" data-action="section-demo"><span><strong>General</strong><small>Standalone routines</small></span><span aria-hidden="true">›</span></button>'}
+          const countText = count ? `${count} routines` : 'Not configured yet';
+          return `<button class="zen-section-row" data-action="section-demo" aria-label="${esc(`${name}. ${countText}`)}"><span><strong>${esc(name)}</strong><small>${countText}</small></span><span aria-hidden="true">›</span></button>`;
+        }).join('') || '<button class="zen-section-row" data-action="section-demo" aria-label="General. Standalone routines"><span><strong>General</strong><small>Standalone routines</small></span><span aria-hidden="true">›</span></button>'}
       </section>
-      <section class="zen-group">
-        <div class="zen-section-heading"><span>Later and as needed</span><small>${later.filter(item => item !== focus).length}</small></div>
-        ${later.filter(item => item !== focus).map(item => routineRow(item, area.name)).join('') || '<p class="zen-quiet">Nothing else is waiting here.</p>'}
+      <section class="zen-group" aria-label="Later and as needed">
+        <div class="zen-section-heading"><span>Later and as needed</span><small aria-label="${remainingLater.length} routines">${remainingLater.length}</small></div>
+        ${remainingLater.map(item => routineRow(item, area.name)).join('') || '<p class="zen-quiet">Nothing else is waiting here.</p>'}
       </section>
     </section>`;
 }
@@ -132,14 +136,14 @@ export function renderAreaDetailZen(data, requestedAreaId, renderUnsupported) {
 export function renderInterventionZen(data) {
   const item = data.intervention;
   return `
-    <section class="zen-intervention">
+    <section class="zen-intervention" aria-label="${esc(`Intervention after ${item.minutes} minutes in ${item.app}`)}">
       <div class="zen-pause-mark" aria-hidden="true"><span></span></div>
       <div class="zen-intervention-copy">
         <span class="zen-eyebrow">A small pause</span>
         <h1>Would stepping away help?</h1>
         <p>You have spent ${item.minutes} minutes in ${esc(item.app)}. There is no penalty for staying. This is simply a chance to choose again.</p>
       </div>
-      <article class="zen-suggestion">
+      <article class="zen-suggestion" aria-label="${esc(`Suggested action: ${item.task}. ${item.location}. About ${item.duration} minutes.`)}">
         <span>One useful option</span>
         <h2>${esc(item.task)}</h2>
         <p>${esc(item.location)} · about ${item.duration} minutes</p>

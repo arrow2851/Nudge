@@ -2,6 +2,12 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
+## Project tracking
+
+- [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
+
+The checklist is the persistent source of truth for scope, progress, review gates, and plan adjustments. Material changes require a pause, a full checklist review, and an approved plan update before implementation continues.
+
 ## Safety boundary
 
 - Development branch: `feature/design-lab`

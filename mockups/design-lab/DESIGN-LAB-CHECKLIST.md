@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.5.1`  
+**Current version:** `0.6.0`  
 **Purpose:** Compare genuinely different design systems for the same Nudge product before selecting or synthesizing a final direction.
 
 This file is the source of truth for scope, order, progress, review gates, and decisions.
@@ -83,9 +83,9 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 - [x] Clone scenario data before rendering
 - [x] Keep Round 1 actions simulated and equivalent
 - [x] Allow presentation and tone differences without changing meaning
-- [x] Document intentional differences for Looks #2, #3, and #4
+- [x] Document intentional differences for Looks #2, #3, #4, and #6
 - [ ] Verify fixture counts and labels programmatically
-- [ ] Confirm no aesthetic-specific fixture exception after Look #6 exists
+- [x] Confirm no aesthetic-specific fixture exception after all four Looks exist
 
 ---
 
@@ -230,32 +230,33 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 
 ## Direction definition
 
-- [ ] Confirm physical labels, controls, index-card organization, and satisfying tactile cues
-- [ ] Define palette and material references
-- [ ] Define readable typography
-- [ ] Define checkbox, switch, stamp, and completion treatments
-- [ ] Define support beyond household content
-- [ ] Define an Intervention where novelty does not distract
-- [ ] Document anti-patterns: fake skeuomorphism, excessive decoration, and unclear affordances
+- [x] Confirm physical labels, controls, index-card organization, and satisfying tactile cues
+- [x] Define restrained palette and non-photorealistic material references
+- [x] Define readable typography
+- [x] Define checkbox, status-stamp, raised-button, card, and Section-drawer treatments
+- [x] Define support beyond household content
+- [x] Define a supportive timer-panel Intervention where novelty does not distract
+- [x] Document anti-patterns: fake skeuomorphism, excessive decoration, and unclear affordances
 
 ## Round 1 implementation
 
-- [ ] Areas overview using the shared fixture
-- [ ] Representative Area detail
-- [ ] Intervention
-- [ ] All seven scenarios
-- [ ] Shared route and simulated-action behavior
-- [ ] Dense-list and long-content fallback
-- [ ] Large Text and narrow-phone handling
-- [ ] Initial semantics and forced-colors handling
+- [x] Areas overview using the shared fixture
+- [x] Representative Area detail
+- [x] Intervention
+- [x] All seven scenarios
+- [x] Shared route and simulated-action behavior
+- [x] Initial dense-list and long-content fallback
+- [x] Initial Large Text and narrow-phone handling
+- [x] Initial semantics and forced-colors handling
 
 ## Code-level quality
 
-- [ ] Responsive and overflow pass
-- [ ] Contrast and essential-text review
-- [ ] Accessibility semantics and touch targets
-- [ ] Decorative performance and readability review
-- [ ] Blocking-issue resolution
+- [~] Responsive and overflow pass
+- [~] Contrast and essential-text review
+- [~] Accessibility semantics and touch targets
+- [~] Decorative performance and readability review
+- [~] Blocking-issue resolution
+- [ ] Actual-browser, keyboard, screen-reader, and comparative review
 
 ## Round 1 review
 
@@ -319,7 +320,7 @@ Promotion requires a hard stop, explanation of the shortlist gap, and equivalent
 
 ## Responsive and device
 
-- [~] 360 px, 390 px, and 412 px static rules complete for Looks #2–#4; real-browser review pending
+- [~] 360 px, 390 px, and 412 px static rules exist for all four Looks; Look #6 quality review and real-browser evidence pending
 - [ ] Tall Android-like viewport
 - [ ] Short constrained viewport
 - [ ] Desktop review panel
@@ -330,24 +331,24 @@ Promotion requires a hard stop, explanation of the shortlist gap, and equivalent
 ## Accessibility
 
 - [x] Visible focus treatment
-- [x] Approximate 44–48 px critical touch targets
+- [x] Approximate 44–48 px critical touch targets in implemented foundations
 - [x] Textual status in addition to color
-- [x] Code-level contrast correction for active Looks
+- [~] Code-level contrast correction complete for Looks #2–#4; Look #6 pass pending
 - [x] Meaningful labels and selected-state semantics
-- [x] Explicit Large Text scenario support
+- [x] Explicit Large Text scenario support in all four Looks
 - [x] Reduced-motion and forced-colors foundations
 - [~] Browser tab order, keyboard operation, and screen-reader smoke tests pending
 
 ## Content and stress
 
 - [x] Fixture contains every required stress state
-- [x] Looks #2–#4 include code-level overflow and dense-data handling
+- [x] All four Looks include initial overflow and dense-data handling
 - [ ] Visually verify every stress state in every completed Look
 
 ## Technical
 
 - [x] HTML parser, CSS balance, and JavaScript syntax checks completed during prior milestones
-- [ ] Run a current full static check after Look #6
+- [ ] Run a current full static check after the Look #6 quality pass
 - [ ] Confirm no console errors during all core routes
 - [ ] Verify browser Back/Forward in a browser
 - [ ] Add route-level automated checks
@@ -360,7 +361,7 @@ Promotion requires a hard stop, explanation of the shortlist gap, and equivalent
 
 Do not begin Round 2 until:
 
-- [ ] All four shortlisted Looks have equivalent screens and scenarios
+- [x] All four shortlisted Looks have equivalent screens and scenarios
 - [ ] Quality checks are complete or limitations documented
 - [ ] Look #1 and all shortlisted Looks have scorecards
 - [ ] Findings and borrowable components are summarized
@@ -466,6 +467,7 @@ Detailed decisions live in [`DECISIONS.md`](DECISIONS.md).
 - [x] `0.3.0` — Modular per-Look architecture
 - [x] `0.4.0–0.4.1` — Precision Minimal implementation and quality pass
 - [x] `0.5.0–0.5.1` — Zen Focus implementation and quality pass
+- [x] `0.6.0` — Tactile Household implementation; all shortlisted Round 1 auditions now exist
 
 ---
 
@@ -475,8 +477,9 @@ Detailed decisions live in [`DECISIONS.md`](DECISIONS.md).
 - [x] Implement and code-review Look #2 Warm Editorial
 - [x] Implement and code-review Look #3 Precision Minimal
 - [x] Implement and code-review Look #4 Zen Focus
-- [ ] Define and implement Look #6 Tactile Household
+- [x] Define and implement Look #6 Tactile Household
 - [ ] Complete Look #6 code-level quality review
+- [ ] Run current full static checks across all four Looks
 - [ ] Complete shared Round 1 browser/device/accessibility checks
 - [ ] Build scorecards and capture canonical screenshots
 - [ ] Score Look #1 and all shortlisted Looks

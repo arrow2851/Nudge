@@ -1,5 +1,19 @@
 # Design Lab Changelog
 
+## 0.6.0 — 2026-08-01
+
+### Look #6 — Tactile Household
+
+- Added the fourth and final shortlisted Round 1 aesthetic
+- Implemented Areas overview, representative Area detail, and Intervention
+- Added labeled maintenance-board cards, raised checklist controls, stamped statuses, and Section-drawer rows
+- Added a restrained warm material palette without photorealistic texture
+- Added a supportive timer-panel Intervention with clear Start, alternative, and Not Now actions
+- Reused all shared fixtures, routes, scenarios, and simulated actions
+- Added initial narrow-phone, dense-list, Long Content, Large Text, screen-reader-summary, and forced-colors handling
+- Added formal Tactile Household principles, versatility rules, and anti-patterns
+- Updated the Design Lab to `0.6.0`
+
 ## 0.5.1 — 2026-08-01
 
 ### Look #4 quality pass

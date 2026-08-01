@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#3f4636">
+  <meta name="description" content="Nudge Design Lab for comparing alternate visual directions without changing Look #1.">
+  <title>Nudge — Design Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="lab-shell">
+    <aside class="lab-panel" aria-label="Design Lab controls">
+      <div class="brand-lockup">
+        <span class="brand-mark">N</span>
+        <div><strong>Nudge</strong><small>Design Lab</small></div>
+      </div>
+
+      <div class="branch-badge">feature/design-lab</div>
+      <h1>Visual auditions</h1>
+      <p class="intro">The same Nudge product, tested through genuinely different visual systems. Look #1 remains untouched on <code>main</code>.</p>
+
+      <section class="control-group" aria-labelledby="look-heading">
+        <div class="control-heading" id="look-heading">Aesthetic</div>
+        <div class="look-grid" id="look-controls"></div>
+      </section>
+
+      <section class="control-group" aria-labelledby="screen-heading">
+        <div class="control-heading" id="screen-heading">Screen</div>
+        <div class="segmented" id="screen-controls"></div>
+      </section>
+
+      <section class="control-group" aria-labelledby="scenario-heading">
+        <div class="control-heading" id="scenario-heading">Scenario</div>
+        <div class="scenario-list" id="scenario-controls"></div>
+      </section>
+
+      <div class="review-note">
+        <strong>Round 1 rule</strong>
+        <p>Judge hierarchy and emotional tone first. Detailed interaction polish comes only after the strongest visual directions are selected.</p>
+      </div>
+    </aside>
+
+    <main class="preview-stage">
+      <div class="preview-caption">
+        <div><span id="look-kicker">Look #2</span><strong id="look-name">Warm Editorial</strong></div>
+        <p id="look-description">A calm household journal with practical utility underneath.</p>
+      </div>
+
+      <section class="device" aria-label="Nudge phone preview">
+        <div class="status-bar"><span id="status-time">9:41</span><span class="status-icons">▮▮▮ ◉ ▰</span></div>
+        <div class="app-frame">
+          <section id="screen" class="screen" aria-live="polite"></section>
+          <nav class="bottom-nav" aria-label="Primary navigation">
+            <button data-nav="today"><span>⌂</span><small>Today</small></button>
+            <button class="active" data-nav="areas"><span>▦</span><small>Areas</small></button>
+            <button data-nav="lists"><span>☷</span><small>Lists</small></button>
+            <button data-nav="tasks"><span>✓</span><small>Tasks</small></button>
+          </nav>
+          <div id="toast-root" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

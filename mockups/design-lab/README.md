@@ -2,14 +2,16 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.2.0`  
+**Current version:** `0.3.0`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
+- [Latest checklist progress — 0.3.0](CHECKLIST-PROGRESS-0.3.0.md)
 - [Shared scenario definitions](SCENARIOS.md)
 - [Look #2 — Warm Editorial direction](LOOK-2-WARM-EDITORIAL.md)
+- [Look #2 quality pass](LOOK-2-QUALITY.md)
 - [Decisions and feedback log](DECISIONS.md)
 - [Design Lab changelog](CHANGELOG.md)
 
@@ -49,18 +51,35 @@ Shared scenarios:
 
 ## Current implementation
 
-Look #2 is the active audition. It includes:
+Look #2 is the completed first audition. It includes:
 
 - Areas overview
 - Direct-linked Area detail
 - Intervention screen
 - Desktop and mobile review controls
-- Shared scenario switching
+- All shared scenarios
 - Browser Back and Forward support
 - Reset Review State
 - Safe fallback for invalid routes
+- Responsive and accessibility corrections
 - Version and experimental-build labeling
 - Reserved entries for Looks #3, #4, and #6
+
+## Architecture
+
+The Design Lab now uses browser-native ES modules without a build step:
+
+- `config.js` — version, Look registry, and allowed screens
+- `fixtures.js` — shared immutable fixture and scenarios
+- `utils.js` — escaping, cloning, and shared status calculations
+- `state.js` — query routing, browser history, and isolated review state
+- `controls.js` — shared review-panel controls
+- `renderers/look2.js` — Warm Editorial presentation
+- `renderers/shared.js` — queued-Look and safe fallback presentation
+- `app.js` — small event and rendering coordinator
+- `quality.js` — accessibility semantics and review metadata
+
+Each new aesthetic should receive its own renderer and optional Look-specific stylesheet while consuming the same shared fixture and state.
 
 ## Run locally
 
@@ -86,4 +105,4 @@ Every active Look must use the same shared fixture and scenarios. Layout, typogr
 
 ## Next audition work
 
-Complete Look #2 phone-width and blocking-quality checks, then implement Look #3 — Precision Minimal using the exact same screens and scenarios. Do not expand Look #2 into the full app until the Round 1 finalists are selected.
+Define and implement Look #3 — Precision Minimal using the exact same screens, scenarios, routes, and simulated actions. Do not expand Look #2 into the full app until the Round 1 finalists are selected.

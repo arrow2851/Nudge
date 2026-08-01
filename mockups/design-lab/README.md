@@ -2,13 +2,13 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.5.1`  
+**Current version:** `0.6.0`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.5.1](CHECKLIST-PROGRESS-0.5.1.md)
+- [Latest checklist progress — 0.6.0](CHECKLIST-PROGRESS-0.6.0.md)
 - [Shared scenario definitions](SCENARIOS.md)
 - [Look #2 — Warm Editorial direction](LOOK-2-WARM-EDITORIAL.md)
 - [Look #2 quality pass](LOOK-2-QUALITY.md)
@@ -16,6 +16,7 @@ The Design Lab compares alternate visual systems without changing the approved L
 - [Look #3 quality pass](LOOK-3-QUALITY.md)
 - [Look #4 — Zen Focus direction](LOOK-4-ZEN-FOCUS.md)
 - [Look #4 quality pass](LOOK-4-QUALITY.md)
+- [Look #6 — Tactile Household direction](LOOK-6-TACTILE-HOUSEHOLD.md)
 - [Decisions and feedback log](DECISIONS.md)
 - [Design Lab changelog](CHANGELOG.md)
 
@@ -33,7 +34,7 @@ The checklist is the persistent source of truth for scope, progress, review gate
 Each aesthetic is judged using the same three product moments:
 
 1. **Areas overview** — hierarchy, density, status, navigation, and scalability.
-2. **Representative Area detail** — routine density, status treatment, and section hierarchy.
+2. **Representative Area detail** — routine density, status treatment, and Section hierarchy.
 3. **Intervention** — emotional tone, clarity, and whether Nudge feels supportive rather than punitive.
 
 Shared scenarios:
@@ -55,7 +56,7 @@ Shared scenarios:
 
 ## Current implementation
 
-Three Round 1 auditions are implemented and have completed code-level quality passes:
+All four shortlisted Round 1 auditions are implemented.
 
 ### Look #2 — Warm Editorial
 
@@ -81,6 +82,14 @@ Three Round 1 auditions are implemented and have completed code-level quality pa
 - All shared scenarios
 - Responsive, contrast, Large Text, forced-colors, long-content, and screen-reader corrections
 
+### Look #6 — Tactile Household
+
+- Labeled maintenance-board Areas overview
+- Area service card with raised priority job, checklist rows, and Section drawers
+- Timer-panel Intervention with a removable-looking suggestion card
+- All shared scenarios
+- Initial narrow-phone, Long Content, Large Text, semantics, and forced-colors handling
+
 Shared functionality includes desktop and mobile review controls, browser Back and Forward, Reset Review State, route fallbacks, isolated review state, and experimental-build labeling.
 
 ## Architecture
@@ -95,14 +104,16 @@ The Design Lab uses browser-native ES modules without a build step:
 - `renderers/look2.js` — Warm Editorial presentation
 - `renderers/look3.js` — Precision Minimal presentation
 - `renderers/look4.js` — Zen Focus presentation
-- `renderers/shared.js` — queued-Look and safe fallback presentation
+- `renderers/look6.js` — Tactile Household presentation
+- `renderers/shared.js` — safe fallback presentation
 - `styles.css` — Warm Editorial and shared app-shell styling
 - `look3.css` — Precision Minimal styling scoped to Look #3
 - `look4.css` — Zen Focus styling scoped to Look #4
+- `look6.css` — Tactile Household styling scoped to Look #6
 - `app.js` — event and rendering coordinator
 - `quality.js` — accessibility semantics and review metadata
 
-Each new aesthetic receives its own renderer and optional Look-specific stylesheet while consuming the same shared fixture and state.
+Each aesthetic owns its presentation while consuming the same shared fixture and state.
 
 ## Run locally
 
@@ -118,15 +129,16 @@ Example review routes:
 ```text
 ?look=2&screen=areas&scenario=normal
 ?look=3&screen=area&area=kitchen&scenario=long
-?look=4&screen=areas&scenario=backlog
-?look=4&screen=area&area=kitchen&scenario=large-text
-?look=4&screen=intervention&scenario=long
+?look=4&screen=intervention&scenario=backlog
+?look=6&screen=areas&scenario=large
+?look=6&screen=area&area=kitchen&scenario=large-text
+?look=6&screen=intervention&scenario=long
 ```
 
 ## Round 1 fairness rule
 
-Every active Look must use the same shared fixture and scenarios. Layout, typography, color, density, icons, and tone may change when meaning remains equivalent. No Look receives additional functionality during the same review round.
+Every active Look uses the same shared fixture and scenarios. Layout, typography, color, density, icons, and tone may change when meaning remains equivalent. No Look receives additional functionality during the same review round.
 
 ## Next audition work
 
-Define and implement Look #6 — Tactile Household using the exact same screens, scenarios, routes, and simulated actions. Do not expand any Look into the full app until the Round 1 finalists are selected.
+Complete Look #6's responsive, accessibility, contrast, dense-data, and blocking-quality pass. Then run the shared Round 1 static and browser review work before the mandatory selection gate. Do not begin Round 2 until the selection decision is recorded.

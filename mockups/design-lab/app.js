@@ -78,7 +78,7 @@ function setView(view) {
 }
 
 document.addEventListener('click', event => {
-  const lookButton = event.target.closest('[data-look]');
+  const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
     state.look = LOOKS.some(look => look.id === requested) ? requested : 2;

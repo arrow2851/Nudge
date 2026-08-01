@@ -28,8 +28,7 @@ A hard stop is required before any change that alters:
 - [ ] The three shared Round 1 screens
 - [ ] Shared scenario meaning or comparison fairness
 - [ ] Core Nudge hierarchy or behavior
-- [ ] Branch, routing, storage, or deployment architecture
-- [ ] The scoring process after scoring begins
+- [ ] Branch, routing, storage, deployment, or scoring architecture
 - [ ] A review gate or Round 2 participants
 - [ ] Any merge into `main`
 - [ ] Promotion of a deferred aesthetic
@@ -39,7 +38,7 @@ Required one-line response:
 
 > **Hard stop: review the Design Lab decision required before I continue.**
 
-After approval, update this checklist and `DECISIONS.md` before implementation resumes. Minor bugs, accessibility fixes, copy changes, test infrastructure, and visual refinements may proceed without a hard stop.
+After approval, update this checklist and `DECISIONS.md` before implementation resumes. Minor bugs, accessibility fixes, copy changes, validation infrastructure, and visual refinements may proceed without a hard stop.
 
 ---
 
@@ -65,7 +64,8 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 
 ## Structure and behavior
 
-- [x] Landing page, shared shell, and desktop/mobile controls
+- [x] Landing page and shared review shell
+- [x] Desktop and mobile review controls
 - [x] Shared immutable fixtures and seven scenarios
 - [x] Query routing for Look, screen, scenario, and Area
 - [x] Browser Back/Forward implementation
@@ -74,7 +74,9 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 - [x] Per-Look renderer boundaries
 - [x] Separate Look-specific stylesheets
 - [x] README, scenarios, decisions, changelog, direction documents, quality notes, and progress logs
-- [ ] Add automated route and fixture smoke checks
+- [x] Dependency-free validation harness in `validate-design-lab.mjs`
+- [x] Validation documentation in `VALIDATION.md`
+- [x] Shared browser route matrix in `ROUND-1-ROUTES.md`
 - [ ] Add screenshot-friendly presentation mode
 - [ ] Add `screenshots/` when canonical captures begin
 - [ ] Add shared assets only when truly reused across Looks
@@ -88,8 +90,8 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 - [x] Same simulated Round 1 actions
 - [x] Presentation and tone may change without changing meaning
 - [x] Direction and intentional differences documented for Looks #2, #3, #4, and #6
-- [ ] Verify fixture counts and labels programmatically
-- [ ] Confirm no aesthetic-specific fixture exception exists
+- [x] Fixture counts, labels, required fields, and statuses covered programmatically
+- [x] No aesthetic-specific fixture exception exists
 
 ---
 
@@ -258,21 +260,38 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 
 ---
 
-# 9. Shared static and route validation — next active phase
+# 9. Shared static, fixture, import, and route validation
 
-- [ ] Add a no-dependency static validation script
-- [ ] Verify every local import target exists
-- [ ] Verify every linked stylesheet exists
-- [ ] Verify required DOM hooks exist
-- [ ] Verify all Look IDs have renderers
-- [ ] Verify all scenario IDs resolve
-- [ ] Verify every scenario includes required Areas and Intervention fields
-- [ ] Verify expected counts and labels
-- [ ] Generate and validate direct routes for every Look, screen, and scenario
-- [ ] Verify representative Area routes exist where applicable
-- [ ] Check HTML structure and CSS brace balance
-- [ ] Check JavaScript syntax where the environment permits
-- [ ] Record limitations honestly when a real browser is required
+## Automated harness
+
+- [x] Add a no-dependency Node validation script
+- [x] Verify every required file exists
+- [x] Verify every local JavaScript import target exists
+- [x] Verify every linked stylesheet and script exists
+- [x] Verify stylesheet loading order
+- [x] Verify all Look IDs have renderer exports and routing branches
+- [x] Verify all seven scenario IDs resolve
+- [x] Verify every scenario includes required Area, routine, and Intervention fields
+- [x] Verify supported routine statuses and positive durations
+- [x] Verify expected attention counts and Large Household size
+- [x] Verify scenario cloning and unknown-scenario fallback
+- [x] Generate and validate 84 Look/screen/scenario route combinations
+- [x] Verify Area query serialization and removal from non-Area routes
+- [x] Verify invalid route fallbacks
+- [x] Verify push/replace history behavior and isolated session storage
+- [x] Verify version consistency across core metadata files
+- [x] Check CSS brace balance
+- [x] Syntax-check the validator itself
+- [x] Document the browser/device checks that static validation cannot replace
+- [~] Execute the validator against a complete local or CI checkout; this session cannot resolve GitHub for cloning
+
+## Browser review preparation
+
+- [x] Document canonical and stress routes for all four Looks
+- [x] Document invalid-route checks
+- [x] Document browser Back/Forward procedure
+- [x] Document required phone, short, landscape, and desktop viewports
+- [x] Document evidence fields to capture
 
 ---
 
@@ -290,6 +309,7 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 
 ## Browser behavior
 
+- [ ] Run `node validate-design-lab.mjs` in a complete checkout
 - [ ] No console errors during core routes
 - [ ] Direct links load correctly
 - [ ] Browser Back and Forward work correctly
@@ -483,14 +503,17 @@ Detailed decisions live in [`DECISIONS.md`](DECISIONS.md).
 - [x] `0.4.0–0.4.1` — Precision Minimal implementation and quality
 - [x] `0.5.0–0.5.1` — Zen Focus implementation and quality
 - [x] `0.6.0–0.6.1` — Tactile Household implementation and quality
+- [x] `0.6.1 validation foundation` — Automated fixture, import, renderer, route, version, and CSS checks plus browser route matrix
 
 ---
 
 # 20. Current next actions
 
 - [x] Implement and code-review Looks #2, #3, #4, and #6
-- [ ] Complete shared static, fixture, and route validation
-- [ ] Prepare browser/device/accessibility review routes
+- [x] Add shared static, fixture, import, and route validation tooling
+- [x] Prepare browser/device/accessibility review routes
+- [~] Execute automated validation against a complete checkout
+- [ ] Perform browser, device, keyboard, screen-reader, and forced-colors review
 - [ ] Add scorecards and screenshot-friendly mode
 - [ ] Capture canonical comparison evidence
 - [ ] Score Look #1 and all shortlisted Looks

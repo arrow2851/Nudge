@@ -1,0 +1,28 @@
+import { DESIGN_LAB, LOOKS, ROUND_ONE_CONTROLS } from './config.js';
+import { SCENARIOS } from './fixtures.js';
+import { esc } from './utils.js';
+
+export function renderReviewControls(state, data, elements) {
+  elements.lookControls.innerHTML = LOOKS.map(look => `
+    <button class="look-button ${state.look === look.id ? 'active' : ''}" data-look="${look.id}">
+      <span class="look-number">#${look.id}</span>
+      <strong>${esc(look.name)}</strong>
+      <small>${esc(look.status)}</small>
+    </button>`).join('');
+
+  elements.screenControls.innerHTML = ROUND_ONE_CONTROLS.map(([id, label]) => {
+    const active = state.view === id || (id === 'areas' && state.view === 'area');
+    return `<button class="${active ? 'active' : ''}" data-view="${id}">${label}</button>`;
+  }).join('');
+
+  elements.scenarioControls.innerHTML = Object.entries(SCENARIOS).map(([id, scenario]) => `
+    <button class="${state.scenario === id ? 'active' : ''}" data-scenario="${id}" title="${esc(scenario.purpose)}">${esc(scenario.label)}</button>`).join('');
+
+  const look = LOOKS.find(item => item.id === state.look) || LOOKS[0];
+  document.querySelector('#look-kicker').textContent = `Look #${look.id}`;
+  document.querySelector('#look-name').textContent = look.name;
+  document.querySelector('#look-description').textContent = look.description;
+  document.querySelector('#scenario-purpose').textContent = `${data.label}: ${data.purpose}`;
+  document.querySelector('#build-meta').textContent = `v${DESIGN_LAB.version} · ${DESIGN_LAB.buildDate}`;
+  return look;
+}

@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.7.1';
+  const VERSION = '0.7.2';
   const initialParams = new URLSearchParams(location.search);
   const captureMode = initialParams.get('capture');
 
@@ -39,7 +39,7 @@
 
   function syncSemantics() {
     const activeLook = document.querySelector('.look-button.active');
-    document.querySelectorAll('[data-look]').forEach(button => {
+    document.querySelectorAll('button[data-look]').forEach(button => {
       button.type = 'button';
       button.setAttribute('aria-pressed', String(button === activeLook));
     });

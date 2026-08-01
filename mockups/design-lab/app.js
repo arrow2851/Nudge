@@ -4,6 +4,7 @@ import { renderReviewControls } from './controls.js';
 import { clearStoredState, commitState, defaultState, readStateFromLocation } from './state.js';
 import { renderAreaDetail, renderAreasEditorial, renderInterventionEditorial } from './renderers/look2.js';
 import { renderAreaDetailPrecision, renderAreasPrecision, renderInterventionPrecision } from './renderers/look3.js';
+import { renderAreaDetailZen, renderAreasZen, renderInterventionZen } from './renderers/look4.js';
 import { renderFutureLook, renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
@@ -30,7 +31,13 @@ function renderLook(look, data) {
     if (state.view === 'areas') return renderAreasPrecision(data);
   }
 
-  if (look.id === 4 || look.id === 6) return renderFutureLook(look);
+  if (look.id === 4) {
+    if (state.view === 'intervention') return renderInterventionZen(data);
+    if (state.view === 'area') return renderAreaDetailZen(data, state.areaId, renderUnsupported);
+    if (state.view === 'areas') return renderAreasZen(data);
+  }
+
+  if (look.id === 6) return renderFutureLook(look);
   return renderUnsupported('The requested screen is not part of the Round 1 audition.');
 }
 

@@ -2,6 +2,19 @@
 
 ## 0.6.1 — 2026-08-01
 
+### Shared validation foundation
+
+- Added dependency-free `validate-design-lab.mjs`
+- Added required-file and relative-import checks
+- Added renderer export and `app.js` routing checks for Looks #2, #3, #4, and #6
+- Added shared fixture field, status, duration, count, clone, and fallback checks
+- Added validation for 84 Look/screen/scenario route combinations
+- Added invalid-route, Area-query, history-method, and isolated-storage checks
+- Added version, HTML-reference, stylesheet-order, and CSS brace-balance checks
+- Added `VALIDATION.md` and `ROUND-1-ROUTES.md`
+- Syntax-checked the validator
+- Documented that a complete-checkout execution remains pending because this session could not resolve GitHub for cloning
+
 ### Look #6 quality pass
 
 - Darkened muted text where the darkest tactile gradient did not meet the small-text contrast target

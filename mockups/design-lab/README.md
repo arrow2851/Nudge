@@ -2,16 +2,18 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.7.1`  
+**Current version:** `0.7.2`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.7.1 Look #1 baseline mapping](CHECKLIST-PROGRESS-0.7.1.md)
+- [Latest checklist progress — 0.7.2 evidence milestone](CHECKLIST-PROGRESS-0.7.2.md)
+- [Round 1 evidence report](ROUND-1-EVIDENCE-0.7.2.md)
+- [Provisional Round 1 scorecard](ROUND-1-SCORECARD-0.7.2.md)
 - [Look #1 — Soft Practical Utility baseline](LOOK-1-SOFT-PRACTICAL-UTILITY.md)
 - [Round 1 review protocol](ROUND-1-REVIEW-PROTOCOL.md)
-- [Round 1 scorecard](ROUND-1-SCORECARD.md)
+- [Blank scorecard template](ROUND-1-SCORECARD.md)
 - [Round 1 active-Look route matrix](ROUND-1-ROUTES.md)
 - [Automated validation guide](VALIDATION.md)
 - [Shared scenario definitions](SCENARIOS.md)
@@ -44,7 +46,24 @@ Active auditions:
 - Look #4 — Zen Focus
 - Look #6 — Tactile Household
 
-All active auditions use the same three scored moments and seven scenarios. They have completed code-level responsive, accessibility, contrast, long-content, and Large Text passes. Browser, device, keyboard, screen-reader, forced-colors, screenshot, and comparative evidence remains pending.
+All active auditions use the same three scored moments and seven scenarios.
+
+## Evidence status
+
+The 0.7.2 evidence pass completed:
+
+- 105 direct routes
+- 90 canonical viewport checks
+- 35 stress-state routes
+- 10 long/Large-Text action-reachability checks
+- keyboard focus and Enter activation
+- automated accessibility-tree inspection
+- forced-colors and reduced-motion emulation
+- 15 canonical labelled captures
+
+The browser pass found and corrected a shared click-routing defect: root `html[data-look]` intercepted non-Look clicks. Look handling and semantics are now scoped to `button[data-look]`.
+
+Physical-device and actual screen-reader testing remain pending. Read `ROUND-1-EVIDENCE-0.7.2.md` for exact results and limitations.
 
 ## Look #1 comparison reference
 
@@ -58,7 +77,7 @@ look1-reference.html?screen=area&area=kitchen&scenario=backlog
 look1-reference.html?screen=intervention&scenario=normal
 ```
 
-The Look #1 Intervention is visibly labeled as a **comparison-only extrapolation** because the current prototype does not contain an equivalent screen. Read `LOOK-1-SOFT-PRACTICAL-UTILITY.md` before scoring it.
+The Look #1 Intervention is visibly labeled as a **comparison-only extrapolation** because the current prototype does not contain an equivalent screen.
 
 ## Run locally
 
@@ -70,10 +89,6 @@ python -m http.server 8080
 
 Open `http://localhost:8080`.
 
-The validator covers required files, imports, fixture invariants, renderer wiring, 84 active-Look route combinations, the Look #1 reference, invalid-route fallbacks, state storage, version consistency, HTML references, stylesheet order, and CSS balance.
-
-This session could syntax-check the relevant JavaScript and CSS but could not clone GitHub into a complete local checkout because DNS resolution for GitHub was unavailable. Full-checkout execution remains pending evidence.
-
 ## Capture modes
 
 Append one of these parameters to an active-Look or Look #1 reference route:
@@ -81,20 +96,10 @@ Append one of these parameters to an active-Look or Look #1 reference route:
 - `capture=labelled` — stable 390 × 844 evidence frame with Look, screen, scenario, and version label.
 - `capture=phone` — clean phone frame without the evidence label.
 
-Examples:
+Use normal routes for interaction, responsive, browser-history, keyboard, and accessibility testing.
 
-```text
-?look=2&screen=areas&scenario=normal&capture=labelled
-?look=4&screen=intervention&scenario=normal&capture=phone
-look1-reference.html?screen=area&area=kitchen&scenario=backlog&capture=labelled
-```
+## Provisional review result
 
-Use normal routes for interaction, responsive, browser-history, keyboard, and accessibility testing. Follow `ROUND-1-REVIEW-PROTOCOL.md` and record results in `ROUND-1-SCORECARD.md`.
+The automated and visual evidence provisionally ranks Look #3 and Look #4 as the strongest finalist candidates, with Look #2 as a credible focused-revision third candidate or component source. Look #1 remains the protected comparator, and Look #6 is provisionally Components only.
 
-## Round 1 fairness rule
-
-Every direction is reviewed against the same fixture, screens, scenarios, evidence order, and scoring criteria. The Look #1 Intervention limitation must remain explicit. No direction receives additional functionality during Round 1.
-
-## Next work
-
-Execute the validator in a complete checkout, run the browser/device/accessibility protocol, capture canonical evidence, fill the scorecard, and summarize borrowable components. Do not begin Round 2 until the mandatory selection decision is reviewed and recorded.
+No finalist decision has been recorded. The mandatory Round 1 selection gate must be reviewed before Round 2 begins.

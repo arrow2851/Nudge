@@ -1,5 +1,32 @@
 # Design Lab Changelog
 
+## 0.3.0 — 2026-08-01
+
+### Modular architecture
+
+- Split the former monolithic controller into configuration, fixtures, utilities, routing state, review controls, and renderer modules
+- Added a dedicated `renderers/` boundary so each new Look can own its presentation without duplicating shared data or routing
+- Kept the shared scenario fixture immutable and cloned per render
+- Preserved query-string routes, browser history, reset behavior, simulated actions, and Look #2 output
+- Switched the Design Lab entry point to an ES module
+- Updated build metadata to `0.3.0`
+
+### Validation
+
+- Passed syntax checks for every module
+- Verified all relative imports resolve to existing files
+- Kept every change under `mockups/design-lab/`
+
+## 0.2.1 — 2026-08-01
+
+### Look #2 quality pass
+
+- Improved narrow-phone and Large Text handling
+- Expanded critical touch targets
+- Added keyboard focus, selected-state semantics, skip navigation, and reduced-motion handling
+- Corrected low-contrast supporting and navigation text
+- Documented remaining actual-device and assistive-technology checks
+
 ## 0.2.0 — 2026-08-01
 
 ### Shared foundation

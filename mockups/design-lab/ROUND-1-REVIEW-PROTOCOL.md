@@ -14,7 +14,7 @@ Open `http://localhost:8080` in a Chromium browser and Firefox. Use the same Des
 
 ## 2. Capture modes
 
-Append one of these parameters to any Design Lab route:
+Append one of these parameters to a Design Lab or Look #1 reference route:
 
 - `capture=labelled` — hides review controls, fixes the phone frame at 390 × 844 on desktop, fixes the status time at 9:41, and adds a Look/screen/scenario/version evidence label.
 - `capture=phone` — shows only the stable phone frame without the evidence label.
@@ -26,19 +26,32 @@ Examples:
 ?look=3&screen=area&area=kitchen&scenario=backlog&capture=labelled
 ?look=4&screen=intervention&scenario=normal&capture=phone
 ?look=6&screen=areas&scenario=large-text&capture=labelled
+look1-reference.html?screen=areas&scenario=normal&capture=labelled
 ```
 
 Capture mode is intentionally presentation-only. Use normal routes for interaction, history, keyboard, and responsive testing.
 
 ## 3. Canonical comparison routes
 
-Review these three routes first for every active Look:
+Review these three routes first for every active audition:
 
 ```text
 ?look=<LOOK>&screen=areas&scenario=normal
 ?look=<LOOK>&screen=area&area=kitchen&scenario=backlog
 ?look=<LOOK>&screen=intervention&scenario=normal
 ```
+
+Replace `<LOOK>` with `2`, `3`, `4`, or `6`.
+
+Use these equivalent Look #1 baseline routes:
+
+```text
+look1-reference.html?screen=areas&scenario=normal
+look1-reference.html?screen=area&area=kitchen&scenario=backlog
+look1-reference.html?screen=intervention&scenario=normal
+```
+
+The Look #1 Intervention route is a clearly labeled comparison-only extrapolation because the protected prototype does not currently include that product moment. Read `LOOK-1-SOFT-PRACTICAL-UTILITY.md` before scoring it.
 
 Then review these stress routes:
 
@@ -52,7 +65,7 @@ Then review these stress routes:
 ?look=<LOOK>&screen=intervention&scenario=large-text
 ```
 
-Replace `<LOOK>` with `2`, `3`, `4`, or `6`. Use `ROUND-1-ROUTES.md` for the full matrix.
+For Look #1, use the same `screen`, `area`, and `scenario` parameters on `look1-reference.html`. Use `ROUND-1-ROUTES.md` for the active-Look matrix.
 
 ## 4. Viewport matrix
 
@@ -79,6 +92,7 @@ Use normal routes rather than capture mode.
 - Use Reset Review State and verify the default route returns.
 - Try invalid Look, screen, scenario, and Area values and verify safe fallback behavior.
 - Click every simulated Round 1 action and verify a readable toast appears.
+- Open the Look #1 reference routes and verify scenario switching, Area links, capture modes, and safe screen fallback.
 - Confirm no console errors during all preceding actions.
 
 ## 6. Keyboard-only walkthrough
@@ -94,6 +108,7 @@ Starting at the top of the page:
 - Tab through completion, Section, and Intervention actions.
 - Confirm focus never becomes trapped inside the phone preview or review panel.
 - Confirm horizontal mobile control rows can still be reached and scrolled.
+- Repeat the core tab sequence on the Look #1 reference page.
 
 ## 7. Screen-reader smoke test
 
@@ -110,6 +125,7 @@ Verify:
 - Intervention time, app, suggested task, location, and actions are understandable.
 - Toast feedback is announced once through the status live region.
 - Whole-screen updates are not so verbose that route changes become unusable.
+- The Look #1 Intervention limitation is visible in the reference content and review notes rather than hidden from the reviewer.
 
 Record the screen reader, browser, operating system, and any announcement defects.
 
@@ -161,15 +177,16 @@ Required stress captures where a concern is found:
 Filename convention:
 
 ```text
-look-<id>__<screen>__<scenario>__<viewport>__v0.7.0.png
+look-<id>__<screen>__<scenario>__<viewport>__v0.7.1.png
 ```
 
 Examples:
 
 ```text
-look-3__areas__normal__390x844__v0.7.0.png
-look-4__area-kitchen__backlog__390x844__v0.7.0.png
-look-6__intervention__long__360x800__v0.7.0.png
+look-1__areas__normal__390x844__v0.7.1.png
+look-3__areas__normal__390x844__v0.7.1.png
+look-4__area-kitchen__backlog__390x844__v0.7.1.png
+look-6__intervention__long__360x800__v0.7.1.png
 ```
 
 Store approved evidence under `mockups/design-lab/screenshots/` only after captures are actually produced.
@@ -178,7 +195,8 @@ Store approved evidence under `mockups/design-lab/screenshots/` only after captu
 
 - Complete the full evidence order before assigning final scores.
 - Fill qualitative notes before calculating totals.
-- Score Look #1 using equivalent content and the same rubric.
+- Score Look #1 using the shared fixture and the same rubric.
+- Explicitly account for the fact that Look #1 Intervention is an extrapolated comparison mock.
 - Use `ROUND-1-SCORECARD.md` as the source document.
 - Do not modify comparison criteria after scoring begins without the documented hard stop.
 - Do not begin Round 2 until finalists and non-finalist dispositions are explicitly recorded.

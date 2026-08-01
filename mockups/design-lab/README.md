@@ -2,16 +2,17 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.3.0`  
+**Current version:** `0.4.0`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.3.0](CHECKLIST-PROGRESS-0.3.0.md)
+- [Latest checklist progress — 0.4.0](CHECKLIST-PROGRESS-0.4.0.md)
 - [Shared scenario definitions](SCENARIOS.md)
 - [Look #2 — Warm Editorial direction](LOOK-2-WARM-EDITORIAL.md)
 - [Look #2 quality pass](LOOK-2-QUALITY.md)
+- [Look #3 — Precision Minimal direction](LOOK-3-PRECISION-MINIMAL.md)
 - [Decisions and feedback log](DECISIONS.md)
 - [Design Lab changelog](CHANGELOG.md)
 
@@ -51,23 +52,29 @@ Shared scenarios:
 
 ## Current implementation
 
-Look #2 is the completed first audition. It includes:
+Two active Round 1 auditions are implemented:
+
+### Look #2 — Warm Editorial
 
 - Areas overview
 - Direct-linked Area detail
-- Intervention screen
-- Desktop and mobile review controls
+- Intervention
 - All shared scenarios
-- Browser Back and Forward support
-- Reset Review State
-- Safe fallback for invalid routes
 - Responsive and accessibility corrections
-- Version and experimental-build labeling
-- Reserved entries for Looks #3, #4, and #6
+
+### Look #3 — Precision Minimal
+
+- Compact table-like Areas overview
+- Direct-linked Area detail
+- Direct but humane Intervention
+- All shared scenarios
+- Dedicated Look-specific stylesheet
+
+Shared functionality includes desktop and mobile review controls, browser Back and Forward, Reset Review State, route fallbacks, isolated review state, and experimental-build labeling.
 
 ## Architecture
 
-The Design Lab now uses browser-native ES modules without a build step:
+The Design Lab uses browser-native ES modules without a build step:
 
 - `config.js` — version, Look registry, and allowed screens
 - `fixtures.js` — shared immutable fixture and scenarios
@@ -75,11 +82,14 @@ The Design Lab now uses browser-native ES modules without a build step:
 - `state.js` — query routing, browser history, and isolated review state
 - `controls.js` — shared review-panel controls
 - `renderers/look2.js` — Warm Editorial presentation
+- `renderers/look3.js` — Precision Minimal presentation
 - `renderers/shared.js` — queued-Look and safe fallback presentation
-- `app.js` — small event and rendering coordinator
+- `styles.css` — Warm Editorial and shared app-shell styling
+- `look3.css` — Precision Minimal styling scoped to Look #3
+- `app.js` — event and rendering coordinator
 - `quality.js` — accessibility semantics and review metadata
 
-Each new aesthetic should receive its own renderer and optional Look-specific stylesheet while consuming the same shared fixture and state.
+Each new aesthetic receives its own renderer and optional Look-specific stylesheet while consuming the same shared fixture and state.
 
 ## Run locally
 
@@ -95,8 +105,9 @@ Example review routes:
 ```text
 ?look=2&screen=areas&scenario=normal
 ?look=2&screen=area&area=kitchen&scenario=backlog
-?look=2&screen=intervention&scenario=long
 ?look=3&screen=areas&scenario=large
+?look=3&screen=area&area=kitchen&scenario=long
+?look=3&screen=intervention&scenario=normal
 ```
 
 ## Round 1 fairness rule
@@ -105,4 +116,4 @@ Every active Look must use the same shared fixture and scenarios. Layout, typogr
 
 ## Next audition work
 
-Define and implement Look #3 — Precision Minimal using the exact same screens, scenarios, routes, and simulated actions. Do not expand Look #2 into the full app until the Round 1 finalists are selected.
+Complete the Look #3 responsive, accessibility, and blocking-quality pass. Then define and implement Look #4 — Zen Focus using the exact same screens, scenarios, routes, and simulated actions.

@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.4.1';
+  const VERSION = '0.5.0';
 
   function syncSemantics() {
     const activeLook = document.querySelector('.look-button.active');

@@ -1,5 +1,19 @@
 # Design Lab Changelog
 
+## 0.7.1 — 2026-08-01
+
+### Look #1 baseline mapping
+
+- Documented the protected Soft Practical Utility visual system, strengths, risks, and comparison rules
+- Added `look1-reference.html`, `look1-reference.js`, and `look1-reference.css` under Design Lab without modifying `mockups/prototype/`
+- Reused the shared fixture and all seven scenarios for equivalent baseline evidence
+- Added Areas overview and Kitchen Area detail reference screens
+- Added a visibly labeled comparison-only Intervention extrapolation because the current prototype has no Intervention screen
+- Added labelled and phone-only capture support for Look #1
+- Added Look #1 routes and evidence limitations to the review protocol and scorecard
+- Extended validation coverage to the Look #1 reference files, shared-fixture import, screens, scenarios, HTML references, CSS, and version metadata
+- Updated the Design Lab to `0.7.1`
+
 ## 0.7.0 — 2026-08-01
 
 ### Round 1 review preparation

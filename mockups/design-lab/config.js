@@ -1,5 +1,5 @@
 export const DESIGN_LAB = Object.freeze({
-  version: '0.4.0',
+  version: '0.4.1',
   buildDate: '2026-08-01',
   branch: 'feature/design-lab',
   storageKey: 'nudge-design-lab-review-v1'

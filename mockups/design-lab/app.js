@@ -5,7 +5,8 @@ import { clearStoredState, commitState, defaultState, readStateFromLocation } fr
 import { renderAreaDetail, renderAreasEditorial, renderInterventionEditorial } from './renderers/look2.js';
 import { renderAreaDetailPrecision, renderAreasPrecision, renderInterventionPrecision } from './renderers/look3.js';
 import { renderAreaDetailZen, renderAreasZen, renderInterventionZen } from './renderers/look4.js';
-import { renderFutureLook, renderUnsupported } from './renderers/shared.js';
+import { renderAreaDetailTactile, renderAreasTactile, renderInterventionTactile } from './renderers/look6.js';
+import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
 let state = readStateFromLocation();
@@ -37,7 +38,12 @@ function renderLook(look, data) {
     if (state.view === 'areas') return renderAreasZen(data);
   }
 
-  if (look.id === 6) return renderFutureLook(look);
+  if (look.id === 6) {
+    if (state.view === 'intervention') return renderInterventionTactile(data);
+    if (state.view === 'area') return renderAreaDetailTactile(data, state.areaId, renderUnsupported);
+    if (state.view === 'areas') return renderAreasTactile(data);
+  }
+
   return renderUnsupported('The requested screen is not part of the Round 1 audition.');
 }
 

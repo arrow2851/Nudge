@@ -1,5 +1,27 @@
 # Design Lab Changelog
 
+## 0.4.1 — 2026-08-01
+
+### Look #3 quality pass
+
+- Added explicit 420 px and 370 px responsive reflow behavior
+- Corrected Large Text behavior for fixed-size labels and content
+- Increased undersized operational labels while preserving compact density
+- Prevented long Area, routine, Section, app, and intervention metadata from causing horizontal overflow
+- Added Area-row, attention-summary, detail-metric, Section-row, and routine-status semantics
+- Added forced-colors support
+- Documented contrast values and remaining actual-browser review work
+
+## 0.4.0 — 2026-08-01
+
+### Look #3 — Precision Minimal
+
+- Added the second active Round 1 aesthetic
+- Implemented Areas overview, representative Area detail, and Intervention
+- Added compact grid-based information hierarchy and cobalt accent treatment
+- Reused all shared fixtures, routes, scenarios, and simulated actions
+- Added formal Precision Minimal principles and anti-patterns
+
 ## 0.3.0 — 2026-08-01
 
 ### Modular architecture

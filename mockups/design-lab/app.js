@@ -171,7 +171,7 @@ const scenarios = Object.freeze({
   large: {
     label: 'Large household',
     purpose: 'Tests many areas, many sections, non-household content, and long scrolling.',
-    expected: '9 areas including Work and Personal, with 7 routines needing attention.',
+    expected: '9 areas including Work and Personal, with 8 routines needing attention.',
     areas: buildLargeHousehold(),
     intervention: { app: 'Instagram', minutes: 11, task: 'Clear temporary working files', location: 'Work · Digital Workspace', duration: 10 }
   },

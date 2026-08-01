@@ -1,5 +1,19 @@
 # Design Lab Changelog
 
+## 0.5.0 — 2026-08-01
+
+### Look #4 — Zen Focus
+
+- Added the third active Round 1 aesthetic
+- Implemented Areas overview, representative Area detail, and Intervention
+- Added one calm suggested starting point while retaining the complete Area and routine picture
+- Added progressive emphasis without hiding required status information
+- Added soft neutral, sage, clay, and muted amber visual roles
+- Added a choice-centered Intervention that explicitly permits staying in the current app
+- Reused all shared fixtures, routes, scenarios, and simulated actions
+- Added initial narrow-phone, Large Text, screen-reader-summary, and forced-colors handling
+- Added formal Zen Focus principles, versatility requirements, and anti-patterns
+
 ## 0.4.1 — 2026-08-01
 
 ### Look #3 quality pass

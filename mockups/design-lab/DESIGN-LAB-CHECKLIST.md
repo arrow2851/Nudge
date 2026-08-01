@@ -3,9 +3,10 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
+**Current Design Lab version:** `0.2.0`  
 **Purpose:** Compare genuinely different design systems for the same Nudge product before selecting or synthesizing a final visual direction.
 
-This is the persistent source of truth for Design Lab scope, execution order, progress, review gates, and decisions. It should be updated whenever a checklist item changes state or an approved plan adjustment is made.
+This is the persistent source of truth for Design Lab scope, execution order, progress, review gates, and decisions. Update it whenever an item changes state or an approved plan adjustment is made.
 
 ---
 
@@ -23,51 +24,53 @@ This is the persistent source of truth for Design Lab scope, execution order, pr
 
 # 0. Change-control agreement
 
-The checklist is intended to anticipate the full Design Lab effort, but it is not immutable. We will **pause before continuing** whenever a proposed change materially affects the experiment, architecture, workload, or comparison fairness.
+The checklist is intended to anticipate the complete Design Lab effort, but it is not immutable. Pause before continuing whenever a proposed change materially affects the experiment, architecture, workload, shortlist, or comparison fairness.
 
-## Changes that require a full checklist review
+## Changes requiring a hard stop and full checklist review
 
-- [ ] Adding or removing a shortlisted Look
-- [ ] Replacing an aesthetic with a substantially different direction
-- [ ] Changing the shared audition screens
-- [ ] Changing the shared demo data or scenario definitions in a way that affects comparison fairness
-- [ ] Expanding one Look into a full app before Round 1 selection
-- [ ] Introducing functionality that Look #1 does not already establish
-- [ ] Changing the product hierarchy or core Nudge behavior rather than only its presentation
-- [ ] Changing the Design Lab architecture, routing, storage, or deployment approach
-- [ ] Moving work out of `feature/design-lab`
-- [ ] Merging any experimental work into `main`
-- [ ] Discovering a technical limitation that invalidates a planned comparison method
-- [ ] Discovering that the checklist omits a major phase or materially underestimates the work
-- [ ] Promoting a deferred aesthetic such as Bold Consumer, Dark Ambient, Illustrated Home, or System Dashboard
-- [ ] Changing the scoring criteria or selection process after reviews have begun
-- [ ] Skipping a review gate or beginning the next round without an explicit decision
+- [ ] Add or remove a shortlisted Look
+- [ ] Replace an aesthetic with a substantially different direction
+- [ ] Change the shared Round 1 screen set
+- [ ] Change shared scenario meaning after reviews begin
+- [ ] Expand one Look into a full app before Round 1 selection
+- [ ] Introduce functionality not established by Look #1
+- [ ] Change the core Nudge product hierarchy or behavior
+- [ ] Change routing, storage, deployment, or branch architecture materially
+- [ ] Move experimental work outside `feature/design-lab`
+- [ ] Merge experimental work into `main`
+- [ ] Promote a deferred aesthetic
+- [ ] Change scoring criteria after reviews begin
+- [ ] Skip a review gate
+- [ ] Discover a limitation that invalidates the planned comparison method
+- [ ] Discover a missing major phase or material scope underestimate
 
-## Required pause message
+## One-line hard-stop response
 
-When one of the above occurs, do not quietly patch the checklist and continue. Present a full planning prompt using this structure:
+When a decision is required, respond only:
+
+> **Hard stop: review the Design Lab decision required before I continue.**
+
+Then provide the full plan-adjustment explanation only after the user opens or asks for the decision.
+
+## Full plan-adjustment format
 
 > **Design Lab plan adjustment required**
 >
-> **What changed:** A clear description of the new information, request, or limitation.
->
-> **Why the current checklist no longer fully fits:** The affected assumptions, phases, comparison rules, or deliverables.
->
-> **Recommended adjustment:** The proposed additions, removals, reordered work, and any items that should become deferred or rejected.
->
-> **Impact:** Effects on completed work, fairness between Looks, branch structure, testing, and expected remaining scope.
->
-> **Decision needed:** The specific direction that must be approved before implementation continues.
+> **What changed:**  
+> **Why the current checklist no longer fits:**  
+> **Recommended adjustment:**  
+> **Impact:**  
+> **Decision needed:**
 
 After approval:
 
 - [ ] Update this checklist first
-- [ ] Add a dated entry to the Decision and Plan-Adjustment Log
-- [ ] Mark superseded items `[r]` or rewrite them with an explanatory note
+- [ ] Add a dated entry to `DECISIONS.md`
+- [ ] Mark superseded items `[r]` or rewrite with an explanatory note
 - [ ] Reconfirm the next active milestone
-- [ ] Resume implementation only after the checklist reflects the new plan
+- [ ] Resume implementation only after the plan is reflected here
 
-Minor bug fixes, accessibility corrections, copy corrections, and visual refinements that do not change scope may be recorded directly without a full plan review.
+Minor bug fixes, accessibility corrections, copy corrections, and visual refinements that do not change scope may proceed without a hard stop.
 
 ---
 
@@ -75,126 +78,129 @@ Minor bug fixes, accessibility corrections, copy corrections, and visual refinem
 
 - [x] Create `feature/design-lab` from the latest `main`
 - [x] Keep Look #1 under `mockups/prototype/` unchanged
-- [x] Create isolated `mockups/design-lab/` directory
-- [x] Document the safety boundary in the Design Lab README
-- [x] Confirm the branch is ahead of and not behind `main` at initial creation
-- [ ] Recheck divergence from `main` before each major review round
-- [ ] Decide how updates from `main` will be incorporated if Look #1 functionality changes during the experiment
-- [ ] Keep Design Lab commits limited to experimental files unless a plan adjustment approves otherwise
+- [x] Create isolated `mockups/design-lab/`
+- [x] Document the safety boundary
+- [x] Confirm the branch started ahead of and not behind `main`
+- [x] Keep current Design Lab commits limited to experimental files
+- [ ] Recheck divergence from `main` before every major review round
+- [ ] Define how later Look #1 functionality updates are incorporated
 - [ ] Add a branch-specific preview deployment
-- [ ] Confirm preview deployment cannot replace the production GitHub Pages site
+- [ ] Confirm the preview cannot replace production GitHub Pages
 - [ ] Document preview URL and refresh procedure
-- [ ] Add build/version/commit information to the review panel
-- [ ] Add a visible `Experimental Design Lab` label in every preview
-- [ ] Prevent accidental links that imply an experimental Look is the selected production design
-- [ ] Open a draft pull request only when the branch needs centralized review history
-- [ ] Do not merge into `main` until the final selection or synthesis decision is documented
+- [x] Add version and build-date information to the review panel
+- [x] Add a visible `Experimental Design Lab` label on desktop and mobile
+- [x] Avoid links or wording implying an experimental Look is selected
+- [ ] Open a draft PR only when centralized review history is useful
+- [ ] Do not merge until final selection or synthesis is documented
 
 ---
 
 # 2. Shared Design Lab foundation
 
-## Structure
+## Structure and documentation
 
 - [x] Create Design Lab landing page
 - [x] Create shared stylesheet
-- [x] Create shared JavaScript controller and demo data
-- [x] Add README with scope and local-run instructions
+- [x] Create shared controller and fixture
+- [x] Add README and local-run instructions
 - [x] Add this master checklist
-- [ ] Split shared data, routing, Look rendering, scenarios, and review controls into maintainable modules if the single file becomes difficult to manage
-- [ ] Add `assets/` for shared icons, textures, and illustrations
-- [ ] Add `screenshots/` for approved review captures
-- [ ] Add `notes/` or a single decision log for feedback summaries
-- [ ] Add a simple version number for the Design Lab
-- [ ] Add a changelog for meaningful review builds
+- [x] Add `SCENARIOS.md`
+- [x] Add `DECISIONS.md`
+- [x] Add `CHANGELOG.md`
+- [x] Add Look #2 direction document
+- [x] Add Design Lab version `0.2.0`
+- [ ] Split the controller into data, routing, renderers, and controls before Look #3 if maintainability requires it
+- [ ] Add `assets/` when shared icons, textures, or illustrations are introduced
+- [ ] Add `screenshots/` when canonical review captures begin
+- [ ] Add per-Look scorecards or a shared scorecard file
 
 ## Shared behavior
 
-- [x] Support query-string state for Look, screen, and scenario
+- [x] Support query-string state for Look, screen, scenario, and Area
 - [x] Provide desktop review controls
-- [x] Provide mobile-accessible review controls
-- [x] Reserve selectors for Looks #2, #3, #4, and #6
-- [ ] Preserve the current screen when switching Looks
-- [ ] Preserve the current scenario when switching Looks
-- [ ] Support browser Back and Forward navigation
-- [ ] Support direct links to every audition screen and scenario
-- [ ] Restore sensible scroll position when switching Looks
-- [ ] Add Reset Review State control
-- [ ] Keep Design Lab state separate from Look #1 browser state
-- [ ] Keep each Look's interactive test state isolated where needed
-- [ ] Add corrupted-state fallback
-- [ ] Add Not Found or unsupported-route handling
+- [x] Provide mobile review controls
+- [x] Reserve Looks #2, #3, #4, and #6
+- [x] Preserve the current screen when switching Looks
+- [x] Preserve the current scenario when switching Looks
+- [x] Support browser Back and Forward
+- [x] Support direct links to Areas, Area detail, and Intervention
+- [x] Reset scroll to a sensible top position after route changes
+- [x] Add Reset Review State
+- [x] Keep Design Lab state separate from Look #1
+- [x] Clone scenario state before rendering to isolate Looks
+- [x] Add invalid-value and unsupported-route fallback
+- [ ] Add route-level automated smoke checks
+- [ ] Add optional screenshot-friendly presentation mode
 
 ## Comparison fairness
 
-- [x] Use the same base Area and routine data for Look #2
-- [ ] Formalize a single shared fixture consumed by every Look
-- [ ] Prevent Look-specific data mutations from affecting other Looks
-- [ ] Keep wording semantically equivalent across Looks unless tone is the design variable being tested
-- [ ] Keep core actions equivalent across Looks
-- [ ] Document every intentional placement or interaction difference
-- [ ] Avoid giving one Look more complete functionality during the same review round
-- [ ] Verify counts, due states, labels, and scenarios match across all active Looks
+- [x] Formalize one shared fixture for every Look
+- [x] Prevent Look-specific fixture mutation
+- [x] Document equivalent product meaning and allowed tone variation
+- [x] Keep Round 1 actions simulated for every Look
+- [x] Document Look #2 intentional placement differences
+- [x] Avoid giving Look #2 additional Round 1 functionality
+- [ ] Verify counts and labels programmatically
+- [ ] Verify every implemented Look consumes all scenarios
+- [ ] Document every later Look's intentional interaction differences
 
 ---
 
-# 3. Shared audition content
+# 3. Shared Round 1 audition content
 
-## Round 1 screens
+## Required screens
 
-Every shortlisted aesthetic must initially demonstrate the same product moments:
+- [x] Finalize Round 1 as:
+  - [x] Areas overview
+  - [x] Representative Area detail, normally Kitchen
+  - [x] Intervention
+- [x] Treat Area detail as a scored screen
+- [x] Keep Round 1 limited to visual-aesthetic validation
 
-- [x] Areas overview shell available
-- [x] Area detail available for Look #2
-- [x] Intervention screen available for Look #2
-- [ ] Finalize the exact Round 1 screen set as:
-  - [ ] Areas overview
-  - [ ] One representative Area detail, preferably Kitchen
-  - [ ] Intervention screen
-- [ ] Decide whether Area detail remains a scored screen or only a supporting interaction
-- [ ] Keep Round 1 limited to visual-aesthetic validation rather than full app completion
+## Required scenarios
 
-## Shared scenarios
+- [x] Normal Day
+- [x] Heavy Backlog
+- [x] New User
+- [x] All Clear
+- [x] Large Household
+- [x] Long Content
+- [x] Large Text
+- [d] Dark Environment unless later testing shows it can be fair without turning each Look into a dark-theme project
+- [x] Define scenario purposes
+- [x] Define expected counts and states
+- [x] Document fairness rules
 
-- [x] Normal Day scenario
-- [x] Heavy Backlog scenario
-- [x] New User scenario
-- [x] All Clear scenario
-- [ ] Add Large Household scenario
-- [ ] Add Long Content scenario
-- [ ] Add Large Text scenario
-- [ ] Add Dark Environment scenario only if it can be tested fairly without turning every Look into a dark theme
-- [ ] Define exact expected counts and item states for every scenario
-- [ ] Document why each scenario exists and what weakness it is intended to expose
+## Shared product data coverage
 
-## Shared product data
-
-- [x] Kitchen with overdue and due routines
-- [x] Bathroom with upcoming routines
+- [x] Kitchen with overdue and due-today routines
+- [x] Bathroom with upcoming and backlog states
 - [x] Living Room with a due-today routine
-- [x] Bedroom with an unconfigured section
-- [x] Car with maintenance routines
-- [ ] Add at least one long Area name
-- [ ] Add at least one long Chore name
-- [ ] Add at least one Area with many Sections
-- [ ] Add at least one Section with many routines
-- [ ] Add Work or Personal content to ensure the aesthetic is not exclusively household-coded
-- [ ] Confirm the same data supports every selected Look without aesthetic-specific exceptions
+- [x] Bedroom with an unconfigured Section
+- [x] Car maintenance
+- [x] Long Area name
+- [x] Long Section name
+- [x] Long Chore name
+- [x] Area with many Sections
+- [x] Area with many routines
+- [x] Work content
+- [x] Personal content
+- [ ] Confirm the fixture needs no aesthetic-specific exception after all four Looks exist
 
 ---
 
 # 4. Look #1 reference baseline
 
-Look #1 remains the approved functional baseline and is not rebuilt inside the Design Lab unless needed for synchronized comparison.
+Look #1 remains the approved functional baseline and is not rebuilt inside the Design Lab unless required for synchronized comparison.
 
-- [ ] Document the Look #1 visual principles in a concise reference sheet
-- [ ] Capture Look #1 Areas overview screenshot using the shared scenario
-- [ ] Capture Look #1 Area detail screenshot using the shared scenario
-- [ ] Capture or mock the Look #1 intervention treatment using identical content
-- [ ] Record strengths of Look #1
-- [ ] Record weaknesses or open nitpicks without fixing them during Round 1
-- [ ] Decide whether Design Lab comparison mode embeds Look #1 or links to it separately
-- [ ] Ensure Look #1 remains a valid selectable reference during final scoring
+- [ ] Write a concise Look #1 visual-principles reference
+- [ ] Capture Look #1 Areas overview using the shared Normal Day content
+- [ ] Capture Look #1 Area detail using the shared content
+- [ ] Capture or mock Look #1 Intervention with identical content
+- [ ] Record Look #1 strengths
+- [ ] Record Look #1 weaknesses and open nitpicks without fixing them
+- [ ] Decide whether comparison mode embeds Look #1 or links separately
+- [ ] Ensure Look #1 is scored as the baseline
 
 ---
 
@@ -203,39 +209,44 @@ Look #1 remains the approved functional baseline and is not rebuilt inside the D
 ## Direction definition
 
 - [x] Name the direction `Warm Editorial`
-- [x] Establish warm ivory, charcoal, olive, and terracotta palette
-- [x] Use serif display typography with clean sans-serif supporting text
-- [x] Use editorial labels, rules, and restrained card treatment
-- [x] Define the emotional target as calm, thoughtful, and household-journal-like
-- [ ] Document design principles and anti-patterns
-- [ ] Define how the direction supports Home, Car, Personal, and Work
-- [ ] Define icon style
-- [ ] Define motion and completion-feedback style
-- [ ] Define sheet, form, and destructive-action styling for later rounds
+- [x] Establish warm ivory, charcoal-green, olive, terracotta, and mustard roles
+- [x] Use serif display typography with sans-serif body text
+- [x] Use editorial labels, rules, and restrained cards
+- [x] Define the emotional target as calm, thoughtful, and practical
+- [x] Document design principles
+- [x] Document anti-patterns
+- [x] Define Home, Car, Personal, and Work support
+- [x] Define icon intent
+- [x] Define motion and completion-feedback intent
+- [x] Define later sheet, form, and destructive-action styling
 
 ## Round 1 implementation
 
 - [x] Implement Areas overview
 - [x] Implement Area detail
-- [x] Implement Intervention screen
-- [x] Support Normal, Backlog, New User, and All Clear scenarios
-- [x] Support route switching between audition screens
-- [ ] Complete Large Household scenario
-- [ ] Complete Long Content scenario
-- [ ] Verify all states on a phone-width viewport
-- [ ] Verify intervention remains clear and actionable
-- [ ] Verify typography does not reduce information density excessively
-- [ ] Verify Work and Personal content does not feel out of place
-- [ ] Resolve only blocking visual or interaction issues before Round 1 review
+- [x] Implement Intervention
+- [x] Support Normal Day
+- [x] Support Heavy Backlog
+- [x] Support New User
+- [x] Support All Clear
+- [x] Support Large Household
+- [x] Support Long Content
+- [x] Support Large Text
+- [x] Support direct route switching
+- [~] Verify all states at phone widths
+- [~] Verify Intervention remains clear and actionable
+- [~] Verify editorial typography retains practical density
+- [~] Verify Work and Personal do not feel visually out of place
+- [ ] Resolve only blocking issues before review
 
 ## Round 1 review
 
 - [ ] Capture canonical screenshots
-- [ ] Score against the Design Lab rubric
+- [ ] Score against the shared rubric
 - [ ] Record strongest element
 - [ ] Record biggest weakness
 - [ ] Record components worth borrowing
-- [ ] Mark as finalist, revise, hold, or reject
+- [ ] Mark finalist, revise, hold, or reject
 
 ---
 
@@ -243,26 +254,26 @@ Look #1 remains the approved functional baseline and is not rebuilt inside the D
 
 ## Direction definition
 
-- [ ] Confirm visual principles: strict grid, compact density, minimal ornament, one sharp accent
+- [ ] Confirm strict grid, compact density, minimal ornament, and one sharp accent
 - [ ] Define palette and light/dark assumptions
 - [ ] Define sans-serif and monospaced typography roles
 - [ ] Define border, radius, and spacing system
 - [ ] Define navigation treatment
 - [ ] Define status and urgency treatment
-- [ ] Define intervention tone so it does not feel punitive or corporate
+- [ ] Define a humane, non-corporate Intervention tone
 - [ ] Document anti-patterns and accessibility concerns
 
 ## Round 1 implementation
 
-- [ ] Implement Areas overview using the shared fixture
+- [ ] Implement Areas overview with the shared fixture
 - [ ] Implement representative Area detail
-- [ ] Implement Intervention screen
+- [ ] Implement Intervention
 - [ ] Implement all shared scenarios
 - [ ] Preserve shared route and scenario behavior
 - [ ] Verify dense data remains readable
-- [ ] Verify empty and all-clear states do not feel unfinished
-- [ ] Verify the intervention remains humane
-- [ ] Resolve only blocking issues before Round 1 review
+- [ ] Verify empty and all-clear states feel intentional
+- [ ] Verify the Intervention remains humane
+- [ ] Resolve only blocking issues before review
 
 ## Round 1 review
 
@@ -271,7 +282,7 @@ Look #1 remains the approved functional baseline and is not rebuilt inside the D
 - [ ] Record strongest element
 - [ ] Record biggest weakness
 - [ ] Record components worth borrowing
-- [ ] Mark as finalist, revise, hold, or reject
+- [ ] Mark finalist, revise, hold, or reject
 
 ---
 
@@ -279,24 +290,24 @@ Look #1 remains the approved functional baseline and is not rebuilt inside the D
 
 ## Direction definition
 
-- [ ] Confirm visual principles: large calm spaces, one dominant action, progressive disclosure
+- [ ] Confirm large calm spaces, one dominant action, and progressive disclosure
 - [ ] Define soft neutral palette and restrained urgency colors
-- [ ] Define typography and spacing system
-- [ ] Define how hidden secondary information is revealed
-- [ ] Define compact-density fallback for large data
-- [ ] Define intervention treatment centered on a gentle useful pause
-- [ ] Document anti-patterns, especially excessive emptiness or hidden status
+- [ ] Define typography and spacing
+- [ ] Define how secondary information is revealed
+- [ ] Define a compact-density fallback
+- [ ] Define the gentle useful-pause Intervention
+- [ ] Document anti-patterns, especially hidden status and excessive emptiness
 
 ## Round 1 implementation
 
-- [ ] Implement Areas overview using the shared fixture
+- [ ] Implement Areas overview
 - [ ] Implement representative Area detail
-- [ ] Implement Intervention screen
+- [ ] Implement Intervention
 - [ ] Implement all shared scenarios
-- [ ] Verify the Heavy Backlog state remains usable
-- [ ] Verify Large Household and Long Content do not collapse the calm aesthetic
-- [ ] Verify users can still quickly identify everything requiring attention
-- [ ] Resolve only blocking issues before Round 1 review
+- [ ] Verify Heavy Backlog remains usable
+- [ ] Verify Large Household and Long Content preserve clarity
+- [ ] Verify attention remains quickly discoverable
+- [ ] Resolve only blocking issues before review
 
 ## Round 1 review
 
@@ -305,7 +316,7 @@ Look #1 remains the approved functional baseline and is not rebuilt inside the D
 - [ ] Record strongest element
 - [ ] Record biggest weakness
 - [ ] Record components worth borrowing
-- [ ] Mark as finalist, revise, hold, or reject
+- [ ] Mark finalist, revise, hold, or reject
 
 ---
 
@@ -313,24 +324,24 @@ Look #1 remains the approved functional baseline and is not rebuilt inside the D
 
 ## Direction definition
 
-- [ ] Confirm visual principles: physical labels, controls, index-card organization, satisfying tactile cues
+- [ ] Confirm physical labels, controls, index-card organization, and tactile cues
 - [ ] Define palette and material references
-- [ ] Define typography without sacrificing readability
+- [ ] Define readable typography
 - [ ] Define checkbox, switch, stamp, and completion treatments
-- [ ] Define how the aesthetic expands beyond household chores to Car, Personal, and Work
-- [ ] Define intervention treatment without novelty becoming distracting
+- [ ] Define support beyond household content
+- [ ] Define an Intervention where novelty is not distracting
 - [ ] Document anti-patterns, especially fake skeuomorphism and excessive decoration
 
 ## Round 1 implementation
 
-- [ ] Implement Areas overview using the shared fixture
+- [ ] Implement Areas overview
 - [ ] Implement representative Area detail
-- [ ] Implement Intervention screen
+- [ ] Implement Intervention
 - [ ] Implement all shared scenarios
-- [ ] Verify tactile controls remain accessible and understandable
-- [ ] Verify the aesthetic scales to dense lists
-- [ ] Verify decorative surfaces do not reduce performance or readability
-- [ ] Resolve only blocking issues before Round 1 review
+- [ ] Verify tactile controls remain accessible
+- [ ] Verify dense lists scale
+- [ ] Verify decorative surfaces do not reduce readability
+- [ ] Resolve only blocking issues before review
 
 ## Round 1 review
 
@@ -339,122 +350,119 @@ Look #1 remains the approved functional baseline and is not rebuilt inside the D
 - [ ] Record strongest element
 - [ ] Record biggest weakness
 - [ ] Record components worth borrowing
-- [ ] Mark as finalist, revise, hold, or reject
+- [ ] Mark finalist, revise, hold, or reject
 
 ---
 
 # 9. Deferred aesthetic directions
 
-These are documented but should not be implemented unless promoted through the full plan-adjustment process.
+These remain documented but unimplemented unless promoted through the full plan-adjustment process.
 
 - [d] Look #5 — Bold Modern Consumer
 - [d] Look #7 — Dark Ambient as a standalone system
 - [d] Look #8 — Friendly Illustrated Home
 - [d] Look #9 — System Dashboard
 - [d] Dark variants of finalist Looks
-- [d] Additional aesthetic concepts discovered during review
+- [d] Additional aesthetics discovered during review
 
-For each deferred direction that is later promoted:
+For any promoted direction:
 
-- [ ] Explain which current shortlist gap it fills
-- [ ] Explain why existing Looks cannot answer the same design question
-- [ ] Update total Round 1 scope and review schedule
-- [ ] Add equivalent implementation and scoring tasks before work begins
+- [ ] Explain the shortlist gap it fills
+- [ ] Explain why an existing Look cannot answer the same question
+- [ ] Update Round 1 scope
+- [ ] Add equivalent implementation and scoring items before work
 
 ---
 
 # 10. Review rubric and feedback capture
 
-## Shared scoring categories
+## Shared 1–5 scoring categories
 
-Score each Look from 1–5 using the same definitions:
+- [ ] Clarity
+- [ ] Calmness
+- [ ] Speed
+- [ ] Personality
+- [ ] Density
+- [ ] Scalability
+- [ ] Intervention suitability
+- [ ] Accessibility
+- [ ] Versatility
+- [ ] Daily preference
 
-- [ ] Clarity — Can the user immediately identify what needs attention?
-- [ ] Calmness — Does the interface feel supportive rather than stressful?
-- [ ] Speed — Can a user complete or start an action quickly?
-- [ ] Personality — Is the product visually memorable and coherent?
-- [ ] Density — Is enough information visible without crowding?
-- [ ] Scalability — Can it support many Areas, Sections, and routines?
-- [ ] Intervention suitability — Does the interruption feel appropriate?
-- [ ] Accessibility — Are text, controls, states, and contrast understandable?
-- [ ] Versatility — Does it suit Home, Car, Personal, and Work?
-- [ ] Daily preference — Would the reviewer willingly use it every day?
-
-## Feedback format
-
-For each Look record:
+## Per-Look feedback
 
 - [ ] Numeric score by category
 - [ ] Best feature
 - [ ] Biggest problem
 - [ ] Most confusing element
 - [ ] Most distinctive element
-- [ ] Component or pattern worth borrowing
-- [ ] Scenario where the Look performs best
-- [ ] Scenario where the Look performs worst
+- [ ] Component worth borrowing
+- [ ] Best-performing scenario
+- [ ] Worst-performing scenario
 - [ ] Final Round 1 recommendation
 
 ## Review tooling
 
-- [ ] Add scorecard to the desktop review panel or create a linked Markdown scorecard
-- [ ] Add notes field or documented review workflow
-- [ ] Allow exporting or copying scores
-- [ ] Keep review data separate from app demo state
-- [ ] Add Reset Scores control with confirmation
-- [ ] Prevent early scores from being lost when another Look is opened
+- [ ] Add a Markdown or in-app scorecard
+- [ ] Add a documented notes workflow
+- [ ] Allow copying or exporting scores
+- [ ] Keep scores separate from demo state
+- [ ] Add Reset Scores confirmation if scores are stored in-app
+- [ ] Preserve scores when switching Looks
 
 ---
 
 # 11. Round 1 quality checks
 
-## Responsive and device checks
+## Responsive and device
 
-- [ ] 360 px-wide phone
-- [ ] 390 px-wide phone
-- [ ] 412 px-wide phone
+- [ ] 360 px phone
+- [ ] 390 px phone
+- [ ] 412 px phone
 - [ ] Tall Android viewport
-- [ ] Short viewport with keyboard-like vertical constraint
+- [ ] Short constrained viewport
 - [ ] Desktop review panel
 - [ ] Mobile review selector
-- [ ] Portrait orientation
+- [ ] Portrait
 - [ ] Landscape smoke test
 
-## Accessibility checks
+## Accessibility
 
-- [ ] Touch targets are at least approximately 44–48 px where practical
+- [~] Visible keyboard focus treatment
+- [ ] Approximate 44–48 px touch targets
 - [ ] Color is not the only status indicator
-- [ ] Text contrast review
-- [ ] Visible keyboard focus states
+- [ ] Contrast review
 - [ ] Logical tab order
-- [ ] Screen-reader labels for meaningful controls
-- [ ] Large text does not hide critical actions
-- [ ] Reduced-motion fallback for animations
+- [ ] Screen-reader labels
+- [~] Large Text scenario
+- [ ] Reduced-motion fallback
 - [ ] Intervention actions remain unambiguous
 
-## Content and stress checks
+## Content and stress
 
-- [ ] Long Area names
-- [ ] Long Section names
-- [ ] Long Chore names
-- [ ] Zero items
-- [ ] One item
-- [ ] Many items
-- [ ] Multiple overdue counts
-- [ ] All clear
-- [ ] Unconfigured Area or Section
-- [ ] Work/Personal content
-- [ ] Extremely dense backlog
+- [x] Long Area names available
+- [x] Long Section names available
+- [x] Long Chore names available
+- [x] Zero items available
+- [x] One and few-item states available
+- [x] Many-item state available
+- [x] Multiple overdue counts available
+- [x] All Clear available
+- [x] Unconfigured Section available
+- [x] Work and Personal content available
+- [x] Dense backlog available
+- [ ] Visually verify each case in every Look
 
-## Technical checks
+## Technical
 
 - [ ] HTML validation
 - [ ] CSS syntax check
-- [ ] JavaScript syntax check
+- [x] JavaScript syntax check for shared controller
 - [ ] No console errors during core flows
-- [ ] Query routes load directly
-- [ ] Browser Back works
-- [ ] No dependency on production Look #1 state
-- [ ] No accidental writes outside the Design Lab directory
+- [ ] Query routes load directly in a browser
+- [ ] Browser Back verified in a browser
+- [x] No dependency on Look #1 state
+- [x] No writes outside Design Lab during this batch
 
 ---
 
@@ -462,45 +470,43 @@ For each Look record:
 
 Do not begin full vertical-slice expansion until this gate is complete.
 
-- [ ] Every shortlisted Look has equivalent Round 1 screens
-- [ ] Every shortlisted Look supports the same required scenarios
-- [ ] Quality checks are complete or known limitations are documented
-- [ ] Each Look has a completed scorecard
-- [ ] Look #1 has been scored as the baseline
-- [ ] Review findings have been summarized
+- [ ] Every shortlisted Look has equivalent screens
+- [ ] Every shortlisted Look supports every required scenario
+- [ ] Quality checks are complete or limitations documented
+- [ ] Every Look has a scorecard
+- [ ] Look #1 is scored
+- [ ] Findings are summarized
 - [ ] Select approximately two or three finalists
-- [ ] Explicitly mark non-finalists as hold, reject, or source-of-components-only
-- [ ] Decide whether any finalist needs one focused revision before Round 2
-- [ ] Decide whether the final product may synthesize components from multiple Looks
-- [ ] Update this checklist based on the selected finalists
-- [ ] Add a dated decision-log entry
+- [ ] Mark non-finalists hold, reject, or components-only
+- [ ] Decide whether a finalist needs one focused revision
+- [ ] Decide whether synthesis remains allowed
+- [ ] Update this checklist based on finalists
+- [ ] Add a dated decision entry
 
-This gate is itself a mandatory plan-review point because the number and identity of Round 2 Looks cannot be finalized in advance.
+This gate is a mandatory hard stop because Round 2 participants cannot be finalized in advance.
 
 ---
 
 # 13. Round 2 — Interactive vertical slices
 
-The exact finalist Looks will be inserted after the Round 1 selection gate.
+The exact finalist Looks will be inserted after the Round 1 gate.
 
-## Shared Round 2 journey
-
-Each finalist must support the same end-to-end journey:
+## Shared journey
 
 - [ ] Open Today
 - [ ] Open Areas
 - [ ] Open Kitchen
-- [ ] Open Appliances or another representative Section
+- [ ] Open a representative Section
 - [ ] Open Chore details
 - [ ] Complete a graded Chore
 - [ ] Select Light, Moderate, or Deep
-- [ ] Add a new Chore
-- [ ] Open the Tasks checklist
+- [ ] Add a Chore
+- [ ] Open Tasks
 - [ ] Add, edit, complete, reopen, reorder, and indent a Task
 - [ ] Open a reusable List
 - [ ] Add, edit, complete, reopen, reorder, and indent a List item
-- [ ] Trigger a simulated intervention
-- [ ] Start the suggested action
+- [ ] Trigger a simulated Intervention
+- [ ] Start the suggestion
 - [ ] Request a different action
 - [ ] Choose Not Now
 
@@ -508,12 +514,12 @@ Each finalist must support the same end-to-end journey:
 
 - [ ] Preserve Look #1 product boundaries
 - [ ] Areas contains recurring Chores and maintenance only
-- [ ] One-time Tasks stay in Tasks
-- [ ] Lists preserve remembered-item suggestions
-- [ ] Completion rules match the approved prototype
-- [ ] Recurrence and graded-completion behavior match the approved prototype
-- [ ] Same shared data fixture across finalists
-- [ ] Same supported actions across finalists
+- [ ] One-time Tasks remain in Tasks
+- [ ] Lists preserve remembered suggestions
+- [ ] Completion rules match Look #1
+- [ ] Recurrence and graded completion match Look #1
+- [ ] Same fixture across finalists
+- [ ] Same actions across finalists
 - [ ] Same error and empty states across finalists
 
 ## Look-specific freedom
@@ -528,144 +534,136 @@ Finalists may vary:
 - [ ] Sheet versus full-page editing
 - [ ] Typography and icons
 - [ ] Completion feedback
-- [ ] Motion style
-- [ ] Intervention wording tone within equivalent meaning
+- [ ] Motion
+- [ ] Intervention tone with equivalent meaning
 
-Every meaningful interaction divergence must be documented so it can be evaluated rather than mistaken for missing functionality.
+Every meaningful divergence must be documented.
 
 ---
 
 # 14. Round 2 comparison mode
 
-- [ ] Implement side-by-side desktop previews
-- [ ] Synchronize routes between previews
-- [ ] Synchronize scenarios between previews
-- [ ] Optionally synchronize selected test action without sharing mutable state
-- [ ] Allow Look #1 versus finalist comparison
-- [ ] Allow finalist versus finalist comparison
-- [ ] Add single-phone toggle comparison on mobile
-- [ ] Preserve the current route when switching Looks
-- [ ] Add screenshot-friendly presentation mode
-- [ ] Add labels that clearly identify each Look
-- [ ] Verify the comparison shell does not distort mobile dimensions
+- [ ] Side-by-side desktop previews
+- [ ] Synchronized routes
+- [ ] Synchronized scenarios
+- [ ] Optional synchronized test action without shared mutable state
+- [ ] Look #1 versus finalist
+- [ ] Finalist versus finalist
+- [ ] Single-phone toggle on mobile
+- [ ] Preserve route when switching Looks
+- [ ] Screenshot-friendly mode
+- [ ] Clear Look labels
+- [ ] Preserve true phone dimensions
 
 ---
 
 # 15. Round 2 usability and preference review
 
-- [ ] Complete the shared vertical-slice journey in every finalist
+- [ ] Complete the shared journey in every finalist
 - [ ] Time key actions where useful
-- [ ] Record mis-taps or navigation confusion
+- [ ] Record mis-taps and navigation confusion
 - [ ] Review on an actual phone
-- [ ] Test Normal Day
-- [ ] Test Heavy Backlog
-- [ ] Test New User
-- [ ] Test All Clear
-- [ ] Test Large Household
-- [ ] Test Long Content
-- [ ] Test Large Text
-- [ ] Score every finalist again
-- [ ] Record which aesthetic is preferred initially
-- [ ] Record which aesthetic is preferred after repeated use
-- [ ] Identify fatigue, clutter, hidden information, or overly decorative behavior
-- [ ] Identify the best intervention treatment
-- [ ] Identify the best dense checklist treatment
-- [ ] Identify the best Areas treatment
-- [ ] Identify the best creation and editing treatment
+- [ ] Test all seven scenarios
+- [ ] Score finalists again
+- [ ] Record initial preference
+- [ ] Record preference after repeated use
+- [ ] Identify fatigue, clutter, hidden information, or excessive decoration
+- [ ] Identify best Intervention
+- [ ] Identify best dense checklist
+- [ ] Identify best Areas treatment
+- [ ] Identify best creation and editing treatment
 
 ---
 
 # 16. Synthesis exploration
 
-This phase occurs only if review evidence supports combining systems.
+This phase occurs only when review evidence supports combining systems.
 
 - [ ] Decide whether one finalist is strong enough without synthesis
-- [ ] Identify transferable components rather than mixing aesthetics indiscriminately
-- [ ] Create a proposed synthesis specification
-- [ ] Define the dominant visual system
-- [ ] Define which borrowed components are exceptions
-- [ ] Confirm typography, palette, spacing, and motion remain coherent
-- [ ] Build only the key comparison screens first
+- [ ] Identify transferable components
+- [ ] Define a dominant visual system
+- [ ] Define borrowed exceptions
+- [ ] Confirm coherent typography, palette, spacing, and motion
+- [ ] Build key comparison screens first
 - [ ] Compare synthesis against the strongest pure finalist
-- [ ] Reject synthesis if it weakens identity or consistency
+- [ ] Reject synthesis if identity or consistency weakens
 - [ ] Document the decision
 
-Potential combinations to evaluate only if supported by evidence:
+Potential combinations, only if evidence supports them:
 
-- [d] Warm Editorial typography with Precision Minimal list density
-- [d] Zen intervention treatment with another Look's organizer screens
-- [d] Tactile completion controls within a restrained broader system
-- [d] A finalist's light design with a later Dark Ambient theme
+- [d] Warm Editorial typography with Precision Minimal density
+- [d] Zen Intervention with another organizer system
+- [d] Tactile completion controls in a restrained system
+- [d] A later Dark Ambient theme for the selected Look
 
 ---
 
 # 17. Final selection gate
 
-- [ ] All finalists or synthesis candidates have equivalent functionality
-- [ ] Phone review is complete
-- [ ] Accessibility review is complete enough for selection
-- [ ] Review scores and qualitative notes are complete
-- [ ] The selected direction works for Home, Car, Personal, and Work
-- [ ] The selected intervention treatment feels supportive
-- [ ] The selected system scales to both empty and dense states
-- [ ] Identify any remaining design nitpicks that do not block selection
+- [ ] Equivalent functionality across finalists or synthesis candidates
+- [ ] Phone review complete
+- [ ] Accessibility review sufficient for selection
+- [ ] Scores and notes complete
+- [ ] Works for Home, Car, Personal, and Work
+- [ ] Intervention feels supportive
+- [ ] Empty and dense states both scale
+- [ ] Remaining nonblocking nitpicks identified
 - [ ] Select one visual foundation
-- [ ] Decide whether Look #1 remains the production baseline until Android work or whether selected design work should be ported back
+- [ ] Decide whether Look #1 remains production baseline until Android work
 - [ ] Document selected, rejected, and borrowed directions
-- [ ] Add dated final decision-log entry
-- [ ] Define exactly what will and will not be merged into `main`
-- [ ] Create a migration plan rather than directly replacing Look #1 ad hoc
+- [ ] Add dated final decision entry
+- [ ] Define what will and will not merge
+- [ ] Create a migration plan rather than replacing Look #1 ad hoc
 
 ---
 
 # 18. Branch closeout and preservation
 
 - [ ] Preserve canonical screenshots for every completed Look
-- [ ] Preserve scorecards and decision notes
-- [ ] Mark rejected Looks clearly without deleting their history
-- [ ] Remove abandoned temporary code only after screenshots and notes are saved
-- [ ] Update Design Lab README with final outcome
+- [ ] Preserve scorecards and decisions
+- [ ] Mark rejected Looks without deleting history
+- [ ] Remove abandoned temporary code only after preservation
+- [ ] Update README with final outcome
 - [ ] Update main project documentation only after an approved merge plan
-- [ ] Create a focused pull request for selected reusable infrastructure, if any
-- [ ] Create a separate focused pull request for any selected visual direction port
+- [ ] Create focused PRs for reusable infrastructure and selected visual work
 - [ ] Confirm `main` remains stable
-- [ ] Tag or otherwise preserve the final Design Lab branch state
-- [ ] Decide whether the branch remains open for future aesthetic exploration
+- [ ] Tag or preserve the final branch state
+- [ ] Decide whether the branch remains open for future exploration
 
 ---
 
 # 19. Decision and plan-adjustment log
 
-## 2026-08-01 — Design Lab branch and initial shortlist
+The detailed log lives in [`DECISIONS.md`](DECISIONS.md).
 
-**Decision:** Create `feature/design-lab` and preserve Look #1 on `main`.  
-**Shortlist:** Warm Editorial, Precision Minimal, Zen Focus, and Tactile Household.  
-**Round 1 focus:** Areas overview, representative Area detail, and Intervention using shared scenarios.  
-**Current active Look:** Look #2 — Warm Editorial.
+## 2026-08-01 — Initial Design Lab direction
 
-## Future entries
+- [x] Preserve Look #1 on `main`
+- [x] Create `feature/design-lab`
+- [x] Shortlist Looks #2, #3, #4, and #6
+- [x] Define Round 1 screens
+- [x] Make Look #2 the first active audition
 
-Add each entry using:
+## 2026-08-01 — Shared fixture foundation v0.2
 
-```text
-## YYYY-MM-DD — Decision title
-
-Reason:
-Decision:
-Checklist changes:
-Impact on completed work:
-Next active milestone:
-```
+- [x] Add Large Household, Long Content, and Large Text
+- [x] Add direct Area routes and browser history
+- [x] Add reset and route fallbacks
+- [x] Document fairness, scenarios, and Look #2 principles
+- [x] Keep all changes within `mockups/design-lab/`
 
 ---
 
 # 20. Current next actions
 
-- [~] Finish the Round 1 foundation and shared-fixture rules
-- [~] Finish Look #2 Warm Editorial stress states and review readiness
-- [ ] Implement Look #3 Precision Minimal audition
-- [ ] Implement Look #4 Zen Focus audition
-- [ ] Implement Look #6 Tactile Household audition
+- [x] Finish Round 1 shared-fixture rules
+- [x] Finish Look #2 stress-scenario implementation
+- [~] Complete Look #2 responsive, accessibility, and blocking-quality checks
+- [ ] Split shared controller before Look #3 if needed
+- [ ] Define Look #3 Precision Minimal
+- [ ] Implement Look #3 audition
+- [ ] Implement Look #4 audition
+- [ ] Implement Look #6 audition
 - [ ] Complete Round 1 quality checks
 - [ ] Score Look #1 and all shortlisted Looks
-- [ ] Hold the Round 1 selection gate before any full-app expansion
+- [ ] Hold the Round 1 selection gate before full-app expansion

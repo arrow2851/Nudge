@@ -1,5 +1,21 @@
 # Design Lab Changelog
 
+## 0.6.1 — 2026-08-01
+
+### Look #6 quality pass
+
+- Darkened muted text where the darkest tactile gradient did not meet the small-text contrast target
+- Corrected Large Text scaling across fixed-size headings, cards, labels, metadata, rows, status tags, and actions
+- Ensured Large Text rules override 360 px reductions
+- Reflowed the summary board and routine status tags on narrow screens
+- Stacked long timer-panel metadata at very narrow widths
+- Added overflow protection for Area, routine, Section, app, stamp, and Intervention content
+- Added stronger Look-specific keyboard focus indicators
+- Simplified Tactile routine status screen-reader announcements
+- Removed nonessential perforation, paperclip, ticket-hole, and dashed-card details in forced-colors mode
+- Added `look6-quality.css` and `LOOK-6-QUALITY.md`
+- Updated the Design Lab to `0.6.1`
+
 ## 0.6.0 — 2026-08-01
 
 ### Look #6 — Tactile Household
@@ -12,75 +28,54 @@
 - Reused all shared fixtures, routes, scenarios, and simulated actions
 - Added initial narrow-phone, dense-list, Long Content, Large Text, screen-reader-summary, and forced-colors handling
 - Added formal Tactile Household principles, versatility rules, and anti-patterns
-- Updated the Design Lab to `0.6.0`
 
 ## 0.5.1 — 2026-08-01
 
 ### Look #4 quality pass
 
-- Corrected Large Text scaling for fixed-size Zen Focus content
-- Added explicit narrow-phone routine and status reflow
-- Preserved every attention item during dense backlog scenarios
-- Added long-content wrapping across Areas, routines, Sections, and Intervention content
-- Corrected the empty-orbit and pause-mark positioning context
-- Improved overdue status contrast
-- Added richer Area, routine, Section, focus-card, suggestion, and Intervention semantics
-- Added all-clear wording that avoids recreating urgency
+- Corrected fixed-size Large Text behavior
+- Added narrow-phone routine and status reflow
+- Preserved every backlog item and full Area access
+- Added long-content wrapping and richer semantics
+- Corrected decorative positioning and overdue contrast
 - Extended forced-colors handling
-- Documented remaining actual-browser and assistive-technology review work
 
 ## 0.5.0 — 2026-08-01
 
 ### Look #4 — Zen Focus
 
 - Added the third active Round 1 aesthetic
-- Implemented Areas overview, representative Area detail, and Intervention
-- Added one calm suggested starting point while retaining the complete Area and routine picture
-- Added progressive emphasis without hiding required status information
-- Added soft neutral, sage, clay, and muted amber visual roles
-- Added a choice-centered Intervention that explicitly permits staying in the current app
-- Reused all shared fixtures, routes, scenarios, and simulated actions
-- Added initial narrow-phone, Large Text, screen-reader-summary, and forced-colors handling
-- Added formal Zen Focus principles, versatility requirements, and anti-patterns
+- Implemented Areas overview, Area detail, and Intervention
+- Added one calm suggested starting point while retaining the complete information picture
+- Added progressive emphasis, soft neutral roles, and a choice-centered Intervention
+- Reused every shared fixture, route, scenario, and simulated action
 
 ## 0.4.1 — 2026-08-01
 
 ### Look #3 quality pass
 
-- Added explicit 420 px and 370 px responsive reflow behavior
-- Corrected Large Text behavior for fixed-size labels and content
-- Increased undersized operational labels while preserving compact density
-- Prevented long Area, routine, Section, app, and intervention metadata from causing horizontal overflow
-- Added Area-row, attention-summary, detail-metric, Section-row, and routine-status semantics
-- Added forced-colors support
-- Documented contrast values and remaining actual-browser review work
+- Added explicit narrow-phone reflow
+- Corrected fixed-size Large Text behavior
+- Improved small operational labels and long-content protection
+- Added richer semantics and forced-colors support
 
 ## 0.4.0 — 2026-08-01
 
 ### Look #3 — Precision Minimal
 
 - Added the second active Round 1 aesthetic
-- Implemented Areas overview, representative Area detail, and Intervention
-- Added compact grid-based information hierarchy and cobalt accent treatment
-- Reused all shared fixtures, routes, scenarios, and simulated actions
-- Added formal Precision Minimal principles and anti-patterns
+- Implemented Areas overview, Area detail, and Intervention
+- Added compact grid hierarchy, cobalt accent treatment, and formal direction rules
+- Reused every shared fixture, route, scenario, and simulated action
 
 ## 0.3.0 — 2026-08-01
 
 ### Modular architecture
 
-- Split the former monolithic controller into configuration, fixtures, utilities, routing state, review controls, and renderer modules
-- Added a dedicated `renderers/` boundary so each new Look can own its presentation without duplicating shared data or routing
-- Kept the shared scenario fixture immutable and cloned per render
-- Preserved query-string routes, browser history, reset behavior, simulated actions, and Look #2 output
-- Switched the Design Lab entry point to an ES module
-- Updated build metadata to `0.3.0`
-
-### Validation
-
-- Passed syntax checks for every module
-- Verified all relative imports resolve to existing files
-- Kept every change under `mockups/design-lab/`
+- Split the monolithic controller into configuration, fixtures, utilities, state, controls, and per-Look renderer modules
+- Added immutable shared fixtures and dedicated renderer boundaries
+- Preserved query routing, browser history, reset behavior, and simulated actions
+- Switched the Design Lab entry point to browser-native ES modules
 
 ## 0.2.1 — 2026-08-01
 
@@ -89,41 +84,22 @@
 - Improved narrow-phone and Large Text handling
 - Expanded critical touch targets
 - Added keyboard focus, selected-state semantics, skip navigation, and reduced-motion handling
-- Corrected low-contrast supporting and navigation text
-- Documented remaining actual-device and assistive-technology checks
+- Corrected low-contrast supporting text
 
 ## 0.2.0 — 2026-08-01
 
 ### Shared foundation
 
-- Added direct routes for Areas overview, Area detail, and Intervention
-- Added browser Back and Forward support
-- Preserved the active screen and scenario when switching Looks
-- Added safe fallback behavior for invalid Look, screen, scenario, and Area values
-- Added a Reset Review State control
-- Added isolated Design Lab session storage with query parameters as the source of truth
-- Added visible Experimental Design Lab labeling
-- Added Design Lab version and build-date metadata
-
-### Shared scenarios
-
-- Added Large Household
-- Added Long Content
-- Added Large Text
-- Added Work and Personal content
-- Added long Area, Section, Chore, and Intervention labels
-- Documented exact scenario purposes and expected states
-
-### Look #2
-
-- Added formal Warm Editorial principles, versatility rules, motion intent, and anti-patterns
-- Continued to limit Round 1 actions to equivalent simulations
+- Added direct routes, browser Back and Forward, reset behavior, route fallbacks, and isolated review state
+- Added visible Experimental Design Lab and version metadata
+- Added Large Household, Long Content, Large Text, Work, Personal, and long-label fixture coverage
+- Formalized comparison fairness and Warm Editorial direction rules
 
 ## 0.1.0 — 2026-08-01
 
 - Created `feature/design-lab`
 - Added the Design Lab shell
-- Added Look #2 Warm Editorial Areas, Area detail, and Intervention auditions
-- Added Normal Day, Heavy Backlog, New User, and All Clear scenarios
-- Reserved Look #3 Precision Minimal, Look #4 Zen Focus, and Look #6 Tactile Household
-- Added the master Design Lab checklist
+- Added Look #2 Warm Editorial
+- Added the initial shared scenarios
+- Reserved Looks #3, #4, and #6
+- Added the master execution checklist

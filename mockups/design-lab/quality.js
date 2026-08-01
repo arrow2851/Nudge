@@ -1,10 +1,14 @@
 (() => {
   const VERSION = '0.7.0';
-  const params = new URLSearchParams(location.search);
-  const captureMode = params.get('capture');
+  const initialParams = new URLSearchParams(location.search);
+  const captureMode = initialParams.get('capture');
 
   if (captureMode === 'labelled' || captureMode === 'phone') {
     document.documentElement.dataset.capture = captureMode;
+  }
+
+  function setText(element, value) {
+    if (element && element.textContent !== value) element.textContent = value;
   }
 
   function syncCaptureHeader(lookName, scenario) {
@@ -16,23 +20,21 @@
       header.id = 'capture-header';
       header.className = 'capture-header';
       header.setAttribute('aria-label', 'Screenshot evidence label');
+      const title = document.createElement('strong');
+      const meta = document.createElement('span');
+      header.append(title, meta);
       document.querySelector('.preview-stage')?.prepend(header);
     }
 
+    const routeParams = new URLSearchParams(location.search);
     const lookKicker = document.querySelector('#look-kicker')?.textContent?.trim() || 'Look';
-    const screen = params.get('screen') || 'areas';
-    const area = params.get('area');
+    const screen = routeParams.get('screen') || 'areas';
+    const area = routeParams.get('area');
     const routeLabel = screen === 'area' && area ? `Area detail · ${area}` : screen;
 
-    header.replaceChildren();
-    const title = document.createElement('strong');
-    title.textContent = `${lookKicker} — ${lookName || 'Unknown Look'}`;
-    const meta = document.createElement('span');
-    meta.textContent = `${routeLabel} · ${scenario || 'Normal day'} · v${VERSION}`;
-    header.append(title, meta);
-
-    const statusTime = document.querySelector('#status-time');
-    if (statusTime) statusTime.textContent = '9:41';
+    setText(header.querySelector('strong'), `${lookKicker} — ${lookName || 'Unknown Look'}`);
+    setText(header.querySelector('span'), `${routeLabel} · ${scenario || 'Normal day'} · v${VERSION}`);
+    setText(document.querySelector('#status-time'), '9:41');
   }
 
   function syncSemantics() {
@@ -67,11 +69,8 @@
     const scenario = document.querySelector('[data-scenario].active')?.textContent?.trim();
     if (lookName && scenario) document.title = `Nudge Design Lab — ${lookName} · ${scenario}`;
 
-    const build = document.querySelector('#build-meta');
-    const mobileBuild = document.querySelector('#mobile-build');
-    if (build) build.textContent = `v${VERSION} · 2026-08-01`;
-    if (mobileBuild) mobileBuild.textContent = `v${VERSION}`;
-
+    setText(document.querySelector('#build-meta'), `v${VERSION} · 2026-08-01`);
+    setText(document.querySelector('#mobile-build'), `v${VERSION}`);
     syncCaptureHeader(lookName, scenario);
   }
 

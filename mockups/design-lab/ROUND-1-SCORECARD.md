@@ -2,7 +2,7 @@
 
 Use this scorecard only after reviewing the same screens, scenarios, and viewport sequence for every direction.
 
-**Design Lab version:** `0.7.0`  
+**Design Lab version:** `0.7.1`  
 **Reviewer:**  
 **Review date:**  
 **Primary device/browser:**  
@@ -17,6 +17,8 @@ Use this scorecard only after reviewing the same screens, scenarios, and viewpor
 - **5 — Excellent:** distinctive, dependable, and preferred for repeated use.
 
 Do not average scores until the qualitative notes are complete. A high total does not automatically override a serious accessibility, scalability, or Intervention concern.
+
+Look #1 Areas and Area detail use a comparison-only shared-fixture reference based on the protected prototype. Its Intervention is a clearly labeled extrapolation because the current prototype has no equivalent screen; account for that limitation in the score and notes.
 
 ## Required evidence order
 
@@ -49,6 +51,7 @@ Do not average scores until the qualitative notes are complete. A high total doe
 
 ## Look #1 — Soft Practical Utility
 
+- **Evidence limitation:** Intervention is an extrapolated comparison mock, not an existing prototype screen.
 - **Best feature:**
 - **Biggest problem:**
 - **Most confusing element:**

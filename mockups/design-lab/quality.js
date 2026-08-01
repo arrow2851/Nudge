@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.6.0';
+  const VERSION = '0.6.1';
 
   function syncSemantics() {
     const activeLook = document.querySelector('.look-button.active');
@@ -22,6 +22,11 @@
       button.type = 'button';
       if (button.classList.contains('active')) button.setAttribute('aria-current', 'page');
       else button.removeAttribute('aria-current');
+    });
+
+    document.querySelectorAll('.th-status-tag').forEach(tag => {
+      const status = tag.textContent?.trim();
+      if (status) tag.setAttribute('aria-label', `Status: ${status}`);
     });
 
     const lookName = document.querySelector('#look-name')?.textContent?.trim();

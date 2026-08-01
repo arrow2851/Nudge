@@ -2,17 +2,18 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.4.0`  
+**Current version:** `0.4.1`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.4.0](CHECKLIST-PROGRESS-0.4.0.md)
+- [Latest checklist progress — 0.4.1](CHECKLIST-PROGRESS-0.4.1.md)
 - [Shared scenario definitions](SCENARIOS.md)
 - [Look #2 — Warm Editorial direction](LOOK-2-WARM-EDITORIAL.md)
 - [Look #2 quality pass](LOOK-2-QUALITY.md)
 - [Look #3 — Precision Minimal direction](LOOK-3-PRECISION-MINIMAL.md)
+- [Look #3 quality pass](LOOK-3-QUALITY.md)
 - [Decisions and feedback log](DECISIONS.md)
 - [Design Lab changelog](CHANGELOG.md)
 
@@ -52,7 +53,7 @@ Shared scenarios:
 
 ## Current implementation
 
-Two active Round 1 auditions are implemented:
+Two active Round 1 auditions are implemented and have completed code-level quality passes:
 
 ### Look #2 — Warm Editorial
 
@@ -60,7 +61,7 @@ Two active Round 1 auditions are implemented:
 - Direct-linked Area detail
 - Intervention
 - All shared scenarios
-- Responsive and accessibility corrections
+- Responsive, accessibility, contrast, and Large Text corrections
 
 ### Look #3 — Precision Minimal
 
@@ -68,7 +69,7 @@ Two active Round 1 auditions are implemented:
 - Direct-linked Area detail
 - Direct but humane Intervention
 - All shared scenarios
-- Dedicated Look-specific stylesheet
+- Responsive, accessibility, forced-colors, long-content, and Large Text corrections
 
 Shared functionality includes desktop and mobile review controls, browser Back and Forward, Reset Review State, route fallbacks, isolated review state, and experimental-build labeling.
 
@@ -107,7 +108,7 @@ Example review routes:
 ?look=2&screen=area&area=kitchen&scenario=backlog
 ?look=3&screen=areas&scenario=large
 ?look=3&screen=area&area=kitchen&scenario=long
-?look=3&screen=intervention&scenario=normal
+?look=3&screen=intervention&scenario=large-text
 ```
 
 ## Round 1 fairness rule
@@ -116,4 +117,4 @@ Every active Look must use the same shared fixture and scenarios. Layout, typogr
 
 ## Next audition work
 
-Complete the Look #3 responsive, accessibility, and blocking-quality pass. Then define and implement Look #4 — Zen Focus using the exact same screens, scenarios, routes, and simulated actions.
+Define and implement Look #4 — Zen Focus using the exact same screens, scenarios, routes, and simulated actions. Do not expand any Look into the full app until the Round 1 finalists are selected.

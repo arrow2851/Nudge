@@ -1,5 +1,22 @@
 # Design Lab Changelog
 
+## 0.7.2 — 2026-08-01
+
+### Round 1 browser evidence
+
+- Reconstructed the connected branch from draft PR #1 when direct cloning remained unavailable
+- Executed 105 direct routes, 90 canonical viewport checks, and 35 stress-state routes
+- Verified Long Content and Large Text action reachability after scrolling
+- Exercised Area navigation, History API return, Look/scenario preservation, reset, invalid fallback, and Intervention feedback
+- Verified visible keyboard focus and Enter activation of a focused Area
+- Inspected the automated accessibility tree and found zero unnamed buttons in the audited dense route
+- Emulated forced colors and reduced motion for all five directions without runtime errors
+- Captured 15 canonical labelled screenshots
+- Found and fixed root `html[data-look]` interception by scoping Look controls and semantics to `button[data-look]`
+- Added `ROUND-1-EVIDENCE-0.7.2.md` and `ROUND-1-SCORECARD-0.7.2.md`
+- Recorded Look #3 and Look #4 as provisional finalist recommendations pending the mandatory product-owner gate
+- Updated the Design Lab to `0.7.2`
+
 ## 0.7.1 — 2026-08-01
 
 ### Look #1 baseline mapping

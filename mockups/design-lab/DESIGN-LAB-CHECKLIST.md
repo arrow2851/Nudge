@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.6.0`  
+**Current version:** `0.6.1`  
 **Purpose:** Compare genuinely different design systems for the same Nudge product before selecting or synthesizing a final direction.
 
 This file is the source of truth for scope, order, progress, review gates, and decisions.
@@ -11,7 +11,7 @@ This file is the source of truth for scope, order, progress, review gates, and d
 ## Status legend
 
 - `[x]` Completed or code-level verified
-- `[~]` Partially complete; usually awaiting real-browser or comparative evidence
+- `[~]` Partially complete; usually awaiting real-browser, device, or comparative evidence
 - `[ ]` Not started
 - `[!]` Decision required
 - `[b]` Blocked
@@ -39,7 +39,7 @@ Required one-line response:
 
 > **Hard stop: review the Design Lab decision required before I continue.**
 
-After approval, update this checklist and `DECISIONS.md` before implementation resumes. Minor bugs, accessibility fixes, copy changes, and visual refinements may proceed without a hard stop.
+After approval, update this checklist and `DECISIONS.md` before implementation resumes. Minor bugs, accessibility fixes, copy changes, test infrastructure, and visual refinements may proceed without a hard stop.
 
 ---
 
@@ -47,56 +47,59 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 
 - [x] Create `feature/design-lab` from `main`
 - [x] Keep Look #1 unchanged on `main`
-- [x] Keep all current experimental files under `mockups/design-lab/`
+- [x] Keep experimental files under `mockups/design-lab/`
 - [x] Add visible Experimental Design Lab and build labels
-- [x] Keep Design Lab browser state separate from Look #1
-- [x] Verify the branch remains ahead of and not behind `main` during implementation
-- [ ] Recheck divergence before the Round 1 review gate
-- [ ] Define how later Look #1 functionality changes would be incorporated
+- [x] Keep Design Lab state separate from Look #1
+- [x] Confirm the branch remains ahead of and not behind `main` during implementation
+- [ ] Recheck divergence before Round 1 scoring
+- [ ] Define how later Look #1 functionality changes are incorporated
 - [ ] Add a branch-specific preview deployment
 - [ ] Confirm preview deployment cannot replace production GitHub Pages
 - [ ] Document preview URL and refresh procedure
-- [ ] Open a draft PR only when centralized review history becomes useful
-- [ ] Do not merge before the final selection and migration plan
+- [ ] Open a draft PR only when centralized review history is useful
+- [ ] Do not merge before final selection and migration planning
 
 ---
 
 # 2. Shared Design Lab foundation
 
-## Structure
+## Structure and behavior
 
-- [x] Landing page, shared shell, and mobile/desktop controls
-- [x] Shared immutable fixtures and scenarios
+- [x] Landing page, shared shell, and desktop/mobile controls
+- [x] Shared immutable fixtures and seven scenarios
 - [x] Query routing for Look, screen, scenario, and Area
 - [x] Browser Back/Forward implementation
 - [x] Reset Review State and invalid-route fallback
-- [x] Modular ES architecture: config, fixtures, utilities, state, controls, per-Look renderers
-- [x] README, scenario specification, decisions log, changelog, and versioned progress notes
+- [x] Browser-native ES modules
+- [x] Per-Look renderer boundaries
+- [x] Separate Look-specific stylesheets
+- [x] README, scenarios, decisions, changelog, direction documents, quality notes, and progress logs
 - [ ] Add automated route and fixture smoke checks
 - [ ] Add screenshot-friendly presentation mode
-- [ ] Add `assets/` only when shared assets are introduced
 - [ ] Add `screenshots/` when canonical captures begin
+- [ ] Add shared assets only when truly reused across Looks
 
 ## Comparison fairness
 
-- [x] One fixture and seven scenarios shared by active Looks
+- [x] One fixture shared by all shortlisted Looks
 - [x] Clone scenario data before rendering
-- [x] Keep Round 1 actions simulated and equivalent
-- [x] Allow presentation and tone differences without changing meaning
-- [x] Document intentional differences for Looks #2, #3, #4, and #6
+- [x] Same three screens for all Looks
+- [x] Same seven scenarios for all Looks
+- [x] Same simulated Round 1 actions
+- [x] Presentation and tone may change without changing meaning
+- [x] Direction and intentional differences documented for Looks #2, #3, #4, and #6
 - [ ] Verify fixture counts and labels programmatically
-- [x] Confirm no aesthetic-specific fixture exception after all four Looks exist
+- [ ] Confirm no aesthetic-specific fixture exception exists
 
 ---
 
-# 3. Shared Round 1 audition content
+# 3. Shared Round 1 content
 
-## Screens
+## Scored screens
 
 - [x] Areas overview
 - [x] Representative Area detail, normally Kitchen
 - [x] Intervention
-- [x] Treat all three as scored screens
 - [x] Prevent full-app expansion before finalist selection
 
 ## Scenarios
@@ -108,7 +111,7 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 - [x] Large Household
 - [x] Long Content
 - [x] Large Text
-- [d] Dark Environment unless later promoted through plan adjustment
+- [d] Dark Environment unless promoted through plan adjustment
 
 ## Fixture coverage
 
@@ -116,22 +119,22 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 - [x] Upcoming and as-needed content
 - [x] Empty and all-clear states
 - [x] Unconfigured Section
-- [x] Car maintenance
-- [x] Work and Personal Areas
-- [x] Long Area, Section, Chore, and Intervention labels
+- [x] Home and Car content
+- [x] Work and Personal content
+- [x] Long Area, Section, Chore, app, and Intervention labels
 - [x] Many Areas, Sections, routines, and backlog items
 
 ---
 
-# 4. Look #1 reference baseline
+# 4. Look #1 — Soft Practical Utility baseline
 
-- [ ] Write concise Look #1 visual principles
-- [ ] Capture Areas overview using equivalent content
-- [ ] Capture Area detail using equivalent content
-- [ ] Capture or mock equivalent Intervention content
+- [ ] Write concise visual principles
+- [ ] Map equivalent shared content to Areas overview
+- [ ] Map equivalent shared content to Area detail
+- [ ] Capture or mock an equivalent Intervention
 - [ ] Record strengths, weaknesses, and unresolved nitpicks
-- [ ] Decide whether final comparison embeds or separately links Look #1
-- [ ] Score Look #1 as the baseline
+- [ ] Decide whether comparison embeds or separately links Look #1
+- [ ] Score Look #1 as the production baseline
 
 ---
 
@@ -139,27 +142,26 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 
 ## Direction and implementation
 
-- [x] Define palette, typography, editorial hierarchy, icon intent, motion intent, and anti-patterns
-- [x] Define support for Home, Car, Personal, and Work
-- [x] Implement all three Round 1 screens
-- [x] Implement all seven scenarios
+- [x] Define palette, typography, editorial hierarchy, icon intent, motion intent, versatility, and anti-patterns
+- [x] Implement all three screens and seven scenarios
 - [x] Preserve shared routes and simulated actions
 
 ## Code-level quality
 
 - [x] Narrow-phone and long-content protection
-- [x] Explicit Large Text handling
+- [x] Large Text handling
 - [x] Contrast corrections
 - [x] Critical touch targets
-- [x] Keyboard focus, selected-state, navigation, and live-region semantics
+- [x] Focus, selected-state, navigation, and live-region semantics
 - [x] Reduced-motion handling
-- [~] Actual-device, keyboard, screen-reader, and comparative review pending
+- [~] Actual-device, keyboard, screen-reader, and comparative evidence pending
 
 ## Round 1 review
 
 - [ ] Canonical screenshots
 - [ ] Shared scorecard
-- [ ] Best feature, biggest weakness, and borrowable components
+- [ ] Best feature, biggest weakness, confusing element, distinctive element, and borrowable components
+- [ ] Best and worst scenario
 - [ ] Finalist, revise, hold, or reject status
 
 ---
@@ -168,27 +170,26 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 
 ## Direction and implementation
 
-- [x] Define strict grid, compact density, cobalt accent, typography roles, navigation, urgency treatment, and anti-patterns
-- [x] Define humane non-corporate Intervention tone
-- [x] Implement all three Round 1 screens
-- [x] Implement all seven scenarios
+- [x] Define strict grid, compact density, cobalt accent, typography roles, navigation, urgency treatment, humane Intervention tone, and anti-patterns
+- [x] Implement all three screens and seven scenarios
 - [x] Preserve shared routes and simulated actions
 
 ## Code-level quality
 
 - [x] 420 px and 370 px reflow
 - [x] Long-content and dense-data protection
-- [x] Explicit Large Text handling
+- [x] Large Text handling
 - [x] Small-label and contrast review
 - [x] Screen-reader summaries and forced-colors support
 - [x] Critical touch targets
-- [~] Actual-browser, keyboard, screen-reader, and comparative review pending
+- [~] Actual-browser, keyboard, screen-reader, and comparative evidence pending
 
 ## Round 1 review
 
 - [ ] Canonical screenshots
 - [ ] Shared scorecard
-- [ ] Best feature, biggest weakness, and borrowable components
+- [ ] Best feature, biggest weakness, confusing element, distinctive element, and borrowable components
+- [ ] Best and worst scenario
 - [ ] Finalist, revise, hold, or reject status
 
 ---
@@ -197,92 +198,144 @@ After approval, update this checklist and `DECISIONS.md` before implementation r
 
 ## Direction and implementation
 
-- [x] Define calm progressive emphasis without hiding required information
-- [x] Define soft neutral palette, restrained urgency, typography, spacing, and anti-patterns
-- [x] Keep one suggested starting point with the complete Area and routine picture below it
-- [x] Implement all three Round 1 screens
-- [x] Implement all seven scenarios
+- [x] Define calm progressive emphasis, soft neutral palette, restrained urgency, typography, spacing, versatility, and anti-patterns
+- [x] Keep one suggested start while retaining the complete information picture
+- [x] Implement all three screens and seven scenarios
 - [x] Preserve shared routes and simulated actions
 
 ## Code-level quality
 
 - [x] Preserve every backlog item and full Area access
 - [x] Narrow-phone and dense-row reflow
-- [x] Explicit Large Text handling for fixed-size content
+- [x] Large Text handling
 - [x] Long-content wrapping
-- [x] Correct empty-orbit and pause-mark positioning
-- [x] Correct overdue contrast and review remaining palette roles
-- [x] Area, routine, Section, focus-card, suggestion, and Intervention semantics
+- [x] Decorative positioning corrections
+- [x] Contrast review
+- [x] Richer Area, routine, Section, focus, suggestion, and Intervention semantics
 - [x] Forced-colors support and critical touch targets
-- [x] Use `Available when useful` rather than urgent language in All Clear
-- [~] Actual-browser, keyboard, screen-reader, and comparative review pending
+- [x] All Clear avoids artificial urgency
+- [~] Actual-browser, keyboard, screen-reader, and comparative evidence pending
 
 ## Round 1 review
 
 - [ ] Canonical screenshots
 - [ ] Shared scorecard
-- [ ] Best feature, biggest weakness, and borrowable components
+- [ ] Best feature, biggest weakness, confusing element, distinctive element, and borrowable components
+- [ ] Best and worst scenario
 - [ ] Finalist, revise, hold, or reject status
 
 ---
 
 # 8. Look #6 — Tactile Household
 
-## Direction definition
+## Direction and implementation
 
-- [x] Confirm physical labels, controls, index-card organization, and satisfying tactile cues
-- [x] Define restrained palette and non-photorealistic material references
-- [x] Define readable typography
-- [x] Define checkbox, status-stamp, raised-button, card, and Section-drawer treatments
-- [x] Define support beyond household content
-- [x] Define a supportive timer-panel Intervention where novelty does not distract
-- [x] Document anti-patterns: fake skeuomorphism, excessive decoration, and unclear affordances
-
-## Round 1 implementation
-
-- [x] Areas overview using the shared fixture
-- [x] Representative Area detail
-- [x] Intervention
-- [x] All seven scenarios
-- [x] Shared route and simulated-action behavior
-- [x] Initial dense-list and long-content fallback
-- [x] Initial Large Text and narrow-phone handling
-- [x] Initial semantics and forced-colors handling
+- [x] Define physical labels, practical controls, card organization, tactile cues, typography, palette, versatility, Intervention tone, and anti-patterns
+- [x] Avoid photorealism, fake skeuomorphism, and decorative ambiguity
+- [x] Implement all three screens and seven scenarios
+- [x] Preserve shared routes and simulated actions
 
 ## Code-level quality
 
-- [~] Responsive and overflow pass
-- [~] Contrast and essential-text review
-- [~] Accessibility semantics and touch targets
-- [~] Decorative performance and readability review
-- [~] Blocking-issue resolution
-- [ ] Actual-browser, keyboard, screen-reader, and comparative review
+- [x] Responsive and overflow pass
+- [x] Contrast and essential-text review
+- [x] Large Text behavior that overrides narrow-screen reductions
+- [x] Dense routine/status reflow
+- [x] Accessibility semantics and touch targets
+- [x] Strong keyboard focus treatment
+- [x] Decorative-readability review
+- [x] Forced-colors decoration suppression
+- [x] Blocking-issue resolution
+- [~] Actual-browser, keyboard, screen-reader, and comparative evidence pending
 
 ## Round 1 review
 
 - [ ] Canonical screenshots
 - [ ] Shared scorecard
-- [ ] Best feature, biggest weakness, and borrowable components
+- [ ] Best feature, biggest weakness, confusing element, distinctive element, and borrowable components
+- [ ] Best and worst scenario
 - [ ] Finalist, revise, hold, or reject status
 
 ---
 
-# 9. Deferred aesthetic directions
+# 9. Shared static and route validation — next active phase
 
-- [d] Look #5 — Bold Modern Consumer
-- [d] Look #7 — Dark Ambient as a standalone system
-- [d] Look #8 — Friendly Illustrated Home
-- [d] Look #9 — System Dashboard
-- [d] Dark variants of finalists
-- [d] Additional aesthetics discovered during review
-
-Promotion requires a hard stop, explanation of the shortlist gap, and equivalent Round 1 scope.
+- [ ] Add a no-dependency static validation script
+- [ ] Verify every local import target exists
+- [ ] Verify every linked stylesheet exists
+- [ ] Verify required DOM hooks exist
+- [ ] Verify all Look IDs have renderers
+- [ ] Verify all scenario IDs resolve
+- [ ] Verify every scenario includes required Areas and Intervention fields
+- [ ] Verify expected counts and labels
+- [ ] Generate and validate direct routes for every Look, screen, and scenario
+- [ ] Verify representative Area routes exist where applicable
+- [ ] Check HTML structure and CSS brace balance
+- [ ] Check JavaScript syntax where the environment permits
+- [ ] Record limitations honestly when a real browser is required
 
 ---
 
-# 10. Review rubric and feedback capture
+# 10. Shared browser, device, and accessibility evidence
 
-## Shared 1–5 scores
+## Responsive and device
+
+- [~] Static 360 px, 390 px, and 412 px rules complete; visual walkthrough pending
+- [ ] Tall Android-like viewport
+- [ ] Short constrained viewport
+- [ ] Desktop review panel
+- [ ] Mobile review selector
+- [ ] Portrait walkthrough
+- [ ] Landscape smoke test
+
+## Browser behavior
+
+- [ ] No console errors during core routes
+- [ ] Direct links load correctly
+- [ ] Browser Back and Forward work correctly
+- [ ] Reset Review State works correctly
+- [ ] Look and scenario switching preserve equivalent state
+- [ ] Invalid routes fall back safely
+
+## Accessibility
+
+- [x] Visible code-level focus treatment
+- [x] Approximate 44–48 px critical touch targets
+- [x] Textual status in addition to color
+- [x] Code-level contrast corrections
+- [x] Meaningful labels and selected-state semantics
+- [x] Explicit Large Text support
+- [x] Reduced-motion and forced-colors foundations
+- [ ] Keyboard-only walkthrough
+- [ ] Logical tab order verification
+- [ ] Screen-reader smoke test
+- [ ] Forced-colors visual inspection
+- [ ] Intervention actions remain unambiguous in every Look
+
+## Stress content
+
+- [x] Required stress states exist in the fixture
+- [x] Every Look has code-level dense-data and overflow handling
+- [ ] Visually verify every stress scenario in every Look
+
+---
+
+# 11. Review preparation and evidence capture
+
+## Canonical screenshots
+
+- [ ] Define exact viewport and capture rules
+- [ ] Add screenshot-friendly mode
+- [ ] Capture Areas Normal Day for Looks #1, #2, #3, #4, and #6
+- [ ] Capture Kitchen Heavy Backlog
+- [ ] Capture Intervention Normal Day
+- [ ] Capture New User, All Clear, Large Household, Long Content, and Large Text evidence
+- [ ] Store captures under `screenshots/`
+- [ ] Label every image with Look, screen, scenario, viewport, and version
+
+## Shared scorecard
+
+Score each Look from 1–5 for:
 
 - [ ] Clarity
 - [ ] Calmness
@@ -295,65 +348,25 @@ Promotion requires a hard stop, explanation of the shortlist gap, and equivalent
 - [ ] Versatility across Home, Car, Personal, and Work
 - [ ] Daily preference
 
-## Per-Look notes
+Record for every Look:
 
 - [ ] Best feature
 - [ ] Biggest problem
 - [ ] Most confusing element
 - [ ] Most distinctive element
 - [ ] Component worth borrowing
-- [ ] Best and worst scenario
+- [ ] Best-performing scenario
+- [ ] Worst-performing scenario
 - [ ] Final Round 1 recommendation
 
-## Tooling
+## Review tooling
 
 - [ ] Add Markdown or in-app scorecard
 - [ ] Add documented notes workflow
 - [ ] Allow score copying or export
-- [ ] Keep review scores separate from demo state
+- [ ] Keep scores separate from demo state
 - [ ] Preserve scores across Look switching
-- [ ] Add Reset Scores confirmation if stored in-app
-
----
-
-# 11. Shared Round 1 quality checks
-
-## Responsive and device
-
-- [~] 360 px, 390 px, and 412 px static rules exist for all four Looks; Look #6 quality review and real-browser evidence pending
-- [ ] Tall Android-like viewport
-- [ ] Short constrained viewport
-- [ ] Desktop review panel
-- [ ] Mobile review selector
-- [ ] Portrait walkthrough
-- [ ] Landscape smoke test
-
-## Accessibility
-
-- [x] Visible focus treatment
-- [x] Approximate 44–48 px critical touch targets in implemented foundations
-- [x] Textual status in addition to color
-- [~] Code-level contrast correction complete for Looks #2–#4; Look #6 pass pending
-- [x] Meaningful labels and selected-state semantics
-- [x] Explicit Large Text scenario support in all four Looks
-- [x] Reduced-motion and forced-colors foundations
-- [~] Browser tab order, keyboard operation, and screen-reader smoke tests pending
-
-## Content and stress
-
-- [x] Fixture contains every required stress state
-- [x] All four Looks include initial overflow and dense-data handling
-- [ ] Visually verify every stress state in every completed Look
-
-## Technical
-
-- [x] HTML parser, CSS balance, and JavaScript syntax checks completed during prior milestones
-- [ ] Run a current full static check after the Look #6 quality pass
-- [ ] Confirm no console errors during all core routes
-- [ ] Verify browser Back/Forward in a browser
-- [ ] Add route-level automated checks
-- [x] No dependency on Look #1 state
-- [x] No current writes outside Design Lab
+- [ ] Add Reset Scores confirmation if scores are stored in-app
 
 ---
 
@@ -362,7 +375,7 @@ Promotion requires a hard stop, explanation of the shortlist gap, and equivalent
 Do not begin Round 2 until:
 
 - [x] All four shortlisted Looks have equivalent screens and scenarios
-- [ ] Quality checks are complete or limitations documented
+- [ ] Quality limitations are documented and review evidence is sufficient
 - [ ] Look #1 and all shortlisted Looks have scorecards
 - [ ] Findings and borrowable components are summarized
 - [ ] Approximately two or three finalists are selected
@@ -370,6 +383,8 @@ Do not begin Round 2 until:
 - [ ] Focused finalist revisions, if any, are defined
 - [ ] Synthesis remains allowed or is rejected
 - [ ] Checklist and decision log are updated
+
+When the selection decision is required, use the one-line hard stop and wait for review.
 
 ---
 
@@ -382,10 +397,10 @@ Each finalist must support:
 - [ ] Add a Chore
 - [ ] Task add, edit, complete, reopen, reorder, and indent
 - [ ] Reusable List add, edit, complete, reopen, reorder, indent, and suggestions
-- [ ] Simulated Intervention: start, choose another, and Not Now
+- [ ] Simulated Intervention: Start, choose another, and Not Now
 - [ ] Same fixture, errors, empty states, recurrence, and product boundaries
 
-Look-specific navigation, layout, density, editing surface, typography, icons, motion, and equivalent-tone wording remain evaluable differences.
+Look-specific navigation, layout, density, editing surfaces, typography, icons, motion, and equivalent-tone wording remain evaluable differences.
 
 ---
 
@@ -393,7 +408,8 @@ Look-specific navigation, layout, density, editing surface, typography, icons, m
 
 - [ ] Side-by-side desktop previews
 - [ ] Synchronized routes and scenarios without shared mutable state
-- [ ] Look #1 versus finalist and finalist versus finalist
+- [ ] Look #1 versus finalist
+- [ ] Finalist versus finalist
 - [ ] Single-phone Look toggle
 - [ ] Screenshot-friendly mode
 - [ ] Clear Look labels and true phone dimensions
@@ -421,19 +437,19 @@ Only when review evidence supports it:
 - [ ] Identify transferable components and a dominant visual system
 - [ ] Define borrowed exceptions
 - [ ] Confirm coherent typography, palette, spacing, and motion
-- [ ] Build key screens before a full synthesis
+- [ ] Build key screens before full synthesis
 - [ ] Compare synthesis with the strongest pure finalist
 - [ ] Reject synthesis if identity or consistency weakens
 - [ ] Document the decision
 
-Potential evidence-led combinations remain deferred: Editorial typography with Precision density, Zen Intervention with another organizer, and Tactile controls in a restrained system.
+Potential evidence-led combinations remain deferred: Editorial typography with Precision density, Zen Intervention with another organizer, and restrained Tactile controls inside another system.
 
 ---
 
 # 17. Final selection gate
 
 - [ ] Equivalent finalist or synthesis functionality
-- [ ] Phone and accessibility review sufficient for selection
+- [ ] Phone and accessibility evidence sufficient for selection
 - [ ] Scores and qualitative notes complete
 - [ ] Works across Home, Car, Personal, and Work
 - [ ] Supportive Intervention and scalable empty/dense states
@@ -457,30 +473,25 @@ Potential evidence-led combinations remain deferred: Editorial typography with P
 
 ---
 
-# 19. Decision and milestone log
+# 19. Milestone log
 
 Detailed decisions live in [`DECISIONS.md`](DECISIONS.md).
 
-- [x] `0.1.0` — Branch, shell, shortlist, and initial Warm Editorial audition
-- [x] `0.2.0` — Shared scenarios, routes, reset, and fairness foundation
-- [x] `0.2.1` — Warm Editorial code-level quality pass
+- [x] `0.1.0` — Branch, shell, shortlist, and Warm Editorial audition
+- [x] `0.2.0–0.2.1` — Shared scenarios, routes, fairness, and Warm Editorial quality
 - [x] `0.3.0` — Modular per-Look architecture
-- [x] `0.4.0–0.4.1` — Precision Minimal implementation and quality pass
-- [x] `0.5.0–0.5.1` — Zen Focus implementation and quality pass
-- [x] `0.6.0` — Tactile Household implementation; all shortlisted Round 1 auditions now exist
+- [x] `0.4.0–0.4.1` — Precision Minimal implementation and quality
+- [x] `0.5.0–0.5.1` — Zen Focus implementation and quality
+- [x] `0.6.0–0.6.1` — Tactile Household implementation and quality
 
 ---
 
 # 20. Current next actions
 
-- [x] Shared fixture and modular architecture
-- [x] Implement and code-review Look #2 Warm Editorial
-- [x] Implement and code-review Look #3 Precision Minimal
-- [x] Implement and code-review Look #4 Zen Focus
-- [x] Define and implement Look #6 Tactile Household
-- [ ] Complete Look #6 code-level quality review
-- [ ] Run current full static checks across all four Looks
-- [ ] Complete shared Round 1 browser/device/accessibility checks
-- [ ] Build scorecards and capture canonical screenshots
+- [x] Implement and code-review Looks #2, #3, #4, and #6
+- [ ] Complete shared static, fixture, and route validation
+- [ ] Prepare browser/device/accessibility review routes
+- [ ] Add scorecards and screenshot-friendly mode
+- [ ] Capture canonical comparison evidence
 - [ ] Score Look #1 and all shortlisted Looks
-- [!] Hold the mandatory Round 1 selection gate before full-app expansion
+- [!] Hold the mandatory Round 1 selection gate before any full-app expansion

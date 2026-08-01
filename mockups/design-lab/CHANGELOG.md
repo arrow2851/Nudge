@@ -1,5 +1,20 @@
 # Design Lab Changelog
 
+## 0.5.1 — 2026-08-01
+
+### Look #4 quality pass
+
+- Corrected Large Text scaling for fixed-size Zen Focus content
+- Added explicit narrow-phone routine and status reflow
+- Preserved every attention item during dense backlog scenarios
+- Added long-content wrapping across Areas, routines, Sections, and Intervention content
+- Corrected the empty-orbit and pause-mark positioning context
+- Improved overdue status contrast
+- Added richer Area, routine, Section, focus-card, suggestion, and Intervention semantics
+- Added all-clear wording that avoids recreating urgency
+- Extended forced-colors handling
+- Documented remaining actual-browser and assistive-technology review work
+
 ## 0.5.0 — 2026-08-01
 
 ### Look #4 — Zen Focus

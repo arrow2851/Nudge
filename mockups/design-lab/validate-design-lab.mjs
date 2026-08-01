@@ -60,7 +60,8 @@ function evaluateSharedModules() {
 function validateRequiredFiles() {
   const required = [
     'index.html', 'config.js', 'utils.js', 'fixtures.js', 'state.js', 'controls.js', 'app.js', 'quality.js',
-    'styles.css', 'foundation.css', 'look3.css', 'look4.css', 'look6.css', 'look6-quality.css',
+    'styles.css', 'foundation.css', 'look3.css', 'look4.css', 'look6.css', 'look6-quality.css', 'review.css',
+    'look1-reference.html', 'look1-reference.css', 'look1-reference.js',
     'renderers/look2.js', 'renderers/look3.js', 'renderers/look4.js', 'renderers/look6.js', 'renderers/shared.js'
   ];
   required.forEach(file => assert(exists(file), `Missing required file: ${file}`));
@@ -69,7 +70,7 @@ function validateRequiredFiles() {
 
 function validateImportGraph() {
   const jsFiles = [
-    'config.js', 'utils.js', 'fixtures.js', 'state.js', 'controls.js', 'app.js', 'quality.js',
+    'config.js', 'utils.js', 'fixtures.js', 'state.js', 'controls.js', 'app.js', 'quality.js', 'look1-reference.js',
     'renderers/look2.js', 'renderers/look3.js', 'renderers/look4.js', 'renderers/look6.js', 'renderers/shared.js'
   ].filter(exists);
   const importPattern = /from\s+['"]([^'"]+)['"]/g;
@@ -87,25 +88,33 @@ function validateImportGraph() {
   if (!failures.length) pass(`Relative import graph passed (${edgeCount} edges).`);
 }
 
-function validateHtmlReferences(version) {
-  const html = read('index.html');
-  const localReferences = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/g)]
+function localReferencesFor(htmlFile) {
+  const html = read(htmlFile);
+  const references = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/g)]
     .map(match => match[1])
-    .filter(value => !/^(?:https?:|#|data:)/.test(value));
-  localReferences.forEach(reference => assert(exists(reference), `index.html references missing file: ${reference}`));
+    .filter(value => !/^(?:https?:|#|data:|\?)/.test(value));
+  references.forEach(reference => assert(exists(reference), `${htmlFile} references missing file: ${reference}`));
+  return { html, references };
+}
 
-  const requiredOrder = ['styles.css', 'foundation.css', 'look3.css', 'look4.css', 'look6.css', 'look6-quality.css'];
+function validateHtmlReferences(version) {
+  const main = localReferencesFor('index.html');
+  const baseline = localReferencesFor('look1-reference.html');
+
+  const requiredOrder = ['styles.css', 'foundation.css', 'look3.css', 'look4.css', 'look6.css', 'look6-quality.css', 'review.css'];
   let lastIndex = -1;
   for (const stylesheet of requiredOrder) {
-    const current = html.indexOf(`href="${stylesheet}"`);
+    const current = main.html.indexOf(`href="${stylesheet}"`);
     assert(current >= 0, `index.html does not load ${stylesheet}`);
     assert(current > lastIndex, `Stylesheet order is incorrect around ${stylesheet}`);
     lastIndex = current;
   }
-  assert(html.includes('type="module" src="app.js"'), 'index.html must load app.js as an ES module.');
-  assert(html.includes('src="quality.js"'), 'index.html must load quality.js.');
-  assert(html.includes(`v${version}`), `index.html does not display current version v${version}.`);
-  if (!failures.length) pass(`HTML reference and stylesheet-order checks passed (${localReferences.length} local references).`);
+  assert(main.html.includes('type="module" src="app.js"'), 'index.html must load app.js as an ES module.');
+  assert(main.html.includes('src="quality.js"'), 'index.html must load quality.js.');
+  assert(main.html.includes(`v${version}`), `index.html does not display current version v${version}.`);
+  assert(baseline.html.includes('type="module" src="look1-reference.js"'), 'look1-reference.html must load look1-reference.js as an ES module.');
+  assert(baseline.html.includes('href="look1-reference.css"'), 'look1-reference.html must load look1-reference.css.');
+  if (!failures.length) pass(`HTML reference and stylesheet-order checks passed (${main.references.length + baseline.references.length} local references).`);
 }
 
 function attentionCount(areas) {
@@ -178,6 +187,12 @@ function validateRenderersAndRouting(shared) {
     assert(app.includes(`look.id === ${look}`), `app.js has no routing branch for Look #${look}.`);
   }
 
+  const baseline = read('look1-reference.js');
+  assert(baseline.includes("from './fixtures.js'"), 'Look #1 reference must use the shared fixture module.');
+  EXPECTED_VIEWS.forEach(view => assert(baseline.includes(`'${view}'`), `Look #1 reference is missing ${view} screen support.`));
+  EXPECTED_SCENARIOS.forEach(scenario => assert(baseline.includes(`'${scenario}'`) || scenario === 'normal', `Look #1 reference is missing scenario ${scenario}.`));
+  assert(baseline.includes('Comparison-only extrapolation'), 'Look #1 Intervention must remain visibly labeled as an extrapolation.');
+
   const validArea = shared.SCENARIOS.normal.areas[0].id;
   for (const look of EXPECTED_LOOKS) {
     for (const scenario of EXPECTED_SCENARIOS) {
@@ -207,7 +222,7 @@ function validateRenderersAndRouting(shared) {
   assert(shared.storage.has(shared.DESIGN_LAB.storageKey), 'commitState must persist isolated Design Lab state when storage is available.');
   shared.clearStoredState();
   assert(!shared.storage.has(shared.DESIGN_LAB.storageKey), 'clearStoredState must remove isolated Design Lab state.');
-  if (!failures.length) pass(`Renderer and route matrix passed (${EXPECTED_LOOKS.length * EXPECTED_SCENARIOS.length * EXPECTED_VIEWS.length} route combinations).`);
+  if (!failures.length) pass(`Renderer and route matrix passed (${EXPECTED_LOOKS.length * EXPECTED_SCENARIOS.length * EXPECTED_VIEWS.length} active-Look route combinations plus Look #1 reference coverage).`);
 }
 
 function validateVersionConsistency(shared) {
@@ -215,6 +230,8 @@ function validateVersionConsistency(shared) {
   assert(/^\d+\.\d+\.\d+$/.test(version), `Invalid semantic version: ${version}`);
   const quality = read('quality.js');
   assert(quality.includes(`const VERSION = '${version}'`), `quality.js version does not match config.js (${version}).`);
+  const baseline = read('look1-reference.js');
+  assert(baseline.includes(`const VERSION = '${version}'`), `look1-reference.js version does not match config.js (${version}).`);
   const readme = read('README.md');
   assert(readme.includes(`**Current version:** \`${version}\``), `README.md version does not match config.js (${version}).`);
   const checklist = read('DESIGN-LAB-CHECKLIST.md');
@@ -224,7 +241,7 @@ function validateVersionConsistency(shared) {
 }
 
 function validateCssBalance() {
-  const cssFiles = ['styles.css', 'foundation.css', 'look3.css', 'look4.css', 'look6.css', 'look6-quality.css'];
+  const cssFiles = ['styles.css', 'foundation.css', 'look3.css', 'look4.css', 'look6.css', 'look6-quality.css', 'review.css', 'look1-reference.css'];
   for (const file of cssFiles) {
     const source = read(file).replace(/\/\*[\s\S]*?\*\//g, '');
     let balance = 0;

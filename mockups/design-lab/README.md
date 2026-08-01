@@ -2,133 +2,99 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.7.0`  
+**Current version:** `0.7.1`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.7.0 review preparation](CHECKLIST-PROGRESS-0.7.0.md)
-- [Automated validation guide](VALIDATION.md)
-- [Round 1 route matrix](ROUND-1-ROUTES.md)
+- [Latest checklist progress — 0.7.1 Look #1 baseline mapping](CHECKLIST-PROGRESS-0.7.1.md)
+- [Look #1 — Soft Practical Utility baseline](LOOK-1-SOFT-PRACTICAL-UTILITY.md)
 - [Round 1 review protocol](ROUND-1-REVIEW-PROTOCOL.md)
 - [Round 1 scorecard](ROUND-1-SCORECARD.md)
+- [Round 1 active-Look route matrix](ROUND-1-ROUTES.md)
+- [Automated validation guide](VALIDATION.md)
 - [Shared scenario definitions](SCENARIOS.md)
-- [Look #2 — Warm Editorial direction](LOOK-2-WARM-EDITORIAL.md)
-- [Look #2 quality pass](LOOK-2-QUALITY.md)
-- [Look #3 — Precision Minimal direction](LOOK-3-PRECISION-MINIMAL.md)
-- [Look #3 quality pass](LOOK-3-QUALITY.md)
-- [Look #4 — Zen Focus direction](LOOK-4-ZEN-FOCUS.md)
-- [Look #4 quality pass](LOOK-4-QUALITY.md)
-- [Look #6 — Tactile Household direction](LOOK-6-TACTILE-HOUSEHOLD.md)
-- [Look #6 quality pass](LOOK-6-QUALITY.md)
+- [Look #2 — Warm Editorial](LOOK-2-WARM-EDITORIAL.md) and [quality pass](LOOK-2-QUALITY.md)
+- [Look #3 — Precision Minimal](LOOK-3-PRECISION-MINIMAL.md) and [quality pass](LOOK-3-QUALITY.md)
+- [Look #4 — Zen Focus](LOOK-4-ZEN-FOCUS.md) and [quality pass](LOOK-4-QUALITY.md)
+- [Look #6 — Tactile Household](LOOK-6-TACTILE-HOUSEHOLD.md) and [quality pass](LOOK-6-QUALITY.md)
 - [Decisions and feedback log](DECISIONS.md)
 - [Design Lab changelog](CHANGELOG.md)
 
-The checklist remains the source of truth for scope, progress, review gates, and plan adjustments. Material changes require a pause, checklist review, and approved plan update before implementation continues.
+The checklist remains the source of truth for scope, progress, review gates, and plan adjustments.
 
 ## Safety boundary
 
-- Existing Look #1 remains under `mockups/prototype/` and is unchanged.
-- Experimental work remains under `mockups/design-lab/`.
+- The protected Look #1 prototype remains under `mockups/prototype/` on `main` and is unchanged.
+- Experimental and comparison-only files remain under `mockups/design-lab/`.
 - Design Lab state is isolated from Look #1.
-- No Design Lab work should be merged into `main` until selection and migration decisions are recorded.
+- Nothing should merge into `main` until selection and migration decisions are recorded.
 
-## Round 1 visual auditions
+## Round 1 directions
 
-Every active aesthetic uses the same three scored product moments:
+Baseline:
 
-1. **Areas overview** — hierarchy, density, status, navigation, and scalability.
-2. **Representative Area detail** — routine density, status treatment, and Section hierarchy.
-3. **Intervention** — emotional tone, clarity, and supportive behavior.
+- Look #1 — Soft Practical Utility
 
-Shared scenarios:
-
-- Normal Day
-- Heavy Backlog
-- New User
-- All Clear
-- Large Household
-- Long Content
-- Large Text
-
-Active directions:
+Active auditions:
 
 - Look #2 — Warm Editorial
 - Look #3 — Precision Minimal
 - Look #4 — Zen Focus
 - Look #6 — Tactile Household
 
-All four shortlisted Looks have equivalent Round 1 screens and scenarios and have completed code-level responsive, accessibility, contrast, long-content, and Large Text passes. Browser, device, keyboard, screen-reader, forced-colors, and comparative evidence remains pending.
+All active auditions use the same three scored moments and seven scenarios. They have completed code-level responsive, accessibility, contrast, long-content, and Large Text passes. Browser, device, keyboard, screen-reader, forced-colors, screenshot, and comparative evidence remains pending.
 
-## Architecture
+## Look #1 comparison reference
 
-The Design Lab uses browser-native ES modules without an application build step:
+`look1-reference.html` maps the shared fixture into the protected prototype's existing green, white-card, rounded-control visual language without editing `mockups/prototype/`.
 
-- `config.js` — version, Look registry, and allowed screens
-- `fixtures.js` — shared immutable fixture and scenarios
-- `utils.js` — escaping, cloning, and shared status calculations
-- `state.js` — query routing, browser history, and isolated review state
-- `controls.js` — shared review-panel controls
-- `renderers/look2.js` — Warm Editorial presentation
-- `renderers/look3.js` — Precision Minimal presentation
-- `renderers/look4.js` — Zen Focus presentation
-- `renderers/look6.js` — Tactile Household presentation
-- `renderers/shared.js` — safe fallback presentation
-- `styles.css` and `foundation.css` — shared shell and Warm Editorial styling
-- `look3.css`, `look4.css`, `look6.css` — Look-specific styling
-- `look6-quality.css` — Look #6 quality corrections
-- `review.css` — labelled and phone-only screenshot layouts
-- `app.js` — event and rendering coordinator
-- `quality.js` — semantics, review metadata, and capture-mode labeling
-- `validate-design-lab.mjs` — dependency-free fixture, import, renderer, route, version, HTML-reference, and CSS validation
+Routes:
 
-Each aesthetic owns its presentation while consuming the same fixture and route state.
+```text
+look1-reference.html?screen=areas&scenario=normal
+look1-reference.html?screen=area&area=kitchen&scenario=backlog
+look1-reference.html?screen=intervention&scenario=normal
+```
+
+The Look #1 Intervention is visibly labeled as a **comparison-only extrapolation** because the current prototype does not contain an equivalent screen. Read `LOOK-1-SOFT-PRACTICAL-UTILITY.md` before scoring it.
 
 ## Run locally
 
 ```bash
 cd mockups/design-lab
+node validate-design-lab.mjs
 python -m http.server 8080
 ```
 
 Open `http://localhost:8080`.
 
-## Run automated validation
+The validator covers required files, imports, fixture invariants, renderer wiring, 84 active-Look route combinations, the Look #1 reference, invalid-route fallbacks, state storage, version consistency, HTML references, stylesheet order, and CSS balance.
 
-```bash
-cd mockups/design-lab
-node validate-design-lab.mjs
-```
+This session could syntax-check the relevant JavaScript and CSS but could not clone GitHub into a complete local checkout because DNS resolution for GitHub was unavailable. Full-checkout execution remains pending evidence.
 
-The validator covers required files, imports, fixture invariants, renderer exports, 84 Look/screen/scenario route combinations, invalid-route fallbacks, state storage, version consistency, HTML references, stylesheet order, and CSS brace balance.
+## Capture modes
 
-The validator has been syntax-checked, but this session could not execute it against a complete checkout because GitHub cloning was unavailable. The full-checkout run remains pending evidence.
+Append one of these parameters to an active-Look or Look #1 reference route:
 
-## Review and capture modes
-
-Use [`ROUND-1-REVIEW-PROTOCOL.md`](ROUND-1-REVIEW-PROTOCOL.md) for the exact browser, viewport, keyboard, screen-reader, forced-colors, stress, and screenshot procedure.
-
-Append one of these parameters to a direct route:
-
-- `capture=labelled` — stable 390 × 844 desktop phone frame with Look, screen, scenario, and version label.
+- `capture=labelled` — stable 390 × 844 evidence frame with Look, screen, scenario, and version label.
 - `capture=phone` — clean phone frame without the evidence label.
 
 Examples:
 
 ```text
 ?look=2&screen=areas&scenario=normal&capture=labelled
-?look=3&screen=area&area=kitchen&scenario=backlog&capture=labelled
 ?look=4&screen=intervention&scenario=normal&capture=phone
-?look=6&screen=areas&scenario=large-text&capture=labelled
+look1-reference.html?screen=area&area=kitchen&scenario=backlog&capture=labelled
 ```
 
-Use normal routes for interaction, responsive, browser-history, keyboard, and accessibility testing. Use [`ROUND-1-ROUTES.md`](ROUND-1-ROUTES.md) for the full route matrix and [`ROUND-1-SCORECARD.md`](ROUND-1-SCORECARD.md) for scoring.
+Use normal routes for interaction, responsive, browser-history, keyboard, and accessibility testing. Follow `ROUND-1-REVIEW-PROTOCOL.md` and record results in `ROUND-1-SCORECARD.md`.
 
 ## Round 1 fairness rule
 
-Every active Look uses the same fixture, screens, scenarios, and simulated actions. Layout, typography, color, density, icons, and tone may change when meaning remains equivalent. No Look receives additional functionality during the same review round.
+Every direction is reviewed against the same fixture, screens, scenarios, evidence order, and scoring criteria. The Look #1 Intervention limitation must remain explicit. No direction receives additional functionality during Round 1.
 
 ## Next work
 
-Execute the shared browser/device/accessibility protocol, capture canonical and concern-specific evidence, map equivalent Look #1 evidence, and complete the scorecard. Do not begin Round 2 until the mandatory selection decision is reviewed and recorded.
+Execute the validator in a complete checkout, run the browser/device/accessibility protocol, capture canonical evidence, fill the scorecard, and summarize borrowable components. Do not begin Round 2 until the mandatory selection decision is reviewed and recorded.

@@ -1,6 +1,6 @@
 import { getScenario } from './fixtures.js';
 
-const VERSION = '0.7.1';
+const VERSION = '0.7.2';
 const params = new URLSearchParams(location.search);
 const allowedScreens = new Set(['areas', 'area', 'intervention']);
 const screenId = allowedScreens.has(params.get('screen')) ? params.get('screen') : 'areas';

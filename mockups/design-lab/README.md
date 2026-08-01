@@ -8,7 +8,9 @@ The Design Lab compares alternate visual systems without changing the approved L
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.6.1](CHECKLIST-PROGRESS-0.6.1.md)
+- [Latest checklist progress — shared validation](CHECKLIST-PROGRESS-VALIDATION.md)
+- [Automated validation guide](VALIDATION.md)
+- [Round 1 browser route matrix](ROUND-1-ROUTES.md)
 - [Shared scenario definitions](SCENARIOS.md)
 - [Look #2 — Warm Editorial direction](LOOK-2-WARM-EDITORIAL.md)
 - [Look #2 quality pass](LOOK-2-QUALITY.md)
@@ -95,7 +97,7 @@ Shared functionality includes desktop and mobile review controls, browser Back a
 
 ## Architecture
 
-The Design Lab uses browser-native ES modules without a build step:
+The Design Lab uses browser-native ES modules without an application build step:
 
 - `config.js` — version, Look registry, and allowed screens
 - `fixtures.js` — shared immutable fixture and scenarios
@@ -114,6 +116,7 @@ The Design Lab uses browser-native ES modules without a build step:
 - `look6-quality.css` — Look #6 quality corrections loaded after its base stylesheet
 - `app.js` — event and rendering coordinator
 - `quality.js` — accessibility semantics and review metadata
+- `validate-design-lab.mjs` — dependency-free fixture, import, renderer, route, version, HTML-reference, and CSS validation
 
 Each aesthetic owns its presentation while consuming the same shared fixture and state.
 
@@ -126,7 +129,22 @@ python -m http.server 8080
 
 Open `http://localhost:8080`.
 
-Example review routes:
+## Run automated validation
+
+```bash
+cd mockups/design-lab
+node validate-design-lab.mjs
+```
+
+The validator checks required files, relative imports, fixture invariants, renderer exports, 84 Look/screen/scenario route combinations, invalid-route fallbacks, state storage, version consistency, HTML references, stylesheet order, and CSS brace balance.
+
+This session could syntax-check the validator but could not clone GitHub to execute it against a complete checkout because DNS resolution for GitHub was unavailable. The full-checkout run remains recorded as pending rather than being treated as completed evidence.
+
+## Browser review routes
+
+Use [`ROUND-1-ROUTES.md`](ROUND-1-ROUTES.md) for canonical, stress, invalid-route, browser-history, and viewport review paths.
+
+Example routes:
 
 ```text
 ?look=2&screen=areas&scenario=normal
@@ -141,6 +159,6 @@ Example review routes:
 
 Every active Look uses the same shared fixture and scenarios. Layout, typography, color, density, icons, and tone may change when meaning remains equivalent. No Look receives additional functionality during the same review round.
 
-## Next audition work
+## Next work
 
-Run the shared Round 1 static and route checks across all four Looks, prepare browser/device review routes and scorecards, and capture the evidence required before the mandatory selection gate. Do not begin Round 2 until the selection decision is recorded.
+Run the automated validator in a complete checkout, perform the shared browser/device/keyboard/screen-reader review, then add scorecards and canonical screenshot capture. Do not begin Round 2 until the mandatory selection decision is recorded.

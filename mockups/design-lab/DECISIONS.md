@@ -175,9 +175,27 @@ Today / Needs Attention
 
 **Visibility:** Completed items remain at the bottom by default and can be hidden or shown without changing their state.
 
-**Cross-Look behavior:** Task state is preserved while switching Looks, but only Look #4 currently renders the Task hierarchy screen. Look #3 is next in the delegated order.
+**Validation boundary:** Source-level validation checks the Tasks route, state module, add/edit actions, main/subtask rules, progress, reorder hooks, explicit movement controls, completed grouping, hide/show, responsive hooks, Forced Colors, and Reduced Motion. Exact-checkout browser, Android gesture, and actual screen-reader evidence remain pending.
 
-**Validation boundary:** Source-level validation now checks the Tasks route, state module, add/edit actions, main/subtask rules, progress, reorder hooks, explicit movement controls, completed grouping, hide/show, responsive hooks, Forced Colors, and Reduced Motion. Exact-checkout browser, Android gesture, and actual screen-reader evidence remain pending.
+## 2026-08-02 — Precision Minimal applies the shared checklist without adding scope
+
+**Milestone:** Version `0.10.1` implements the Task hierarchy loop in Look #3 — Precision Minimal.
+
+**Presentation:** The same checklist becomes an operational register with Active, Main, and Done counts; fixed control columns; compact settings; and explicit progress count, percentage, and track.
+
+**Semantic parity:** Look #3 does not add priority, assignments, due-date scheduling, deletion, or deeper nesting. It exposes the same actions and state transitions as Look #4.
+
+**Cross-Look state:** Looks #3 and #4 render the same task state. Editing, completing, reordering, indenting, or changing hierarchy in one Look remains visible after switching to the other.
+
+**Responsive priority:** The optional time column is removed before the editable task-title area is compressed. Large Text removes the column header and retains full-width editing and 54 px action heights.
+
+**Accessibility:** Subtasks use both indentation and an accent rail. Completion uses a checkmark and line-through. Drag remains optional because explicit Move, Indent, and Unindent controls remain available.
+
+**Controller decision:** Routine screens and Tasks now use shared renderer registries. This reduces duplicated route branches while keeping pure-Look renderers independent.
+
+**Validation boundary:** The validator now requires two task renderers, two task stylesheets, the shared task engine, both Look registrations, cross-Look state hooks, and responsive/accessibility tokens. Exact-checkout execution, Android gesture testing, and actual screen-reader evidence remain pending.
+
+**Next active Look:** Look #5 — Playful Modular.
 
 ## Feedback entry template
 

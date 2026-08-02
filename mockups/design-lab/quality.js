@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.8.7';
+  const VERSION = '0.9.0';
   const initialParams = new URLSearchParams(location.search);
   const captureMode = initialParams.get('capture');
 
@@ -28,9 +28,17 @@
 
     const routeParams = new URLSearchParams(location.search);
     const lookKicker = document.querySelector('#look-kicker')?.textContent?.trim() || 'Look';
-    const screen = routeParams.get('screen') || 'areas';
+    const screen = routeParams.get('screen') || 'today';
     const area = routeParams.get('area');
-    const routeLabel = screen === 'area' && area ? `Area detail · ${area}` : screen;
+    const section = routeParams.get('section');
+    const chore = routeParams.get('chore');
+    const routeLabel = screen === 'area' && area
+      ? `Area detail · ${area}`
+      : screen === 'section' && section
+        ? `Section · ${section}`
+        : screen === 'chore' && chore
+          ? `Chore · ${chore}`
+          : screen;
 
     setText(header.querySelector('strong'), `${lookKicker} — ${lookName || 'Unknown Look'}`);
     setText(header.querySelector('span'), `${routeLabel} · ${scenario || 'Normal day'} · v${VERSION}`);

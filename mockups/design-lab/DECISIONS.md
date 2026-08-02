@@ -50,6 +50,27 @@ This file records review decisions, intentional interaction differences, plan ad
 
 **Dark variants:** Still deferred as variants rather than separate numbered Looks unless explicitly promoted later.
 
+## 2026-08-01 — Interactive expansion package prepared
+
+**Status:** Pending user decision; no implementation started.
+
+**Recommended strategy:** One shared semantic behavior core with eight Design Lab visual adapters.
+
+**Recommended first slice:** Routine completion loop from Today or Needs Attention through Area, Section, Chore detail, completion, recurrence advancement, and undo or reopen.
+
+**Recommended Look-switch boundary:** Design Lab review control only. Do not infer a user-facing theme feature.
+
+**Recommended state boundary:** Deterministic isolated prototype state with no production integration.
+
+**Reason:** This package preserves every visual direction without duplicating product behavior eight times or making one Look an accidental permanent winner.
+
+**Hard stop:** Implementation requires explicit approval because it introduces material routing, state, component, and architecture commitments.
+
+**Decision documents:**
+
+- `INTERACTIVE-EXPANSION-DECISION.md`
+- `VERTICAL-SLICE-CANDIDATES.md`
+
 ## Feedback entry template
 
 ```text

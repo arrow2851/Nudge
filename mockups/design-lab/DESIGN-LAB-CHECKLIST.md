@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.10.1`  
+**Current version:** `0.10.2`  
 **Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
@@ -161,7 +161,7 @@ Additional Look #8 boundary:
 - [x] Forty-eight Routine Completion renderer exports required
 - [x] Shared completion, recurrence, Undo, and state hooks checked
 - [x] Shared Task hierarchy state and action contract checked
-- [x] Look #3 and Look #4 task renderers and stylesheets required
+- [x] Look #3, Look #4, and Look #5 task renderers and stylesheets required
 - [x] Add, edit, main-task, subtask, release, progress, reorder, indent, completion, and hide/show hooks checked
 - [x] Responsive, Large Text, Forced Colors, and Reduced Motion hooks encoded
 - [x] Ambient Glass solid-fallback and Reduced Transparency hooks encoded
@@ -196,14 +196,14 @@ See `PURE-LOOK-IMPLEMENTATION-ORDER.md` for rationale and acceptance gates.
 
 1. [x] Look #4 — Zen Focus
 2. [x] Look #3 — Precision Minimal
-3. [ ] Look #5 — Playful Modular — **next**
-4. [ ] Look #7 — Bold Utility
+3. [x] Look #5 — Playful Modular
+4. [ ] Look #7 — Bold Utility — **next**
 5. [ ] Look #6 — Tactile Household
 6. [ ] Look #2 — Warm Editorial
 7. [ ] Look #8 — Ambient Glass
 8. [ ] Look #9 — Retro Digital
 
-Shared behaviors currently implemented in 2 of 8 Looks:
+Shared behaviors currently implemented in 3 of 8 Looks:
 
 - [~] Add and inline edit
 - [~] Complete and reopen
@@ -229,13 +229,14 @@ Shared behaviors currently implemented in 2 of 8 Looks:
 - [x] `0.9.0–0.9.7` — Routine Completion Loop implemented across all eight active Looks
 - [x] `0.10.0` — Look #4 Zen Focus Task hierarchy loop
 - [x] `0.10.1` — Look #3 Precision Minimal Task hierarchy loop
+- [x] `0.10.2` — Look #5 Playful Modular Task hierarchy loop
 
 ---
 
 # 9. Current next actions
 
-- [ ] Implement the shared Task hierarchy contract in Look #5 — Playful Modular
-- [ ] Preserve existing task state while switching among Looks #3, #4, and #5
+- [ ] Implement the shared Task hierarchy contract in Look #7 — Bold Utility
+- [ ] Preserve existing task state while switching among Looks #3, #4, #5, and #7
 - [ ] Keep the simple checklist anatomy and behavior equivalent
-- [ ] Extend validator coverage through Look #5 Task hierarchy
+- [ ] Extend validator coverage through Look #7 Task hierarchy
 - [ ] Keep exact-checkout, Android, and screen-reader evidence pending until actually performed

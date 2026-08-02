@@ -1,21 +1,37 @@
 # Design Lab Changelog
 
+## 0.8.4 — 2026-08-01
+
+### Look #9 — Retro Digital quality pass
+
+- Increased 6–8 px operational labels to readable standard sizes
+- Increased completion controls to 48 × 48 px and critical actions to at least 48 px high
+- Added explicit Large Text sizing and layout reflow
+- Reflowed Area, routine, Section, meter, and Intervention layouts for narrow phones
+- Corrected the status-meter fill to use the supplied percentage directly
+- Lightened muted and structural tokens while retaining strong dark-theme contrast
+- Added strong Look-specific focus indicators and long-content wrapping
+- Improved Area, summary, routine-status, Section, timing, and suggested-task semantics
+- Reframed command-heavy Intervention copy as an optional mode switch with `START TASK`, `SHOW ALTERNATE`, and `STAY HERE`
+- Added higher-contrast and forced-colors behavior
+- Added `look9-quality.css`, `LOOK-9-QUALITY.md`, and `CHECKLIST-PROGRESS-0.8.4.md`
+- Extended validator coverage through the final quality stylesheet and load order
+- Sourced the Look #1 comparison version from shared configuration
+- Updated the Design Lab to `0.8.4`
+- Completed dedicated code-level quality passes for every active gallery direction
+
 ## 0.8.3 — 2026-08-01
 
 ### Look #8 — Ambient Glass quality pass
 
-- Increased microtext labels and supporting copy
-- Increased completion controls to 48 × 48 px and critical actions to at least 48 px high
-- Reflowed Area cards and routine statuses for narrow screens and Large Text
-- Added strong Look-specific focus indicators and long-content wrapping
+- Increased microtext, metadata, status, and suggestion labels
+- Increased completion controls and critical actions to accessible target sizes
+- Added explicit narrow-screen and Large Text reflow
+- Darkened gradient endpoints and muted text for stronger contrast
+- Removed backdrop blur from repeated cards and panels
+- Limited blur to focal surfaces and added solid unsupported-browser and reduced-transparency fallbacks
 - Improved Area, summary, panel, Section, routine-status, and Intervention semantics
-- Darkened the primary gradient from `#4b72db` / `#8a72d6` to `#315ebd` / `#6550b4`, raising white-text contrast to approximately `6.06:1` and `6.25:1`
-- Darkened muted text to `#465875`, providing approximately `6.48:1` against the main background
-- Removed backdrop blur from repeated Area cards and content panels
-- Limited blur to a few focal surfaces and reduced it to 10 px
-- Added solid fallbacks for unsupported backdrop filtering
-- Added a reduced-transparency path that removes blur, aurora, and glow decoration
-- Expanded forced-colors handling
+- Added stronger focus indicators, long-content wrapping, and forced-colors behavior
 - Added `look8-quality.css`, `LOOK-8-QUALITY.md`, and `CHECKLIST-PROGRESS-0.8.3.md`
 - Extended validator coverage to the Look #8 quality stylesheet and load order
 - Updated the Design Lab to `0.8.3`

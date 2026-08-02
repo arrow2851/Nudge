@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.10.7`  
+**Current version:** `0.11.0`  
 **Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
@@ -35,7 +35,7 @@ Required one-line response:
 - [x] Create `feature/design-lab` from `main`
 - [x] Keep Look #1 unchanged under `mockups/prototype/`
 - [x] Keep experimental files under `mockups/design-lab/`
-- [x] Isolate Design Lab query, routine, and task state
+- [x] Isolate Design Lab query, routine, task, and intervention state
 - [x] Keep visible experimental-build labels
 - [x] Keep draft PR #1 as the centralized review record
 - [ ] Do not merge before migration boundaries are explicitly reviewed
@@ -47,6 +47,7 @@ Required one-line response:
 - [x] Shared shell and review controls
 - [x] Immutable routine fixture with seven scenarios
 - [x] Deterministic task fixture with the same seven scenarios
+- [x] Deterministic intervention fixture with the same seven scenarios
 - [x] Query routing and browser history
 - [x] Reset Review State
 - [x] Per-Look renderers and styles
@@ -170,21 +171,34 @@ Additional Look #8 boundary:
 7. [x] Look #8 — Ambient Glass
 8. [x] Look #9 — Retro Digital
 
-Shared behaviors implemented in 8 of 8 Looks:
+---
 
-- [x] Add and inline edit
-- [x] Complete and reopen
-- [x] Main task and subtasks
-- [x] Progress and completion propagation
-- [x] Reorder and explicit movement controls
-- [x] Indent and unindent
-- [x] Subtask release when main-task mode is removed
-- [x] Completed-item grouping and hide/show
-- [x] Cross-Look task-state preservation
+# 6. Shared Intervention-to-action foundation
+
+- [x] Separate scenario-isolated intervention storage namespace
+- [x] Deterministic suggestion list beginning with the scenario fixture
+- [x] Additional suggestions derived from available routines
+- [x] Setup-safe alternatives for scenarios without Areas
+- [x] Prompt phase
+- [x] Active phase
+- [x] Completed phase
+- [x] Dismissed phase
+- [x] Start creates a concrete action state
+- [x] Complete and reopen actions
+- [x] Undo Start
+- [x] Different suggestion cycles deterministically
+- [x] Not Now changes no routine or task state
+- [x] Dismissed state can resume the suggestion
+- [x] Reset Review State clears intervention state
+- [x] Raw scenario data remains the source for stable cycling
+- [x] Existing Routine Completion and Task Hierarchy state remain intact
+- [d] Real app-usage detection
+- [d] App blocking or redirect enforcement
+- [d] Production timers, reminders, notifications, accounts, or backend integration
 
 ---
 
-# 6. Validation and evidence
+# 7. Validation and evidence
 
 - [x] Required-file and relative-import checks encoded
 - [x] Fixture and renderer-export checks encoded
@@ -196,8 +210,11 @@ Shared behaviors implemented in 8 of 8 Looks:
 - [x] Shared completion, recurrence, Undo, and state hooks checked
 - [x] Shared Task hierarchy state and action contract checked
 - [x] Eight task renderers and eight dedicated task stylesheets required
-- [x] Add, edit, main-task, subtask, release, progress, reorder, indent, completion, and hide/show hooks checked
-- [x] Responsive, Large Text, Forced Colors, Increased Contrast, and Reduced Motion hooks encoded
+- [x] Shared Intervention phase and deterministic-suggestion contract checked
+- [x] Look #4 Start, Next, Dismiss, Resume, Complete, Reopen, Undo, and Return actions checked
+- [x] Intervention reset integration checked
+- [x] Look #4 dedicated intervention stylesheet required
+- [x] Responsive, short-screen, Large Text, Forced Colors, Increased Contrast, and Reduced Motion hooks encoded
 - [x] Ambient Glass solid-fallback and Reduced Transparency hooks encoded
 - [x] Retro Digital task-language checks reject error, fault, and failure terms
 - [ ] Exact complete-checkout validator execution
@@ -210,7 +227,7 @@ Shared behaviors implemented in 8 of 8 Looks:
 
 ---
 
-# 7. Pure-Look implementation order
+# 8. Pure-Look implementation order
 
 1. Look #4 — Zen Focus
 2. Look #3 — Precision Minimal
@@ -225,12 +242,10 @@ See `PURE-LOOK-IMPLEMENTATION-ORDER.md` for rationale and acceptance gates.
 
 ---
 
-# 8. Intervention-to-action sequence
+# 9. Intervention-to-action sequence
 
-The next feature loop uses the same delegated order:
-
-1. [ ] Look #4 — Zen Focus — **next**
-2. [ ] Look #3 — Precision Minimal
+1. [x] Look #4 — Zen Focus
+2. [ ] Look #3 — Precision Minimal — **next**
 3. [ ] Look #5 — Playful Modular
 4. [ ] Look #7 — Bold Utility
 5. [ ] Look #6 — Tactile Household
@@ -238,39 +253,35 @@ The next feature loop uses the same delegated order:
 7. [ ] Look #8 — Ambient Glass
 8. [ ] Look #9 — Retro Digital
 
-Acceptance goals for the first Look:
+Shared behaviors currently implemented in 1 of 8 Looks:
 
-- [ ] Intervention appears after the deterministic trigger state
-- [ ] Suggested task remains optional and dismissible
-- [ ] Start action opens or creates a concrete task/action state
-- [ ] Different suggestion remains reversible and non-punitive
-- [ ] Not Now exits without guilt or penalty
-- [ ] Existing routine and task state remain intact
-- [ ] No production notifications, app blocking, usage tracking, or backend integration
+- [~] Optional prompt and deterministic suggestion
+- [~] Start to concrete action state
+- [~] Completion and reopen
+- [~] Undo Start
+- [~] Different suggestion
+- [~] Guilt-free Not Now and resume
+- [~] Scenario-isolated state
+- [~] Existing routine and task state preserved
 
 Reusable Lists begins only after Intervention-to-action is complete across all eight Looks.
 
 ---
 
-# 9. Milestone log
+# 10. Milestone log
 
 - [x] `0.1.0–0.8.7` — Gallery foundation, all Looks, quality passes, evidence, and delegated pure-Look sequence
 - [x] `0.9.0–0.9.7` — Routine Completion Loop implemented across all eight active Looks
-- [x] `0.10.0` — Look #4 Zen Focus Task hierarchy loop
-- [x] `0.10.1` — Look #3 Precision Minimal Task hierarchy loop
-- [x] `0.10.2` — Look #5 Playful Modular Task hierarchy loop
-- [x] `0.10.3` — Look #7 Bold Utility Task hierarchy loop
-- [x] `0.10.4` — Look #6 Tactile Household Task hierarchy loop
-- [x] `0.10.5` — Look #2 Warm Editorial Task hierarchy loop
-- [x] `0.10.6` — Look #8 Ambient Glass Task hierarchy loop
-- [x] `0.10.7` — Look #9 Retro Digital Task hierarchy loop; Task hierarchy complete in all active Looks
+- [x] `0.10.0–0.10.7` — Task hierarchy implemented across all eight active Looks
+- [x] `0.11.0` — Look #4 Zen Focus Intervention-to-action loop
 
 ---
 
-# 10. Current next actions
+# 11. Current next actions
 
-- [ ] Implement the Intervention-to-action contract in Look #4 — Zen Focus
-- [ ] Preserve existing Routine Completion and Task hierarchy state
-- [ ] Keep intervention suggestions optional, dismissible, and non-guilt-based
-- [ ] Extend validator coverage for the new intervention state and actions
+- [ ] Implement the Intervention-to-action contract in Look #3 — Precision Minimal
+- [ ] Preserve existing intervention state while switching between implemented Intervention Looks
+- [ ] Preserve existing Routine Completion and Task Hierarchy state
+- [ ] Keep suggestions optional, reversible, and non-guilt-based
+- [ ] Extend validator coverage through Look #3 Intervention-to-action
 - [ ] Keep exact-checkout, Android, screen-reader, single-version regression, and Ambient Glass paint evidence pending until actually performed

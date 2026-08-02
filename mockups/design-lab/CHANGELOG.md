@@ -1,5 +1,26 @@
 # Design Lab Changelog
 
+## 0.9.4 — 2026-08-01
+
+### Look #6 — Tactile Household Routine Completion Loop
+
+- Reused the shared deterministic Routine Completion state engine
+- Added Tactile Household Today / Needs Attention with a work board, top work order, and waiting cards
+- Added interactive Area, Section, and Chore routes
+- Converted service cards and Section drawers into real navigation controls
+- Replaced static completion placeholders with separate working Complete and job-card controls
+- Added service intervals, bench-time labels, job facts, completion slips, and immediate Reopen
+- Preserved deterministic Light, Moderate, and Deep recurrence advancement
+- Preserved derived attention-count and All Clear updates
+- Preserved browser-history-compatible route state
+- Preserved semantic completion state while switching among Looks #3, #4, #5, #6, and #7
+- Added `look6-interactive.css` with narrow-screen, Large Text, focus, forced-colors, and reduced-motion handling
+- Extended the validator to cover five interactive Looks, thirty interactive renderer exports, five interactive stylesheets, and shared state hooks
+- Added `LOOK-6-INTERACTIVE.md` and `CHECKLIST-PROGRESS-0.9.4.md`
+- Set Look #2 — Warm Editorial as the next interactive implementation
+- Documented that direct cloning and exact-checkout browser execution remain DNS-blocked
+- Kept Look #1, `main`, production storage, and backend behavior unchanged
+
 ## 0.9.3 — 2026-08-01
 
 ### Look #7 — Bold Utility Routine Completion Loop

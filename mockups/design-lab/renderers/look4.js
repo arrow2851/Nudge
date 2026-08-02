@@ -249,25 +249,97 @@ export function renderChoreZen(data, requestedAreaId, requestedSectionId, reques
     </section>`;
 }
 
+function interventionSuggestion(item, label = 'One useful option') {
+  return `
+    <article class="zen-suggestion" aria-label="${esc(`Suggested action: ${item.task}. ${item.location}. About ${item.duration} minutes.`)}">
+      <span>${label}</span>
+      <h2>${esc(item.task)}</h2>
+      <p>${esc(item.location)} · about ${item.duration} minutes</p>
+    </article>`;
+}
+
+function interventionPrompt(item) {
+  return `
+    <div class="zen-intervention-copy">
+      <span class="zen-eyebrow">A small pause</span>
+      <h1>Would stepping away help?</h1>
+      <p>You have spent ${item.minutes} minutes in ${esc(item.app)}. There is no penalty for staying. This is simply a chance to choose again.</p>
+    </div>
+    ${interventionSuggestion(item)}
+    <div class="zen-actions">
+      <button class="zen-primary" data-action="start-intervention">Start this</button>
+      <button class="zen-secondary" data-action="next-intervention">Show another option</button>
+      <button class="zen-dismiss" data-action="dismiss-intervention">Stay here for now</button>
+    </div>`;
+}
+
+function interventionActive(item) {
+  return `
+    <div class="zen-intervention-copy">
+      <span class="zen-eyebrow">A small action</span>
+      <h1>You chose a place to begin.</h1>
+      <p>${esc(item.startedLabel || 'Started now')}. Nothing is being timed or monitored. Continue only while this still feels useful.</p>
+    </div>
+    ${interventionSuggestion(item, 'Active now')}
+    <article class="zen-action-state active" role="status">
+      <span aria-hidden="true">○</span>
+      <div><strong>Ready in front of you</strong><p>The suggestion is now a concrete action state. You can complete it, choose something else, or undo the start.</p></div>
+    </article>
+    <div class="zen-actions">
+      <button class="zen-primary" data-action="complete-intervention">Mark this complete</button>
+      <button class="zen-secondary" data-action="next-intervention">Choose something else</button>
+      <button class="zen-dismiss" data-action="undo-intervention">Undo start</button>
+    </div>`;
+}
+
+function interventionCompleted(item) {
+  return `
+    <div class="zen-intervention-copy">
+      <span class="zen-eyebrow">Action complete</span>
+      <h1>That small step is finished.</h1>
+      <p>${esc(item.completedLabel || 'Completed just now')}. Nothing else is required, and the completion can be reopened immediately.</p>
+    </div>
+    ${interventionSuggestion(item, 'Completed action')}
+    <article class="zen-action-state completed" role="status">
+      <span aria-hidden="true">✓</span>
+      <div><strong>Complete for now</strong><p>This completion is isolated to the Design Lab and does not change production tasks or routines.</p></div>
+    </article>
+    <div class="zen-actions">
+      <button class="zen-secondary" data-action="reopen-intervention">Reopen this action</button>
+      <button class="zen-secondary" data-action="next-intervention">Choose another option</button>
+      <button class="zen-dismiss" data-action="return-today">Return to Today</button>
+    </div>`;
+}
+
+function interventionDismissed(item) {
+  return `
+    <div class="zen-intervention-copy">
+      <span class="zen-eyebrow">Pause dismissed</span>
+      <h1>Staying here is a valid choice.</h1>
+      <p>No task was started, no penalty was added, and no reminder is waiting. You can reopen the suggestion whenever it would help.</p>
+    </div>
+    <article class="zen-action-state dismissed" role="status">
+      <span aria-hidden="true">—</span>
+      <div><strong>Nothing changed</strong><p>${esc(item.app)} remains your current context. The Design Lab does not block or monitor the app.</p></div>
+    </article>
+    <div class="zen-actions">
+      <button class="zen-secondary" data-action="resume-intervention">Show the suggestion again</button>
+      <button class="zen-dismiss" data-action="return-today">Return to Today</button>
+    </div>`;
+}
+
 export function renderInterventionZen(data) {
   const item = data.intervention;
+  const content = item.phase === 'active'
+    ? interventionActive(item)
+    : item.phase === 'completed'
+      ? interventionCompleted(item)
+      : item.phase === 'dismissed'
+        ? interventionDismissed(item)
+        : interventionPrompt(item);
   return `
-    <section class="zen-intervention" aria-label="${esc(`Intervention after ${item.minutes} minutes in ${item.app}`)}">
+    <section class="zen-intervention zen-intervention-action" aria-label="${esc(`Intervention after ${item.minutes} minutes in ${item.app}. State: ${item.phase}.`)}">
       <div class="zen-pause-mark" aria-hidden="true"><span></span></div>
-      <div class="zen-intervention-copy">
-        <span class="zen-eyebrow">A small pause</span>
-        <h1>Would stepping away help?</h1>
-        <p>You have spent ${item.minutes} minutes in ${esc(item.app)}. There is no penalty for staying. This is simply a chance to choose again.</p>
-      </div>
-      <article class="zen-suggestion" aria-label="${esc(`Suggested action: ${item.task}. ${item.location}. About ${item.duration} minutes.`)}">
-        <span>One useful option</span>
-        <h2>${esc(item.task)}</h2>
-        <p>${esc(item.location)} · about ${item.duration} minutes</p>
-      </article>
-      <div class="zen-actions">
-        <button class="zen-primary" data-action="start-demo">Start this</button>
-        <button class="zen-secondary" data-action="different-demo">Show another option</button>
-        <button class="zen-dismiss" data-action="not-now-demo">Stay here for now</button>
-      </div>
+      ${content}
     </section>`;
 }

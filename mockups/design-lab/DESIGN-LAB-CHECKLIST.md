@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.9.7`  
+**Current version:** `0.10.0`  
 **Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
@@ -35,7 +35,7 @@ Required one-line response:
 - [x] Create `feature/design-lab` from `main`
 - [x] Keep Look #1 unchanged under `mockups/prototype/`
 - [x] Keep experimental files under `mockups/design-lab/`
-- [x] Isolate Design Lab query and session state
+- [x] Isolate Design Lab query, routine, and task state
 - [x] Keep visible experimental-build labels
 - [x] Keep draft PR #1 as the centralized review record
 - [ ] Do not merge before migration boundaries are explicitly reviewed
@@ -45,7 +45,8 @@ Required one-line response:
 # 2. Shared gallery foundation
 
 - [x] Shared shell and review controls
-- [x] Immutable fixture with seven scenarios
+- [x] Immutable routine fixture with seven scenarios
+- [x] Deterministic task fixture with the same seven scenarios
 - [x] Query routing and browser history
 - [x] Reset Review State
 - [x] Per-Look renderers and styles
@@ -66,7 +67,7 @@ Required one-line response:
 
 ## Fairness rules
 
-- [x] Every Look consumes the same fixture
+- [x] Every Look consumes equivalent fixture meaning
 - [x] Equivalent actions within each implemented slice
 - [x] Equivalent urgency meaning
 - [x] No Look receives easier content or extra functionality
@@ -74,7 +75,7 @@ Required one-line response:
 
 ---
 
-# 3. Gallery and interactive status
+# 3. Gallery and Routine Completion status
 
 ## Look #1 — Soft Practical Utility
 
@@ -101,7 +102,7 @@ Additional Look #8 boundary:
 
 ---
 
-# 4. Shared interactive foundation
+# 4. Shared Routine Completion foundation
 
 - [x] Stable routine identifiers
 - [x] Light, Moderate, and Deep tier metadata
@@ -120,7 +121,34 @@ Additional Look #8 boundary:
 
 ---
 
-# 5. Validation and evidence
+# 5. Task hierarchy foundation
+
+- [x] Tasks route and bottom-navigation entry
+- [x] Separate scenario-isolated task storage namespace
+- [x] Top and bottom empty-task creation
+- [x] Inline editable title
+- [x] Separate drag handle and completion control
+- [x] Optional shorthand time indicator
+- [x] Settings disclosure
+- [x] Main-task toggle
+- [x] Separate subtask plus control
+- [x] One-level main-task and subtask model
+- [x] Derived subtask progress
+- [x] Main and subtask completion propagation
+- [x] Turning off main-task mode releases subtasks
+- [x] Pointer drag reorder hooks
+- [x] Explicit Move Up and Move Down controls
+- [x] Explicit Indent and Unindent controls
+- [x] Completed items grouped at the bottom
+- [x] Hide Completed and Show Completed
+- [x] Reset clears task state
+- [d] Production mobile swipe implementation
+- [d] Nested subtasks beyond one level
+- [d] Production persistence, sync, collaboration, and notifications
+
+---
+
+# 6. Validation and evidence
 
 - [x] Required-file and relative-import checks encoded
 - [x] Fixture and renderer-export checks encoded
@@ -129,73 +157,81 @@ Additional Look #8 boundary:
 - [x] 168-route gallery matrix encoded
 - [x] Interactive route contract encoded for Looks #2 through #9
 - [x] Interactive stylesheets required for Looks #2 through #9
-- [x] Forty-eight interactive renderer exports required
+- [x] Forty-eight Routine Completion renderer exports required
 - [x] Shared completion, recurrence, Undo, and state hooks checked
+- [x] Look #4 Task hierarchy route, state, renderer, and stylesheet required
+- [x] Add, edit, main-task, subtask, release, progress, reorder, indent, completion, and hide/show hooks checked
 - [x] Responsive, Large Text, Forced Colors, and Reduced Motion hooks encoded
 - [x] Ambient Glass solid-fallback and Reduced Transparency hooks encoded
 - [ ] Exact complete-checkout validator execution
 - [ ] Exact complete-checkout interactive browser run
 - [ ] Physical Android viewport checks
+- [ ] Physical Android drag/hold and swipe checks
 - [ ] Actual screen-reader smoke tests
 - [ ] Ambient Glass lower-end hardware paint measurements
 - [ ] Single-version browser rerun for every Look
 
 ---
 
-# 6. Pure-Look implementation order
+# 7. Pure-Look implementation order
 
-1. [x] Look #4 — Zen Focus
-2. [x] Look #3 — Precision Minimal
-3. [x] Look #5 — Playful Modular
-4. [x] Look #7 — Bold Utility
-5. [x] Look #6 — Tactile Household
-6. [x] Look #2 — Warm Editorial
-7. [x] Look #8 — Ambient Glass
-8. [x] Look #9 — Retro Digital
+1. Look #4 — Zen Focus
+2. Look #3 — Precision Minimal
+3. Look #5 — Playful Modular
+4. Look #7 — Bold Utility
+5. Look #6 — Tactile Household
+6. Look #2 — Warm Editorial
+7. Look #8 — Ambient Glass
+8. Look #9 — Retro Digital
 
 See `PURE-LOOK-IMPLEMENTATION-ORDER.md` for rationale and acceptance gates.
 
 ## Routine Completion Loop progress
 
-- [x] Today / Needs Attention — implemented in 8 of 8 Looks
-- [x] Area → Section → Chore navigation — implemented in 8 of 8 Looks
-- [x] Complete and advance recurrence — implemented in 8 of 8 Looks
-- [x] Update attention counts and All Clear — implemented in 8 of 8 Looks
-- [x] Undo or reopen — implemented in 8 of 8 Looks
-- [x] Browser-history-compatible routes — implemented in 8 of 8 Looks
-- [x] Shared scenarios and Large Text — implemented in 8 of 8 Looks
-- [x] Keyboard-reachable completion and Undo — implemented in 8 of 8 Looks
+- [x] Complete in 8 of 8 Looks
+
+## Task hierarchy loop progress
+
+1. [x] Look #4 — Zen Focus
+2. [ ] Look #3 — Precision Minimal — **next**
+3. [ ] Look #5 — Playful Modular
+4. [ ] Look #7 — Bold Utility
+5. [ ] Look #6 — Tactile Household
+6. [ ] Look #2 — Warm Editorial
+7. [ ] Look #8 — Ambient Glass
+8. [ ] Look #9 — Retro Digital
+
+Shared behaviors currently implemented in 1 of 8 Looks:
+
+- [~] Add and inline edit
+- [~] Complete and reopen
+- [~] Main task and subtasks
+- [~] Progress and completion propagation
+- [~] Reorder and explicit movement controls
+- [~] Indent and unindent
+- [~] Subtask release when main-task mode is removed
+- [~] Completed-item grouping and hide/show
 
 ## Later feature order
 
-1. [ ] Task hierarchy loop
+1. [~] Task hierarchy loop — in progress
 2. [ ] Intervention-to-action loop
 3. [ ] Reusable Lists loop
 
-Use the same Look order unless a documented technical dependency requires a change.
-
 ---
 
-# 7. Milestone log
+# 8. Milestone log
 
 - [x] `0.1.0–0.8.7` — Gallery foundation, all Looks, quality passes, evidence, and delegated pure-Look sequence
-- [x] `0.9.0` — Look #4 Zen Focus Routine Completion Loop
-- [x] `0.9.1` — Look #3 Precision Minimal Routine Completion Loop
-- [x] `0.9.2` — Look #5 Playful Modular Routine Completion Loop
-- [x] `0.9.3` — Look #7 Bold Utility Routine Completion Loop
-- [x] `0.9.4` — Look #6 Tactile Household Routine Completion Loop
-- [x] `0.9.5` — Look #2 Warm Editorial Routine Completion Loop
-- [x] `0.9.6` — Look #8 Ambient Glass Routine Completion Loop
-- [x] `0.9.7` — Look #9 Retro Digital and completion of the eight-Look Routine Completion sequence
+- [x] `0.9.0–0.9.7` — Routine Completion Loop implemented across all eight active Looks
+- [x] `0.10.0` — Look #4 Zen Focus Task hierarchy loop
 
 ---
 
-# 8. Current next actions
+# 9. Current next actions
 
-- [ ] Begin Look #4 Task hierarchy loop
-- [ ] Implement simple checklist creation and editing
-- [ ] Implement reorder handle and completion control separation
-- [ ] Implement main task and subtask behavior
-- [ ] Implement indent and unindent behavior
-- [ ] Preserve current Routine Completion routes and state
+- [ ] Implement the shared Task hierarchy contract in Look #3 — Precision Minimal
+- [ ] Preserve the existing task state while switching between Looks #4 and #3
+- [ ] Keep the simple checklist anatomy and behavior equivalent
+- [ ] Extend validator coverage through Look #3 Task hierarchy
 - [ ] Keep exact-checkout, Android, and screen-reader evidence pending until actually performed

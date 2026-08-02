@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.8.7`  
+**Current version:** `0.9.0`  
 **Purpose:** Maintain a complete gallery of genuinely different visual systems for the same Nudge product, then test pure directions without forcing premature elimination.
 
 This file is the source of truth for scope, progress, review gates, and decisions.
@@ -67,14 +67,11 @@ Required one-line response:
 - [x] Look #1 comparison reference
 - [x] Look #1 reference version sourced from shared configuration
 
-## Shared screens
+## Shared screens and scenarios
 
 - [x] Areas overview
 - [x] Representative Area detail
 - [x] Intervention
-
-## Shared scenarios
-
 - [x] Normal Day
 - [x] Heavy Backlog
 - [x] New User
@@ -87,9 +84,9 @@ Required one-line response:
 ## Fairness rules
 
 - [x] Every Look consumes the same fixture
-- [x] Every Look exposes equivalent actions
+- [x] Every Look exposes equivalent actions within the current implementation stage
 - [x] Urgency meaning remains equivalent
-- [x] No Look receives easier content or extra functionality
+- [x] No Look receives easier content or extra functionality at the same completed stage
 - [x] Look-specific wording may vary without changing meaning
 
 ---
@@ -106,63 +103,74 @@ Required one-line response:
 
 ## Look #2 — Warm Editorial
 
-- [x] Three shared screens and seven scenarios
+- [x] Three shared gallery screens and seven scenarios
 - [x] Dedicated code-level quality pass
 - [x] Included in 0.7.2 browser evidence
 
 ## Look #3 — Precision Minimal
 
-- [x] Three shared screens and seven scenarios
+- [x] Three shared gallery screens and seven scenarios
 - [x] Dedicated code-level quality pass
 - [x] Included in 0.7.2 browser evidence
+- [ ] Routine Completion Loop
 
 ## Look #4 — Zen Focus
 
-- [x] Three shared screens and seven scenarios
+- [x] Three shared gallery screens and seven scenarios
 - [x] Dedicated code-level quality pass
 - [x] Included in 0.7.2 browser evidence
+- [x] Today / Needs Attention
+- [x] Area → Section → Chore route chain
+- [x] Completion and deterministic recurrence advancement
+- [x] Derived attention-count and All Clear updates
+- [x] Undo or reopen
+- [x] Browser-history-compatible route state
+- [x] Dedicated interactive styling and validation contract
+- [x] Reconstructed browser smoke evidence
+- [~] Exact-checkout browser, physical-device, and actual screen-reader evidence pending
 
 ## Look #5 — Playful Modular
 
-- [x] Three shared screens and seven scenarios
+- [x] Three shared gallery screens and seven scenarios
 - [x] Dedicated responsive, contrast, density, semantics, Large Text, and forced-colors quality pass
-- [x] Dedicated quality stylesheet and evidence record
 - [x] Included in 0.8.4 browser presentation evidence
+- [ ] Routine Completion Loop
 - [~] Physical-device and actual screen-reader evidence pending
 
 ## Look #6 — Tactile Household
 
-- [x] Three shared screens and seven scenarios
+- [x] Three shared gallery screens and seven scenarios
 - [x] Dedicated code-level quality pass
 - [x] Included in 0.7.2 browser evidence
+- [ ] Routine Completion Loop
 
 ## Look #7 — Bold Utility
 
-- [x] Three shared screens and seven scenarios
+- [x] Three shared gallery screens and seven scenarios
 - [x] Dedicated responsive, contrast, density, tone, semantics, Large Text, and forced-colors quality pass
-- [x] Dedicated quality stylesheet and evidence record
 - [x] Included in 0.8.4 browser presentation evidence
+- [ ] Routine Completion Loop
 - [~] Physical-device and actual screen-reader evidence pending
 
 ## Look #8 — Ambient Glass
 
-- [x] Three shared screens and seven scenarios
+- [x] Three shared gallery screens and seven scenarios
 - [x] Dedicated responsive, contrast, transparency, fallback, performance-risk, semantics, and forced-colors quality pass
-- [x] Dedicated quality stylesheet and evidence record
 - [x] Included in 0.8.4 browser presentation evidence
+- [ ] Routine Completion Loop
 - [~] Physical-device, actual screen-reader, and lower-end hardware paint evidence pending
 
 ## Look #9 — Retro Digital
 
-- [x] Three shared screens and seven scenarios
+- [x] Three shared gallery screens and seven scenarios
 - [x] Dedicated responsive, microtext, contrast, meter, semantics, Large Text, and forced-colors quality pass
-- [x] Dedicated quality stylesheet and evidence record
 - [x] Included in 0.8.4 browser presentation evidence
+- [ ] Routine Completion Loop
 - [~] Physical-device and actual screen-reader evidence pending
 
 ---
 
-# 4. Gallery policy
+# 4. Gallery and implementation policy
 
 - [x] No direction must be rejected merely because another scores higher overall
 - [x] Pure-Look prototypes remain allowed
@@ -170,12 +178,15 @@ Required one-line response:
 - [x] All other Looks remain preserved while one Look is implemented
 - [x] Look order is a learning sequence, not a ranking
 - [x] Look switching remains Design Lab-only
+- [x] Prototype state remains deterministic and isolated
 - [x] Unrestricted mixing within a screen remains prohibited
 - [x] Dark variants remain deferred variants, not numbered Looks
 
 ---
 
 # 5. Validation
+
+## Gallery validation
 
 - [x] Required-file checks
 - [x] Relative-import checks
@@ -184,9 +195,24 @@ Required one-line response:
 - [x] Version consistency checks encoded in the validator
 - [x] Stylesheet load-order checks
 - [x] CSS block-balance checks
-- [x] Route matrix expanded to 168 active-Look combinations
+- [x] Route matrix includes 168 active-Look gallery combinations
 - [x] Validator includes Look #5, #7, #8, and #9 quality layers
+
+## Look #4 interactive validation
+
+- [x] Require `interactive-state.js`
+- [x] Require `look4-interactive.css`
+- [x] Validate six Look #4 views
+- [x] Validate Today, Section, and Chore exports
+- [x] Validate completion and reopen actions
+- [x] Validate route state for Section and Chore identifiers
+- [x] Validate action-handler ordering
+- [x] Validate forced-colors and reduced-motion hooks
+- [x] Execute syntax and module-level interaction tests
+- [x] Execute reconstructed validator
+- [x] Execute injected Chromium flow smoke test
 - [ ] Execute the updated validator in an exact complete checkout
+- [ ] Execute the interactive browser flow from an exact complete checkout
 
 ---
 
@@ -217,9 +243,29 @@ Required one-line response:
 - [x] Three nine-direction comparison contact sheets
 - [x] Narrative and machine-readable repository evidence records
 
+## Completed for Look #4 in version 0.9.0
+
+- [x] Today → Areas → Area → Section → Chore scripted path
+- [x] Completion and recurrence advancement
+- [x] Immediate completed-state presentation
+- [x] Undo and prior-state restoration
+- [x] Attention-count and All Clear updates
+- [x] Direct completion from Today opening reversible Chore detail
+- [x] Browser-history route smoke test
+- [x] New User and All Clear
+- [x] Heavy Backlog
+- [x] Long Content and Large Text
+- [x] Keyboard Enter completion
+- [x] Forced colors and reduced motion
+- [x] 360, 390, and 412 px phone widths
+- [x] Short-phone and landscape smoke checks
+- [x] No tested horizontal overflow
+- [x] Critical tested controls at least 48 px
+
 ## Still required
 
 - [ ] Exact complete-checkout validator execution
+- [ ] Exact-checkout browser rerun
 - [ ] Physical Android viewport checks
 - [ ] Actual screen-reader smoke tests
 - [ ] Ambient Glass lower-end hardware paint/compositing measurements
@@ -241,7 +287,7 @@ Required one-line response:
 
 ## Pure-Look implementation order
 
-1. [ ] Look #4 — Zen Focus
+1. [x] Look #4 — Zen Focus
 2. [ ] Look #3 — Precision Minimal
 3. [ ] Look #5 — Playful Modular
 4. [ ] Look #7 — Bold Utility
@@ -254,16 +300,20 @@ See `PURE-LOOK-IMPLEMENTATION-ORDER.md` for rationale and acceptance gates.
 
 ## Routine Completion Loop required in each Look
 
-- [ ] Today / Needs Attention entry
-- [ ] Areas → Area → Section → Chore detail navigation
-- [ ] Complete chore
-- [ ] Advance deterministic Light, Moderate, or Deep recurrence
-- [ ] Update attention counts and all-clear state
-- [ ] Undo or reopen
-- [ ] Preserve valid state through browser Back and Forward
-- [ ] Support Normal Day, Heavy Backlog, All Clear, New Area, Long Content, and Large Text
-- [ ] Keep completion and undo keyboard reachable
-- [ ] Keep primary actions reachable on short screens
+Look #4 has established the behavioral contract:
+
+- [x] Today / Needs Attention entry
+- [x] Areas → Area → Section → Chore detail navigation
+- [x] Complete chore
+- [x] Advance deterministic Light, Moderate, or Deep recurrence
+- [x] Update attention counts and All Clear
+- [x] Undo or reopen
+- [x] Preserve valid routed state through browser Back and Forward
+- [x] Support Normal Day, Heavy Backlog, All Clear, New User, Long Content, and Large Text
+- [x] Keep completion and Undo keyboard reachable
+- [x] Keep primary actions reachable on short screens
+
+Each remaining Look must implement the equivalent contract without changing product meaning.
 
 ## Later feature order after all eight Looks receive the Routine Completion Loop
 
@@ -291,14 +341,16 @@ Use the same Look order for each later feature unless a documented technical dep
 - [x] `0.8.5` — Full-gallery browser evidence record, contact sheets, and repository status update
 - [x] `0.8.6` — Interactive-expansion decision record and vertical-slice candidates
 - [x] `0.8.7` — Option A implementation sequence delegated and locked
+- [x] `0.9.0` — Look #4 Zen Focus Routine Completion Loop
 
 ---
 
 # 9. Current next actions
 
-- [ ] Build the isolated deterministic state foundation for Look #4
-- [ ] Add Today / Needs Attention and the Look #4 route chain
-- [ ] Add Chore detail, completion, recurrence advance, and undo or reopen
-- [ ] Validate Look #4 under Normal Day, Heavy Backlog, All Clear, New Area, Long Content, and Large Text
+- [ ] Implement Today / Needs Attention for Look #3 — Precision Minimal
+- [ ] Implement Look #3 Area → Section → Chore routes
+- [ ] Apply the established completion, recurrence, attention-count, and Undo behavior
+- [ ] Add Look #3 interactive responsive and accessibility treatment
+- [ ] Validate Look #3 under Normal Day, Heavy Backlog, All Clear, New User, Long Content, and Large Text
 - [ ] Execute updated validation in an exact complete checkout when available
 - [ ] Perform physical Android and actual screen-reader smoke tests when available

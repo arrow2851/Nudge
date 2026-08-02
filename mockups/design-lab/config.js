@@ -1,5 +1,5 @@
 export const DESIGN_LAB = Object.freeze({
-  version: '0.11.5',
+  version: '0.11.6',
   buildDate: '2026-08-02',
   branch: 'feature/design-lab',
   storageKey: 'nudge-design-lab-review-v1'
@@ -12,8 +12,8 @@ export const LOOKS = Object.freeze([
   { id: 5, name: 'Playful Modular', status: 'Routine Completion, Task hierarchy, and Intervention-to-action implemented', description: 'Colorful blocks and friendly controls that make upkeep feel approachable.' },
   { id: 6, name: 'Tactile Household', status: 'Routine Completion, Task hierarchy, and Intervention-to-action implemented', description: 'Physical labels, controls, and satisfying household-tool cues.' },
   { id: 7, name: 'Bold Utility', status: 'Routine Completion, Task hierarchy, and Intervention-to-action implemented', description: 'High-contrast structure, thick rules, and unapologetically direct hierarchy.' },
-  { id: 8, name: 'Ambient Glass', status: 'Next Intervention-to-action implementation', description: 'Soft translucent layers, atmospheric depth, and calm modern polish.' },
-  { id: 9, name: 'Retro Digital', status: 'Routine Completion and Task hierarchy implemented', description: 'A friendly home operating system with segmented displays and terminal cues.' }
+  { id: 8, name: 'Ambient Glass', status: 'Routine Completion, Task hierarchy, and Intervention-to-action implemented', description: 'Soft translucent layers, atmospheric depth, and calm modern polish.' },
+  { id: 9, name: 'Retro Digital', status: 'Next Intervention-to-action implementation', description: 'A friendly home operating system with segmented displays and terminal cues.' }
 ]);
 
 export const ALLOWED_VIEWS = new Set(['today', 'areas', 'area', 'section', 'chore', 'tasks', 'intervention']);

@@ -3,9 +3,24 @@ import { getScenario } from './fixtures.js';
 import { renderReviewControls } from './controls.js';
 import { clearStoredState, commitState, defaultState, readStateFromLocation } from './state.js';
 import { applyRoutineState, clearInteractiveState, completeRoutine, findRoutine, reopenRoutine } from './interactive-state.js';
+import {
+  addTask,
+  clearTaskState,
+  getTaskState,
+  indentTask,
+  moveTask,
+  moveTaskBefore,
+  setHideCompleted,
+  toggleMainTask,
+  toggleTaskCompletion,
+  toggleTaskSettings,
+  unindentTask,
+  updateTaskTitle
+} from './task-state.js';
 import { renderAreaDetail, renderAreasEditorial, renderChoreEditorial, renderInterventionEditorial, renderSectionEditorial, renderTodayEditorial } from './renderers/look2.js';
 import { renderAreaDetailPrecision, renderAreasPrecision, renderChorePrecision, renderInterventionPrecision, renderSectionPrecision, renderTodayPrecision } from './renderers/look3.js';
 import { renderAreaDetailZen, renderAreasZen, renderChoreZen, renderInterventionZen, renderSectionZen, renderTodayZen } from './renderers/look4.js';
+import { renderTasksZen } from './renderers/look4-tasks.js';
 import { renderAreaDetailPlayful, renderAreasPlayful, renderChorePlayful, renderInterventionPlayful, renderSectionPlayful, renderTodayPlayful } from './renderers/look5.js';
 import { renderAreaDetailTactile, renderAreasTactile, renderChoreTactile, renderInterventionTactile, renderSectionTactile, renderTodayTactile } from './renderers/look6.js';
 import { renderAreaDetailBold, renderAreasBold, renderChoreBold, renderInterventionBold, renderSectionBold, renderTodayBold } from './renderers/look7.js';
@@ -15,9 +30,12 @@ import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
 const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
+const TASK_HIERARCHY_LOOKS = new Set([4]);
 
 let state = readStateFromLocation();
 let currentData = null;
+let currentTasks = null;
+let draggedTask = null;
 
 const elements = {
   screen: document.querySelector('#screen'),
@@ -27,7 +45,7 @@ const elements = {
   toastRoot: document.querySelector('#toast-root')
 };
 
-function renderLook(look, data) {
+function renderLook(look, data, tasks) {
   if (look.id === 2) {
     if (state.view === 'today') return renderTodayEditorial(data);
     if (state.view === 'intervention') return renderInterventionEditorial(data);
@@ -47,6 +65,7 @@ function renderLook(look, data) {
   }
 
   if (look.id === 4) {
+    if (state.view === 'tasks') return renderTasksZen(tasks);
     if (state.view === 'today') return renderTodayZen(data);
     if (state.view === 'intervention') return renderInterventionZen(data);
     if (state.view === 'chore') return renderChoreZen(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
@@ -100,6 +119,9 @@ function renderLook(look, data) {
     if (state.view === 'areas') return renderAreasRetro(data);
   }
 
+  if (state.view === 'tasks') {
+    return renderUnsupported('The Task hierarchy loop is currently implemented in Look #4 — Zen Focus. Task state remains preserved while you compare Looks.');
+  }
   return renderUnsupported('This interactive screen is implemented in every active Design Lab Look.');
 }
 
@@ -110,7 +132,9 @@ function syncBottomNavigation() {
       ? state.view === 'today'
       : button.dataset.nav === 'areas'
         ? areasActive
-        : false;
+        : button.dataset.nav === 'tasks'
+          ? state.view === 'tasks'
+          : false;
     button.classList.toggle('active', active);
   });
 }
@@ -122,6 +146,7 @@ function resetPath() {
 }
 
 function normalizeStateForData(data) {
+  if (state.view === 'tasks') return;
   if (!['area', 'section', 'chore'].includes(state.view)) return;
   const area = data.areas.find(item => item.id === state.areaId);
   if (!area) {
@@ -152,11 +177,12 @@ function normalizeStateForData(data) {
 
 function render({ routeAction = 'none' } = {}) {
   currentData = applyRoutineState(getScenario(state.scenario), state.scenario);
+  currentTasks = getTaskState(state.scenario);
   normalizeStateForData(currentData);
   const look = renderReviewControls(state, currentData, elements);
   document.documentElement.dataset.textScale = currentData.textScale || 'normal';
   document.documentElement.dataset.look = String(look.id);
-  elements.screen.innerHTML = renderLook(look, currentData);
+  elements.screen.innerHTML = renderLook(look, currentData, currentTasks);
   elements.screen.scrollTop = 0;
   syncBottomNavigation();
   if (routeAction === 'push') commitState(state);
@@ -169,19 +195,25 @@ function showToast(message) {
   showToast.timer = setTimeout(() => { elements.toastRoot.innerHTML = ''; }, 2600);
 }
 
+function focusTask(id) {
+  requestAnimationFrame(() => {
+    const input = [...document.querySelectorAll('input[data-task-title]')]
+      .find(element => element.dataset.taskId === id);
+    input?.focus();
+    input?.select();
+  });
+}
+
 function resetReviewState() {
   state = defaultState();
   clearStoredState();
   clearInteractiveState();
+  clearTaskState();
   render({ routeAction: 'push' });
-  showToast('Design Lab and routine completion state reset.');
+  showToast('Design Lab, routine completion, and task hierarchy state reset.');
 }
 
 function setView(view) {
-  if (view === 'today' && !INTERACTIVE_LOOKS.has(state.look)) {
-    showToast('Today interaction is available in every active Design Lab Look.');
-    return;
-  }
   state.view = view;
   resetPath();
   render({ routeAction: 'push' });
@@ -215,6 +247,10 @@ function routineFromTarget(target) {
   return findRoutine(currentData, target.dataset.areaId || state.areaId, target.dataset.choreId || state.choreId);
 }
 
+function taskIdFromTarget(target) {
+  return target.dataset.taskId;
+}
+
 function runAction(action, target) {
   const actions = {
     'back-areas': () => setView('areas'),
@@ -241,23 +277,118 @@ function runAction(action, target) {
       render();
       showToast('Completion undone. The routine is back in its previous state.');
     },
-    'demo-add-area': () => showToast('Area creation remains outside this first interactive slice.'),
-    'start-demo': () => showToast('The Intervention-to-action loop follows after Routine Completion is implemented across all Looks.'),
+    'add-task-top': () => {
+      const { result } = addTask(state.scenario, { position: 'top' });
+      render();
+      if (result) focusTask(result);
+    },
+    'add-task-bottom': () => {
+      const { result } = addTask(state.scenario, { position: 'bottom' });
+      render();
+      if (result) focusTask(result);
+    },
+    'add-subtask': () => {
+      const { result } = addTask(state.scenario, { parentId: taskIdFromTarget(target) });
+      render();
+      if (result) focusTask(result);
+    },
+    'toggle-task-completion': () => {
+      const { result } = toggleTaskCompletion(state.scenario, taskIdFromTarget(target));
+      render();
+      showToast(result ? 'Task completed.' : 'Task reopened.');
+    },
+    'toggle-task-settings': () => {
+      toggleTaskSettings(state.scenario, taskIdFromTarget(target));
+      render();
+    },
+    'toggle-main-task': () => {
+      const { result } = toggleMainTask(state.scenario, taskIdFromTarget(target));
+      render();
+      if (result?.released) showToast(`${result.released} subtasks became regular tasks.`);
+      else showToast(result?.main ? 'Main task enabled.' : 'Main task disabled.');
+    },
+    'move-task-up': () => {
+      if (moveTask(state.scenario, taskIdFromTarget(target), -1).result) render();
+    },
+    'move-task-down': () => {
+      if (moveTask(state.scenario, taskIdFromTarget(target), 1).result) render();
+    },
+    'indent-task': () => {
+      const moved = indentTask(state.scenario, taskIdFromTarget(target)).result;
+      render();
+      showToast(moved ? 'Task moved under the previous task.' : 'This task cannot be indented here.');
+    },
+    'unindent-task': () => {
+      const moved = unindentTask(state.scenario, taskIdFromTarget(target)).result;
+      render();
+      showToast(moved ? 'Subtask became a regular task.' : 'This task is already at the top level.');
+    },
+    'toggle-completed-visibility': () => {
+      setHideCompleted(state.scenario, target.dataset.hideCompleted === 'true');
+      render();
+    },
+    'demo-add-area': () => showToast('Area creation remains outside this interactive slice.'),
+    'start-demo': () => showToast('The Intervention-to-action loop follows the Task hierarchy sequence.'),
     'different-demo': () => showToast('Alternative suggestions belong to the later Intervention slice.'),
     'not-now-demo': () => showToast('Intervention dismissed without guilt.')
   };
   actions[action]?.();
 }
 
+document.addEventListener('input', event => {
+  const title = event.target.closest('input[data-task-title]');
+  if (!title) return;
+  updateTaskTitle(state.scenario, title.dataset.taskId, title.value);
+});
+
+document.addEventListener('dragstart', event => {
+  const handle = event.target.closest('[data-task-drag]');
+  if (!handle) return;
+  draggedTask = {
+    id: handle.dataset.taskId,
+    parentId: handle.dataset.parentId || ''
+  };
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/plain', draggedTask.id);
+});
+
+document.addEventListener('dragover', event => {
+  const target = event.target.closest('[data-task-drop]');
+  if (!target || !draggedTask || (target.dataset.parentId || '') !== draggedTask.parentId) return;
+  event.preventDefault();
+  target.classList.add('drag-over');
+});
+
+document.addEventListener('dragleave', event => {
+  event.target.closest('[data-task-drop]')?.classList.remove('drag-over');
+});
+
+document.addEventListener('drop', event => {
+  const target = event.target.closest('[data-task-drop]');
+  document.querySelectorAll('.drag-over').forEach(item => item.classList.remove('drag-over'));
+  if (!target || !draggedTask) return;
+  event.preventDefault();
+  const moved = moveTaskBefore(
+    state.scenario,
+    draggedTask.id,
+    target.dataset.taskId,
+    draggedTask.parentId,
+    target.dataset.parentId || ''
+  ).result;
+  draggedTask = null;
+  if (moved) render();
+});
+
+document.addEventListener('dragend', () => {
+  draggedTask = null;
+  document.querySelectorAll('.drag-over').forEach(item => item.classList.remove('drag-over'));
+});
+
 document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 9;
-    if (!INTERACTIVE_LOOKS.has(state.look) && ['today', 'section', 'chore'].includes(state.view)) {
-      state.view = 'areas';
-      resetPath();
-    }
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 4;
     render({ routeAction: 'push' });
     return;
   }
@@ -303,7 +434,8 @@ document.addEventListener('click', event => {
   if (nav) {
     if (nav.dataset.nav === 'today') setView('today');
     else if (nav.dataset.nav === 'areas') setView('areas');
-    else showToast('This pure-Look slice currently covers Today and Areas.');
+    else if (nav.dataset.nav === 'tasks') setView('tasks');
+    else showToast('Reusable Lists follow after the Intervention-to-action loop.');
   }
 });
 

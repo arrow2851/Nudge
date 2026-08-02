@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.8.0';
+  const VERSION = '0.8.1';
   const initialParams = new URLSearchParams(location.search);
   const captureMode = initialParams.get('capture');
 

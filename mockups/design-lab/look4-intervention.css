@@ -1,0 +1,196 @@
+/* Look #4 — Zen Focus Intervention-to-action loop */
+
+html[data-look="4"] .zen-intervention-action {
+  overflow-x: hidden;
+}
+
+html[data-look="4"] .zen-intervention-action .zen-pause-mark {
+  margin-bottom: 28px;
+}
+
+html[data-look="4"] .zen-intervention-action .zen-suggestion {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 14px 38px rgba(48, 66, 55, .07);
+}
+
+html[data-look="4"] .zen-intervention-action .zen-suggestion::after {
+  content: '';
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  right: -44px;
+  top: -48px;
+  border-radius: 50%;
+  background: #e4ede5;
+  pointer-events: none;
+}
+
+html[data-look="4"] .zen-intervention-action .zen-suggestion > * {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-look="4"] .zen-action-state {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 13px;
+  align-items: center;
+  margin-top: 14px;
+  padding: 15px 16px;
+  border: 1px solid var(--zen-line);
+  border-radius: 20px;
+  background: rgba(251, 252, 248, .82);
+}
+
+html[data-look="4"] .zen-action-state > span {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #c8d5ca;
+  border-radius: 50%;
+  color: var(--zen-sage-dark);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+html[data-look="4"] .zen-action-state > div {
+  min-width: 0;
+}
+
+html[data-look="4"] .zen-action-state strong,
+html[data-look="4"] .zen-action-state p {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="4"] .zen-action-state strong {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+html[data-look="4"] .zen-action-state p {
+  margin: 4px 0 0;
+  color: var(--zen-muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+html[data-look="4"] .zen-action-state.active {
+  border-color: #cbd8cd;
+  background: #f8fbf7;
+}
+
+html[data-look="4"] .zen-action-state.completed {
+  border-color: #c7d8ca;
+  background: #edf5ee;
+}
+
+html[data-look="4"] .zen-action-state.completed > span {
+  background: var(--zen-sage-dark);
+  color: #fff;
+}
+
+html[data-look="4"] .zen-action-state.dismissed {
+  background: transparent;
+}
+
+html[data-look="4"] .zen-intervention-action .zen-actions {
+  width: 100%;
+}
+
+html[data-look="4"] .zen-intervention-action .zen-actions button {
+  width: 100%;
+  min-height: 48px;
+}
+
+html[data-look="4"] .zen-intervention-action button:focus-visible {
+  outline: 3px solid #234d70;
+  outline-offset: 3px;
+}
+
+@media (max-height: 720px) {
+  html[data-look="4"] .zen-intervention-action {
+    padding-top: 22px;
+  }
+
+  html[data-look="4"] .zen-intervention-action .zen-pause-mark {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 18px;
+  }
+
+  html[data-look="4"] .zen-intervention-action .zen-pause-mark::before {
+    width: 38px;
+    height: 38px;
+  }
+
+  html[data-look="4"] .zen-intervention-action .zen-suggestion {
+    margin-top: 20px;
+  }
+
+  html[data-look="4"] .zen-intervention-action .zen-actions {
+    margin-top: 0;
+    padding-top: 18px;
+  }
+}
+
+@media (max-width: 390px) {
+  html[data-look="4"] .zen-action-state {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  html[data-look="4"] .zen-action-state > span {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+html[data-text-scale="large"][data-look="4"] .zen-action-state {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+html[data-text-scale="large"][data-look="4"] .zen-action-state strong {
+  font-size: 17px;
+}
+
+html[data-text-scale="large"][data-look="4"] .zen-action-state p {
+  font-size: 14px;
+}
+
+html[data-text-scale="large"][data-look="4"] .zen-intervention-action .zen-actions button {
+  min-height: 54px;
+  font-size: 15px;
+}
+
+@media (forced-colors: active) {
+  html[data-look="4"] .zen-intervention-action .zen-suggestion,
+  html[data-look="4"] .zen-action-state,
+  html[data-look="4"] .zen-action-state > span,
+  html[data-look="4"] .zen-intervention-action .zen-actions button {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  html[data-look="4"] .zen-intervention-action .zen-suggestion::after {
+    display: none;
+  }
+
+  html[data-look="4"] .zen-action-state.completed > span {
+    color: HighlightText;
+    background: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="4"] .zen-intervention-action *,
+  html[data-look="4"] .zen-intervention-action *::before,
+  html[data-look="4"] .zen-intervention-action *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

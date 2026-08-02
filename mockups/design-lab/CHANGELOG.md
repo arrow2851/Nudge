@@ -1,5 +1,29 @@
 # Design Lab Changelog
 
+## 0.10.6 — 2026-08-02
+
+### Look #8 — Ambient Glass Task hierarchy loop
+
+- Reused the shared scenario-isolated Task hierarchy state engine
+- Added `renderers/look8-tasks.js` and `look8-tasks.css`
+- Added translucent high-value surfaces with mostly solid task rows
+- Preserved top and bottom empty-task creation with immediate inline editing focus
+- Preserved separate drag, completion, title, optional time, options, and subtask controls
+- Added Active, Main Tasks, and Completed summary counts
+- Added main-task progress text, percentage, and blue-to-violet progress track
+- Preserved one-level hierarchy, completion propagation, and subtask release
+- Preserved pointer drag plus Move Up, Move Down, Indent, and Unindent controls
+- Preserved completed-item grouping and Hide/Show Completed
+- Preserved shared task state across Looks #2 through #8
+- Limited blur to high-value surfaces rather than every task row
+- Added no-backdrop-filter and Reduced Transparency solid fallbacks
+- Added Forced Colors and Reduced Motion handling
+- Extended validation to seven task Looks and seven task stylesheets
+- Added `LOOK-8-TASK-HIERARCHY.md` and `CHECKLIST-PROGRESS-0.10.6.md`
+- Set Look #9 — Retro Digital as the final Task hierarchy implementation
+- Kept lower-end paint/compositing measurements, exact-checkout browser, Android gesture, and screen-reader evidence pending
+- Kept Look #1 and `main` unchanged
+
 ## 0.10.5 — 2026-08-02
 
 ### Look #2 — Warm Editorial Task hierarchy loop

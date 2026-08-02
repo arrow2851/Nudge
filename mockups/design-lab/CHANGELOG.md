@@ -1,5 +1,25 @@
 # Design Lab Changelog
 
+## 0.9.3 — 2026-08-01
+
+### Look #7 — Bold Utility Routine Completion Loop
+
+- Reused the shared deterministic Routine Completion state engine
+- Added Bold Utility Today / Needs Attention with one priority action and an explicit queue count
+- Added interactive Area, Section, and Chore routes
+- Replaced static completion placeholders with separate working Complete and detail controls
+- Added thick-rule Chore facts, status panels, and a clear `DONE` state with immediate Undo
+- Preserved deterministic Light, Moderate, and Deep recurrence advancement
+- Preserved derived attention-count and All Clear updates
+- Preserved browser-history-compatible route state
+- Preserved semantic completion state while switching among Looks #3, #4, #5, and #7
+- Added `look7-interactive.css` with narrow-screen, Large Text, focus, forced-colors, and reduced-motion handling
+- Extended the validator to cover four interactive Looks, twenty-four interactive renderer exports, four interactive stylesheets, and shared state hooks
+- Added `LOOK-7-INTERACTIVE.md` and `CHECKLIST-PROGRESS-0.9.3.md`
+- Set Look #6 — Tactile Household as the next interactive implementation
+- Documented that direct cloning and exact-checkout browser execution remain DNS-blocked
+- Kept Look #1, `main`, production storage, and backend behavior unchanged
+
 ## 0.9.2 — 2026-08-01
 
 ### Look #5 — Playful Modular Routine Completion Loop

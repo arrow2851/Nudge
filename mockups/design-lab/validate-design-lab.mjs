@@ -28,7 +28,7 @@ const rendererFunctions = new Map([
 function requiredFiles() {
   const files = [
     'index.html','config.js','utils.js','fixtures.js','state.js','controls.js','app.js','quality.js',
-    'styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css','expanded-looks.css','look5-quality.css','review.css',
+    'styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css','expanded-looks.css','look5-quality.css','look7-quality.css','review.css',
     'look1-reference.html','look1-reference.css','look1-reference.js','renderers/shared.js',
     ...LOOKS.map(id => `renderers/look${id}.js`).filter(file => file !== 'renderers/look1.js')
   ];
@@ -101,7 +101,7 @@ function versionsAndHtml(shared) {
   check(read('README.md').includes(`**Current version:** \`${version}\``), 'README version mismatch.');
   check(read('DESIGN-LAB-CHECKLIST.md').includes(`**Current version:** \`${version}\``), 'Checklist version mismatch.');
   const html = read('index.html');
-  const styles = ['styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css','expanded-looks.css','look5-quality.css','review.css'];
+  const styles = ['styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css','expanded-looks.css','look5-quality.css','look7-quality.css','review.css'];
   styles.forEach(file => check(html.includes(`href="${file}"`), `index.html does not load ${file}.`));
   let previous = -1;
   styles.forEach(file => {
@@ -114,7 +114,7 @@ function versionsAndHtml(shared) {
 }
 
 function cssBalance() {
-  const files = ['styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css','expanded-looks.css','look5-quality.css','review.css','look1-reference.css'];
+  const files = ['styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css','expanded-looks.css','look5-quality.css','look7-quality.css','review.css','look1-reference.css'];
   files.forEach(file => {
     const source = read(file).replace(/\/\*[\s\S]*?\*\//g,'');
     check(source.split('{').length === source.split('}').length, `${file} has unbalanced braces.`);

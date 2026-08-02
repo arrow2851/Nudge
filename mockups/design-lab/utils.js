@@ -26,7 +26,10 @@ export function statusFor(area) {
 
 export function nextRoutine(area) {
   const priority = { overdue: 0, today: 1, upcoming: 2, 'as-needed': 3 };
-  return [...area.routines].sort((a, b) => priority[a.status] - priority[b.status])[0];
+  return [...area.routines].sort((a, b) => {
+    const completionDelta = Number(Boolean(a.completion)) - Number(Boolean(b.completion));
+    return completionDelta || priority[a.status] - priority[b.status];
+  })[0];
 }
 
 export function dueLabel(status) {

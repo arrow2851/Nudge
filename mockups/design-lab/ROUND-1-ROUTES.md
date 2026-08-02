@@ -1,4 +1,4 @@
-# Round 1 Browser Review Routes
+# Design Lab Browser Review Routes
 
 Use these routes after starting the local server:
 
@@ -13,9 +13,11 @@ Base URL:
 http://localhost:8080/
 ```
 
-## Canonical screen routes
+## Active gallery Looks
 
-Replace `<LOOK>` with `2`, `3`, `4`, or `6`.
+Replace `<LOOK>` with `2`, `3`, `4`, `5`, `6`, `7`, `8`, or `9`.
+
+## Canonical screen routes
 
 ```text
 ?look=<LOOK>&screen=areas&scenario=normal
@@ -25,7 +27,7 @@ Replace `<LOOK>` with `2`, `3`, `4`, or `6`.
 
 ## Stress scenarios
 
-Run each route for all four Looks.
+Run each route for all eight active gallery Looks.
 
 | Scenario | Areas overview | Area detail | Intervention |
 |---|---|---|---|
@@ -37,9 +39,19 @@ Run each route for all four Looks.
 | Long Content | `?look=<LOOK>&screen=areas&scenario=long` | `?look=<LOOK>&screen=area&area=kitchen&scenario=long` | `?look=<LOOK>&screen=intervention&scenario=long` |
 | Large Text | `?look=<LOOK>&screen=areas&scenario=large-text` | `?look=<LOOK>&screen=area&area=kitchen&scenario=large-text` | `?look=<LOOK>&screen=intervention&scenario=large-text` |
 
-## Invalid-route checks
+The active matrix contains **168 Look/screen/scenario combinations**.
 
-These routes must recover without a blank screen or uncaught error:
+## Look #1 reference routes
+
+```text
+look1-reference.html?screen=areas&scenario=normal
+look1-reference.html?screen=area&area=kitchen&scenario=backlog
+look1-reference.html?screen=intervention&scenario=normal
+```
+
+The Look #1 Intervention remains a visibly labeled comparison-only extrapolation.
+
+## Invalid-route checks
 
 ```text
 ?look=999&screen=areas&scenario=normal
@@ -68,27 +80,15 @@ The Look, screen, scenario, and Area must follow the URL without stale content.
 
 ## Viewports
 
-Review the canonical and stress routes at:
-
 - 360 × 800
 - 390 × 844
 - 412 × 915
-- 360 × 640 short viewport
-- 915 × 412 landscape smoke test
-- Desktop with the Design Lab control panel visible
+- 390 × 700 short viewport
+- 844 × 390 landscape smoke test
+- 1440 × 900 desktop review panel
 
 ## Evidence to record
 
-For each Look, record:
+For each Look, record console errors, horizontal overflow, clipped actions, wrapping problems, tab order, screen-reader output, strongest and weakest scenarios, and reusable components.
 
-- Console errors
-- Horizontal overflow
-- Clipped or hidden actions
-- Broken wrapping
-- Tab-order problems
-- Screen-reader duplication or missing context
-- Strongest scenario
-- Weakest scenario
-- Best feature
-- Biggest weakness
-- Components worth borrowing
+No ranking or elimination is required. Evidence may instead identify where each Look performs best and what controlled synthesis combinations are coherent.

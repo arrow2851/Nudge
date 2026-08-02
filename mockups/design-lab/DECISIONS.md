@@ -113,8 +113,6 @@ Today / Needs Attention
 
 **Accessibility:** Completed state uses text, a checkmark, and line-through. Critical targets retain the 48 px floor; Large Text actions reach 54 px; forced-colors uses system colors.
 
-**Validation boundary:** The validator encodes six interactive Looks and requires `look2-interactive.css`, but exact-checkout execution remains pending because direct cloning is DNS-blocked.
-
 ## 2026-08-01 — Look #8 treats transparency as enhancement, not structure
 
 **Milestone:** Version `0.9.6` implements the Routine Completion Loop in Look #8 — Ambient Glass.
@@ -133,9 +131,27 @@ Today / Needs Attention
 
 **Accessibility:** Completed state uses explicit text, checkmark, and line-through; critical targets retain the 48 px floor; Large Text actions reach 54 px.
 
-**Validation boundary:** The validator now encodes seven interactive Looks and requires Ambient Glass Reduced Transparency and no-backdrop-filter fallbacks. Exact-checkout execution, physical Android testing, actual screen-reader testing, and lower-end paint measurements remain pending.
+## 2026-08-01 — Look #9 uses system clarity without failure language
 
-**Next active Look:** Look #9 — Retro Digital. It must preserve the same behavior while testing terminal-like density, explicit system status, and friendly command language.
+**Milestone:** Version `0.9.7` implements the Routine Completion Loop in Look #9 — Retro Digital and completes the flow across all eight active Looks.
+
+**Presentation:** Today uses an optional action queue, Areas use node rows and attention meters, Sections use a directory, and Chore detail uses a routine record, practical facts, and a completion log.
+
+**Tone boundary:** Terminal and system language may improve clarity, but normal backlog must not be described as an error, malfunction, or failed state. The user is offered available actions rather than commanded to repair the system.
+
+**Action separation:** Every routine row has separate completion and detail targets. Opening a routine never completes it.
+
+**Queue integrity:** Mixed Today queues retain each routine's own Area identifier so navigation and completion always affect the correct record.
+
+**Reversibility:** Completion opens or retains Chore detail and immediately presents `UNDO COMPLETION`.
+
+**Cross-Look state:** Looks #2 through #9 share semantic completion state. Visual switching changes presentation only.
+
+**Accessibility:** Completed state uses text, `[✓]`, and line-through. Critical targets retain the 48 px floor; Large Text actions reach 54 px; Forced Colors uses system colors; Reduced Motion suppresses nonessential transitions.
+
+**Validation boundary:** The validator now encodes eight interactive Looks, forty-eight interactive renderer exports, eight interaction stylesheets, and shared state hooks. Exact-checkout, physical Android, actual screen-reader, single-version browser regression, and Ambient Glass paint evidence remain pending.
+
+**Sequence result:** The Routine Completion Loop is complete across all active Looks. The next recorded feature loop is Task hierarchy, beginning with Look #4 — Zen Focus.
 
 ## Feedback entry template
 

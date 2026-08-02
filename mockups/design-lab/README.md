@@ -2,14 +2,15 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.8.0`  
+**Current version:** `0.8.1`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.8.0 expanded gallery](CHECKLIST-PROGRESS-0.8.0.md)
+- [Latest checklist progress — 0.8.1 Look #5 quality](CHECKLIST-PROGRESS-0.8.1.md)
 - [Expanded gallery directions](EXPANDED-GALLERY-LOOKS.md)
+- [Look #5 quality pass](LOOK-5-QUALITY.md)
 - [Decisions and feedback log](DECISIONS.md)
 - [Round 1 evidence report](ROUND-1-EVIDENCE-0.7.2.md)
 - [Look #1 — Soft Practical Utility baseline](LOOK-1-SOFT-PRACTICAL-UTILITY.md)
@@ -63,9 +64,11 @@ Unrestricted mixing within a single screen remains prohibited because it weakens
 
 ## Evidence status
 
-Looks #2, #3, #4, and #6 completed dedicated code-level quality passes and the 0.7.2 browser evidence run.
+Looks #2, #3, #4, #5, and #6 have completed dedicated code-level quality passes.
 
-Looks #5, #7, #8, and #9 now have initial responsive, Large Text, long-content, reduced-motion, and forced-colors foundations. Their dedicated quality passes and full browser/device evidence are still pending.
+Looks #1, #2, #3, #4, and #6 were included in the 0.7.2 browser evidence run. Look #5 is now ready for the expanded-gallery browser pass after Looks #7, #8, and #9 complete the same quality gate.
+
+Looks #7, #8, and #9 still have only their initial responsive, Large Text, long-content, reduced-motion, and forced-colors foundations.
 
 ## Look #1 comparison reference
 
@@ -96,4 +99,4 @@ Append `capture=labelled` for an evidence frame or `capture=phone` for a clean p
 
 ## Next work
 
-Complete dedicated quality passes for Looks #5, #7, #8, and #9, then extend browser and device evidence across the complete eight-Look gallery.
+Complete the dedicated Look #7 — Bold Utility quality pass, followed by Looks #8 and #9. Then extend browser and device evidence across the complete eight-Look gallery.

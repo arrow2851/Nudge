@@ -1,5 +1,27 @@
 # Design Lab Changelog
 
+## 0.9.1 — 2026-08-01
+
+### Look #3 — Precision Minimal Routine Completion Loop
+
+- Reused the deterministic Routine Completion state engine introduced in 0.9.0
+- Added Precision Minimal Today / Needs Attention with explicit queue and Area counts
+- Added interactive Area, Section, and Chore routes
+- Replaced static completion placeholders with working Complete and Reopen controls
+- Added compact Chore status, recurrence, schedule, duration, and next-state facts
+- Preserved deterministic Light, Moderate, and Deep recurrence advancement
+- Preserved attention-count and All Clear updates
+- Preserved browser-history-compatible route state
+- Preserved semantic completion state while switching between Looks #3 and #4
+- Added `look3-interactive.css` with narrow-screen, Large Text, focus, forced-colors, and reduced-motion handling
+- Raised Precision Minimal critical controls to at least 48 px and Large Text actions to at least 54 px
+- Corrected `nextRoutine` so completed routines are deprioritized after advancing to Upcoming
+- Expanded the validator to cover two interactive Looks, twelve interactive renderer exports, both interactive stylesheets, and shared state hooks
+- Added `LOOK-3-INTERACTIVE.md` and `CHECKLIST-PROGRESS-0.9.1.md`
+- Set Look #5 — Playful Modular as the next interactive implementation
+- Documented that direct cloning and exact-checkout browser execution remain DNS-blocked
+- Kept Look #1, `main`, production storage, and backend behavior unchanged
+
 ## 0.9.0 — 2026-08-01
 
 ### Look #4 — Zen Focus Routine Completion Loop

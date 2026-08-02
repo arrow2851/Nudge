@@ -17,6 +17,7 @@ A successful run exits with status `0`. Failed invariants are printed with a `FA
 - Renderers for Looks #2 through #9 exist
 - The protected Look #1 comparison reference exists
 - Existing and expanded gallery stylesheets exist
+- The Look #5 dedicated quality stylesheet exists
 
 ### Import graph
 
@@ -44,23 +45,24 @@ This produces **168 active-Look route combinations**.
 ### Version and entry point
 
 - Version agreement between `config.js`, `quality.js`, `look1-reference.js`, `index.html`, `README.md`, and the master checklist
-- `index.html` loads the existing styles, `expanded-looks.css`, and review styles
+- `index.html` loads the original Look styles, `expanded-looks.css`, `look5-quality.css`, and review styles
+- Stylesheet order is enforced so Look #5 quality overrides load after the expanded-gallery base and before capture-only review styles
 - `app.js` loads as an ES module
 
 ### Stylesheets
 
 - Existing Look styles remain present
-- `expanded-looks.css` is loaded after the original Look styles and before review capture overrides
+- `expanded-looks.css` remains the shared base for Looks #5, #7, #8, and #9
+- `look5-quality.css` remains a separate auditable override layer
 - All active stylesheets have balanced braces
 
-## Local checks completed for version 0.8.0
+## Code-level checks completed for version 0.8.1
 
-- `renderers/look5.js` passed `node --check`
-- `renderers/look7.js` passed `node --check`
-- `renderers/look8.js` passed `node --check`
-- `renderers/look9.js` passed `node --check`
-- The updated validator passed `node --check`
-- `expanded-looks.css` had balanced opening and closing blocks
+- Look #5 renderer semantics were reviewed after the accessible-label changes
+- `look5-quality.css` block balance was checked
+- The validator was updated to require the file and its load order
+- Contrast ratios were calculated for all alternating Look #5 card surfaces and key controls
+- Shared scenarios, fixture data, and route meaning were not changed
 
 ## What static validation does not replace
 

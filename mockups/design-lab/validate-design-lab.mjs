@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
-const INTERACTIVE_LOOKS = [3, 4, 5, 7];
+const INTERACTIVE_LOOKS = [3, 4, 5, 6, 7];
 const SCENARIOS = ['normal', 'backlog', 'new', 'clear', 'large', 'long', 'large-text'];
 const GALLERY_VIEWS = ['areas', 'area', 'intervention'];
 const INTERACTIVE_VIEWS = ['today', 'areas', 'area', 'section', 'chore', 'intervention'];
@@ -21,14 +21,14 @@ const rendererFunctions = new Map([
   [3, ['renderTodayPrecision', 'renderAreasPrecision', 'renderAreaDetailPrecision', 'renderSectionPrecision', 'renderChorePrecision', 'renderInterventionPrecision']],
   [4, ['renderTodayZen', 'renderAreasZen', 'renderAreaDetailZen', 'renderSectionZen', 'renderChoreZen', 'renderInterventionZen']],
   [5, ['renderTodayPlayful', 'renderAreasPlayful', 'renderAreaDetailPlayful', 'renderSectionPlayful', 'renderChorePlayful', 'renderInterventionPlayful']],
-  [6, ['renderAreasTactile', 'renderAreaDetailTactile', 'renderInterventionTactile']],
+  [6, ['renderTodayTactile', 'renderAreasTactile', 'renderAreaDetailTactile', 'renderSectionTactile', 'renderChoreTactile', 'renderInterventionTactile']],
   [7, ['renderTodayBold', 'renderAreasBold', 'renderAreaDetailBold', 'renderSectionBold', 'renderChoreBold', 'renderInterventionBold']],
   [8, ['renderAreasAmbient', 'renderAreaDetailAmbient', 'renderInterventionAmbient']],
   [9, ['renderAreasRetro', 'renderAreaDetailRetro', 'renderInterventionRetro']]
 ]);
 
 const styles = [
-  'styles.css','foundation.css','look3.css','look3-interactive.css','look4.css','look4-interactive.css','look6.css','look6-quality.css',
+  'styles.css','foundation.css','look3.css','look3-interactive.css','look4.css','look4-interactive.css','look6.css','look6-quality.css','look6-interactive.css',
   'expanded-looks.css','look5-quality.css','look5-interactive.css','look7-quality.css','look7-interactive.css','look8-quality.css','look9-quality.css','review.css'
 ];
 
@@ -117,7 +117,7 @@ function sharedInteractiveContract() {
   ['routine-completion-v1','nextLabel','previousStatus','nextStatus'].forEach(token => {
     check(interaction.includes(token), `interactive-state.js is missing ${token}.`);
   });
-  check(app.includes('new Set([3, 4, 5, 7])'), 'app.js does not register Looks #3, #4, #5, and #7 as interactive.');
+  check(app.includes('new Set([3, 4, 5, 6, 7])'), 'app.js does not register Looks #3, #4, #5, #6, and #7 as interactive.');
   check(utils.includes('completionDelta'), 'nextRoutine does not deprioritize completed routines.');
   check(app.indexOf("const actionTarget") < app.indexOf("const choreButton"), 'Action handling must run before generic chore navigation.');
   passes.push('Checked shared completion, recurrence, undo, route, and state-preservation hooks.');
@@ -172,6 +172,7 @@ function main() {
   lookInteractiveContract(3, 'renderers/look3.js', 'look3-interactive.css', ['.pm-chore-actions','.pm-routine-open']);
   lookInteractiveContract(4, 'renderers/look4.js', 'look4-interactive.css', ['.zen-chore-actions','.zen-routine-open']);
   lookInteractiveContract(5, 'renderers/look5.js', 'look5-interactive.css', ['.pl-chore-actions','.pl-routine-open']);
+  lookInteractiveContract(6, 'renderers/look6.js', 'look6-interactive.css', ['.th-chore-actions','.th-routine-open']);
   lookInteractiveContract(7, 'renderers/look7.js', 'look7-interactive.css', ['.bu-chore-actions','.bu-routine-open']);
   if (shared) {
     fixturesAndRoutes(shared);
@@ -183,7 +184,7 @@ function main() {
   passes.forEach(item => console.log(`PASS  ${item}`));
   failures.forEach(item => console.error(`FAIL  ${item}`));
   if (failures.length) process.exitCode = 1;
-  else console.log('\nAll gallery and Looks #3/#4/#5/#7 interactive checks passed.');
+  else console.log('\nAll gallery and Looks #3/#4/#5/#6/#7 interactive checks passed.');
 }
 
 main();

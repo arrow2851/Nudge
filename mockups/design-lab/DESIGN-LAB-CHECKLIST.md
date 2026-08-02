@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.8.4`  
+**Current version:** `0.8.5`  
 **Purpose:** Maintain a complete gallery of genuinely different visual systems for the same Nudge product, then test pure directions and controlled synthesis without forcing premature elimination.
 
 This file is the source of truth for scope, progress, review gates, and decisions.
@@ -126,7 +126,8 @@ The user has approved Looks #5, #7, #8, and #9 and removed the former mandatory 
 - [x] Three shared screens and seven scenarios
 - [x] Dedicated responsive, contrast, density, semantics, Large Text, and forced-colors quality pass
 - [x] Dedicated quality stylesheet and evidence record
-- [ ] Browser and device evidence
+- [x] Included in 0.8.4 browser presentation evidence
+- [~] Physical-device and actual screen-reader evidence pending
 
 ## Look #6 — Tactile Household
 
@@ -139,21 +140,24 @@ The user has approved Looks #5, #7, #8, and #9 and removed the former mandatory 
 - [x] Three shared screens and seven scenarios
 - [x] Dedicated responsive, contrast, density, tone, semantics, Large Text, and forced-colors quality pass
 - [x] Dedicated quality stylesheet and evidence record
-- [ ] Browser and device evidence
+- [x] Included in 0.8.4 browser presentation evidence
+- [~] Physical-device and actual screen-reader evidence pending
 
 ## Look #8 — Ambient Glass
 
 - [x] Three shared screens and seven scenarios
 - [x] Dedicated responsive, contrast, transparency, fallback, performance-risk, semantics, and forced-colors quality pass
 - [x] Dedicated quality stylesheet and evidence record
-- [ ] Browser and device evidence
+- [x] Included in 0.8.4 browser presentation evidence
+- [~] Physical-device, actual screen-reader, and lower-end hardware paint evidence pending
 
 ## Look #9 — Retro Digital
 
 - [x] Three shared screens and seven scenarios
 - [x] Dedicated responsive, microtext, contrast, meter, semantics, Large Text, and forced-colors quality pass
 - [x] Dedicated quality stylesheet and evidence record
-- [ ] Browser and device evidence
+- [x] Included in 0.8.4 browser presentation evidence
+- [~] Physical-device and actual screen-reader evidence pending
 
 ---
 
@@ -176,12 +180,12 @@ The user has approved Looks #5, #7, #8, and #9 and removed the former mandatory 
 - [x] Relative-import checks
 - [x] Shared fixture checks
 - [x] Renderer export and routing checks
-- [x] Version consistency checks
+- [x] Version consistency checks encoded in the validator
 - [x] Stylesheet load-order checks
 - [x] CSS block-balance checks
 - [x] Route matrix expanded to 168 active-Look combinations
 - [x] Validator includes Look #5, #7, #8, and #9 quality layers
-- [ ] Execute the updated validator in a complete checkout
+- [ ] Execute the updated validator in an exact complete checkout
 
 ---
 
@@ -198,12 +202,27 @@ The user has approved Looks #5, #7, #8, and #9 and removed the former mandatory 
 - [x] Forced-colors and reduced-motion emulation
 - [x] Canonical labelled captures
 
+## Completed in the 0.8.4 evidence run for Looks #5, #7, #8, and #9
+
+- [x] 84 direct routes across four Looks, seven scenarios, and three screens
+- [x] 72 canonical viewport checks across six viewport sizes
+- [x] 28 stress-scenario checks
+- [x] Eight Long Content and Large Text action-reachability checks
+- [x] Forced-colors and reduced-motion emulation
+- [x] Keyboard focus visibility
+- [x] No horizontal-overflow failures
+- [x] No unnamed visible-button failures
+- [x] Minimum tested in-preview control size of 48 × 48 px
+- [x] Three nine-direction comparison contact sheets
+- [x] Narrative and machine-readable repository evidence records
+
 ## Still required
 
-- [ ] Browser evidence for Looks #5, #7, #8, and #9
+- [ ] Exact complete-checkout validator execution
 - [ ] Physical Android viewport checks
 - [ ] Actual screen-reader smoke tests
-- [ ] Comparative contact sheets for all nine directions including Look #1
+- [ ] Ambient Glass lower-end hardware paint/compositing measurements
+- [ ] Single-version browser rerun for every Look from one identical build
 
 ---
 
@@ -242,13 +261,14 @@ Each interactive slice must preserve the same product behavior and support:
 - [x] `0.8.2` — Look #7 Bold Utility quality pass
 - [x] `0.8.3` — Look #8 Ambient Glass quality pass
 - [x] `0.8.4` — Look #9 Retro Digital quality pass and completion of all per-Look code-level quality gates
+- [x] `0.8.5` — Full-gallery browser evidence record, contact sheets, and repository status update
 
 ---
 
 # 9. Current next actions
 
-- [ ] Execute updated complete-checkout validation
-- [ ] Execute browser evidence for Looks #5, #7, #8, and #9
-- [ ] Prepare full-gallery contact sheets
+- [ ] Prepare the interactive-expansion decision record
+- [ ] Define candidate pure-Look, feature-specific, and controlled-synthesis vertical slices without implementing them
+- [ ] Execute updated validation in an exact complete checkout when available
 - [ ] Perform physical Android and actual screen-reader smoke tests when available
-- [ ] Decide later whether interactive expansion uses pure Looks, feature-specific variants, or controlled synthesis
+- [ ] Decide intentionally which vertical-slice strategy to implement

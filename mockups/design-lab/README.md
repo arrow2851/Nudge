@@ -2,13 +2,14 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.10.6`  
+**Current version:** `0.10.7`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.10.6 Look #8 Task hierarchy](CHECKLIST-PROGRESS-0.10.6.md)
+- [Latest checklist progress — 0.10.7 all-Look Task hierarchy](CHECKLIST-PROGRESS-0.10.7.md)
+- [Look #9 Task hierarchy implementation](LOOK-9-TASK-HIERARCHY.md)
 - [Look #8 Task hierarchy implementation](LOOK-8-TASK-HIERARCHY.md)
 - [Look #2 Task hierarchy implementation](LOOK-2-TASK-HIERARCHY.md)
 - [Look #6 Task hierarchy implementation](LOOK-6-TASK-HIERARCHY.md)
@@ -35,11 +36,9 @@ The Design Lab compares alternate visual systems without changing the approved L
 
 Look #1 remains the protected Soft Practical Utility baseline. Active gallery directions are Looks #2 through #9. Every direction remains preserved; the implementation order is a learning sequence, not a ranking or elimination list.
 
-All active directions have completed dedicated code-level quality passes. Browser presentation evidence exists cumulatively across versions 0.7.2 and 0.8.4, although it was not executed from one identical build.
+## Routine Completion — 8 of 8 complete
 
-## Routine Completion complete in every active Look
-
-Looks #2 through #9 all implement:
+Every active Look implements:
 
 ```text
 Today / Needs Attention
@@ -55,9 +54,9 @@ Today / Needs Attention
 
 The eight Looks share semantic routine-completion state. Switching Looks changes presentation without resetting the route or routine result.
 
-## Task hierarchy — 7 of 8 Looks
+## Task hierarchy — 8 of 8 complete
 
-Versions `0.10.0` through `0.10.6` implement the approved simple checklist model in Looks #4, #3, #5, #7, #6, #2, and #8:
+Versions `0.10.0` through `0.10.7` implement the approved simple checklist model in all active Looks:
 
 ```text
 Tasks
@@ -82,44 +81,45 @@ Shared rules include:
 - Reopening a subtask reopens the main task.
 - Turning off main-task mode releases subtasks as regular tasks.
 - Completed items move to the bottom and may be hidden or shown.
-- Native pointer drag plus explicit Move, Indent, and Unindent controls.
-
-Task state uses a separate scenario-isolated Design Lab session-storage namespace. Switching among implemented task Looks changes presentation without resetting the task list or hierarchy.
+- Pointer drag plus explicit Move, Indent, and Unindent controls.
+- One shared scenario-isolated task state across all eight Looks.
 
 ### Look-specific treatment
 
 - **Look #4 — Zen Focus:** calm cards, generous spacing, soft progress, and low-pressure language.
 - **Look #3 — Precision Minimal:** compact operational table, Active/Main/Done metrics, fixed control columns, and explicit progress data.
 - **Look #5 — Playful Modular:** colorful task blocks, friendly progress language, clear hierarchy rails, and positive—but non-scoring—feedback.
-- **Look #7 — Bold Utility:** thick rules, direct controls, factual Active/Main/Done counts, and strong hierarchy rails without failure-state language.
-- **Look #6 — Tactile Household:** paper task cards, drawer-like subtask grouping, physical controls, and satisfying filing cues without defect-based language.
-- **Look #2 — Warm Editorial:** a calm practical page, restrained progress notes, serif task titles, and editorial spacing without reflection or diary requirements.
-- **Look #8 — Ambient Glass:** translucent high-value surfaces, mostly solid task rows, atmospheric depth, and complete solid-mode fallbacks.
+- **Look #7 — Bold Utility:** thick rules, direct controls, factual counts, and strong hierarchy rails without failure-state language.
+- **Look #6 — Tactile Household:** paper task cards, drawer-like subtask grouping, and physical controls without defect-based language.
+- **Look #2 — Warm Editorial:** a calm practical page and restrained progress notes without reflection or diary requirements.
+- **Look #8 — Ambient Glass:** selective translucent surfaces with solid no-blur and Reduced Transparency fallbacks.
+- **Look #9 — Retro Digital:** a neutral task directory with Available/Main/Complete counters and no error, fault, or failure language.
 
-## Task hierarchy sequence
+## Next feature sequence — Intervention-to-action
 
-1. Look #4 — Zen Focus — **implemented**
-2. Look #3 — Precision Minimal — **implemented**
-3. Look #5 — Playful Modular — **implemented**
-4. Look #7 — Bold Utility — **implemented**
-5. Look #6 — Tactile Household — **implemented**
-6. Look #2 — Warm Editorial — **implemented**
-7. Look #8 — Ambient Glass — **implemented**
-8. Look #9 — Retro Digital — **next**
+The next loop uses the same delegated pure-Look order:
 
-After Task hierarchy is implemented across all Looks, the feature order remains Intervention-to-action and then Reusable Lists.
+1. Look #4 — Zen Focus — **next**
+2. Look #3 — Precision Minimal
+3. Look #5 — Playful Modular
+4. Look #7 — Bold Utility
+5. Look #6 — Tactile Household
+6. Look #2 — Warm Editorial
+7. Look #8 — Ambient Glass
+8. Look #9 — Retro Digital
+
+Reusable Lists follows after Intervention-to-action is implemented across all Looks.
 
 ## Validation boundary
 
 The static validator now covers:
 
 - Eight Routine Completion Looks and forty-eight routine renderer exports.
-- Shared Task hierarchy state and action contract.
-- Look #2 through Look #8 task renderers and stylesheets.
-- Add, edit, complete, reopen, main-task, subtask, release, progress, reorder, indent, unindent, and completed-visibility hooks.
+- Eight Task hierarchy renderers and eight dedicated task stylesheets.
+- Shared add, edit, complete, reopen, main-task, subtask, release, progress, reorder, indent, unindent, and visibility behavior.
 - Cross-Look task-state preservation.
-- Responsive, Large Text, Forced Colors, and Reduced Motion contracts.
-- Ambient Glass Reduced Transparency and no-backdrop-filter solid fallbacks for both Routine Completion and Tasks.
+- Responsive, Large Text, Forced Colors, Increased Contrast, Reduced Motion, and Ambient Glass transparency fallbacks.
+- Retro Digital language checks that reject error, fault, and failure terms in the task renderer.
 
 Still pending:
 
@@ -143,21 +143,17 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
+?look=9&screen=tasks&scenario=normal
+?look=9&screen=tasks&scenario=backlog
+?look=9&screen=tasks&scenario=new
+?look=9&screen=tasks&scenario=long
+?look=9&screen=tasks&scenario=large-text
 ?look=8&screen=tasks&scenario=normal
-?look=8&screen=tasks&scenario=backlog
-?look=8&screen=tasks&scenario=new
-?look=8&screen=tasks&scenario=long
-?look=8&screen=tasks&scenario=large-text
-?look=2&screen=tasks&scenario=normal
-?look=6&screen=tasks&scenario=normal
-?look=7&screen=tasks&scenario=normal
-?look=5&screen=tasks&scenario=normal
-?look=3&screen=tasks&scenario=normal
-?look=4&screen=tasks&scenario=normal
+?look=4&screen=intervention&scenario=normal
 ```
 
 Append `capture=labelled` for an evidence frame or `capture=phone` for a clean phone frame.
 
 ## Next work
 
-Implement the same Task hierarchy behavior contract in Look #9 — Retro Digital, preserving system clarity without failure language.
+Implement the Intervention-to-action loop in Look #4 — Zen Focus while preserving the existing Routine Completion and Task hierarchy behavior.

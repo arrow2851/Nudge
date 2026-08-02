@@ -25,12 +25,17 @@ const rendererFunctions = new Map([
   [9, ['renderAreasRetro', 'renderAreaDetailRetro', 'renderInterventionRetro']]
 ]);
 
+const styles = [
+  'styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css',
+  'expanded-looks.css','look5-quality.css','look7-quality.css','look8-quality.css','look9-quality.css','review.css'
+];
+
 function requiredFiles() {
   const files = [
     'index.html','config.js','utils.js','fixtures.js','state.js','controls.js','app.js','quality.js',
-    'styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css','expanded-looks.css','look5-quality.css','look7-quality.css','look8-quality.css','review.css',
+    ...styles,
     'look1-reference.html','look1-reference.css','look1-reference.js','renderers/shared.js',
-    ...LOOKS.map(id => `renderers/look${id}.js`).filter(file => file !== 'renderers/look1.js')
+    ...LOOKS.map(id => `renderers/look${id}.js`)
   ];
   files.forEach(file => check(exists(file), `Missing required file: ${file}`));
   passes.push(`Checked ${files.length} required files.`);
@@ -73,8 +78,7 @@ function fixturesAndRoutes(shared) {
   }
   const validArea = shared.SCENARIOS.normal.areas[0].id;
   for (const look of LOOKS) for (const scenario of SCENARIOS) for (const view of VIEWS) {
-    const state = { look, view, scenario, areaId: view === 'area' ? validArea : null };
-    const url = `?look=${state.look}&screen=${state.view}&scenario=${encodeURIComponent(state.scenario)}${state.areaId ? `&area=${encodeURIComponent(state.areaId)}` : ''}`;
+    const url = `?look=${look}&screen=${view}&scenario=${encodeURIComponent(scenario)}${view === 'area' ? `&area=${encodeURIComponent(validArea)}` : ''}`;
     check(url.includes(`look=${look}`) && url.includes(`screen=${view}`), `Route serialization failed: Look ${look}, ${view}.`);
   }
   passes.push(`Checked ${LOOKS.length * SCENARIOS.length * VIEWS.length} gallery routes.`);
@@ -97,11 +101,10 @@ function renderers() {
 function versionsAndHtml(shared) {
   const version = shared.DESIGN_LAB.version;
   check(read('quality.js').includes(`const VERSION = '${version}'`), 'quality.js version mismatch.');
-  check(read('look1-reference.js').includes(`const VERSION = '${version}'`), 'Look #1 reference version mismatch.');
+  check(read('look1-reference.js').includes('const VERSION = DESIGN_LAB.version'), 'Look #1 reference does not source the shared version.');
   check(read('README.md').includes(`**Current version:** \`${version}\``), 'README version mismatch.');
   check(read('DESIGN-LAB-CHECKLIST.md').includes(`**Current version:** \`${version}\``), 'Checklist version mismatch.');
   const html = read('index.html');
-  const styles = ['styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css','expanded-looks.css','look5-quality.css','look7-quality.css','look8-quality.css','review.css'];
   styles.forEach(file => check(html.includes(`href="${file}"`), `index.html does not load ${file}.`));
   let previous = -1;
   styles.forEach(file => {
@@ -114,7 +117,7 @@ function versionsAndHtml(shared) {
 }
 
 function cssBalance() {
-  const files = ['styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css','expanded-looks.css','look5-quality.css','look7-quality.css','look8-quality.css','review.css','look1-reference.css'];
+  const files = [...styles, 'look1-reference.css'];
   files.forEach(file => {
     const source = read(file).replace(/\/\*[\s\S]*?\*\//g,'');
     check(source.split('{').length === source.split('}').length, `${file} has unbalanced braces.`);

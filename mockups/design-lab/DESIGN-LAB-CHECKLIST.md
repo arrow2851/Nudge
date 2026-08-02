@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.8.0`  
+**Current version:** `0.8.1`  
 **Purpose:** Maintain a complete gallery of genuinely different visual systems for the same Nudge product, then test pure directions and controlled synthesis without forcing premature elimination.
 
 This file is the source of truth for scope, progress, review gates, and decisions.
@@ -131,7 +131,8 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 - [x] Intervention implemented
 - [x] Seven scenarios supported
 - [x] Initial narrow-screen, Large Text, long-content, reduced-motion, and forced-colors foundations
-- [ ] Dedicated responsive, contrast, density, semantics, and blocking-quality pass
+- [x] Dedicated responsive, contrast, density, semantics, and blocking-quality pass
+- [x] Dedicated quality stylesheet and evidence record
 - [ ] Browser and device evidence
 
 ## Look #6 — Tactile Household
@@ -149,7 +150,7 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 - [x] Intervention implemented
 - [x] Seven scenarios supported
 - [x] Initial narrow-screen, Large Text, long-content, reduced-motion, and forced-colors foundations
-- [ ] Dedicated responsive, contrast, density, semantics, and blocking-quality pass
+- [ ] Dedicated responsive, contrast, density, tone, semantics, and blocking-quality pass
 - [ ] Browser and device evidence
 
 ## Look #8 — Ambient Glass
@@ -200,6 +201,8 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 - [x] Route matrix expanded from 84 to 168 active-Look combinations
 - [x] New renderer files passed local `node --check`
 - [x] `expanded-looks.css` passed local brace-balance checking
+- [x] Look #5 quality stylesheet added and load order enforced
+- [x] Look #5 contrast combinations calculated
 - [ ] Execute updated validator in a complete checkout
 
 ---
@@ -257,12 +260,12 @@ Each interactive slice must preserve the same product behavior and support:
 - [x] `0.6.0–0.6.1` — Tactile Household implementation and quality
 - [x] `0.7.0–0.7.2` — Review tooling, Look #1 mapping, browser evidence, and shared interaction fix
 - [x] `0.8.0` — Complete gallery with Looks #5, #7, #8, and #9
+- [x] `0.8.1` — Playful Modular dedicated quality pass
 
 ---
 
 # 9. Current next actions
 
-- [ ] Complete Look #5 quality pass
 - [ ] Complete Look #7 quality pass
 - [ ] Complete Look #8 quality pass
 - [ ] Complete Look #9 quality pass

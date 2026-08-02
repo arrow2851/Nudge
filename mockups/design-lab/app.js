@@ -19,6 +19,7 @@ import {
 } from './task-state.js';
 import { renderAreaDetail, renderAreasEditorial, renderChoreEditorial, renderInterventionEditorial, renderSectionEditorial, renderTodayEditorial } from './renderers/look2.js';
 import { renderAreaDetailPrecision, renderAreasPrecision, renderChorePrecision, renderInterventionPrecision, renderSectionPrecision, renderTodayPrecision } from './renderers/look3.js';
+import { renderTasksPrecision } from './renderers/look3-tasks.js';
 import { renderAreaDetailZen, renderAreasZen, renderChoreZen, renderInterventionZen, renderSectionZen, renderTodayZen } from './renderers/look4.js';
 import { renderTasksZen } from './renderers/look4-tasks.js';
 import { renderAreaDetailPlayful, renderAreasPlayful, renderChorePlayful, renderInterventionPlayful, renderSectionPlayful, renderTodayPlayful } from './renderers/look5.js';
@@ -30,7 +31,23 @@ import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
 const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
-const TASK_HIERARCHY_LOOKS = new Set([4]);
+const TASK_HIERARCHY_LOOKS = new Set([3, 4]);
+
+const ROUTINE_RENDERERS = new Map([
+  [2, { today: renderTodayEditorial, areas: renderAreasEditorial, area: renderAreaDetail, section: renderSectionEditorial, chore: renderChoreEditorial, intervention: renderInterventionEditorial }],
+  [3, { today: renderTodayPrecision, areas: renderAreasPrecision, area: renderAreaDetailPrecision, section: renderSectionPrecision, chore: renderChorePrecision, intervention: renderInterventionPrecision }],
+  [4, { today: renderTodayZen, areas: renderAreasZen, area: renderAreaDetailZen, section: renderSectionZen, chore: renderChoreZen, intervention: renderInterventionZen }],
+  [5, { today: renderTodayPlayful, areas: renderAreasPlayful, area: renderAreaDetailPlayful, section: renderSectionPlayful, chore: renderChorePlayful, intervention: renderInterventionPlayful }],
+  [6, { today: renderTodayTactile, areas: renderAreasTactile, area: renderAreaDetailTactile, section: renderSectionTactile, chore: renderChoreTactile, intervention: renderInterventionTactile }],
+  [7, { today: renderTodayBold, areas: renderAreasBold, area: renderAreaDetailBold, section: renderSectionBold, chore: renderChoreBold, intervention: renderInterventionBold }],
+  [8, { today: renderTodayAmbient, areas: renderAreasAmbient, area: renderAreaDetailAmbient, section: renderSectionAmbient, chore: renderChoreAmbient, intervention: renderInterventionAmbient }],
+  [9, { today: renderTodayRetro, areas: renderAreasRetro, area: renderAreaDetailRetro, section: renderSectionRetro, chore: renderChoreRetro, intervention: renderInterventionRetro }]
+]);
+
+const TASK_RENDERERS = new Map([
+  [3, renderTasksPrecision],
+  [4, renderTasksZen]
+]);
 
 let state = readStateFromLocation();
 let currentData = null;
@@ -45,84 +62,23 @@ const elements = {
   toastRoot: document.querySelector('#toast-root')
 };
 
+function renderRoutine(lookId, data) {
+  const renderer = ROUTINE_RENDERERS.get(lookId)?.[state.view];
+  if (!renderer) return renderUnsupported('This interactive screen is implemented in every active Design Lab Look.');
+  if (state.view === 'area') return renderer(data, state.areaId, renderUnsupported);
+  if (state.view === 'section') return renderer(data, state.areaId, state.sectionId, renderUnsupported);
+  if (state.view === 'chore') return renderer(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
+  return renderer(data);
+}
+
 function renderLook(look, data, tasks) {
-  if (look.id === 2) {
-    if (state.view === 'today') return renderTodayEditorial(data);
-    if (state.view === 'intervention') return renderInterventionEditorial(data);
-    if (state.view === 'chore') return renderChoreEditorial(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
-    if (state.view === 'section') return renderSectionEditorial(data, state.areaId, state.sectionId, renderUnsupported);
-    if (state.view === 'area') return renderAreaDetail(data, state.areaId, renderUnsupported);
-    if (state.view === 'areas') return renderAreasEditorial(data);
-  }
-
-  if (look.id === 3) {
-    if (state.view === 'today') return renderTodayPrecision(data);
-    if (state.view === 'intervention') return renderInterventionPrecision(data);
-    if (state.view === 'chore') return renderChorePrecision(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
-    if (state.view === 'section') return renderSectionPrecision(data, state.areaId, state.sectionId, renderUnsupported);
-    if (state.view === 'area') return renderAreaDetailPrecision(data, state.areaId, renderUnsupported);
-    if (state.view === 'areas') return renderAreasPrecision(data);
-  }
-
-  if (look.id === 4) {
-    if (state.view === 'tasks') return renderTasksZen(tasks);
-    if (state.view === 'today') return renderTodayZen(data);
-    if (state.view === 'intervention') return renderInterventionZen(data);
-    if (state.view === 'chore') return renderChoreZen(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
-    if (state.view === 'section') return renderSectionZen(data, state.areaId, state.sectionId, renderUnsupported);
-    if (state.view === 'area') return renderAreaDetailZen(data, state.areaId, renderUnsupported);
-    if (state.view === 'areas') return renderAreasZen(data);
-  }
-
-  if (look.id === 5) {
-    if (state.view === 'today') return renderTodayPlayful(data);
-    if (state.view === 'intervention') return renderInterventionPlayful(data);
-    if (state.view === 'chore') return renderChorePlayful(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
-    if (state.view === 'section') return renderSectionPlayful(data, state.areaId, state.sectionId, renderUnsupported);
-    if (state.view === 'area') return renderAreaDetailPlayful(data, state.areaId, renderUnsupported);
-    if (state.view === 'areas') return renderAreasPlayful(data);
-  }
-
-  if (look.id === 6) {
-    if (state.view === 'today') return renderTodayTactile(data);
-    if (state.view === 'intervention') return renderInterventionTactile(data);
-    if (state.view === 'chore') return renderChoreTactile(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
-    if (state.view === 'section') return renderSectionTactile(data, state.areaId, state.sectionId, renderUnsupported);
-    if (state.view === 'area') return renderAreaDetailTactile(data, state.areaId, renderUnsupported);
-    if (state.view === 'areas') return renderAreasTactile(data);
-  }
-
-  if (look.id === 7) {
-    if (state.view === 'today') return renderTodayBold(data);
-    if (state.view === 'intervention') return renderInterventionBold(data);
-    if (state.view === 'chore') return renderChoreBold(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
-    if (state.view === 'section') return renderSectionBold(data, state.areaId, state.sectionId, renderUnsupported);
-    if (state.view === 'area') return renderAreaDetailBold(data, state.areaId, renderUnsupported);
-    if (state.view === 'areas') return renderAreasBold(data);
-  }
-
-  if (look.id === 8) {
-    if (state.view === 'today') return renderTodayAmbient(data);
-    if (state.view === 'intervention') return renderInterventionAmbient(data);
-    if (state.view === 'chore') return renderChoreAmbient(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
-    if (state.view === 'section') return renderSectionAmbient(data, state.areaId, state.sectionId, renderUnsupported);
-    if (state.view === 'area') return renderAreaDetailAmbient(data, state.areaId, renderUnsupported);
-    if (state.view === 'areas') return renderAreasAmbient(data);
-  }
-
-  if (look.id === 9) {
-    if (state.view === 'today') return renderTodayRetro(data);
-    if (state.view === 'intervention') return renderInterventionRetro(data);
-    if (state.view === 'chore') return renderChoreRetro(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
-    if (state.view === 'section') return renderSectionRetro(data, state.areaId, state.sectionId, renderUnsupported);
-    if (state.view === 'area') return renderAreaDetailRetro(data, state.areaId, renderUnsupported);
-    if (state.view === 'areas') return renderAreasRetro(data);
-  }
-
   if (state.view === 'tasks') {
-    return renderUnsupported('The Task hierarchy loop is currently implemented in Look #4 — Zen Focus. Task state remains preserved while you compare Looks.');
+    const renderer = TASK_RENDERERS.get(look.id);
+    return renderer
+      ? renderer(tasks)
+      : renderUnsupported('The Task hierarchy loop is currently implemented in Looks #3 and #4. Task state remains preserved while you compare Looks.');
   }
-  return renderUnsupported('This interactive screen is implemented in every active Design Lab Look.');
+  return renderRoutine(look.id, data);
 }
 
 function syncBottomNavigation() {
@@ -146,8 +102,7 @@ function resetPath() {
 }
 
 function normalizeStateForData(data) {
-  if (state.view === 'tasks') return;
-  if (!['area', 'section', 'chore'].includes(state.view)) return;
+  if (state.view === 'tasks' || !['area', 'section', 'chore'].includes(state.view)) return;
   const area = data.areas.find(item => item.id === state.areaId);
   if (!area) {
     state.view = INTERACTIVE_LOOKS.has(state.look) ? 'today' : 'areas';
@@ -344,10 +299,7 @@ document.addEventListener('input', event => {
 document.addEventListener('dragstart', event => {
   const handle = event.target.closest('[data-task-drag]');
   if (!handle) return;
-  draggedTask = {
-    id: handle.dataset.taskId,
-    parentId: handle.dataset.parentId || ''
-  };
+  draggedTask = { id: handle.dataset.taskId, parentId: handle.dataset.parentId || '' };
   event.dataTransfer.effectAllowed = 'move';
   event.dataTransfer.setData('text/plain', draggedTask.id);
 });
@@ -388,7 +340,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 4;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 3;
     render({ routeAction: 'push' });
     return;
   }

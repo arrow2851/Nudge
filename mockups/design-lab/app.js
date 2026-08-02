@@ -192,10 +192,15 @@ function runAction(action, target) {
     'reset-review': resetReviewState,
     'reset-route': resetReviewState,
     'complete-routine': () => {
-      const { routine } = routineFromTarget(target);
+      const { area, routine } = routineFromTarget(target);
       const completion = completeRoutine(state.scenario, routine);
-      if (!completion) return;
-      render();
+      if (!area || !routine || !completion) return;
+      const routeChanged = state.view !== 'chore' || state.choreId !== routine.id;
+      state.view = 'chore';
+      state.areaId = area.id;
+      state.sectionId = routine.section || 'General';
+      state.choreId = routine.id;
+      render({ routeAction: routeChanged ? 'push' : 'none' });
       showToast(`Completed. ${completion.nextLabel}.`);
     },
     'reopen-routine': () => {

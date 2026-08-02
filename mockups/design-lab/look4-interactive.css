@@ -4,6 +4,11 @@ html[data-look="4"] .zen-chore-page {
   min-height: 100%;
 }
 
+html[data-look="4"] .zen-focus-card > button,
+html[data-look="4"] .zen-back {
+  min-height: 48px;
+}
+
 html[data-look="4"] .zen-clear-card,
 html[data-look="4"] .zen-completion-card {
   display: flex;

@@ -3,7 +3,7 @@ import { SCENARIOS } from './fixtures.js';
 import { esc } from './utils.js';
 
 const TASK_HIERARCHY_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
-const INTERVENTION_ACTION_LOOKS = new Set([3, 4, 5]);
+const INTERVENTION_ACTION_LOOKS = new Set([3, 4, 5, 7]);
 
 export function renderReviewControls(state, data, elements) {
   elements.lookControls.innerHTML = LOOKS.map(look => `
@@ -26,7 +26,7 @@ export function renderReviewControls(state, data, elements) {
     ? ' Task hierarchy is implemented in every active Design Lab Look.'
     : '';
   const interventionNote = state.view === 'intervention' && !INTERVENTION_ACTION_LOOKS.has(state.look)
-    ? ' Intervention-to-action state is currently implemented in Looks #3, #4, and #5; the suggestion screen remains available for visual comparison in other Looks.'
+    ? ' Intervention-to-action state is currently implemented in Looks #3, #4, #5, and #7; the suggestion screen remains available for visual comparison in other Looks.'
     : '';
   document.querySelector('#look-kicker').textContent = `Look #${look.id}`;
   document.querySelector('#look-name').textContent = look.name;

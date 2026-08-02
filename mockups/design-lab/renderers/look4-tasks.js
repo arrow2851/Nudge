@@ -9,7 +9,15 @@ function taskPath(item, parentId = '') {
   return `data-task-id="${esc(item.id)}" data-parent-id="${esc(parentId)}"`;
 }
 
-function taskSettings(item, parentId, state, index, total) {
+function movementFor(item, visibleItems) {
+  const peers = visibleItems.filter(candidate => candidate.completed === item.completed);
+  return {
+    index: peers.findIndex(candidate => candidate.id === item.id),
+    total: peers.length
+  };
+}
+
+function taskSettings(item, parentId, state, index, total, canIndent) {
   if (state.openSettingsId !== item.id) return '';
   const isSubtask = Boolean(parentId);
   return `
@@ -21,7 +29,7 @@ function taskSettings(item, parentId, state, index, total) {
       ${isSubtask ? `
         <button data-action="unindent-task" ${taskPath(item, parentId)}>Make regular task</button>` : `
         <button data-action="toggle-main-task" ${taskPath(item)} aria-pressed="${item.main}">${item.main ? 'Turn off main task' : 'Set as main task'}</button>
-        ${!item.main && index > 0 ? `<button data-action="indent-task" ${taskPath(item)}>Make subtask of previous</button>` : ''}`}
+        ${!item.main && canIndent ? `<button data-action="indent-task" ${taskPath(item)}>Make subtask of previous</button>` : ''}`}
       <div class="zen-task-move-controls" aria-label="Move task">
         <button data-action="move-task-up" ${taskPath(item, parentId)} ${index === 0 ? 'disabled' : ''}>Move up</button>
         <button data-action="move-task-down" ${taskPath(item, parentId)} ${index === total - 1 ? 'disabled' : ''}>Move down</button>
@@ -29,7 +37,7 @@ function taskSettings(item, parentId, state, index, total) {
     </div>`;
 }
 
-function taskRow(item, state, { parentId = '', index = 0, total = 1 } = {}) {
+function taskRow(item, state, { parentId = '', index = 0, total = 1, canIndent = false } = {}) {
   const isSubtask = Boolean(parentId);
   const title = item.title || 'Untitled task';
   const settingsOpen = state.openSettingsId === item.id;
@@ -42,11 +50,15 @@ function taskRow(item, state, { parentId = '', index = 0, total = 1 } = {}) {
       <button class="zen-task-disclosure" data-action="toggle-task-settings" ${taskPath(item, parentId)} aria-expanded="${settingsOpen}" aria-label="${settingsOpen ? 'Close' : 'Open'} settings for ${esc(title)}">›</button>
       ${item.main && !isSubtask ? `<button class="zen-task-subtask-add" data-action="add-subtask" ${taskPath(item)} aria-label="Add subtask to ${esc(title)}">＋</button>` : '<span class="zen-task-add-spacer" aria-hidden="true"></span>'}
     </div>
-    ${taskSettings(item, parentId, state, index, total)}`;
+    ${taskSettings(item, parentId, state, index, total, canIndent)}`;
 }
 
-function mainTask(item, state, index, total) {
+function mainTask(item, state, visibleItems) {
   const progress = taskProgress(item);
+  const movement = movementFor(item, visibleItems);
+  const itemIndex = visibleItems.findIndex(candidate => candidate.id === item.id);
+  const previous = visibleItems[itemIndex - 1];
+  const canIndent = Boolean(previous && previous.completed === item.completed && !item.children.length);
   const visibleChildren = state.hideCompleted
     ? item.children.filter(child => !child.completed)
     : sortedTasks(item.children);
@@ -57,14 +69,16 @@ function mainTask(item, state, index, total) {
           <div><strong>${progress.total ? `${progress.done} of ${progress.total} subtasks` : 'No subtasks yet'}</strong><span>${progress.percent}%</span></div>
           <span class="zen-task-progress-track" aria-hidden="true"><i style="width:${progress.percent}%"></i></span>
         </div>` : ''}
-      ${taskRow(item, state, { index, total })}
+      ${taskRow(item, state, { ...movement, canIndent })}
       ${item.main ? `
         <div class="zen-subtask-list" aria-label="Subtasks for ${esc(item.title || 'untitled task')}">
-          ${visibleChildren.map((child, childIndex) => taskRow(child, state, {
-            parentId: item.id,
-            index: childIndex,
-            total: visibleChildren.length
-          })).join('') || '<p class="zen-task-quiet">No visible subtasks. Use the plus button to add one.</p>'}
+          ${visibleChildren.map(child => {
+            const childMovement = movementFor(child, visibleChildren);
+            return taskRow(child, state, {
+              parentId: item.id,
+              ...childMovement
+            });
+          }).join('') || '<p class="zen-task-quiet">No visible subtasks. Use the plus button to add one.</p>'}
         </div>` : ''}
     </article>`;
 }
@@ -92,7 +106,7 @@ export function renderTasksZen(state) {
       </div>
 
       <section class="zen-task-list" aria-label="Task list">
-        ${visible.length ? visible.map((item, index) => mainTask(item, state, index, visible.length)).join('') : `
+        ${visible.length ? visible.map(item => mainTask(item, state, visible)).join('') : `
           <article class="zen-task-empty">
             <span aria-hidden="true">✓</span>
             <h2>${state.tasks.length ? 'Completed tasks are hidden.' : 'Nothing here yet.'}</h2>

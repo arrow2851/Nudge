@@ -8,7 +8,7 @@ This file records review decisions, intentional interaction differences, plan ad
 
 **Decision:** Create `feature/design-lab`; keep all experimental files under `mockups/design-lab/`; preserve Look #1 on `main`.
 
-**Shortlist:**
+**Initial shortlist:**
 
 - Look #2 — Warm Editorial
 - Look #3 — Precision Minimal
@@ -17,11 +17,9 @@ This file records review decisions, intentional interaction differences, plan ad
 
 **Round 1 screens:** Areas overview, representative Area detail, and Intervention.
 
-**Next active milestone:** Finish the shared fixture and Look #2 stress-state readiness, then implement Look #3.
+## 2026-08-01 — Shared comparison fixture
 
-## 2026-08-01 — Shared Round 1 fixture
-
-**Reason:** Every Look requires equivalent content and stress states for a fair visual comparison.
+**Reason:** Every Look requires equivalent content and stress states for a fair comparison.
 
 **Decision:** Use seven shared scenarios: Normal Day, Heavy Backlog, New User, All Clear, Large Household, Long Content, and Large Text.
 
@@ -29,17 +27,28 @@ This file records review decisions, intentional interaction differences, plan ad
 
 **Intentional differences allowed:** Placement, typography, color, density, iconography, motion intent, and wording tone where semantic meaning remains equivalent.
 
-**Differences not allowed during Round 1:** Additional functionality, easier data, fewer states, altered urgency, or different action availability.
+**Differences not allowed:** Additional functionality, easier data, fewer states, altered urgency, or different action availability.
 
-## 2026-08-01 — Look #2 Round 1 interaction boundaries
+## 2026-08-01 — Keep every visual direction
 
-**Areas overview:** Flat editorial index rather than Look #1 card treatment.
+**User decision:** The user likes all current directions and does not want to choose a single Look or eliminate the others.
 
-**Area detail:** Editorial section rules and flat routine rows; functionality remains simulated at the same Round 1 level.
+**Plan adjustment:** Promote every deferred numbered direction and treat the Design Lab as a complete gallery rather than a forced finalist funnel.
 
-**Intervention:** Full-screen editorial pause with nonjudgmental copy and three equivalent actions: Start, Choose something else, and Not now.
+**New active directions:**
 
-**Creation and completion:** Remain simulated until finalist vertical slices. This prevents Look #2 from receiving more functionality than later Round 1 Looks.
+- Look #5 — Playful Modular
+- Look #7 — Bold Utility
+- Look #8 — Ambient Glass
+- Look #9 — Retro Digital
+
+**Result:** Looks #2 through #9 are all active gallery directions. Look #1 remains the protected baseline reference.
+
+**Selection rule removed:** The previous requirement to choose two or three finalists before continuing is no longer active.
+
+**Replacement rule:** A future interactive prototype may preserve a pure Look, use different Looks for separate experimental variants, or use controlled synthesis. Controlled synthesis requires one dominant system and documented borrowed components. Unrestricted mixing within a screen is not allowed.
+
+**Dark variants:** Still deferred as variants rather than separate numbered Looks unless explicitly promoted later.
 
 ## Feedback entry template
 

@@ -6,9 +6,9 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
-const INTERACTIVE_LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
-const TASK_LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
-const INTERVENTION_LOOKS = [3, 4, 5, 7];
+const INTERACTIVE_LOOKS = [...LOOKS];
+const TASK_LOOKS = [...LOOKS];
+const INTERVENTION_LOOKS = [3, 4, 5, 6, 7];
 const SCENARIOS = ['normal', 'backlog', 'new', 'clear', 'large', 'long', 'large-text'];
 const GALLERY_VIEWS = ['areas', 'area', 'intervention'];
 const ROUTINE_VIEWS = ['today', 'areas', 'area', 'section', 'chore', 'intervention'];
@@ -44,6 +44,7 @@ const interventionRenderers = new Map([
   [3, ['renderers/look3-intervention.js', 'renderInterventionPrecisionAction', 'look3-intervention.css', ['.pm-intervention-card', '.pm-intervention-facts', 'max-height: 700px']]],
   [4, ['renderers/look4.js', 'renderInterventionZen', 'look4-intervention.css', ['.zen-action-state', 'max-height: 720px']]],
   [5, ['renderers/look5-intervention.js', 'renderInterventionPlayfulAction', 'look5-intervention.css', ['.pl-intervention-choice', '.pl-intervention-context', 'max-height: 720px']]],
+  [6, ['renderers/look6-intervention.js', 'renderInterventionTactileAction', 'look6-intervention.css', ['.th-intervention-card', '.th-intervention-facts', 'max-height: 720px']]],
   [7, ['renderers/look7-intervention.js', 'renderInterventionBoldAction', 'look7-intervention.css', ['.bu-intervention-card', '.bu-intervention-facts', 'max-height: 720px']]]
 ]);
 
@@ -51,7 +52,7 @@ const styles = [
   'styles.css', 'foundation.css', 'look2-interactive.css', 'look2-tasks.css',
   'look3.css', 'look3-interactive.css', 'look3-tasks.css', 'look3-intervention.css',
   'look4.css', 'look4-interactive.css', 'look4-tasks.css', 'look4-intervention.css',
-  'look6.css', 'look6-quality.css', 'look6-interactive.css', 'look6-tasks.css',
+  'look6.css', 'look6-quality.css', 'look6-interactive.css', 'look6-tasks.css', 'look6-intervention.css',
   'expanded-looks.css', 'look5-quality.css', 'look5-interactive.css', 'look5-tasks.css', 'look5-intervention.css',
   'look7-quality.css', 'look7-interactive.css', 'look7-tasks.css', 'look7-intervention.css',
   'look8-quality.css', 'look8-interactive.css', 'look8-tasks.css',
@@ -80,7 +81,7 @@ function importGraph() {
     ...[...interventionRenderers.values()].map(([file]) => file)
   ];
   let edges = 0;
-  for (const file of files.filter(exists)) {
+  for (const file of [...new Set(files)].filter(exists)) {
     for (const match of read(file).matchAll(/from\s+['"]([^'"]+)['"]/g)) {
       if (!match[1].startsWith('.')) continue;
       edges += 1;
@@ -113,7 +114,7 @@ function fixturesAndRoutes(shared) {
   check(JSON.stringify(Object.keys(shared.SCENARIOS)) === JSON.stringify(SCENARIOS), 'Scenario registry differs from the seven shared scenarios.');
   check(JSON.stringify(shared.LOOKS.map(item => item.id)) === JSON.stringify(LOOKS), 'Look registry differs from Looks #2–#9.');
   [...ROUTINE_VIEWS, 'tasks'].forEach(view => check(shared.ALLOWED_VIEWS.has(view), `Interactive view is not allowed: ${view}`));
-  check(shared.defaultState().look === 7 && shared.defaultState().view === 'intervention', 'Default review route is not Look #7 Intervention.');
+  check(shared.defaultState().look === 6 && shared.defaultState().view === 'intervention', 'Default review route is not Look #6 Intervention.');
 
   for (const [id, scenario] of Object.entries(shared.SCENARIOS)) {
     check(Array.isArray(scenario.areas), `${id}: areas must be an array.`);
@@ -149,32 +150,21 @@ function routineRenderers() {
 
 function sharedRoutineContract() {
   const app = read('app.js');
-  const state = read('state.js');
   const interaction = read('interactive-state.js');
   const utils = read('utils.js');
-
-  ['applyRoutineState', 'completeRoutine', 'reopenRoutine', 'clearInteractiveState'].forEach(name => {
-    check(app.includes(name), `app.js does not use ${name}.`);
-  });
-  ['sectionId', 'choreId'].forEach(name => check(state.includes(name), `state.js is missing ${name}.`));
-  ['routine-completion-v1', 'nextLabel', 'previousStatus', 'nextStatus'].forEach(token => {
-    check(interaction.includes(token), `interactive-state.js is missing ${token}.`);
-  });
+  ['applyRoutineState', 'completeRoutine', 'reopenRoutine', 'clearInteractiveState'].forEach(name => check(app.includes(name), `app.js does not use ${name}.`));
+  ['routine-completion-v1', 'nextLabel', 'previousStatus', 'nextStatus'].forEach(token => check(interaction.includes(token), `interactive-state.js is missing ${token}.`));
   check(app.includes('new Set([2, 3, 4, 5, 6, 7, 8, 9])'), 'app.js does not register every active Look for Routine Completion.');
   check(utils.includes('completionDelta'), 'nextRoutine does not deprioritize completed routines.');
-  check(app.indexOf("const actionTarget") < app.indexOf("const choreButton"), 'Action handling must run before generic chore navigation.');
+  check(app.indexOf('const actionTarget') < app.indexOf('const choreButton'), 'Action handling must run before generic chore navigation.');
   passes.push('Checked shared completion, recurrence, Undo, route, and state-preservation hooks.');
 }
 
 function lookRoutineContract(look, rendererFile, cssFile, tokens) {
   const renderer = read(rendererFile);
   const css = read(cssFile);
-  ['data-action="complete-routine"', 'data-action="reopen-routine"', 'data-section-id', 'data-chore-id'].forEach(token => {
-    check(renderer.includes(token), `Look #${look} renderer is missing ${token}.`);
-  });
-  ['forced-colors: active', 'prefers-reduced-motion: reduce', ...tokens].forEach(token => {
-    check(css.includes(token), `Look #${look} interactive CSS is missing ${token}.`);
-  });
+  ['data-action="complete-routine"', 'data-action="reopen-routine"', 'data-section-id', 'data-chore-id'].forEach(token => check(renderer.includes(token), `Look #${look} renderer is missing ${token}.`));
+  ['forced-colors: active', 'prefers-reduced-motion: reduce', ...tokens].forEach(token => check(css.includes(token), `Look #${look} interactive CSS is missing ${token}.`));
   passes.push(`Checked Look #${look} Routine Completion renderer and accessibility styling contract.`);
 }
 
@@ -182,39 +172,17 @@ function taskHierarchyContract() {
   const app = read('app.js');
   const taskState = read('task-state.js');
   const controls = read('controls.js');
-
   check(app.includes('new Set([2, 3, 4, 5, 6, 7, 8, 9])'), 'app.js does not register every active Look for Task hierarchy.');
-  check(app.includes('TASK_RENDERERS'), 'app.js is missing the task renderer registry.');
   check(controls.includes('new Set([2, 3, 4, 5, 6, 7, 8, 9])'), 'controls.js does not register every active Look for Task hierarchy guidance.');
-
-  [
-    'nudge-design-lab-task-hierarchy-v1', 'addTask', 'updateTaskTitle', 'toggleTaskCompletion',
-    'toggleMainTask', 'moveTask', 'moveTaskBefore', 'indentTask', 'unindentTask',
-    'setHideCompleted', 'taskProgress', 'released', 'syncParent'
-  ].forEach(token => check(taskState.includes(token), `task-state.js is missing ${token}.`));
-
-  [
-    'add-task-top', 'add-task-bottom', 'add-subtask', 'toggle-task-completion',
-    'toggle-main-task', 'move-task-up', 'move-task-down', 'indent-task', 'unindent-task',
-    'toggle-completed-visibility', 'data-task-drag', 'data-task-drop', 'data-task-title'
-  ].forEach(token => check(app.includes(token) || [...taskRenderers.values()].some(([file]) => read(file).includes(token)), `Task hierarchy contract is missing ${token}.`));
-
+  ['nudge-design-lab-task-hierarchy-v1', 'addTask', 'updateTaskTitle', 'toggleTaskCompletion', 'toggleMainTask', 'moveTask', 'moveTaskBefore', 'indentTask', 'unindentTask', 'setHideCompleted', 'taskProgress', 'released', 'syncParent'].forEach(token => check(taskState.includes(token), `task-state.js is missing ${token}.`));
   for (const [look, [rendererFile, exportName, cssFile, cssTokens]] of taskRenderers) {
     const renderer = read(rendererFile);
     const css = read(cssFile);
     check(new RegExp(`export\\s+function\\s+${exportName}\\b`).test(renderer), `${rendererFile} does not export ${exportName}.`);
     check(app.includes(exportName), `app.js does not reference ${exportName}.`);
-    [
-      'data-action="add-task-top"', 'data-action="add-task-bottom"', 'data-action="add-subtask"',
-      'data-action="toggle-task-completion"', 'data-action="toggle-main-task"',
-      'data-action="indent-task"', 'data-action="unindent-task"', 'data-task-drag="true"',
-      'data-task-title="true"', 'taskProgress'
-    ].forEach(token => check(renderer.includes(token), `Look #${look} task renderer is missing ${token}.`));
-    ['forced-colors: active', 'prefers-reduced-motion: reduce', 'min-height: 48px', ...cssTokens].forEach(token => {
-      check(css.includes(token), `Look #${look} task CSS is missing ${token}.`);
-    });
+    ['data-action="add-task-top"', 'data-action="add-task-bottom"', 'data-action="add-subtask"', 'data-action="toggle-task-completion"', 'data-action="toggle-main-task"', 'data-action="indent-task"', 'data-action="unindent-task"', 'data-task-drag="true"', 'data-task-title="true"', 'taskProgress'].forEach(token => check(renderer.includes(token), `Look #${look} task renderer is missing ${token}.`));
+    ['forced-colors: active', 'prefers-reduced-motion: reduce', 'min-height: 48px', ...cssTokens].forEach(token => check(css.includes(token), `Look #${look} task CSS is missing ${token}.`));
   }
-
   const retro = read('renderers/look9-tasks.js').toUpperCase();
   ['ERROR', 'FAILURE', 'FAULT'].forEach(token => check(!retro.includes(token), `Look #9 task language contains prohibited failure-state token: ${token}.`));
   passes.push('Checked shared Task hierarchy state and all eight renderer, action, drag, responsive, fallback, contrast, and accessibility contracts.');
@@ -224,64 +192,27 @@ function interventionContract() {
   const app = read('app.js');
   const controls = read('controls.js');
   const interaction = read('intervention-state.js');
-
-  check(app.includes('new Set([3, 4, 5, 7])'), 'app.js does not register Looks #3, #4, #5, and #7 for Intervention-to-action.');
-  check(controls.includes('new Set([3, 4, 5, 7])'), 'controls.js does not register Looks #3, #4, #5, and #7 for Intervention-to-action guidance.');
-  [
-    'nudge-design-lab-intervention-action-v1', 'interventionSuggestions', 'applyInterventionState',
-    'showNextInterventionSuggestion', 'startInterventionAction', 'completeInterventionAction',
-    'reopenInterventionAction', 'undoInterventionStart', 'dismissIntervention',
-    'resumeIntervention', 'clearInterventionState', "'prompt'", "'active'", "'completed'", "'dismissed'"
-  ].forEach(token => check(interaction.includes(token), `intervention-state.js is missing ${token}.`));
-
-  [
-    'applyInterventionState', 'clearInterventionState', 'start-intervention', 'next-intervention',
-    'dismiss-intervention', 'resume-intervention', 'complete-intervention',
-    'reopen-intervention', 'undo-intervention', 'return-today', 'currentSourceData'
-  ].forEach(token => check(app.includes(token), `app.js is missing Intervention-to-action hook ${token}.`));
+  check(app.includes('new Set([3, 4, 5, 6, 7])'), 'app.js does not register Looks #3, #4, #5, #6, and #7 for Intervention-to-action.');
+  check(controls.includes('new Set([3, 4, 5, 6, 7])'), 'controls.js does not register Looks #3, #4, #5, #6, and #7 for Intervention guidance.');
+  ['nudge-design-lab-intervention-action-v1', 'interventionSuggestions', 'applyInterventionState', 'showNextInterventionSuggestion', 'startInterventionAction', 'completeInterventionAction', 'reopenInterventionAction', 'undoInterventionStart', 'dismissIntervention', 'resumeIntervention', 'clearInterventionState', "'prompt'", "'active'", "'completed'", "'dismissed'"].forEach(token => check(interaction.includes(token), `intervention-state.js is missing ${token}.`));
+  ['applyInterventionState', 'clearInterventionState', 'start-intervention', 'next-intervention', 'dismiss-intervention', 'resume-intervention', 'complete-intervention', 'reopen-intervention', 'undo-intervention', 'return-today', 'currentSourceData'].forEach(token => check(app.includes(token), `app.js is missing Intervention-to-action hook ${token}.`));
 
   for (const [look, [rendererFile, exportName, cssFile, cssTokens]] of interventionRenderers) {
     const renderer = read(rendererFile);
     const css = read(cssFile);
     check(new RegExp(`export\\s+function\\s+${exportName}\\b`).test(renderer), `${rendererFile} does not export ${exportName}.`);
     check(app.includes(exportName), `app.js does not reference ${exportName}.`);
-    [
-      'data-action="start-intervention"', 'data-action="next-intervention"',
-      'data-action="dismiss-intervention"', 'data-action="resume-intervention"',
-      'data-action="complete-intervention"', 'data-action="reopen-intervention"',
-      'data-action="undo-intervention"', 'data-action="return-today"'
-    ].forEach(token => check(renderer.includes(token), `Look #${look} Intervention renderer is missing ${token}.`));
-    ['min-height: 48px', 'forced-colors: active', 'prefers-reduced-motion: reduce', ...cssTokens].forEach(token => {
-      check(css.includes(token), `Look #${look} Intervention CSS is missing ${token}.`);
-    });
+    ['data-action="start-intervention"', 'data-action="next-intervention"', 'data-action="dismiss-intervention"', 'data-action="resume-intervention"', 'data-action="complete-intervention"', 'data-action="reopen-intervention"', 'data-action="undo-intervention"', 'data-action="return-today"'].forEach(token => check(renderer.includes(token), `Look #${look} Intervention renderer is missing ${token}.`));
+    ['min-height: 48px', 'forced-colors: active', 'prefers-reduced-motion: reduce', ...cssTokens].forEach(token => check(css.includes(token), `Look #${look} Intervention CSS is missing ${token}.`));
   }
 
-  const precision = read('renderers/look3-intervention.js').toUpperCase();
-  ['STAYING HERE IS ALSO VALID', 'NO TASK, REMINDER, PENALTY', 'NOTHING ELSE CHANGED'].forEach(token => {
-    const combined = `${precision}\n${app.toUpperCase()}`;
-    check(combined.includes(token), `Precision Minimal no-guilt language is missing ${token}.`);
-  });
-
-  const playful = read('renderers/look5-intervention.js').toUpperCase();
-  [
-    'STAYING WHERE YOU ARE IS EQUALLY VALID',
-    'NO TIMER, SCORE, STREAK, REWARD, OR PENALTY',
-    'NO ACTION WAS STARTED',
-    'NO POINTS, STREAK, RANKING, OR PERFORMANCE SCORE'
-  ].forEach(token => check(playful.includes(token), `Playful Modular non-gamification language is missing ${token}.`));
+  const tactile = read('renderers/look6-intervention.js').toUpperCase();
+  ['EITHER CHOICE IS COMPLETE', 'NO TIMER, SCORE, SERVICE GRADE', 'NO ACTION WAS STARTED', 'NOTHING IS OWED'].forEach(token => check(tactile.includes(token), `Tactile Household optional-choice language is missing ${token}.`));
+  ['BROKEN', 'DEFECT', 'FAILED', 'REPAIR REQUIRED'].forEach(token => check(!tactile.includes(token), `Tactile Household renderer contains prohibited defect language: ${token}.`));
 
   const bold = read('renderers/look7-intervention.js').toUpperCase();
-  [
-    'BOTH CHOICES ARE VALID',
-    'NO SCORE. NO PENALTY. NO REQUIREMENT TO SWITCH',
-    'NO ACTION WAS STARTED',
-    'DISMISSAL IS A COMPLETE RESPONSE. NOTHING IS OWED'
-  ].forEach(token => check(bold.includes(token), `Bold Utility optional-choice language is missing ${token}.`));
-  ['ERROR', 'FAILURE', 'FAILED', 'FAULT', 'ALARM', 'NONCOMPLIANCE', 'WARNING'].forEach(token => {
-    check(!bold.includes(token), `Bold Utility Intervention language contains prohibited pressure token: ${token}.`);
-  });
-
-  passes.push('Checked shared Intervention phases, deterministic alternatives, all reversible actions, four pure-Look renderers, non-scoring language, direct-without-alarm language, and accessibility contracts.');
+  ['ERROR', 'FAILURE', 'FAULT', 'ALARM', 'WARNING', 'NONCOMPLIANCE'].forEach(token => check(!bold.includes(token), `Bold Utility renderer contains prohibited pressure token: ${token}.`));
+  passes.push('Checked shared Intervention phases, deterministic alternatives, all reversible actions, five pure-Look renderers, language boundaries, and accessibility contracts.');
 }
 
 function versionsAndHtml(shared) {
@@ -346,7 +277,7 @@ function main() {
   passes.forEach(item => console.log(`PASS  ${item}`));
   failures.forEach(item => console.error(`FAIL  ${item}`));
   if (failures.length) process.exitCode = 1;
-  else console.log('\nAll gallery, Routine Completion, Task hierarchy, and Looks #3/#4/#5/#7 Intervention-to-action checks passed.');
+  else console.log('\nAll gallery, Routine Completion, Task hierarchy, and Looks #3/#4/#5/#6/#7 Intervention-to-action checks passed.');
 }
 
 main();

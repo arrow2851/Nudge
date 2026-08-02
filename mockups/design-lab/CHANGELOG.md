@@ -1,5 +1,28 @@
 # Design Lab Changelog
 
+## 0.10.4 — 2026-08-02
+
+### Look #6 — Tactile Household Task hierarchy loop
+
+- Reused the shared scenario-isolated Task hierarchy state engine
+- Added `renderers/look6-tasks.js` and `look6-tasks.css`
+- Added paper-like task cards, drawer-style subtask grouping, and physical-looking controls
+- Preserved top and bottom empty-task creation with immediate inline editing focus
+- Preserved separate drag, completion, title, optional time, options, and subtask controls
+- Added Active Cards, Main Tasks, and Filed Done summary counts
+- Added main-task completion statement, percentage, and progress track
+- Preserved one-level hierarchy, completion propagation, and subtask release
+- Preserved pointer drag plus Move Up, Move Down, Indent, and Unindent controls
+- Preserved completed-item grouping and Hide/Show Completed
+- Preserved shared task state across Looks #3, #4, #5, #6, and #7
+- Kept physical household metaphors organizational rather than defect-based
+- Extended validation to five task Looks and five task stylesheets
+- Added `LOOK-6-TASK-HIERARCHY.md` and `CHECKLIST-PROGRESS-0.10.4.md`
+- Set Look #2 — Warm Editorial as the next Task hierarchy implementation
+- Kept production persistence, notifications, collaboration, nested subtasks, deletion, and production gestures outside the Design Lab boundary
+- Kept exact-checkout browser, Android gesture, and screen-reader evidence pending
+- Kept Look #1 and `main` unchanged
+
 ## 0.10.3 — 2026-08-02
 
 ### Look #7 — Bold Utility Task hierarchy loop

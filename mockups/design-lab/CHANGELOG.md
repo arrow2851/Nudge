@@ -1,5 +1,27 @@
 # Design Lab Changelog
 
+## 0.9.7 — 2026-08-01
+
+### Look #9 — Retro Digital Routine Completion Loop
+
+- Reused the shared deterministic Routine Completion state engine
+- Added Retro Digital Today / Needs Attention with one selected routine and an explicit optional queue
+- Added interactive Area, Section, and Chore routes
+- Replaced static completion placeholders with separate Complete and detail controls
+- Added routine records, practical facts, completion logs, and immediate Undo
+- Preserved deterministic Light, Moderate, and Deep recurrence advancement
+- Preserved derived attention-count and All Clear updates
+- Preserved browser-history-compatible route state
+- Preserved semantic completion state while switching among Looks #2 through #9
+- Preserved per-routine Area routing in mixed Today queues
+- Added `look9-interactive.css` with narrow-screen, Large Text, focus, forced-colors, and reduced-motion handling
+- Extended the validator to eight interactive Looks, forty-eight interactive renderer exports, eight interactive stylesheets, and shared state hooks
+- Added `LOOK-9-INTERACTIVE.md` and `CHECKLIST-PROGRESS-0.9.7.md`
+- Completed the Routine Completion Loop sequence across all eight active Looks
+- Set Look #4 Task hierarchy as the next automatic implementation milestone
+- Kept exact-checkout browser, Android, screen-reader, single-version regression, and Ambient Glass paint evidence pending
+- Kept Look #1, `main`, production storage, and backend behavior unchanged
+
 ## 0.9.6 — 2026-08-01
 
 ### Look #8 — Ambient Glass Routine Completion Loop

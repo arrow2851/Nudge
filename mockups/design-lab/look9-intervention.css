@@ -1,0 +1,268 @@
+/* Look #9 — Retro Digital Intervention-to-action */
+
+html[data-look="9"] .rd-intervention-action {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 18px 24px;
+  background:
+    repeating-linear-gradient(180deg, rgba(132,255,183,.025) 0 1px, transparent 1px 4px),
+    #07110d;
+  color: var(--rd-green);
+}
+
+html[data-look="9"] .rd-intervention-statusline {
+  min-height: 38px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 0 -18px 20px;
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--rd-line);
+  background: #0d1c15;
+  font: 700 9px/1.3 var(--mono);
+  letter-spacing: .08em;
+}
+
+html[data-look="9"] .rd-intervention-statusline strong {
+  padding: 4px 7px;
+  border: 1px solid var(--rd-muted);
+  color: #d8ffe7;
+}
+
+html[data-look="9"] .rd-intervention-main {
+  width: 100%;
+}
+
+html[data-look="9"] .rd-intervention-heading > span,
+html[data-look="9"] .rd-intervention-record-id,
+html[data-look="9"] .rd-intervention-snapshot > span,
+html[data-look="9"] .rd-intervention-snapshot > small {
+  font: 700 9px/1.35 var(--mono);
+  letter-spacing: .07em;
+}
+
+html[data-look="9"] .rd-intervention-heading h1 {
+  margin: 10px 0 8px;
+  color: #d8ffe7;
+  font: 700 31px/1.05 var(--mono);
+  letter-spacing: -.04em;
+}
+
+html[data-look="9"] .rd-intervention-heading p {
+  margin: 0;
+  color: var(--rd-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+html[data-look="9"] .rd-intervention-snapshot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px 12px;
+  align-items: end;
+  margin-top: 20px;
+  padding: 13px 14px;
+  border: 1px solid var(--rd-line);
+  background: #0d1c15;
+}
+
+html[data-look="9"] .rd-intervention-snapshot > strong {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  color: #d8ffe7;
+  font: 700 38px/.9 var(--mono);
+}
+
+html[data-look="9"] .rd-intervention-snapshot > small {
+  color: var(--rd-muted);
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-intervention-record {
+  margin-top: 20px;
+  padding: 14px;
+  border: 1px solid var(--rd-line);
+  background: #0a1812;
+  box-shadow: inset 4px 0 0 var(--rd-green);
+}
+
+html[data-look="9"] .rd-intervention-record.active { box-shadow: inset 4px 0 0 #f0c96a; }
+html[data-look="9"] .rd-intervention-record.completed { box-shadow: inset 4px 0 0 #d8ffe7; }
+html[data-look="9"] .rd-intervention-record.dismissed { box-shadow: inset 4px 0 0 var(--rd-muted); }
+
+html[data-look="9"] .rd-intervention-record-head {
+  min-height: 29px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rd-line);
+  font: 700 9px/1.3 var(--mono);
+}
+
+html[data-look="9"] .rd-intervention-record-head b {
+  color: #d8ffe7;
+}
+
+html[data-look="9"] .rd-intervention-record-id {
+  display: block;
+  margin-top: 12px;
+  color: var(--rd-muted);
+}
+
+html[data-look="9"] .rd-intervention-record h2 {
+  margin: 8px 0 6px;
+  color: #d8ffe7;
+  font: 700 21px/1.15 var(--mono);
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-intervention-record > p {
+  margin: 0;
+  color: var(--rd-muted);
+  font: 600 10px/1.5 var(--mono);
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-intervention-facts {
+  margin: 18px 0 0;
+  border: 1px solid var(--rd-line);
+  background: #09150f;
+}
+
+html[data-look="9"] .rd-intervention-facts > div {
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--rd-line);
+}
+
+html[data-look="9"] .rd-intervention-facts > div:last-child { border-bottom: 0; }
+html[data-look="9"] .rd-intervention-facts dt,
+html[data-look="9"] .rd-intervention-facts dd { margin: 0; }
+html[data-look="9"] .rd-intervention-facts dt {
+  color: var(--rd-muted);
+  font: 700 8px/1.3 var(--mono);
+  letter-spacing: .06em;
+}
+html[data-look="9"] .rd-intervention-facts dd {
+  color: #d8ffe7;
+  text-align: right;
+  font: 700 10px/1.35 var(--mono);
+}
+
+html[data-look="9"] .rd-intervention-boundary {
+  margin: 12px 0 0;
+  padding: 9px 10px;
+  border: 1px dashed var(--rd-line);
+  color: var(--rd-muted);
+  font: 700 8px/1.45 var(--mono);
+  letter-spacing: .04em;
+}
+
+html[data-look="9"] .rd-intervention-actions {
+  width: 100%;
+  display: grid;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+html[data-look="9"] .rd-intervention-actions button {
+  width: 100%;
+  min-height: 48px;
+  padding: 9px 13px;
+  border-radius: 0;
+  font: 700 11px/1.3 var(--mono);
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-intervention-actions button:focus-visible {
+  outline: 4px solid #ffffff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 370px) {
+  html[data-look="9"] .rd-intervention-action { padding-inline: 14px; }
+  html[data-look="9"] .rd-intervention-statusline { margin-inline: -14px; padding-inline: 14px; }
+  html[data-look="9"] .rd-intervention-heading h1 { font-size: 27px; }
+  html[data-look="9"] .rd-intervention-snapshot,
+  html[data-look="9"] .rd-intervention-facts > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  html[data-look="9"] .rd-intervention-snapshot > strong {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  html[data-look="9"] .rd-intervention-facts dd { text-align: left; }
+}
+
+@media (max-height: 720px) {
+  html[data-look="9"] .rd-intervention-statusline { margin-bottom: 14px; }
+  html[data-look="9"] .rd-intervention-heading h1 { margin-block: 7px; font-size: 27px; }
+  html[data-look="9"] .rd-intervention-snapshot,
+  html[data-look="9"] .rd-intervention-record { margin-top: 13px; }
+  html[data-look="9"] .rd-intervention-facts { margin-top: 13px; }
+  html[data-look="9"] .rd-intervention-facts > div { min-height: 34px; padding-block: 5px; }
+  html[data-look="9"] .rd-intervention-boundary { margin-top: 8px; padding-block: 7px; }
+  html[data-look="9"] .rd-intervention-actions { padding-top: 14px; }
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-intervention-heading h1 { font-size: 38px; }
+html[data-text-scale="large"][data-look="9"] .rd-intervention-heading p,
+html[data-text-scale="large"][data-look="9"] .rd-intervention-record > p,
+html[data-text-scale="large"][data-look="9"] .rd-intervention-boundary { font-size: 14px; }
+html[data-text-scale="large"][data-look="9"] .rd-intervention-record h2 { font-size: 28px; }
+html[data-text-scale="large"][data-look="9"] .rd-intervention-facts > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+html[data-text-scale="large"][data-look="9"] .rd-intervention-facts dt { font-size: 10px; }
+html[data-text-scale="large"][data-look="9"] .rd-intervention-facts dd { text-align: left; font-size: 15px; }
+html[data-text-scale="large"][data-look="9"] .rd-intervention-actions button { min-height: 54px; font-size: 14px; }
+
+@media (prefers-contrast: more) {
+  html[data-look="9"] .rd-intervention-action { background: #000; }
+  html[data-look="9"] .rd-intervention-statusline,
+  html[data-look="9"] .rd-intervention-snapshot,
+  html[data-look="9"] .rd-intervention-record,
+  html[data-look="9"] .rd-intervention-facts { border-color: #d8ffe7; background: #000; }
+  html[data-look="9"] .rd-intervention-heading p,
+  html[data-look="9"] .rd-intervention-record > p,
+  html[data-look="9"] .rd-intervention-boundary,
+  html[data-look="9"] .rd-intervention-facts dt { color: #d8ffe7; }
+}
+
+@media (forced-colors: active) {
+  html[data-look="9"] .rd-intervention-action,
+  html[data-look="9"] .rd-intervention-statusline,
+  html[data-look="9"] .rd-intervention-statusline strong,
+  html[data-look="9"] .rd-intervention-snapshot,
+  html[data-look="9"] .rd-intervention-record,
+  html[data-look="9"] .rd-intervention-record-head,
+  html[data-look="9"] .rd-intervention-facts,
+  html[data-look="9"] .rd-intervention-facts > div,
+  html[data-look="9"] .rd-intervention-boundary,
+  html[data-look="9"] .rd-intervention-actions button {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+  html[data-look="9"] .rd-intervention-record.completed .rd-intervention-record-head {
+    color: HighlightText;
+    background: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="9"] .rd-intervention-action *,
+  html[data-look="9"] .rd-intervention-action *::before,
+  html[data-look="9"] .rd-intervention-action *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

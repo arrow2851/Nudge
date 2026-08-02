@@ -1,0 +1,479 @@
+/* Look #2 — Warm Editorial interactive Routine Completion Loop */
+
+html[data-look="2"] .ed-page {
+  min-height: 100%;
+  padding-bottom: 94px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+html[data-look="2"] .ed-today-page,
+html[data-look="2"] .ed-section-page,
+html[data-look="2"] .ed-chore-page {
+  min-height: 100%;
+}
+
+html[data-look="2"] .editorial-header .kicker,
+html[data-look="2"] .section-label,
+html[data-look="2"] .ed-entry-meta,
+html[data-look="2"] .ed-feature-meta,
+html[data-look="2"] .ed-chore-facts dt {
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+html[data-look="2"] .editorial-header p,
+html[data-look="2"] .area-detail-intro p,
+html[data-look="2"] .ed-feature-note p,
+html[data-look="2"] .ed-chore-entry p,
+html[data-look="2"] .ed-context-note p,
+html[data-look="2"] .ed-completion-note p,
+html[data-look="2"] .ed-clear-note p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+html[data-look="2"] .ed-feature-note,
+html[data-look="2"] .ed-chore-entry,
+html[data-look="2"] .ed-context-note,
+html[data-look="2"] .ed-completion-note,
+html[data-look="2"] .ed-clear-note {
+  margin: 22px 23px 0;
+  padding: 20px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+html[data-look="2"] .ed-feature-note.overdue,
+html[data-look="2"] .ed-chore-entry.overdue {
+  border-top-color: var(--terracotta);
+}
+
+html[data-look="2"] .ed-feature-note.today,
+html[data-look="2"] .ed-chore-entry.today {
+  border-top-color: var(--mustard);
+}
+
+html[data-look="2"] .ed-feature-meta,
+html[data-look="2"] .ed-entry-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  color: var(--muted);
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+html[data-look="2"] .ed-feature-note h2,
+html[data-look="2"] .ed-clear-note h2,
+html[data-look="2"] .ed-completion-note h2 {
+  margin: 11px 0 7px;
+  font: 600 28px/1.12 var(--serif);
+  letter-spacing: -.025em;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="2"] .ed-chore-entry h1 {
+  margin: 12px 0 7px;
+  font: 600 36px/1.04 var(--serif);
+  letter-spacing: -.03em;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="2"] .ed-feature-actions,
+html[data-look="2"] .ed-chore-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 18px;
+}
+
+html[data-look="2"] .ed-chore-actions {
+  margin: 22px 23px 0;
+  grid-template-columns: 1fr;
+}
+
+html[data-look="2"] .primary-action,
+html[data-look="2"] .secondary-action,
+html[data-look="2"] .text-action,
+html[data-look="2"] .add-area,
+html[data-look="2"] .back-button,
+html[data-look="2"] .section-link,
+html[data-look="2"] .area-entry button {
+  min-height: 48px;
+}
+
+html[data-look="2"] .primary-action,
+html[data-look="2"] .secondary-action {
+  padding: 13px 15px;
+}
+
+html[data-look="2"] .back-button {
+  min-width: 48px;
+  padding: 8px 0;
+}
+
+html[data-look="2"] .ed-routine-row {
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: stretch;
+  border-bottom: 1px solid var(--line);
+}
+
+html[data-look="2"] .editorial-check {
+  width: 48px;
+  height: 48px;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+html[data-look="2"] .editorial-check::before {
+  content: '';
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid #777466;
+  border-radius: 50%;
+  background: transparent;
+}
+
+html[data-look="2"] .editorial-check span {
+  position: absolute;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--olive-dark);
+}
+
+html[data-look="2"] .ed-routine-row.completed .editorial-check::before {
+  background: #e1e7da;
+  border-color: var(--olive-dark);
+}
+
+html[data-look="2"] .ed-routine-open {
+  width: 100%;
+  min-width: 0;
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 11px 0 11px 4px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+html[data-look="2"] .ed-routine-row.completed .routine-copy strong {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  color: var(--muted);
+}
+
+html[data-look="2"] .routine-copy,
+html[data-look="2"] .ed-routine-open,
+html[data-look="2"] .area-entry button > span:first-child,
+html[data-look="2"] .section-link > span:first-child,
+html[data-look="2"] .ed-feature-note,
+html[data-look="2"] .ed-chore-entry,
+html[data-look="2"] .ed-chore-facts dd {
+  min-width: 0;
+}
+
+html[data-look="2"] .routine-copy strong,
+html[data-look="2"] .routine-copy small,
+html[data-look="2"] .due-stamp,
+html[data-look="2"] .area-name strong,
+html[data-look="2"] .area-meta,
+html[data-look="2"] .area-next,
+html[data-look="2"] .section-link strong,
+html[data-look="2"] .section-link small,
+html[data-look="2"] .ed-chore-facts dd,
+html[data-look="2"] .ed-chore-actions button {
+  overflow-wrap: anywhere;
+}
+
+html[data-look="2"] .routine-copy strong {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+html[data-look="2"] .routine-copy small {
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+html[data-look="2"] .due-stamp {
+  max-width: 104px;
+  white-space: normal;
+  text-align: center;
+  font-size: 9px;
+  line-height: 1.3;
+}
+
+html[data-look="2"] .ed-today-list {
+  padding-top: 8px;
+}
+
+html[data-look="2"] .ed-clear-note {
+  border-color: var(--olive);
+}
+
+html[data-look="2"] .ed-wide-action {
+  width: calc(100% - 46px);
+  margin: 18px 23px 0;
+}
+
+html[data-look="2"] .ed-compact-empty {
+  padding-top: 8px;
+}
+
+html[data-look="2"] .ed-context-note {
+  color: var(--muted);
+}
+
+html[data-look="2"] .ed-completion-note {
+  border-top-color: var(--olive);
+  background: linear-gradient(90deg, rgba(98,108,79,.08), transparent);
+  padding-inline: 14px;
+}
+
+html[data-look="2"] .ed-chore-facts {
+  margin: 24px 23px 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+html[data-look="2"] .ed-chore-facts > div {
+  min-width: 0;
+  padding: 13px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+html[data-look="2"] .ed-chore-facts dt {
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+html[data-look="2"] .ed-chore-facts dd {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+html[data-look="2"] .area-entry button:focus-visible,
+html[data-look="2"] .section-link:focus-visible,
+html[data-look="2"] .editorial-check:focus-visible,
+html[data-look="2"] .ed-routine-open:focus-visible,
+html[data-look="2"] .primary-action:focus-visible,
+html[data-look="2"] .secondary-action:focus-visible,
+html[data-look="2"] .text-action:focus-visible,
+html[data-look="2"] .add-area:focus-visible,
+html[data-look="2"] .back-button:focus-visible {
+  outline: 4px solid #3f4636;
+  outline-offset: 3px;
+}
+
+@media (max-width: 420px) {
+  html[data-look="2"] .editorial-header,
+  html[data-look="2"] .area-detail-intro {
+    padding-inline: 18px;
+  }
+
+  html[data-look="2"] .header-line,
+  html[data-look="2"] .ed-feature-note,
+  html[data-look="2"] .ed-chore-entry,
+  html[data-look="2"] .ed-context-note,
+  html[data-look="2"] .ed-completion-note,
+  html[data-look="2"] .ed-clear-note,
+  html[data-look="2"] .ed-chore-facts,
+  html[data-look="2"] .ed-chore-actions {
+    margin-inline: 18px;
+  }
+
+  html[data-look="2"] .area-index,
+  html[data-look="2"] .routine-group,
+  html[data-look="2"] .coming-soon,
+  html[data-look="2"] .back-row {
+    padding-inline: 18px;
+  }
+
+  html[data-look="2"] .attention-note {
+    margin-inline: 18px;
+  }
+
+  html[data-look="2"] .add-area,
+  html[data-look="2"] .ed-wide-action {
+    width: calc(100% - 36px);
+    margin-inline: 18px;
+  }
+
+  html[data-look="2"] .ed-feature-actions {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-look="2"] .area-entry button {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  html[data-look="2"] .ed-routine-open {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  html[data-look="2"] .due-stamp {
+    justify-self: start;
+    max-width: none;
+  }
+
+  html[data-look="2"] .ed-chore-facts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 370px) {
+  html[data-look="2"] .editorial-header h1,
+  html[data-look="2"] .area-detail-intro h1 {
+    font-size: 29px;
+  }
+
+  html[data-look="2"] .ed-chore-entry h1 {
+    font-size: 32px;
+  }
+
+  html[data-look="2"] .ed-entry-meta,
+  html[data-look="2"] .ed-feature-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  html[data-look="2"] .area-entry button {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-look="2"] .area-count {
+    text-align: left;
+    padding-top: 0;
+  }
+}
+
+html[data-text-scale="large"][data-look="2"] .editorial-header .kicker,
+html[data-text-scale="large"][data-look="2"] .section-label,
+html[data-text-scale="large"][data-look="2"] .ed-entry-meta,
+html[data-text-scale="large"][data-look="2"] .ed-feature-meta,
+html[data-text-scale="large"][data-look="2"] .ed-chore-facts dt,
+html[data-text-scale="large"][data-look="2"] .routine-copy small,
+html[data-text-scale="large"][data-look="2"] .due-stamp,
+html[data-text-scale="large"][data-look="2"] .area-meta,
+html[data-text-scale="large"][data-look="2"] .section-link small {
+  font-size: 12px;
+}
+
+html[data-text-scale="large"][data-look="2"] .editorial-header h1,
+html[data-text-scale="large"][data-look="2"] .area-detail-intro h1 {
+  font-size: 42px;
+}
+
+html[data-text-scale="large"][data-look="2"] .editorial-header p,
+html[data-text-scale="large"][data-look="2"] .area-detail-intro p,
+html[data-text-scale="large"][data-look="2"] .ed-feature-note p,
+html[data-text-scale="large"][data-look="2"] .ed-chore-entry p,
+html[data-text-scale="large"][data-look="2"] .ed-context-note p,
+html[data-text-scale="large"][data-look="2"] .ed-completion-note p,
+html[data-text-scale="large"][data-look="2"] .ed-clear-note p,
+html[data-text-scale="large"][data-look="2"] .ed-chore-facts dd {
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="2"] .routine-copy strong,
+html[data-text-scale="large"][data-look="2"] .section-link strong {
+  font-size: 16px;
+}
+
+html[data-text-scale="large"][data-look="2"] .ed-feature-actions,
+html[data-text-scale="large"][data-look="2"] .ed-chore-facts {
+  grid-template-columns: 1fr;
+}
+
+html[data-text-scale="large"][data-look="2"] .primary-action,
+html[data-text-scale="large"][data-look="2"] .secondary-action,
+html[data-text-scale="large"][data-look="2"] .text-action,
+html[data-text-scale="large"][data-look="2"] .add-area,
+html[data-text-scale="large"][data-look="2"] .back-button,
+html[data-text-scale="large"][data-look="2"] .section-link,
+html[data-text-scale="large"][data-look="2"] .area-entry button {
+  min-height: 54px;
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="2"] .ed-routine-open {
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 86px;
+}
+
+html[data-text-scale="large"][data-look="2"] .due-stamp {
+  justify-self: start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="2"] *,
+  html[data-look="2"] *::before,
+  html[data-look="2"] *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-look="2"] .ed-feature-note,
+  html[data-look="2"] .ed-chore-entry,
+  html[data-look="2"] .ed-context-note,
+  html[data-look="2"] .ed-completion-note,
+  html[data-look="2"] .ed-clear-note,
+  html[data-look="2"] .ed-chore-facts > div,
+  html[data-look="2"] .ed-routine-row,
+  html[data-look="2"] .attention-note,
+  html[data-look="2"] .poster {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  html[data-look="2"] .editorial-check::before,
+  html[data-look="2"] .due-stamp {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+  }
+
+  html[data-look="2"] .primary-action,
+  html[data-look="2"] .secondary-action,
+  html[data-look="2"] .text-action,
+  html[data-look="2"] .add-area,
+  html[data-look="2"] .back-button,
+  html[data-look="2"] .section-link,
+  html[data-look="2"] .area-entry button,
+  html[data-look="2"] .ed-routine-open,
+  html[data-look="2"] .editorial-check {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: ButtonText;
+    box-shadow: none;
+  }
+}

@@ -1,0 +1,359 @@
+/* Look #6 — Tactile Household Intervention-to-action */
+
+html[data-look="6"] .th-intervention-action {
+  min-height: 100%;
+  padding: 20px 18px 24px;
+  background:
+    linear-gradient(rgba(255,255,255,.16) 1px, transparent 1px) 0 0 / 100% 28px,
+    linear-gradient(180deg, #e2dbce, #d6cebf);
+}
+
+html[data-look="6"] .th-intervention-content {
+  width: 100%;
+}
+
+html[data-look="6"] .th-intervention-board-label {
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 7px 9px;
+  border: 1px solid #8f8778;
+  border-radius: 5px;
+  background: var(--th-board);
+  box-shadow: 0 4px 0 #9f9583;
+}
+
+html[data-look="6"] .th-intervention-board-label strong,
+html[data-look="6"] .th-intervention-board-label b {
+  font: 750 8px/1.25 var(--mono);
+  letter-spacing: .07em;
+}
+
+html[data-look="6"] .th-intervention-board-label b {
+  min-height: 23px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 7px;
+  border: 1px solid #888174;
+  border-radius: 3px;
+  background: var(--th-paper);
+  text-align: center;
+}
+
+html[data-look="6"] .th-intervention-heading {
+  padding: 24px 2px 0;
+}
+
+html[data-look="6"] .th-intervention-heading h1 {
+  margin: 12px 0 8px;
+  font-size: 31px;
+  line-height: 1.07;
+  letter-spacing: -.04em;
+}
+
+html[data-look="6"] .th-intervention-heading p {
+  margin: 0;
+  color: var(--th-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+html[data-look="6"] .th-intervention-card {
+  position: relative;
+  margin-top: 25px;
+  padding: 25px 17px 17px;
+  border: 1px solid #948b7d;
+  border-radius: 7px;
+  background: var(--th-paper);
+  box-shadow: var(--th-shadow);
+}
+
+html[data-look="6"] .th-intervention-card::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px dashed rgba(111,101,86,.3);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+html[data-look="6"] .th-intervention-card .th-paperclip {
+  top: -12px;
+  right: 24px;
+  z-index: 2;
+}
+
+html[data-look="6"] .th-intervention-card-head {
+  position: relative;
+  z-index: 1;
+  min-height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: -8px -3px 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #b9af9f;
+  font: 750 8px/1.25 var(--mono);
+  letter-spacing: .06em;
+}
+
+html[data-look="6"] .th-intervention-card .th-tab {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
+html[data-look="6"] .th-intervention-card h2 {
+  position: relative;
+  z-index: 1;
+  margin: 14px 0 7px;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="6"] .th-intervention-card > p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: var(--th-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+html[data-look="6"] .th-intervention-card.active .th-tab {
+  border-color: #7b876f;
+  background: #dce3d8;
+  color: var(--th-green-dark);
+}
+
+html[data-look="6"] .th-intervention-card.completed {
+  background: #eef1e8;
+}
+
+html[data-look="6"] .th-intervention-card.completed .th-tab {
+  border-color: #6f8975;
+  background: #d9e6da;
+  color: #34503c;
+}
+
+html[data-look="6"] .th-intervention-card.dismissed {
+  background: var(--th-paper-2);
+  box-shadow: 0 3px 0 #aaa08f;
+}
+
+html[data-look="6"] .th-card-pull {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin: -5px auto 12px;
+}
+
+html[data-look="6"] .th-completion-slip {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px solid #83907f;
+  border-radius: 4px;
+  background: #dce5dc;
+}
+
+html[data-look="6"] .th-completion-slip strong,
+html[data-look="6"] .th-completion-slip span {
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+html[data-look="6"] .th-completion-slip span {
+  color: #4c5b4f;
+  text-align: right;
+}
+
+html[data-look="6"] .th-intervention-facts {
+  margin: 20px 0 0;
+  border: 1px solid #a29989;
+  border-radius: 5px;
+  background: var(--th-paper-2);
+  box-shadow: 0 3px 0 #aaa08f;
+}
+
+html[data-look="6"] .th-intervention-facts > div {
+  min-height: 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 7px 10px;
+  border-bottom: 1px solid #bbb1a1;
+}
+
+html[data-look="6"] .th-intervention-facts > div:last-child {
+  border-bottom: 0;
+}
+
+html[data-look="6"] .th-intervention-facts dt,
+html[data-look="6"] .th-intervention-facts dd {
+  margin: 0;
+}
+
+html[data-look="6"] .th-intervention-facts dt {
+  color: var(--th-muted);
+  font: 750 8px/1.3 var(--mono);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+html[data-look="6"] .th-intervention-facts dd {
+  text-align: right;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+html[data-look="6"] .th-intervention-boundary {
+  margin: 13px 0 0;
+  padding: 10px 11px;
+  border: 1px dashed #9e9586;
+  border-radius: 4px;
+  background: rgba(244,239,228,.72);
+  color: var(--th-muted);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+html[data-look="6"] .th-intervention-actions {
+  width: 100%;
+  display: grid;
+  gap: 9px;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+html[data-look="6"] .th-intervention-actions button {
+  width: 100%;
+  min-height: 48px;
+  padding: 9px 14px;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="6"] .th-intervention-actions button:focus-visible {
+  outline: 4px solid var(--th-green-dark);
+  outline-offset: 3px;
+}
+
+@media (max-width: 370px) {
+  html[data-look="6"] .th-intervention-action {
+    padding-inline: 14px;
+  }
+
+  html[data-look="6"] .th-intervention-board-label {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  html[data-look="6"] .th-intervention-board-label b {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    justify-content: center;
+  }
+
+  html[data-look="6"] .th-intervention-heading h1 {
+    font-size: 28px;
+  }
+
+  html[data-look="6"] .th-intervention-facts > div,
+  html[data-look="6"] .th-completion-slip {
+    grid-template-columns: minmax(0, 1fr);
+    display: grid;
+  }
+
+  html[data-look="6"] .th-intervention-facts dd,
+  html[data-look="6"] .th-completion-slip span {
+    text-align: left;
+  }
+}
+
+@media (max-height: 720px) {
+  html[data-look="6"] .th-intervention-action { padding-top: 14px; }
+  html[data-look="6"] .th-intervention-heading { padding-top: 16px; }
+  html[data-look="6"] .th-intervention-heading h1 { margin-block: 8px; font-size: 27px; }
+  html[data-look="6"] .th-intervention-card { margin-top: 18px; padding-top: 20px; }
+  html[data-look="6"] .th-intervention-card h2 { margin-top: 10px; font-size: 19px; }
+  html[data-look="6"] .th-intervention-facts { margin-top: 14px; }
+  html[data-look="6"] .th-intervention-facts > div { min-height: 35px; padding-block: 5px; }
+  html[data-look="6"] .th-intervention-boundary { margin-top: 9px; padding-block: 7px; }
+  html[data-look="6"] .th-intervention-actions { padding-top: 15px; }
+}
+
+html[data-text-scale="large"][data-look="6"] .th-intervention-heading h1 {
+  font-size: 39px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-intervention-heading p,
+html[data-text-scale="large"][data-look="6"] .th-intervention-card > p,
+html[data-text-scale="large"][data-look="6"] .th-intervention-boundary {
+  font-size: 14px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-intervention-card h2 {
+  font-size: 29px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-intervention-facts > div {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-intervention-facts dt {
+  font-size: 10px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-intervention-facts dd {
+  text-align: left;
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-intervention-actions button {
+  min-height: 54px;
+  font-size: 15px;
+}
+
+@media (forced-colors: active) {
+  html[data-look="6"] .th-intervention-action,
+  html[data-look="6"] .th-intervention-board-label,
+  html[data-look="6"] .th-intervention-board-label b,
+  html[data-look="6"] .th-intervention-card,
+  html[data-look="6"] .th-intervention-card-head,
+  html[data-look="6"] .th-intervention-card .th-tab,
+  html[data-look="6"] .th-completion-slip,
+  html[data-look="6"] .th-intervention-facts,
+  html[data-look="6"] .th-intervention-facts > div,
+  html[data-look="6"] .th-intervention-boundary,
+  html[data-look="6"] .th-intervention-actions button {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  html[data-look="6"] .th-intervention-card.completed .th-intervention-card-head {
+    color: HighlightText;
+    background: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="6"] .th-intervention-action *,
+  html[data-look="6"] .th-intervention-action *::before,
+  html[data-look="6"] .th-intervention-action *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

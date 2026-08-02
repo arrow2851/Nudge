@@ -1,0 +1,188 @@
+/* Look #6 quality corrections. Loaded after look6.css. */
+html[data-look="6"] {
+  --th-muted: #575952;
+}
+
+html[data-look="6"] .th-area-copy,
+html[data-look="6"] .th-area-next,
+html[data-look="6"] .th-routine-copy,
+html[data-look="6"] .th-section-row > span:nth-child(2),
+html[data-look="6"] .th-timer-panel > small,
+html[data-look="6"] .th-intervention-copy,
+html[data-look="6"] .th-ticket {
+  min-width: 0;
+}
+
+html[data-look="6"] .th-stamp,
+html[data-look="6"] .th-status-tag,
+html[data-look="6"] .th-title-plate span,
+html[data-look="6"] .th-timer-panel > small {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="6"] .th-area-card:focus-visible,
+html[data-look="6"] .th-section-row:focus-visible,
+html[data-look="6"] .th-check:focus-visible,
+html[data-look="6"] .th-primary:focus-visible,
+html[data-look="6"] .th-secondary:focus-visible,
+html[data-look="6"] .th-dismiss:focus-visible,
+html[data-look="6"] .th-add:focus-visible,
+html[data-look="6"] .th-back:focus-visible,
+html[data-look="6"] .th-next-card > button:focus-visible {
+  outline: 3px solid var(--th-green-dark);
+  outline-offset: 3px;
+}
+
+@media (max-width: 420px) {
+  html[data-look="6"] .th-summary-board {
+    grid-template-columns: 67px 67px minmax(0, 1fr);
+  }
+
+  html[data-look="6"] .th-summary-board p {
+    grid-column: 1 / -1;
+    padding-top: 3px;
+  }
+
+  html[data-look="6"] .th-routine-row {
+    grid-template-columns: 48px minmax(0, 1fr);
+    align-items: center;
+    padding: 6px 8px 6px 0;
+  }
+
+  html[data-look="6"] .th-status-tag {
+    grid-column: 2;
+    justify-self: start;
+    margin: 0 0 7px;
+  }
+}
+
+@media (max-width: 370px) {
+  html[data-look="6"] .th-summary-board {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  html[data-look="6"] .th-summary-board p {
+    grid-column: 1 / -1;
+  }
+
+  html[data-look="6"] .th-timer-panel {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  html[data-look="6"] .th-timer-panel > small {
+    padding-bottom: 0;
+  }
+}
+
+html[data-text-scale="large"][data-look="6"] .th-header h1,
+html[data-text-scale="large"][data-look="6"] .th-detail-header h1,
+html[data-text-scale="large"][data-look="6"] .th-intervention-copy h1 {
+  font-size: 36px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-next-card h2,
+html[data-text-scale="large"][data-look="6"] .th-job-card h2,
+html[data-text-scale="large"][data-look="6"] .th-ticket h2,
+html[data-text-scale="large"][data-look="6"] .th-empty-card strong {
+  font-size: 25px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-label,
+html[data-text-scale="large"][data-look="6"] .th-tab,
+html[data-text-scale="large"][data-look="6"] .th-panel-label,
+html[data-text-scale="large"][data-look="6"] .th-summary-board span,
+html[data-text-scale="large"][data-look="6"] .th-block-label span,
+html[data-text-scale="large"][data-look="6"] .th-block-label b,
+html[data-text-scale="large"][data-look="6"] .th-card-index,
+html[data-text-scale="large"][data-look="6"] .th-stamp,
+html[data-text-scale="large"][data-look="6"] .th-status-tag,
+html[data-text-scale="large"][data-look="6"] .th-title-plate span,
+html[data-text-scale="large"][data-look="6"] .th-timer-panel > small {
+  font-size: 11px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-header p,
+html[data-text-scale="large"][data-look="6"] .th-summary-board p,
+html[data-text-scale="large"][data-look="6"] .th-next-card p,
+html[data-text-scale="large"][data-look="6"] .th-job-card p,
+html[data-text-scale="large"][data-look="6"] .th-ticket p,
+html[data-text-scale="large"][data-look="6"] .th-empty-card p,
+html[data-text-scale="large"][data-look="6"] .th-intervention-copy p {
+  font-size: 14px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-area-copy strong,
+html[data-text-scale="large"][data-look="6"] .th-area-next strong,
+html[data-text-scale="large"][data-look="6"] .th-routine-copy strong,
+html[data-text-scale="large"][data-look="6"] .th-section-row strong {
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-area-copy small,
+html[data-text-scale="large"][data-look="6"] .th-area-next small,
+html[data-text-scale="large"][data-look="6"] .th-routine-copy small,
+html[data-text-scale="large"][data-look="6"] .th-section-row small {
+  font-size: 12px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-primary,
+html[data-text-scale="large"][data-look="6"] .th-secondary,
+html[data-text-scale="large"][data-look="6"] .th-dismiss,
+html[data-text-scale="large"][data-look="6"] .th-add,
+html[data-text-scale="large"][data-look="6"] .th-back,
+html[data-text-scale="large"][data-look="6"] .th-next-card > button {
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-summary-board {
+  grid-template-columns: 1fr 1fr;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-summary-board p {
+  grid-column: 1 / -1;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-area-card {
+  grid-template-columns: 32px minmax(0, 1fr) 18px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-area-copy,
+html[data-text-scale="large"][data-look="6"] .th-area-next,
+html[data-text-scale="large"][data-look="6"] .th-stamp {
+  grid-column: 2;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-card-handle {
+  grid-column: 3;
+  grid-row: 1 / span 3;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-stamp {
+  grid-row: auto;
+  justify-self: start;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-routine-row {
+  grid-template-columns: 48px minmax(0, 1fr);
+  padding: 7px 8px 7px 0;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-status-tag {
+  grid-column: 2;
+  justify-self: start;
+  margin-bottom: 7px;
+}
+
+@media (forced-colors: active) {
+  html[data-look="6"] .th-next-card::after,
+  html[data-look="6"] .th-job-card::after,
+  html[data-look="6"] .th-ticket::after,
+  html[data-look="6"] .th-area-card::before,
+  html[data-look="6"] .th-paperclip,
+  html[data-look="6"] .th-ticket-hole {
+    display: none;
+  }
+}

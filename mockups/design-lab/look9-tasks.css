@@ -1,0 +1,557 @@
+/* Look #9 — Retro Digital Task hierarchy loop */
+
+html[data-look="9"] .rd-tasks-page {
+  overflow-x: hidden;
+}
+
+html[data-look="9"] .rd-task-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58px;
+  gap: 14px;
+  align-items: start;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rd-line);
+}
+
+html[data-look="9"] .rd-task-header > div > span {
+  color: var(--rd-muted);
+  font: 700 9px/1.3 ui-monospace, monospace;
+  letter-spacing: .12em;
+}
+
+html[data-look="9"] .rd-task-header h1 {
+  margin: 9px 0 7px;
+  color: #d8ffe7;
+  font: 800 29px/1 ui-monospace, monospace;
+  letter-spacing: -.04em;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-task-header p {
+  margin: 0;
+  max-width: 310px;
+  color: var(--rd-muted);
+  font: 600 10px/1.55 ui-monospace, monospace;
+}
+
+html[data-look="9"] .rd-task-top-add,
+html[data-look="9"] .rd-task-bottom-add,
+html[data-look="9"] .rd-task-command button,
+html[data-look="9"] .rd-task-settings button {
+  min-height: 48px;
+  border: 1px solid var(--rd-green);
+  border-radius: 0;
+  background: transparent;
+  color: #d8ffe7;
+  font: 800 10px/1.2 ui-monospace, monospace;
+  text-shadow: 0 0 8px rgba(114, 255, 164, .18);
+  cursor: pointer;
+}
+
+html[data-look="9"] .rd-task-top-add {
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  background: rgba(81, 180, 119, .13);
+  font-size: 14px;
+}
+
+html[data-look="9"] .rd-task-display {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 14px;
+  border: 1px solid var(--rd-line);
+  background: rgba(10, 27, 20, .72);
+}
+
+html[data-look="9"] .rd-task-display > div {
+  min-width: 0;
+  padding: 12px 9px;
+  border-right: 1px solid var(--rd-line);
+}
+
+html[data-look="9"] .rd-task-display > div:last-child {
+  border-right: 0;
+}
+
+html[data-look="9"] .rd-task-display small,
+html[data-look="9"] .rd-task-display strong {
+  display: block;
+  font-family: ui-monospace, monospace;
+}
+
+html[data-look="9"] .rd-task-display small {
+  min-height: 22px;
+  color: var(--rd-muted);
+  font-size: 8px;
+  line-height: 1.3;
+}
+
+html[data-look="9"] .rd-task-display strong {
+  margin-top: 4px;
+  color: #d8ffe7;
+  font-size: 27px;
+  line-height: 1;
+}
+
+html[data-look="9"] .rd-task-command {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--rd-line);
+}
+
+html[data-look="9"] .rd-task-command > span {
+  min-width: 0;
+  color: var(--rd-muted);
+  font: 700 8px/1.4 ui-monospace, monospace;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-task-command button {
+  flex: none;
+  padding: 0 10px;
+  border-color: var(--rd-line);
+  font-size: 8px;
+}
+
+html[data-look="9"] .rd-task-columns,
+html[data-look="9"] .rd-task-row {
+  display: grid;
+  grid-template-columns: 38px 54px minmax(0, 1fr) 42px 48px 48px;
+  gap: 4px;
+  align-items: center;
+}
+
+html[data-look="9"] .rd-task-columns {
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--rd-line);
+  background: rgba(81, 180, 119, .08);
+  color: var(--rd-muted);
+  font: 700 7px ui-monospace, monospace;
+  text-align: center;
+}
+
+html[data-look="9"] .rd-task-columns span:nth-child(3) {
+  text-align: left;
+}
+
+html[data-look="9"] .rd-task-list {
+  border-bottom: 1px solid var(--rd-line);
+}
+
+html[data-look="9"] .rd-task-cluster {
+  border-bottom: 1px solid var(--rd-line);
+}
+
+html[data-look="9"] .rd-task-cluster:last-child {
+  border-bottom: 0;
+}
+
+html[data-look="9"] .rd-task-cluster.completed {
+  opacity: .76;
+}
+
+html[data-look="9"] .rd-task-progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: center;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--rd-line);
+  background: rgba(81, 180, 119, .1);
+  font-family: ui-monospace, monospace;
+}
+
+html[data-look="9"] .rd-task-progress span {
+  color: var(--rd-muted);
+  font-size: 8px;
+  letter-spacing: .08em;
+}
+
+html[data-look="9"] .rd-task-progress strong,
+html[data-look="9"] .rd-task-progress b {
+  color: #d8ffe7;
+  font-size: 9px;
+}
+
+html[data-look="9"] .rd-task-progress-track {
+  height: 8px;
+  border: 1px solid var(--rd-line);
+  background: #07120d;
+  overflow: hidden;
+}
+
+html[data-look="9"] .rd-task-progress-track i {
+  display: block;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--rd-green) 0 7px, transparent 7px 9px);
+}
+
+html[data-look="9"] .rd-task-row {
+  min-width: 0;
+  min-height: 72px;
+  padding: 7px 4px;
+  border-bottom: 1px dashed rgba(88, 113, 101, .72);
+  background: rgba(5, 18, 12, .38);
+}
+
+html[data-look="9"] .rd-task-cluster:not(.main-task) .rd-task-row,
+html[data-look="9"] .rd-subtask-directory .rd-task-row:last-of-type {
+  border-bottom: 0;
+}
+
+html[data-look="9"] .rd-task-row.subtask {
+  position: relative;
+  padding-left: 18px;
+  background: rgba(26, 58, 42, .28);
+}
+
+html[data-look="9"] .rd-task-row.subtask::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: repeating-linear-gradient(180deg, var(--rd-green) 0 6px, transparent 6px 9px);
+}
+
+html[data-look="9"] .rd-task-drag,
+html[data-look="9"] .rd-task-check,
+html[data-look="9"] .rd-task-disclosure,
+html[data-look="9"] .rd-task-subtask-add {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--rd-line);
+  border-radius: 0;
+  background: transparent;
+  color: #d8ffe7;
+  font: 800 10px ui-monospace, monospace;
+  cursor: pointer;
+}
+
+html[data-look="9"] .rd-task-drag {
+  width: 38px;
+  touch-action: none;
+  color: var(--rd-muted);
+  cursor: grab;
+}
+
+html[data-look="9"] .rd-task-drag:active {
+  cursor: grabbing;
+}
+
+html[data-look="9"] .rd-task-check {
+  width: 54px;
+  font-size: 11px;
+}
+
+html[data-look="9"] .rd-task-row.completed .rd-task-check {
+  border-color: var(--rd-green);
+  background: rgba(81, 180, 119, .14);
+}
+
+html[data-look="9"] .rd-task-title {
+  min-width: 0;
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 4px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: #d8ffe7;
+  font: 700 11px/1.4 ui-monospace, monospace;
+  text-overflow: ellipsis;
+}
+
+html[data-look="9"] .rd-task-title:focus {
+  outline: 0;
+  border-bottom-color: var(--rd-green);
+  text-overflow: clip;
+}
+
+html[data-look="9"] .rd-task-title::placeholder {
+  color: var(--rd-muted);
+}
+
+html[data-look="9"] .rd-task-row.completed .rd-task-title {
+  color: var(--rd-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+html[data-look="9"] .rd-task-time {
+  min-width: 0;
+  color: var(--rd-muted);
+  font: 700 8px ui-monospace, monospace;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-task-disclosure[aria-expanded="true"] {
+  border-color: var(--rd-green);
+  background: rgba(81, 180, 119, .13);
+  transform: rotate(90deg);
+}
+
+html[data-look="9"] .rd-task-subtask-add {
+  border-color: var(--rd-green);
+  color: #d8ffe7;
+}
+
+html[data-look="9"] .rd-task-add-spacer {
+  width: 48px;
+  height: 48px;
+}
+
+html[data-look="9"] .rd-task-settings {
+  padding: 12px;
+  border-bottom: 1px solid var(--rd-line);
+  background: #0b2016;
+}
+
+html[data-look="9"] .rd-task-settings header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: ui-monospace, monospace;
+}
+
+html[data-look="9"] .rd-task-settings header strong {
+  color: #d8ffe7;
+  font-size: 10px;
+}
+
+html[data-look="9"] .rd-task-settings header span {
+  color: var(--rd-muted);
+  font-size: 8px;
+}
+
+html[data-look="9"] .rd-task-settings p {
+  margin: 8px 0 12px;
+  color: var(--rd-muted);
+  font: 600 9px/1.5 ui-monospace, monospace;
+}
+
+html[data-look="9"] .rd-task-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+html[data-look="9"] .rd-task-settings button {
+  width: 100%;
+  padding: 0 9px;
+  border-color: var(--rd-line);
+  text-align: left;
+  font-size: 8px;
+}
+
+html[data-look="9"] .rd-task-settings button:disabled {
+  opacity: .38;
+  cursor: default;
+}
+
+html[data-look="9"] .rd-task-quiet,
+html[data-look="9"] .rd-task-note {
+  margin: 0;
+  color: var(--rd-muted);
+  font: 700 8px/1.55 ui-monospace, monospace;
+}
+
+html[data-look="9"] .rd-task-quiet {
+  padding: 14px 10px;
+}
+
+html[data-look="9"] .rd-task-bottom-add {
+  width: 100%;
+  margin-top: 14px;
+  background: rgba(81, 180, 119, .1);
+}
+
+html[data-look="9"] .rd-task-note {
+  margin-top: 10px;
+  text-align: center;
+}
+
+html[data-look="9"] .rd-task-empty {
+  padding: 28px 0;
+}
+
+html[data-look="9"] .rd-task-empty strong {
+  color: #d8ffe7;
+  font: 800 31px/1 ui-monospace, monospace;
+}
+
+html[data-look="9"] .rd-task-empty h2 {
+  margin: 17px 0 7px;
+  color: #d8ffe7;
+  font: 800 17px/1.15 ui-monospace, monospace;
+}
+
+html[data-look="9"] .rd-task-empty p {
+  margin: 0;
+  color: var(--rd-muted);
+  font: 600 10px/1.5 ui-monospace, monospace;
+}
+
+html[data-look="9"] [data-task-drop="true"].drag-over {
+  box-shadow: inset 4px 0 var(--rd-green), inset 0 0 0 1px var(--rd-green);
+  background: rgba(81, 180, 119, .12);
+}
+
+html[data-look="9"] .rd-task-drag:focus-visible,
+html[data-look="9"] .rd-task-check:focus-visible,
+html[data-look="9"] .rd-task-title:focus-visible,
+html[data-look="9"] .rd-task-disclosure:focus-visible,
+html[data-look="9"] .rd-task-subtask-add:focus-visible,
+html[data-look="9"] .rd-task-settings button:focus-visible,
+html[data-look="9"] .rd-task-command button:focus-visible,
+html[data-look="9"] .rd-task-top-add:focus-visible,
+html[data-look="9"] .rd-task-bottom-add:focus-visible {
+  outline: 4px solid #ffffff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 390px) {
+  html[data-look="9"] .rd-task-columns,
+  html[data-look="9"] .rd-task-row {
+    grid-template-columns: 34px 50px minmax(0, 1fr) 44px 44px;
+  }
+
+  html[data-look="9"] .rd-task-columns span:nth-child(4),
+  html[data-look="9"] .rd-task-time {
+    display: none;
+  }
+
+  html[data-look="9"] .rd-task-drag {
+    width: 34px;
+  }
+
+  html[data-look="9"] .rd-task-check {
+    width: 50px;
+  }
+
+  html[data-look="9"] .rd-task-disclosure,
+  html[data-look="9"] .rd-task-subtask-add,
+  html[data-look="9"] .rd-task-add-spacer {
+    width: 44px;
+  }
+
+  html[data-look="9"] .rd-task-row.subtask {
+    padding-left: 14px;
+  }
+
+  html[data-look="9"] .rd-task-settings-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-task-header h1 {
+  font-size: 36px;
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-task-header p,
+html[data-text-scale="large"][data-look="9"] .rd-task-title,
+html[data-text-scale="large"][data-look="9"] .rd-task-settings p,
+html[data-text-scale="large"][data-look="9"] .rd-task-empty p {
+  font-size: 14px;
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-task-columns {
+  display: none;
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-task-row {
+  grid-template-columns: 44px 54px minmax(0, 1fr) 48px 48px;
+  min-height: 84px;
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-task-time {
+  display: none;
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-task-top-add,
+html[data-text-scale="large"][data-look="9"] .rd-task-bottom-add,
+html[data-text-scale="large"][data-look="9"] .rd-task-command button,
+html[data-text-scale="large"][data-look="9"] .rd-task-settings button {
+  min-height: 54px;
+  font-size: 13px;
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-task-display small,
+html[data-text-scale="large"][data-look="9"] .rd-task-progress,
+html[data-text-scale="large"][data-look="9"] .rd-task-time,
+html[data-text-scale="large"][data-look="9"] .rd-task-note {
+  font-size: 12px;
+}
+
+@media (prefers-contrast: more) {
+  html[data-look="9"] .rd-task-display,
+  html[data-look="9"] .rd-task-list,
+  html[data-look="9"] .rd-task-cluster,
+  html[data-look="9"] .rd-task-row,
+  html[data-look="9"] .rd-task-settings,
+  html[data-look="9"] .rd-task-progress,
+  html[data-look="9"] .rd-task-drag,
+  html[data-look="9"] .rd-task-check,
+  html[data-look="9"] .rd-task-disclosure,
+  html[data-look="9"] .rd-task-subtask-add {
+    border-color: #c5e4d2;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-look="9"] .rd-tasks-page,
+  html[data-look="9"] .rd-task-header,
+  html[data-look="9"] .rd-task-display,
+  html[data-look="9"] .rd-task-display > div,
+  html[data-look="9"] .rd-task-command,
+  html[data-look="9"] .rd-task-columns,
+  html[data-look="9"] .rd-task-list,
+  html[data-look="9"] .rd-task-cluster,
+  html[data-look="9"] .rd-task-progress,
+  html[data-look="9"] .rd-task-row,
+  html[data-look="9"] .rd-task-settings,
+  html[data-look="9"] .rd-task-drag,
+  html[data-look="9"] .rd-task-check,
+  html[data-look="9"] .rd-task-title,
+  html[data-look="9"] .rd-task-disclosure,
+  html[data-look="9"] .rd-task-subtask-add,
+  html[data-look="9"] .rd-task-top-add,
+  html[data-look="9"] .rd-task-bottom-add,
+  html[data-look="9"] .rd-task-command button,
+  html[data-look="9"] .rd-task-settings button {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+    text-shadow: none;
+  }
+
+  html[data-look="9"] .rd-task-row.completed .rd-task-check {
+    color: HighlightText;
+    background: Highlight;
+    border-color: Highlight;
+  }
+
+  html[data-look="9"] .rd-task-progress-track,
+  html[data-look="9"] .rd-task-progress-track i {
+    border-color: CanvasText;
+    background: Canvas;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="9"] .rd-task-disclosure {
+    transition: none;
+  }
+}

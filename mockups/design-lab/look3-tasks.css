@@ -1,0 +1,545 @@
+/* Look #3 — Precision Minimal Task hierarchy loop */
+
+html[data-look="3"] .pm-tasks-page {
+  min-height: 100%;
+}
+
+html[data-look="3"] .pm-task-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px;
+  gap: 16px;
+  align-items: start;
+  padding: 6px 0 18px;
+  border-bottom: 1px solid var(--pm-ink);
+}
+
+html[data-look="3"] .pm-task-header h1 {
+  margin: 5px 0 4px;
+  font-size: 31px;
+  line-height: 1.05;
+  letter-spacing: -.045em;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="3"] .pm-task-header p {
+  margin: 0;
+  color: var(--pm-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+html[data-look="3"] .pm-task-top-add,
+html[data-look="3"] .pm-task-bottom-add,
+html[data-look="3"] .pm-task-toolbar button,
+html[data-look="3"] .pm-task-settings button {
+  min-height: 48px;
+  border: 1px solid var(--pm-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--pm-ink);
+  font: 700 10px var(--mono);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+html[data-look="3"] .pm-task-top-add {
+  width: 48px;
+  padding: 0;
+  border-color: var(--pm-accent);
+  background: var(--pm-accent);
+  color: #fff;
+  font-size: 20px;
+}
+
+html[data-look="3"] .pm-task-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--pm-ink);
+}
+
+html[data-look="3"] .pm-task-metrics > div {
+  min-width: 0;
+  padding: 14px 10px 12px;
+  border-right: 1px solid var(--pm-line);
+}
+
+html[data-look="3"] .pm-task-metrics > div:last-child {
+  border-right: 0;
+}
+
+html[data-look="3"] .pm-task-metrics strong,
+html[data-look="3"] .pm-task-metrics span {
+  display: block;
+}
+
+html[data-look="3"] .pm-task-metrics strong {
+  color: var(--pm-accent);
+  font: 650 24px/1 var(--mono);
+}
+
+html[data-look="3"] .pm-task-metrics span {
+  margin-top: 5px;
+  color: var(--pm-muted);
+  font: 650 8px var(--mono);
+  letter-spacing: .08em;
+}
+
+html[data-look="3"] .pm-task-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--pm-line);
+}
+
+html[data-look="3"] .pm-task-toolbar > span {
+  min-width: 0;
+  color: var(--pm-muted);
+  font: 650 9px/1.35 var(--mono);
+  overflow-wrap: anywhere;
+}
+
+html[data-look="3"] .pm-task-toolbar button {
+  min-height: 42px;
+  flex: 0 0 auto;
+  padding: 0 10px;
+  border-color: var(--pm-line);
+  font-size: 9px;
+}
+
+html[data-look="3"] .pm-task-columns {
+  display: grid;
+  grid-template-columns: 38px 48px minmax(0, 1fr) 38px 48px 48px;
+  gap: 4px;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--pm-ink);
+  color: var(--pm-muted);
+  font: 600 7px var(--mono);
+  text-align: center;
+}
+
+html[data-look="3"] .pm-task-columns span:nth-child(3) {
+  text-align: left;
+}
+
+html[data-look="3"] .pm-task-list {
+  display: grid;
+  gap: 0;
+  border-bottom: 1px solid var(--pm-ink);
+}
+
+html[data-look="3"] .pm-task-cluster {
+  min-width: 0;
+  border-bottom: 1px solid var(--pm-line);
+}
+
+html[data-look="3"] .pm-task-cluster:last-child {
+  border-bottom: 0;
+}
+
+html[data-look="3"] .pm-task-cluster.completed {
+  opacity: .78;
+}
+
+html[data-look="3"] .pm-task-progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px 12px;
+  align-items: center;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--pm-line);
+  background: var(--pm-soft);
+  font-family: var(--mono);
+}
+
+html[data-look="3"] .pm-task-progress > span {
+  color: var(--pm-muted);
+  font-size: 8px;
+  letter-spacing: .08em;
+}
+
+html[data-look="3"] .pm-task-progress > strong {
+  color: var(--pm-ink);
+  font-size: 10px;
+}
+
+html[data-look="3"] .pm-task-progress-track {
+  height: 4px;
+  background: #d5d8dc;
+  overflow: hidden;
+}
+
+html[data-look="3"] .pm-task-progress-track i {
+  display: block;
+  height: 100%;
+  background: var(--pm-accent);
+}
+
+html[data-look="3"] .pm-task-progress > b {
+  color: var(--pm-accent);
+  font-size: 9px;
+}
+
+html[data-look="3"] .pm-task-row {
+  min-width: 0;
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: 38px 48px minmax(0, 1fr) 38px 48px 48px;
+  gap: 4px;
+  align-items: center;
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--pm-line);
+  background: var(--pm-bg);
+}
+
+html[data-look="3"] .pm-task-cluster:not(.main-task) .pm-task-row,
+html[data-look="3"] .pm-subtask-list .pm-task-row:last-of-type {
+  border-bottom: 0;
+}
+
+html[data-look="3"] .pm-task-row.subtask {
+  position: relative;
+  padding-left: 20px;
+  background: #f1f2f3;
+}
+
+html[data-look="3"] .pm-task-row.subtask::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--pm-accent);
+}
+
+html[data-look="3"] .pm-task-drag,
+html[data-look="3"] .pm-task-check,
+html[data-look="3"] .pm-task-disclosure,
+html[data-look="3"] .pm-task-subtask-add {
+  min-width: 0;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--pm-muted);
+  cursor: pointer;
+}
+
+html[data-look="3"] .pm-task-drag {
+  width: 38px;
+  touch-action: none;
+  cursor: grab;
+  font: 700 12px var(--mono);
+  letter-spacing: -4px;
+}
+
+html[data-look="3"] .pm-task-drag:active {
+  cursor: grabbing;
+}
+
+html[data-look="3"] .pm-task-check {
+  width: 48px;
+}
+
+html[data-look="3"] .pm-task-check span {
+  width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid #676c72;
+  border-radius: 2px;
+  color: #fff;
+  font: 700 10px var(--mono);
+}
+
+html[data-look="3"] .pm-task-row.completed .pm-task-check span {
+  border-color: var(--pm-accent);
+  background: var(--pm-accent);
+}
+
+html[data-look="3"] .pm-task-title {
+  min-width: 0;
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 3px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--pm-ink);
+  font: 650 12px/1.35 var(--sans);
+  text-overflow: ellipsis;
+}
+
+html[data-look="3"] .pm-task-title:focus {
+  outline: 0;
+  border-bottom-color: var(--pm-accent);
+  text-overflow: clip;
+}
+
+html[data-look="3"] .pm-task-title::placeholder {
+  color: #858a90;
+}
+
+html[data-look="3"] .pm-task-row.completed .pm-task-title {
+  color: var(--pm-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+html[data-look="3"] .pm-task-time {
+  min-width: 0;
+  color: var(--pm-muted);
+  font: 650 9px var(--mono);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="3"] .pm-task-disclosure,
+html[data-look="3"] .pm-task-subtask-add {
+  width: 48px;
+  font-size: 21px;
+}
+
+html[data-look="3"] .pm-task-disclosure[aria-expanded="true"] {
+  color: var(--pm-accent);
+  transform: rotate(90deg);
+}
+
+html[data-look="3"] .pm-task-subtask-add {
+  border-left: 1px solid var(--pm-line);
+  color: var(--pm-accent);
+  font-size: 18px;
+}
+
+html[data-look="3"] .pm-task-add-spacer {
+  width: 48px;
+  height: 48px;
+}
+
+html[data-look="3"] .pm-task-settings {
+  padding: 12px;
+  border-bottom: 1px solid var(--pm-line);
+  background: #e9ebee;
+}
+
+html[data-look="3"] .pm-task-settings-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono);
+}
+
+html[data-look="3"] .pm-task-settings-head strong {
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+html[data-look="3"] .pm-task-settings-head span {
+  color: var(--pm-accent);
+  font-size: 8px;
+}
+
+html[data-look="3"] .pm-task-settings > p {
+  margin: 7px 0 11px;
+  color: var(--pm-muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+html[data-look="3"] .pm-task-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+html[data-look="3"] .pm-task-settings button {
+  width: 100%;
+  padding: 0 10px;
+  border-color: #bfc3c8;
+  text-align: left;
+  font-size: 9px;
+}
+
+html[data-look="3"] .pm-task-settings button:disabled {
+  opacity: .42;
+  cursor: default;
+}
+
+html[data-look="3"] .pm-task-quiet,
+html[data-look="3"] .pm-task-gesture-note {
+  margin: 0;
+  color: var(--pm-muted);
+  font: 600 8px/1.5 var(--mono);
+}
+
+html[data-look="3"] .pm-task-quiet {
+  padding: 14px 12px;
+}
+
+html[data-look="3"] .pm-task-bottom-add {
+  width: 100%;
+  margin-top: 14px;
+  border-color: var(--pm-accent);
+  color: var(--pm-accent);
+}
+
+html[data-look="3"] .pm-task-gesture-note {
+  margin-top: 9px;
+  text-align: center;
+}
+
+html[data-look="3"] .pm-task-empty {
+  padding: 28px 0;
+  border-top: 4px solid var(--pm-accent);
+}
+
+html[data-look="3"] .pm-task-empty > span {
+  color: var(--pm-accent);
+  font: 650 28px var(--mono);
+}
+
+html[data-look="3"] .pm-task-empty h2 {
+  margin: 18px 0 6px;
+  font-size: 20px;
+}
+
+html[data-look="3"] .pm-task-empty p {
+  margin: 0;
+  color: var(--pm-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+html[data-look="3"] [data-task-drop="true"].drag-over {
+  box-shadow: inset 3px 0 var(--pm-accent), inset 0 0 0 1px var(--pm-accent);
+}
+
+html[data-look="3"] .pm-task-drag:focus-visible,
+html[data-look="3"] .pm-task-check:focus-visible,
+html[data-look="3"] .pm-task-title:focus-visible,
+html[data-look="3"] .pm-task-disclosure:focus-visible,
+html[data-look="3"] .pm-task-subtask-add:focus-visible,
+html[data-look="3"] .pm-task-settings button:focus-visible,
+html[data-look="3"] .pm-task-toolbar button:focus-visible,
+html[data-look="3"] .pm-task-top-add:focus-visible,
+html[data-look="3"] .pm-task-bottom-add:focus-visible {
+  outline: 3px solid #0b2fbd;
+  outline-offset: 2px;
+}
+
+@media (max-width: 390px) {
+  html[data-look="3"] .pm-task-columns,
+  html[data-look="3"] .pm-task-row {
+    grid-template-columns: 34px 44px minmax(0, 1fr) 44px 44px;
+  }
+
+  html[data-look="3"] .pm-task-columns span:nth-child(4),
+  html[data-look="3"] .pm-task-time {
+    display: none;
+  }
+
+  html[data-look="3"] .pm-task-drag {
+    width: 34px;
+  }
+
+  html[data-look="3"] .pm-task-check,
+  html[data-look="3"] .pm-task-disclosure,
+  html[data-look="3"] .pm-task-subtask-add,
+  html[data-look="3"] .pm-task-add-spacer {
+    width: 44px;
+  }
+
+  html[data-look="3"] .pm-task-row.subtask {
+    padding-left: 14px;
+  }
+
+  html[data-look="3"] .pm-task-settings-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-task-header h1 {
+  font-size: 38px;
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-task-header p,
+html[data-text-scale="large"][data-look="3"] .pm-task-title,
+html[data-text-scale="large"][data-look="3"] .pm-task-settings > p,
+html[data-text-scale="large"][data-look="3"] .pm-task-empty p {
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-task-metrics span,
+html[data-text-scale="large"][data-look="3"] .pm-task-toolbar > span,
+html[data-text-scale="large"][data-look="3"] .pm-task-settings-head,
+html[data-text-scale="large"][data-look="3"] .pm-task-progress,
+html[data-text-scale="large"][data-look="3"] .pm-task-gesture-note,
+html[data-text-scale="large"][data-look="3"] .pm-task-time {
+  font-size: 12px;
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-task-columns {
+  display: none;
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-task-row {
+  grid-template-columns: 44px 48px minmax(0, 1fr) 48px 48px;
+  min-height: 82px;
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-task-time {
+  display: none;
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-task-toolbar button,
+html[data-text-scale="large"][data-look="3"] .pm-task-settings button,
+html[data-text-scale="large"][data-look="3"] .pm-task-top-add,
+html[data-text-scale="large"][data-look="3"] .pm-task-bottom-add {
+  min-height: 54px;
+  font-size: 14px;
+}
+
+@media (forced-colors: active) {
+  html[data-look="3"] .pm-task-header,
+  html[data-look="3"] .pm-task-metrics,
+  html[data-look="3"] .pm-task-toolbar,
+  html[data-look="3"] .pm-task-columns,
+  html[data-look="3"] .pm-task-list,
+  html[data-look="3"] .pm-task-cluster,
+  html[data-look="3"] .pm-task-row,
+  html[data-look="3"] .pm-task-progress,
+  html[data-look="3"] .pm-task-settings,
+  html[data-look="3"] .pm-task-title,
+  html[data-look="3"] .pm-task-top-add,
+  html[data-look="3"] .pm-task-bottom-add,
+  html[data-look="3"] .pm-task-toolbar button,
+  html[data-look="3"] .pm-task-settings button {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  html[data-look="3"] .pm-task-row.completed .pm-task-check span {
+    color: HighlightText;
+    background: Highlight;
+    border-color: Highlight;
+  }
+
+  html[data-look="3"] .pm-task-progress-track,
+  html[data-look="3"] .pm-task-progress-track i {
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="3"] .pm-task-disclosure {
+    transition: none;
+  }
+}

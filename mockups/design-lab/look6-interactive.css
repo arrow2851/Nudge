@@ -1,0 +1,555 @@
+/* Look #6 — Tactile Household interactive Routine Completion Loop */
+
+html[data-look="6"] .th-today-page,
+html[data-look="6"] .th-section-page,
+html[data-look="6"] .th-chore-page {
+  overflow: visible;
+}
+
+html[data-look="6"] .th-work-order,
+html[data-look="6"] .th-service-ticket,
+html[data-look="6"] .th-clear-ticket,
+html[data-look="6"] .th-completion-slip,
+html[data-look="6"] .th-job-note,
+html[data-look="6"] .th-chore-facts {
+  min-width: 0;
+}
+
+html[data-look="6"] .th-work-order {
+  position: relative;
+  margin-top: 22px;
+  padding: 20px 17px 18px;
+  border: 1px solid #887f70;
+  border-radius: 8px;
+  background: var(--th-paper);
+  box-shadow: var(--th-shadow);
+}
+
+html[data-look="6"] .th-work-order::after,
+html[data-look="6"] .th-service-ticket::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px dashed rgba(91, 82, 67, .32);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+html[data-look="6"] .th-work-order.overdue {
+  border-color: #8a4637;
+}
+
+html[data-look="6"] .th-work-order.today {
+  border-color: #927026;
+}
+
+html[data-look="6"] .th-work-order-head,
+html[data-look="6"] .th-service-ticket-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #aaa190;
+  font: 750 10px/1.3 var(--mono);
+  letter-spacing: .07em;
+}
+
+html[data-look="6"] .th-work-order-head b,
+html[data-look="6"] .th-service-ticket-head b {
+  padding: 3px 6px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+}
+
+html[data-look="6"] .th-work-order.overdue .th-work-order-head b {
+  color: #6d2d22;
+  background: #ead5ce;
+}
+
+html[data-look="6"] .th-work-order.today .th-work-order-head b {
+  color: #604609;
+  background: #eadfbd;
+}
+
+html[data-look="6"] .th-work-order .th-tab,
+html[data-look="6"] .th-service-ticket .th-tab {
+  position: relative;
+  z-index: 1;
+  margin-top: 14px;
+}
+
+html[data-look="6"] .th-work-order h2,
+html[data-look="6"] .th-service-ticket h1 {
+  position: relative;
+  z-index: 1;
+  margin: 14px 0 7px;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="6"] .th-work-order h2 {
+  font-size: 24px;
+  line-height: 1.12;
+}
+
+html[data-look="6"] .th-work-order p,
+html[data-look="6"] .th-service-ticket p,
+html[data-look="6"] .th-clear-ticket p,
+html[data-look="6"] .th-completion-slip p,
+html[data-look="6"] .th-job-note p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: var(--th-muted);
+  font-size: 12px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="6"] .th-work-order-actions,
+html[data-look="6"] .th-job-actions,
+html[data-look="6"] .th-chore-actions {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 9px;
+  margin-top: 17px;
+}
+
+html[data-look="6"] .th-work-order-actions button,
+html[data-look="6"] .th-job-actions button,
+html[data-look="6"] .th-chore-actions button,
+html[data-look="6"] .th-wide-action {
+  width: 100%;
+}
+
+html[data-look="6"] .th-clear-ticket {
+  margin-top: 26px;
+  padding: 24px 18px;
+  border: 1px solid #718577;
+  border-radius: 8px;
+  background: #e3eadf;
+  box-shadow: 0 4px 0 #9eaa9d;
+}
+
+html[data-look="6"] .th-clear-ticket h2 {
+  margin: 14px 0 7px;
+  font-size: 22px;
+  line-height: 1.18;
+}
+
+html[data-look="6"] .th-wide-action {
+  margin-top: 17px;
+}
+
+html[data-look="6"] .th-job-actions {
+  grid-template-columns: 1fr 1fr;
+}
+
+html[data-look="6"] .th-job-card .th-primary {
+  margin-top: 0;
+}
+
+html[data-look="6"] .th-routine-row {
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 0;
+  padding-right: 0;
+}
+
+html[data-look="6"] .th-routine-row.completed {
+  background: #e1e8df;
+}
+
+html[data-look="6"] .th-routine-row.completed .th-routine-copy strong {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+html[data-look="6"] .th-routine-row.completed .th-check span {
+  display: grid;
+  place-items: center;
+  border-color: var(--th-green-dark);
+  background: #dce5dc;
+  color: var(--th-green-dark);
+  font-size: 14px;
+  font-weight: 900;
+  box-shadow: inset 0 0 0 3px #eef3ec;
+}
+
+html[data-look="6"] .th-routine-open {
+  width: 100%;
+  min-width: 0;
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+  padding: 8px 8px 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--th-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+html[data-look="6"] .th-routine-open .th-status-tag {
+  max-width: 94px;
+}
+
+html[data-look="6"] .th-section-jobs {
+  margin-top: 20px;
+}
+
+html[data-look="6"] .th-compact-empty {
+  margin-top: 24px;
+  padding-top: 24px;
+}
+
+html[data-look="6"] .th-compact-empty .th-drawer-pull {
+  display: block;
+  margin-bottom: 14px;
+}
+
+html[data-look="6"] .th-service-ticket {
+  position: relative;
+  margin-top: 19px;
+  padding: 19px 17px 20px;
+  border: 1px solid #887f70;
+  border-radius: 8px;
+  background: var(--th-paper);
+  box-shadow: var(--th-shadow);
+}
+
+html[data-look="6"] .th-service-ticket.completed {
+  border-color: #657d6b;
+  background: #edf1e9;
+}
+
+html[data-look="6"] .th-service-ticket h1 {
+  font-size: 28px;
+  line-height: 1.08;
+}
+
+html[data-look="6"] .th-service-ticket > .th-stamp {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+}
+
+html[data-look="6"] .th-completion-slip,
+html[data-look="6"] .th-job-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 15px;
+  border: 1px solid #829085;
+  border-radius: 6px;
+  background: #dfe7dd;
+  box-shadow: 0 3px 0 #a7b0a5;
+}
+
+html[data-look="6"] .th-completion-slip > span {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--th-green-dark);
+  border-radius: 50%;
+  background: #f3f6f1;
+  color: var(--th-green-dark);
+  font-weight: 900;
+}
+
+html[data-look="6"] .th-completion-slip strong,
+html[data-look="6"] .th-job-note strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+html[data-look="6"] .th-job-note {
+  grid-template-columns: 1fr;
+  border-color: #a59878;
+  background: #eee6d5;
+  box-shadow: 0 3px 0 #b8ad98;
+}
+
+html[data-look="6"] .th-chore-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 20px 0 0;
+  border: 1px solid #9d9484;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--th-paper);
+}
+
+html[data-look="6"] .th-chore-facts > div {
+  min-width: 0;
+  padding: 12px;
+  border-right: 1px solid #c0b6a5;
+  border-bottom: 1px solid #c0b6a5;
+}
+
+html[data-look="6"] .th-chore-facts > div:nth-child(2n) {
+  border-right: 0;
+}
+
+html[data-look="6"] .th-chore-facts > div:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+html[data-look="6"] .th-chore-facts dt {
+  color: var(--th-muted);
+  font: 750 9px/1.3 var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+html[data-look="6"] .th-chore-facts dd {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="6"] .th-area-card:focus-visible,
+html[data-look="6"] .th-next-card > button:focus-visible,
+html[data-look="6"] .th-routine-open:focus-visible,
+html[data-look="6"] .th-check:focus-visible,
+html[data-look="6"] .th-section-row:focus-visible,
+html[data-look="6"] .th-primary:focus-visible,
+html[data-look="6"] .th-secondary:focus-visible,
+html[data-look="6"] .th-dismiss:focus-visible,
+html[data-look="6"] .th-back:focus-visible,
+html[data-look="6"] .th-add:focus-visible {
+  outline: 4px solid #2f5e77;
+  outline-offset: 3px;
+}
+
+@media (max-width: 420px) {
+  html[data-look="6"] .th-page {
+    padding-inline: 14px;
+  }
+
+  html[data-look="6"] .th-summary-board {
+    grid-template-columns: 66px 66px minmax(0, 1fr);
+    gap: 7px;
+    padding: 10px;
+  }
+
+  html[data-look="6"] .th-area-card {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+  }
+
+  html[data-look="6"] .th-area-next {
+    grid-column: 2 / 4;
+  }
+
+  html[data-look="6"] .th-stamp {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  html[data-look="6"] .th-card-handle {
+    grid-column: 3;
+    grid-row: 3;
+  }
+
+  html[data-look="6"] .th-job-actions {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-look="6"] .th-routine-open {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  html[data-look="6"] .th-routine-open .th-status-tag {
+    justify-self: start;
+    max-width: none;
+  }
+}
+
+@media (max-width: 370px) {
+  html[data-look="6"] .th-header h1,
+  html[data-look="6"] .th-detail-header h1,
+  html[data-look="6"] .th-service-ticket h1 {
+    font-size: 26px;
+  }
+
+  html[data-look="6"] .th-summary-board {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  html[data-look="6"] .th-summary-board p {
+    grid-column: 1 / -1;
+  }
+
+  html[data-look="6"] .th-work-order-actions {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-look="6"] .th-chore-facts {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-look="6"] .th-chore-facts > div,
+  html[data-look="6"] .th-chore-facts > div:nth-child(2n),
+  html[data-look="6"] .th-chore-facts > div:nth-last-child(-n + 2) {
+    border-right: 0;
+    border-bottom: 1px solid #c0b6a5;
+  }
+
+  html[data-look="6"] .th-chore-facts > div:last-child {
+    border-bottom: 0;
+  }
+}
+
+html[data-text-scale="large"][data-look="6"] .th-label,
+html[data-text-scale="large"][data-look="6"] .th-tab,
+html[data-text-scale="large"][data-look="6"] .th-panel-label,
+html[data-text-scale="large"][data-look="6"] .th-work-order-head,
+html[data-text-scale="large"][data-look="6"] .th-service-ticket-head,
+html[data-text-scale="large"][data-look="6"] .th-chore-facts dt {
+  font-size: 12px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-header h1,
+html[data-text-scale="large"][data-look="6"] .th-detail-header h1,
+html[data-text-scale="large"][data-look="6"] .th-service-ticket h1 {
+  font-size: 36px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-header p,
+html[data-text-scale="large"][data-look="6"] .th-work-order p,
+html[data-text-scale="large"][data-look="6"] .th-service-ticket p,
+html[data-text-scale="large"][data-look="6"] .th-clear-ticket p,
+html[data-text-scale="large"][data-look="6"] .th-completion-slip p,
+html[data-text-scale="large"][data-look="6"] .th-job-note p,
+html[data-text-scale="large"][data-look="6"] .th-chore-facts dd,
+html[data-text-scale="large"][data-look="6"] .th-routine-copy strong,
+html[data-text-scale="large"][data-look="6"] .th-routine-copy small,
+html[data-text-scale="large"][data-look="6"] .th-status-tag {
+  font-size: 14px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-work-order h2 {
+  font-size: 30px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-job-actions,
+html[data-text-scale="large"][data-look="6"] .th-work-order-actions,
+html[data-text-scale="large"][data-look="6"] .th-chore-actions {
+  grid-template-columns: 1fr;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-primary,
+html[data-text-scale="large"][data-look="6"] .th-secondary,
+html[data-text-scale="large"][data-look="6"] .th-dismiss,
+html[data-text-scale="large"][data-look="6"] .th-back,
+html[data-text-scale="large"][data-look="6"] .th-add {
+  min-height: 54px;
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-area-card {
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-area-next {
+  grid-column: 2 / 4;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-stamp {
+  grid-column: 2;
+  justify-self: start;
+  font-size: 12px;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-card-handle {
+  grid-column: 3;
+  grid-row: 3;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-routine-open {
+  min-height: 82px;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+html[data-text-scale="large"][data-look="6"] .th-routine-open .th-status-tag {
+  justify-self: start;
+  max-width: none;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-chore-facts {
+  grid-template-columns: 1fr;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-chore-facts > div,
+html[data-text-scale="large"][data-look="6"] .th-chore-facts > div:nth-child(2n),
+html[data-text-scale="large"][data-look="6"] .th-chore-facts > div:nth-last-child(-n + 2) {
+  border-right: 0;
+  border-bottom: 1px solid #c0b6a5;
+}
+
+html[data-text-scale="large"][data-look="6"] .th-chore-facts > div:last-child {
+  border-bottom: 0;
+}
+
+@media (forced-colors: active) {
+  html[data-look="6"] .th-work-order,
+  html[data-look="6"] .th-service-ticket,
+  html[data-look="6"] .th-clear-ticket,
+  html[data-look="6"] .th-completion-slip,
+  html[data-look="6"] .th-job-note,
+  html[data-look="6"] .th-chore-facts,
+  html[data-look="6"] .th-routine-row,
+  html[data-look="6"] .th-routine-open {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  html[data-look="6"] .th-work-order::after,
+  html[data-look="6"] .th-service-ticket::after {
+    display: none;
+  }
+
+  html[data-look="6"] .th-completion-slip > span,
+  html[data-look="6"] .th-check span,
+  html[data-look="6"] .th-stamp,
+  html[data-look="6"] .th-status-tag,
+  html[data-look="6"] .th-work-order-head b,
+  html[data-look="6"] .th-service-ticket-head b {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  html[data-look="6"] .th-primary,
+  html[data-look="6"] .th-secondary,
+  html[data-look="6"] .th-dismiss,
+  html[data-look="6"] .th-back,
+  html[data-look="6"] .th-add {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: ButtonText;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="6"] *,
+  html[data-look="6"] *::before,
+  html[data-look="6"] *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

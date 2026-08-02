@@ -24,7 +24,7 @@ Today / Needs Attention
 
 ## Routes
 
-Look #4 now supports six routed views:
+Look #4 supports six routed views:
 
 - `today`
 - `areas`
@@ -145,6 +145,8 @@ Still pending:
 - Look #1 changes.
 - Merge into `main`.
 
-## Next implementation
+## Subsequent shared-contract status
 
-Look #3 — Precision Minimal receives the same Routine Completion Loop next. The behavioral result must remain equivalent while the interaction presentation becomes denser and more operational.
+Version `0.9.1` implemented the same Routine Completion Loop in Look #3 — Precision Minimal. Looks #3 and #4 now share the deterministic semantic state, so completing or reopening a routine in either Look is reflected when switching to the other Look.
+
+The next implementation in the recorded sequence is Look #5 — Playful Modular.

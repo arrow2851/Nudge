@@ -5,7 +5,11 @@ import { clearStoredState, commitState, defaultState, readStateFromLocation } fr
 import { renderAreaDetail, renderAreasEditorial, renderInterventionEditorial } from './renderers/look2.js';
 import { renderAreaDetailPrecision, renderAreasPrecision, renderInterventionPrecision } from './renderers/look3.js';
 import { renderAreaDetailZen, renderAreasZen, renderInterventionZen } from './renderers/look4.js';
+import { renderAreaDetailPlayful, renderAreasPlayful, renderInterventionPlayful } from './renderers/look5.js';
 import { renderAreaDetailTactile, renderAreasTactile, renderInterventionTactile } from './renderers/look6.js';
+import { renderAreaDetailBold, renderAreasBold, renderInterventionBold } from './renderers/look7.js';
+import { renderAreaDetailAmbient, renderAreasAmbient, renderInterventionAmbient } from './renderers/look8.js';
+import { renderAreaDetailRetro, renderAreasRetro, renderInterventionRetro } from './renderers/look9.js';
 import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
@@ -38,13 +42,37 @@ function renderLook(look, data) {
     if (state.view === 'areas') return renderAreasZen(data);
   }
 
+  if (look.id === 5) {
+    if (state.view === 'intervention') return renderInterventionPlayful(data);
+    if (state.view === 'area') return renderAreaDetailPlayful(data, state.areaId, renderUnsupported);
+    if (state.view === 'areas') return renderAreasPlayful(data);
+  }
+
   if (look.id === 6) {
     if (state.view === 'intervention') return renderInterventionTactile(data);
     if (state.view === 'area') return renderAreaDetailTactile(data, state.areaId, renderUnsupported);
     if (state.view === 'areas') return renderAreasTactile(data);
   }
 
-  return renderUnsupported('The requested screen is not part of the Round 1 audition.');
+  if (look.id === 7) {
+    if (state.view === 'intervention') return renderInterventionBold(data);
+    if (state.view === 'area') return renderAreaDetailBold(data, state.areaId, renderUnsupported);
+    if (state.view === 'areas') return renderAreasBold(data);
+  }
+
+  if (look.id === 8) {
+    if (state.view === 'intervention') return renderInterventionAmbient(data);
+    if (state.view === 'area') return renderAreaDetailAmbient(data, state.areaId, renderUnsupported);
+    if (state.view === 'areas') return renderAreasAmbient(data);
+  }
+
+  if (look.id === 9) {
+    if (state.view === 'intervention') return renderInterventionRetro(data);
+    if (state.view === 'area') return renderAreaDetailRetro(data, state.areaId, renderUnsupported);
+    if (state.view === 'areas') return renderAreasRetro(data);
+  }
+
+  return renderUnsupported('The requested screen is not part of the Design Lab gallery.');
 }
 
 function render({ routeAction = 'none' } = {}) {
@@ -115,7 +143,7 @@ document.addEventListener('click', event => {
   const nav = event.target.closest('[data-nav]');
   if (nav) {
     if (nav.dataset.nav === 'areas') setView('areas');
-    else showToast('Round 1 is focused on Areas and the intervention moment.');
+    else showToast('The gallery is focused on Areas and the intervention moment.');
     return;
   }
 
@@ -126,9 +154,9 @@ document.addEventListener('click', event => {
     'back-areas': () => setView('areas'),
     'reset-review': resetReviewState,
     'reset-route': resetReviewState,
-    'complete-demo': () => showToast('Completion feedback will be tested in the interactive vertical-slice round.'),
-    'demo-add-area': () => showToast('The audition tests the visual system; full creation comes in Round 2.'),
-    'section-demo': () => showToast('Section detail follows after the visual finalists are selected.'),
+    'complete-demo': () => showToast('Completion feedback will be tested in a later interactive round.'),
+    'demo-add-area': () => showToast('The gallery tests visual systems; full creation comes in a later interactive round.'),
+    'section-demo': () => showToast('Section detail will be added during interactive expansion.'),
     'start-demo': () => showToast('Task accepted. Nudge would open its focused completion view.'),
     'different-demo': () => showToast('A short alternative-task list would appear here.'),
     'not-now-demo': () => showToast('Intervention dismissed without guilt.')

@@ -107,9 +107,25 @@ Today / Needs Attention
 
 **Accessibility:** Urgency colors are always repeated in text. Critical targets retain the 48 px floor; Large Text actions reach 54 px; forced-colors removes decorative shadows.
 
-**Validation boundary:** The validator now encodes four interactive Looks and requires `look7-interactive.css`, but exact-checkout execution remains pending because direct cloning is DNS-blocked.
+## 2026-08-01 — Look #6 makes routine state feel physical, not punitive
 
-**Next active Look:** Look #6 — Tactile Household. It must preserve the same behavior while testing physical-control cues and household-tool affordances.
+**Milestone:** Version `0.9.4` implements the Routine Completion Loop in Look #6 — Tactile Household.
+
+**Presentation:** Today's work board, work orders, Area service cards, Section drawers, job cards, service intervals, bench-time labels, inspection stamps, and completion slips.
+
+**Metaphor boundary:** Household-tool language should make the system understandable and tangible. It must not imply that the home, the user, or an overdue routine is broken.
+
+**Action separation:** Routine rows retain separate completion and job-card detail controls. Drawer rows navigate; they do not complete work.
+
+**Reversibility:** Completing a job closes its card and immediately presents `Reopen job card`. Reopen maps to the same shared Undo behavior and restores the prior fixture status.
+
+**Cross-Look state:** Looks #3, #4, #5, #6, and #7 share semantic completion state. Physical metaphors are presentation-only.
+
+**Accessibility:** Stamps and colors are repeated in text. Completed state also uses a checkmark and line-through. Critical targets retain 48 px; Large Text actions reach 54 px; forced-colors removes decorative paper and shadow effects.
+
+**Validation boundary:** The validator now encodes five interactive Looks and requires `look6-interactive.css`, but exact-checkout execution remains pending because direct cloning is DNS-blocked.
+
+**Next active Look:** Look #2 — Warm Editorial. It must preserve the same behavior while testing journal-like hierarchy and narrative context without hiding direct completion controls.
 
 ## Feedback entry template
 

@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.10.7';
+  const VERSION = '0.11.0';
   const initialParams = new URLSearchParams(location.search);
   const captureMode = initialParams.get('capture');
 
@@ -28,7 +28,7 @@
 
     const routeParams = new URLSearchParams(location.search);
     const lookKicker = document.querySelector('#look-kicker')?.textContent?.trim() || 'Look';
-    const screen = routeParams.get('screen') || 'tasks';
+    const screen = routeParams.get('screen') || 'intervention';
     const area = routeParams.get('area');
     const section = routeParams.get('section');
     const chore = routeParams.get('chore');

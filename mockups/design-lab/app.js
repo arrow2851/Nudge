@@ -10,11 +10,11 @@ import { renderAreaDetailPlayful, renderAreasPlayful, renderChorePlayful, render
 import { renderAreaDetailTactile, renderAreasTactile, renderChoreTactile, renderInterventionTactile, renderSectionTactile, renderTodayTactile } from './renderers/look6.js';
 import { renderAreaDetailBold, renderAreasBold, renderChoreBold, renderInterventionBold, renderSectionBold, renderTodayBold } from './renderers/look7.js';
 import { renderAreaDetailAmbient, renderAreasAmbient, renderChoreAmbient, renderInterventionAmbient, renderSectionAmbient, renderTodayAmbient } from './renderers/look8.js';
-import { renderAreaDetailRetro, renderAreasRetro, renderInterventionRetro } from './renderers/look9.js';
+import { renderAreaDetailRetro, renderAreasRetro, renderChoreRetro, renderInterventionRetro, renderSectionRetro, renderTodayRetro } from './renderers/look9.js';
 import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
-const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8]);
+const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
 
 let state = readStateFromLocation();
 let currentData = null;
@@ -92,12 +92,15 @@ function renderLook(look, data) {
   }
 
   if (look.id === 9) {
+    if (state.view === 'today') return renderTodayRetro(data);
     if (state.view === 'intervention') return renderInterventionRetro(data);
+    if (state.view === 'chore') return renderChoreRetro(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
+    if (state.view === 'section') return renderSectionRetro(data, state.areaId, state.sectionId, renderUnsupported);
     if (state.view === 'area') return renderAreaDetailRetro(data, state.areaId, renderUnsupported);
     if (state.view === 'areas') return renderAreasRetro(data);
   }
 
-  return renderUnsupported('This interactive screen is currently implemented in Looks #2 through #8.');
+  return renderUnsupported('This interactive screen is implemented in every active Design Lab Look.');
 }
 
 function syncBottomNavigation() {
@@ -176,7 +179,7 @@ function resetReviewState() {
 
 function setView(view) {
   if (view === 'today' && !INTERACTIVE_LOOKS.has(state.look)) {
-    showToast('Today interaction is currently available in Looks #2 through #8.');
+    showToast('Today interaction is available in every active Design Lab Look.');
     return;
   }
   state.view = view;
@@ -250,7 +253,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 8;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 9;
     if (!INTERACTIVE_LOOKS.has(state.look) && ['today', 'section', 'chore'].includes(state.view)) {
       state.view = 'areas';
       resetPath();

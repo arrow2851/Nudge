@@ -2,13 +2,14 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.10.4`  
+**Current version:** `0.10.5`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.10.4 Look #6 Task hierarchy](CHECKLIST-PROGRESS-0.10.4.md)
+- [Latest checklist progress — 0.10.5 Look #2 Task hierarchy](CHECKLIST-PROGRESS-0.10.5.md)
+- [Look #2 Task hierarchy implementation](LOOK-2-TASK-HIERARCHY.md)
 - [Look #6 Task hierarchy implementation](LOOK-6-TASK-HIERARCHY.md)
 - [Look #7 Task hierarchy implementation](LOOK-7-TASK-HIERARCHY.md)
 - [Look #5 Task hierarchy implementation](LOOK-5-TASK-HIERARCHY.md)
@@ -53,9 +54,9 @@ Today / Needs Attention
 
 The eight Looks share semantic routine-completion state. Switching Looks changes presentation without resetting the route or routine result.
 
-## Task hierarchy — 5 of 8 Looks
+## Task hierarchy — 6 of 8 Looks
 
-Versions `0.10.0` through `0.10.4` implement the approved simple checklist model in Looks #4, #3, #5, #7, and #6:
+Versions `0.10.0` through `0.10.5` implement the approved simple checklist model in Looks #4, #3, #5, #7, #6, and #2:
 
 ```text
 Tasks
@@ -91,6 +92,7 @@ Task state uses a separate scenario-isolated Design Lab session-storage namespac
 - **Look #5 — Playful Modular:** colorful task blocks, friendly progress language, clear hierarchy rails, and positive—but non-scoring—feedback.
 - **Look #7 — Bold Utility:** thick rules, direct controls, factual Active/Main/Done counts, and strong hierarchy rails without failure-state language.
 - **Look #6 — Tactile Household:** paper task cards, drawer-like subtask grouping, physical controls, and satisfying filing cues without defect-based language.
+- **Look #2 — Warm Editorial:** a calm practical page, restrained progress notes, serif task titles, and editorial spacing without reflection or diary requirements.
 
 ## Task hierarchy sequence
 
@@ -99,8 +101,8 @@ Task state uses a separate scenario-isolated Design Lab session-storage namespac
 3. Look #5 — Playful Modular — **implemented**
 4. Look #7 — Bold Utility — **implemented**
 5. Look #6 — Tactile Household — **implemented**
-6. Look #2 — Warm Editorial — **next**
-7. Look #8 — Ambient Glass
+6. Look #2 — Warm Editorial — **implemented**
+7. Look #8 — Ambient Glass — **next**
 8. Look #9 — Retro Digital
 
 After Task hierarchy is implemented across all Looks, the feature order remains Intervention-to-action and then Reusable Lists.
@@ -111,7 +113,7 @@ The static validator now covers:
 
 - Eight Routine Completion Looks and forty-eight routine renderer exports.
 - Shared Task hierarchy state and action contract.
-- Look #3, Look #4, Look #5, Look #6, and Look #7 task renderers and stylesheets.
+- Look #2 through Look #7 task renderers and stylesheets.
 - Add, edit, complete, reopen, main-task, subtask, release, progress, reorder, indent, unindent, and completed-visibility hooks.
 - Cross-Look task-state preservation.
 - Responsive, Large Text, Forced Colors, and Reduced Motion contracts.
@@ -139,11 +141,12 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
+?look=2&screen=tasks&scenario=normal
+?look=2&screen=tasks&scenario=backlog
+?look=2&screen=tasks&scenario=new
+?look=2&screen=tasks&scenario=long
+?look=2&screen=tasks&scenario=large-text
 ?look=6&screen=tasks&scenario=normal
-?look=6&screen=tasks&scenario=backlog
-?look=6&screen=tasks&scenario=new
-?look=6&screen=tasks&scenario=long
-?look=6&screen=tasks&scenario=large-text
 ?look=7&screen=tasks&scenario=normal
 ?look=5&screen=tasks&scenario=normal
 ?look=3&screen=tasks&scenario=normal
@@ -154,4 +157,4 @@ Append `capture=labelled` for an evidence frame or `capture=phone` for a clean p
 
 ## Next work
 
-Implement the same Task hierarchy behavior contract in Look #2 — Warm Editorial.
+Implement the same Task hierarchy behavior contract in Look #8 — Ambient Glass, preserving solid fallbacks and the simple checklist model.

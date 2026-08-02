@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
 const INTERACTIVE_LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
-const TASK_LOOKS = [3, 4, 5, 6, 7];
+const TASK_LOOKS = [2, 3, 4, 5, 6, 7];
 const SCENARIOS = ['normal', 'backlog', 'new', 'clear', 'large', 'long', 'large-text'];
 const GALLERY_VIEWS = ['areas', 'area', 'intervention'];
 const ROUTINE_VIEWS = ['today', 'areas', 'area', 'section', 'chore', 'intervention'];
@@ -29,6 +29,7 @@ const rendererFunctions = new Map([
 ]);
 
 const taskRenderers = new Map([
+  [2, ['renderers/look2-tasks.js', 'renderTasksEditorial', 'look2-tasks.css', ['.ed-task-row', '.ed-task-settings', '.ed-task-progress']]],
   [3, ['renderers/look3-tasks.js', 'renderTasksPrecision', 'look3-tasks.css', ['.pm-task-row', '.pm-task-settings', '.pm-task-progress']]],
   [4, ['renderers/look4-tasks.js', 'renderTasksZen', 'look4-tasks.css', ['.zen-task-row', '.zen-task-settings', '.zen-task-progress']]],
   [5, ['renderers/look5-tasks.js', 'renderTasksPlayful', 'look5-tasks.css', ['.pl-task-row', '.pl-task-settings', '.pl-task-progress']]],
@@ -37,7 +38,7 @@ const taskRenderers = new Map([
 ]);
 
 const styles = [
-  'styles.css', 'foundation.css', 'look2-interactive.css',
+  'styles.css', 'foundation.css', 'look2-interactive.css', 'look2-tasks.css',
   'look3.css', 'look3-interactive.css', 'look3-tasks.css',
   'look4.css', 'look4-interactive.css', 'look4-tasks.css',
   'look6.css', 'look6-quality.css', 'look6-interactive.css', 'look6-tasks.css',
@@ -100,7 +101,7 @@ function fixturesAndRoutes(shared) {
   check(JSON.stringify(Object.keys(shared.SCENARIOS)) === JSON.stringify(SCENARIOS), 'Scenario registry differs from the seven shared scenarios.');
   check(JSON.stringify(shared.LOOKS.map(item => item.id)) === JSON.stringify(LOOKS), 'Look registry differs from Looks #2–#9.');
   [...ROUTINE_VIEWS, 'tasks'].forEach(view => check(shared.ALLOWED_VIEWS.has(view), `Interactive view is not allowed: ${view}`));
-  check(shared.defaultState().look === 6 && shared.defaultState().view === 'tasks', 'Default review route is not Look #6 Tasks.');
+  check(shared.defaultState().look === 2 && shared.defaultState().view === 'tasks', 'Default review route is not Look #2 Tasks.');
 
   for (const [id, scenario] of Object.entries(shared.SCENARIOS)) {
     check(Array.isArray(scenario.areas), `${id}: areas must be an array.`);
@@ -170,9 +171,9 @@ function taskHierarchyContract() {
   const taskState = read('task-state.js');
   const controls = read('controls.js');
 
-  check(app.includes('new Set([3, 4, 5, 6, 7])'), 'app.js does not register Looks #3, #4, #5, #6, and #7 for Task hierarchy.');
+  check(app.includes('new Set([2, 3, 4, 5, 6, 7])'), 'app.js does not register Looks #2 through #7 for Task hierarchy.');
   check(app.includes('TASK_RENDERERS'), 'app.js is missing the task renderer registry.');
-  check(controls.includes('new Set([3, 4, 5, 6, 7])'), 'controls.js does not register Looks #3, #4, #5, #6, and #7 for Task hierarchy guidance.');
+  check(controls.includes('new Set([2, 3, 4, 5, 6, 7])'), 'controls.js does not register Looks #2 through #7 for Task hierarchy guidance.');
 
   [
     'nudge-design-lab-task-hierarchy-v1', 'addTask', 'updateTaskTitle', 'toggleTaskCompletion',
@@ -201,7 +202,7 @@ function taskHierarchyContract() {
       check(css.includes(token), `Look #${look} task CSS is missing ${token}.`);
     });
   }
-  passes.push('Checked shared Task hierarchy state and Looks #3/#4/#5/#6/#7 renderer, action, drag, responsive, and accessibility contracts.');
+  passes.push('Checked shared Task hierarchy state and Looks #2/#3/#4/#5/#6/#7 renderer, action, drag, responsive, and accessibility contracts.');
 }
 
 function versionsAndHtml(shared) {
@@ -265,7 +266,7 @@ function main() {
   passes.forEach(item => console.log(`PASS  ${item}`));
   failures.forEach(item => console.error(`FAIL  ${item}`));
   if (failures.length) process.exitCode = 1;
-  else console.log('\nAll gallery, Routine Completion, and Looks #3/#4/#5/#6/#7 Task hierarchy checks passed.');
+  else console.log('\nAll gallery, Routine Completion, and Looks #2/#3/#4/#5/#6/#7 Task hierarchy checks passed.');
 }
 
 main();

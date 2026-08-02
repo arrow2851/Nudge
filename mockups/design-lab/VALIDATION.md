@@ -16,7 +16,7 @@ A successful run exits with status `0`. Failed invariants are printed with a `FA
 - Shared shell, controller, routine, task, and intervention state files exist
 - Routine renderers for Looks #2 through #9 exist
 - Task renderers for all eight active Looks exist
-- Dedicated Intervention-to-action renderers/styles exist for Looks #2 through #8
+- Dedicated Intervention-to-action renderers/styles exist for all eight active Looks
 - The protected Look #1 comparison reference exists
 - Every required stylesheet exists and loads in the expected order
 
@@ -25,7 +25,7 @@ A successful run exits with status `0`. Failed invariants are printed with a `FA
 - Every relative JavaScript import resolves to an existing file
 - Every Look exports the six Routine Completion screens
 - Every active Look exports its Task hierarchy screen
-- `app.js` references routine, task, and implemented intervention renderers
+- `app.js` references all routine, task, and intervention renderers
 - The Look #1 comparison reference imports the shared Design Lab version
 
 ### Shared fixtures and state
@@ -39,7 +39,7 @@ A successful run exits with status `0`. Failed invariants are printed with a `FA
 
 ### Routes
 
-The validator covers Looks #2 through #9, all Routine Completion routes, Tasks for all eight Looks, and all seven scenarios. It also requires Look #8 Intervention as the default review route for version `0.11.6`.
+The validator covers Looks #2 through #9, all Routine Completion routes, Tasks for all eight Looks, and all seven scenarios. It requires Look #9 Intervention as the default review route for version `0.11.7`.
 
 ### Routine Completion and Task hierarchy
 
@@ -54,19 +54,20 @@ The validator covers Looks #2 through #9, all Routine Completion routes, Tasks f
 - `intervention-state.js` contains the separate storage namespace and four-phase model
 - Suggestion cycling uses raw scenario data and remains deterministic
 - Start, Next, Dismiss, Resume, Complete, Reopen, Undo, Return-to-Today, and Reset hooks remain present
-- Looks #2 through #8 are registered as Intervention-to-action Looks
-- All seven pure-Look renderers expose the equivalent action set
-- All seven dedicated style contracts retain 48 px actions, Large Text handling, short-screen behavior, Forced Colors, visible focus, and Reduced Motion
+- Looks #2 through #9 are registered as Intervention-to-action Looks
+- All eight pure-Look renderers expose the equivalent action set
+- All eight style contracts retain 48 px actions, Large Text handling, short-screen behavior, Forced Colors, visible focus, and Reduced Motion
 - Starting or completing an intervention does not alter routine or task state
 - Optional-choice language confirms that staying, dismissing, and changing the suggestion carry no penalty
-- Warm Editorial includes explicit no-journaling language and contains no textarea, contenteditable reflection field, or journal field
+- Warm Editorial contains no journaling or reflection input requirement
 - Precision Minimal metrics remain descriptive rather than evaluative
-- Playful Modular feedback remains free of points, streaks, rewards, rankings, and performance scoring
+- Playful Modular remains free of points, streaks, rewards, rankings, and performance scoring
 - Bold Utility excludes error, failure, fault, alarm, warning, and noncompliance framing
-- Tactile Household excludes broken, defect, failed, and repair-required framing
-- Ambient Glass explicitly states that transparency is decorative
+- Tactile Household excludes defect, repair, and service-grade framing
 - Ambient Glass requires solid no-backdrop-filter and Reduced Transparency modes
-- Ambient Glass fallback modes remove aurora and decorative orb effects while preserving phase and action meaning
+- Retro Digital requires fixture-snapshot and not-live-timer wording
+- Retro Digital excludes error, failure, fault, alarm, warning, and failed-process framing
+- Retro Digital retains Increased Contrast behavior
 
 ### Version and stylesheets
 
@@ -76,7 +77,7 @@ The validator covers Looks #2 through #9, all Routine Completion routes, Tasks f
 
 ## Evidence boundary
 
-The committed-source contract is recorded through version `0.11.6`. Direct repository cloning remains blocked by local DNS restrictions, so the exact complete-checkout validator and browser run have not been claimed.
+The committed-source contract is recorded through version `0.11.7`. Direct repository cloning remains blocked by local DNS restrictions, so the exact complete-checkout validator and browser run have not been claimed.
 
 Static validation does not replace runtime console checks, browser navigation testing, keyboard review, actual screen-reader output, physical Android presentation, real forced-colors behavior, or a single-version browser regression across every Look. Lower-end Ambient Glass paint and compositing measurements also remain pending.
 

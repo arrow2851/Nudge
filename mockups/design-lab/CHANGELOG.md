@@ -1,5 +1,25 @@
 # Design Lab Changelog
 
+## 0.8.3 — 2026-08-01
+
+### Look #8 — Ambient Glass quality pass
+
+- Increased microtext labels and supporting copy
+- Increased completion controls to 48 × 48 px and critical actions to at least 48 px high
+- Reflowed Area cards and routine statuses for narrow screens and Large Text
+- Added strong Look-specific focus indicators and long-content wrapping
+- Improved Area, summary, panel, Section, routine-status, and Intervention semantics
+- Darkened the primary gradient from `#4b72db` / `#8a72d6` to `#315ebd` / `#6550b4`, raising white-text contrast to approximately `6.06:1` and `6.25:1`
+- Darkened muted text to `#465875`, providing approximately `6.48:1` against the main background
+- Removed backdrop blur from repeated Area cards and content panels
+- Limited blur to a few focal surfaces and reduced it to 10 px
+- Added solid fallbacks for unsupported backdrop filtering
+- Added a reduced-transparency path that removes blur, aurora, and glow decoration
+- Expanded forced-colors handling
+- Added `look8-quality.css`, `LOOK-8-QUALITY.md`, and `CHECKLIST-PROGRESS-0.8.3.md`
+- Extended validator coverage to the Look #8 quality stylesheet and load order
+- Updated the Design Lab to `0.8.3`
+
 ## 0.8.2 — 2026-08-01
 
 ### Look #7 — Bold Utility quality pass

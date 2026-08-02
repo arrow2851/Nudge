@@ -1,5 +1,29 @@
 # Design Lab Changelog
 
+## 0.10.7 — 2026-08-02
+
+### Look #9 — Retro Digital Task hierarchy loop
+
+- Reused the shared scenario-isolated Task hierarchy state engine
+- Added `renderers/look9-tasks.js` and `look9-tasks.css`
+- Added a neutral task directory with Available, Main Tasks, and Complete counters
+- Preserved top and bottom empty-task creation with immediate inline editing focus
+- Preserved separate drag, completion, title, optional time, options, and subtask controls
+- Added main-task fraction, percentage, and segmented progress track
+- Preserved one-level hierarchy, completion propagation, and subtask release
+- Preserved pointer drag plus Move Up, Move Down, Indent, and Unindent controls
+- Preserved completed-item grouping and Hide/Show Completed
+- Preserved shared task state across all eight active Looks
+- Added narrow-screen, Large Text, Increased Contrast, Forced Colors, and Reduced Motion handling
+- Added validator checks rejecting error, fault, and failure terminology in the Retro Digital task renderer
+- Extended validation to eight task Looks and eight task stylesheets
+- Added `LOOK-9-TASK-HIERARCHY.md` and `CHECKLIST-PROGRESS-0.10.7.md`
+- Completed the Task hierarchy sequence across all eight active Looks
+- Set Look #4 — Zen Focus Intervention-to-action as the next automatic milestone
+- Kept production persistence, notifications, collaboration, nested subtasks, deletion, and production gestures outside the Design Lab boundary
+- Kept exact-checkout browser, Android gesture, screen-reader, single-version regression, and Ambient Glass paint evidence pending
+- Kept Look #1 and `main` unchanged
+
 ## 0.10.6 — 2026-08-02
 
 ### Look #8 — Ambient Glass Task hierarchy loop

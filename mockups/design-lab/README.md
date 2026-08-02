@@ -2,21 +2,15 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.9.7`  
+**Current version:** `0.10.0`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.9.7 all-Look Routine Completion](CHECKLIST-PROGRESS-0.9.7.md)
-- [Look #9 interactive Routine Completion Loop](LOOK-9-INTERACTIVE.md)
-- [Look #8 interactive Routine Completion Loop](LOOK-8-INTERACTIVE.md)
-- [Look #2 interactive Routine Completion Loop](LOOK-2-INTERACTIVE.md)
-- [Look #6 interactive Routine Completion Loop](LOOK-6-INTERACTIVE.md)
-- [Look #7 interactive Routine Completion Loop](LOOK-7-INTERACTIVE.md)
-- [Look #5 interactive Routine Completion Loop](LOOK-5-INTERACTIVE.md)
-- [Look #3 interactive Routine Completion Loop](LOOK-3-INTERACTIVE.md)
-- [Look #4 interactive Routine Completion Loop](LOOK-4-INTERACTIVE.md)
+- [Latest checklist progress — 0.10.0 Look #4 Task hierarchy](CHECKLIST-PROGRESS-0.10.0.md)
+- [Look #4 Task hierarchy implementation](LOOK-4-TASK-HIERARCHY.md)
+- [All-Look Routine Completion progress](CHECKLIST-PROGRESS-0.9.7.md)
 - [Pure-Look implementation order](PURE-LOOK-IMPLEMENTATION-ORDER.md)
 - [Interactive expansion decision record](INTERACTIVE-EXPANSION-DECISION.md)
 - [Full-gallery browser evidence report](FULL-GALLERY-EVIDENCE-0.8.4.md)
@@ -28,7 +22,7 @@ The Design Lab compares alternate visual systems without changing the approved L
 
 - The protected Look #1 prototype remains under `mockups/prototype/` on `main` and is unchanged.
 - Experimental files remain under `mockups/design-lab/`.
-- Design Lab state is isolated from Look #1 and production storage.
+- Design Lab routine and task state are isolated from Look #1 and production storage.
 - Nothing should merge into `main` until migration boundaries are intentionally reviewed.
 
 ## Complete visual gallery
@@ -39,20 +33,7 @@ All active directions have completed dedicated code-level quality passes. Browse
 
 ## Routine Completion complete in every active Look
 
-The user selected **Option A**: build one pure-Look vertical slice at a time.
-
-The completed sequence is:
-
-1. Look #4 — Zen Focus
-2. Look #3 — Precision Minimal
-3. Look #5 — Playful Modular
-4. Look #7 — Bold Utility
-5. Look #6 — Tactile Household
-6. Look #2 — Warm Editorial
-7. Look #8 — Ambient Glass
-8. Look #9 — Retro Digital
-
-Every active Look now implements:
+Looks #2 through #9 all implement:
 
 ```text
 Today / Needs Attention
@@ -66,35 +47,67 @@ Today / Needs Attention
 → Undo or reopen
 ```
 
-Looks #2 through #9 share semantic completion state. Switching Looks changes presentation without resetting the route or routine result.
+The eight Looks share semantic routine-completion state. Switching Looks changes presentation without resetting the route or routine result.
 
-## Interactive milestones
+## Task hierarchy started
 
-- `0.9.0` — Look #4 Zen Focus
-- `0.9.1` — Look #3 Precision Minimal
-- `0.9.2` — Look #5 Playful Modular
-- `0.9.3` — Look #7 Bold Utility
-- `0.9.4` — Look #6 Tactile Household
-- `0.9.5` — Look #2 Warm Editorial
-- `0.9.6` — Look #8 Ambient Glass
-- `0.9.7` — Look #9 Retro Digital and completion of the eight-Look sequence
+Version `0.10.0` implements the approved simple checklist model in Look #4 — Zen Focus:
+
+```text
+Tasks
+→ Add empty task
+→ Edit inline
+→ Complete or reopen
+→ Set as main task
+→ Add subtasks
+→ Track progress
+→ Reorder
+→ Indent or unindent
+→ Release subtasks when main-task mode is removed
+→ Hide or show completed items
+```
+
+Implemented rules include:
+
+- A plus at the top and Add Task below the list.
+- Left drag handle, separate completion control, editable title, optional time shorthand, settings disclosure, and a separate subtask plus.
+- One-level main-task and subtask hierarchy.
+- Completing every subtask completes the main task.
+- Reopening a subtask reopens the main task.
+- Turning off main-task mode releases subtasks as regular tasks.
+- Completed items move to the bottom and may be hidden or shown.
+- Native pointer drag plus explicit Move, Indent, and Unindent controls.
+
+Task state uses a separate scenario-isolated Design Lab session-storage namespace. Other Looks preserve that state while showing that their Task hierarchy presentation is not implemented yet.
+
+## Task hierarchy sequence
+
+1. Look #4 — Zen Focus — **implemented**
+2. Look #3 — Precision Minimal — **next**
+3. Look #5 — Playful Modular
+4. Look #7 — Bold Utility
+5. Look #6 — Tactile Household
+6. Look #2 — Warm Editorial
+7. Look #8 — Ambient Glass
+8. Look #9 — Retro Digital
+
+After Task hierarchy is implemented across all Looks, the feature order remains Intervention-to-action and then Reusable Lists.
 
 ## Validation boundary
 
 The static validator now covers:
 
-- Eight interactive Looks.
-- Forty-eight interactive renderer exports.
-- Eight dedicated interactive stylesheets.
-- Shared completion, recurrence, Undo, route, and state-preservation hooks.
-- Responsive, Large Text, forced-colors, and reduced-motion contracts.
+- Eight Routine Completion Looks and forty-eight routine renderer exports.
+- Look #4 Task hierarchy route, state module, renderer, and stylesheet.
+- Add, edit, complete, reopen, main-task, subtask, release, progress, reorder, indent, unindent, and completed-visibility hooks.
+- Responsive, Large Text, Forced Colors, and Reduced Motion contracts.
 - Ambient Glass reduced-transparency and no-backdrop-filter fallbacks.
 
 Still pending:
 
 - Exact complete-checkout validator execution.
 - Exact complete-checkout interactive browser run.
-- Physical Android testing.
+- Physical Android testing, including drag/hold and swipe behavior.
 - Actual screen-reader smoke testing.
 - Lower-end Ambient Glass paint/compositing measurements.
 - A single-version browser regression across every Look.
@@ -112,15 +125,15 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
-?look=9&screen=today&scenario=normal
-?look=9&screen=area&area=kitchen&scenario=backlog
-?look=9&screen=section&area=kitchen&section=Countertops%20%26%20Surfaces&scenario=normal
-?look=9&screen=chore&area=kitchen&section=Countertops%20%26%20Surfaces&chore=kitchen-wipe-stovetop-1&scenario=normal
-?look=4&screen=today&scenario=large-text
+?look=4&screen=tasks&scenario=normal
+?look=4&screen=tasks&scenario=backlog
+?look=4&screen=tasks&scenario=new
+?look=4&screen=tasks&scenario=long
+?look=4&screen=tasks&scenario=large-text
 ```
 
 Append `capture=labelled` for an evidence frame or `capture=phone` for a clean phone frame.
 
 ## Next work
 
-Begin the **Task hierarchy loop** in Look #4 — Zen Focus, then continue through the delegated Look order unless a material scope or architecture decision requires a hard stop.
+Implement the same Task hierarchy behavior contract in Look #3 — Precision Minimal.

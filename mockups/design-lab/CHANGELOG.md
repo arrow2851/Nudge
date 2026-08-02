@@ -1,5 +1,48 @@
 # Design Lab Changelog
 
+## 0.10.3 — 2026-08-02
+
+### Look #7 — Bold Utility Task hierarchy loop
+
+- Reused the shared scenario-isolated Task hierarchy state engine
+- Added `renderers/look7-tasks.js` and `look7-tasks.css`
+- Added a high-contrast task register with Active, Main, and Done counts
+- Preserved top and bottom empty-task creation with immediate inline editing focus
+- Preserved separate drag, completion, title, optional time, settings, and subtask controls
+- Added main-task progress fraction, percentage, and progress track
+- Preserved one-level hierarchy, completion propagation, and subtask release
+- Preserved pointer drag plus Move Up, Move Down, Indent, and Unindent controls
+- Preserved completed-item grouping and Hide/Show Completed
+- Preserved shared task state across Looks #3, #4, #5, and #7
+- Kept direct language factual without treating active work as failure
+- Extended validation to four task Looks and four task stylesheets
+- Added `LOOK-7-TASK-HIERARCHY.md` and `CHECKLIST-PROGRESS-0.10.3.md`
+- Set Look #6 — Tactile Household as the next Task hierarchy implementation
+- Kept production persistence, notifications, collaboration, nested subtasks, deletion, and production gestures outside the Design Lab boundary
+- Kept exact-checkout browser, Android gesture, and screen-reader evidence pending
+- Kept Look #1 and `main` unchanged
+
+## 0.10.2 — 2026-08-02
+
+### Look #5 — Playful Modular Task hierarchy loop
+
+- Reused the shared scenario-isolated Task hierarchy state engine
+- Added `renderers/look5-tasks.js` and `look5-tasks.css`
+- Added colorful modular task cards with Active, Main, and Done summary blocks
+- Preserved top and bottom empty-task creation with immediate inline editing focus
+- Preserved separate drag, completion, title, optional time, settings, and subtask controls
+- Added friendly progress language and a visible progress track
+- Preserved one-level hierarchy, completion propagation, and subtask release
+- Preserved pointer drag plus Move Up, Move Down, Indent, and Unindent controls
+- Preserved completed-item grouping and Hide/Show Completed
+- Preserved shared task state across Looks #3, #4, and #5
+- Kept positive feedback free of points, streaks, rewards, and scoring
+- Extended validation to three task Looks and three task stylesheets
+- Added `LOOK-5-TASK-HIERARCHY.md` and `CHECKLIST-PROGRESS-0.10.2.md`
+- Set Look #7 — Bold Utility as the next Task hierarchy implementation
+- Kept exact-checkout browser, Android gesture, and screen-reader evidence pending
+- Kept Look #1 and `main` unchanged
+
 ## 0.10.1 — 2026-08-02
 
 ### Look #3 — Precision Minimal Task hierarchy loop

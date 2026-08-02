@@ -2,13 +2,14 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.9.4`  
+**Current version:** `0.9.5`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.9.4 Look #6 interactive slice](CHECKLIST-PROGRESS-0.9.4.md)
+- [Latest checklist progress — 0.9.5 Look #2 interactive slice](CHECKLIST-PROGRESS-0.9.5.md)
+- [Look #2 interactive Routine Completion Loop](LOOK-2-INTERACTIVE.md)
 - [Look #6 interactive Routine Completion Loop](LOOK-6-INTERACTIVE.md)
 - [Look #7 interactive Routine Completion Loop](LOOK-7-INTERACTIVE.md)
 - [Look #5 interactive Routine Completion Loop](LOOK-5-INTERACTIVE.md)
@@ -17,7 +18,10 @@ The Design Lab compares alternate visual systems without changing the approved L
 - [Pure-Look implementation order](PURE-LOOK-IMPLEMENTATION-ORDER.md)
 - [Interactive expansion decision record](INTERACTIVE-EXPANSION-DECISION.md)
 - [Full-gallery browser evidence report](FULL-GALLERY-EVIDENCE-0.8.4.md)
+- [Expanded gallery directions](EXPANDED-GALLERY-LOOKS.md)
 - [Decisions and feedback log](DECISIONS.md)
+- [Look #1 — Soft Practical Utility baseline](LOOK-1-SOFT-PRACTICAL-UTILITY.md)
+- [Shared scenario definitions](SCENARIOS.md)
 - [Automated validation guide](VALIDATION.md)
 - [Design Lab changelog](CHANGELOG.md)
 
@@ -32,9 +36,9 @@ The Design Lab compares alternate visual systems without changing the approved L
 
 Look #1 remains the protected Soft Practical Utility baseline. Active gallery directions are Looks #2 through #9. Every direction remains preserved; the implementation order is a learning sequence, not a ranking or elimination list.
 
-All active directions completed dedicated code-level quality passes. Browser presentation evidence exists cumulatively across versions 0.7.2 and 0.8.4, although it was not executed from one identical build.
+All active directions have completed dedicated code-level quality passes. Browser presentation evidence exists cumulatively across versions 0.7.2 and 0.8.4, although it was not executed from one identical build.
 
-Exact complete-checkout validation, physical Android checks, actual screen-reader testing, and a single-version all-Look rerun remain pending.
+The exact complete-checkout validator, physical Android checks, actual screen-reader smoke testing, and a single-version all-Look rerun remain pending.
 
 ## Approved interactive strategy
 
@@ -47,8 +51,8 @@ Routine `go` messages advance automatically through this sequence:
 3. Look #5 — Playful Modular — **implemented**
 4. Look #7 — Bold Utility — **implemented**
 5. Look #6 — Tactile Household — **implemented**
-6. Look #2 — Warm Editorial — **next**
-7. Look #8 — Ambient Glass
+6. Look #2 — Warm Editorial — **implemented**
+7. Look #8 — Ambient Glass — **next**
 8. Look #9 — Retro Digital
 
 The first flow in every Look is the Routine Completion Loop:
@@ -71,35 +75,16 @@ Look switching remains a Design Lab review control, prototype state remains isol
 
 ## Interactive slices completed
 
-### 0.9.0 — Look #4 Zen Focus
+- `0.9.0` — Look #4 Zen Focus: calm emphasis and one useful action at a time.
+- `0.9.1` — Look #3 Precision Minimal: dense operational hierarchy and explicit metrics.
+- `0.9.2` — Look #5 Playful Modular: colorful grouping and friendly reversible feedback.
+- `0.9.3` — Look #7 Bold Utility: direct high-contrast hierarchy without guilt or alarm.
+- `0.9.4` — Look #6 Tactile Household: work orders, service cards, drawers, and job-card completion.
+- `0.9.5` — Look #2 Warm Editorial: a quiet daily page, contextual entries, and restrained completion notes.
 
-Established the shared behavior contract with calm emphasis and one useful action at a time.
+Looks #2 through #7 now share semantic completion state. Switching Looks changes presentation without resetting the route or routine result.
 
-### 0.9.1 — Look #3 Precision Minimal
-
-Applied the same behavior to a dense operational presentation with explicit metrics and compact metadata.
-
-### 0.9.2 — Look #5 Playful Modular
-
-Applied the behavior to colorful modular grouping and friendly reversible completion feedback.
-
-### 0.9.3 — Look #7 Bold Utility
-
-Applied the behavior to a direct high-contrast hierarchy with explicit backlog visibility.
-
-### 0.9.4 — Look #6 Tactile Household
-
-Applies the same behavior to a physical household-maintenance system:
-
-- Today's work board and a top work order.
-- Area service cards and Section drawers.
-- Separate completion and job-card detail controls.
-- Service intervals, bench-time labels, inspection stamps, and job facts.
-- Closed job-card state with an immediate Reopen action.
-- Shared semantic completion state across Looks #3, #4, #5, #6, and #7.
-- Narrow-screen, Large Text, forced-colors, reduced-motion, and focus-visible treatment.
-
-Direct cloning remains blocked by local DNS restrictions, so 0.9.4 does not claim an exact complete-checkout validator or browser run. See `LOOK-6-INTERACTIVE.md` for the complete evidence boundary.
+Direct cloning remains blocked by local DNS restrictions, so 0.9.5 does not claim an exact complete-checkout validator or browser run. See `LOOK-2-INTERACTIVE.md` for the complete evidence boundary.
 
 ## Run locally
 
@@ -114,15 +99,15 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
-?look=6&screen=today&scenario=normal
-?look=6&screen=area&area=kitchen&scenario=backlog
-?look=6&screen=section&area=kitchen&section=Countertops%20%26%20Surfaces&scenario=normal
-?look=6&screen=chore&area=kitchen&section=Countertops%20%26%20Surfaces&chore=kitchen-wipe-stovetop-1&scenario=normal
-?look=7&screen=today&scenario=large-text
+?look=2&screen=today&scenario=normal
+?look=2&screen=area&area=kitchen&scenario=backlog
+?look=2&screen=section&area=kitchen&section=Countertops%20%26%20Surfaces&scenario=normal
+?look=2&screen=chore&area=kitchen&section=Countertops%20%26%20Surfaces&chore=kitchen-wipe-stovetop-1&scenario=normal
+?look=6&screen=today&scenario=large-text
 ```
 
 Append `capture=labelled` for an evidence frame or `capture=phone` for a clean phone frame.
 
 ## Next work
 
-Implement the Routine Completion Loop in Look #2 — Warm Editorial, preserving the shared behavior while testing calm journal-like hierarchy and narrative context.
+Implement the Routine Completion Loop in Look #8 — Ambient Glass, preserving the shared behavior while testing translucent hierarchy, fallback surfaces, and lower-end rendering risk.

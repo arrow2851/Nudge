@@ -1,0 +1,248 @@
+/* Look #3 — Precision Minimal Intervention-to-action loop */
+
+html[data-look="3"] .pm-intervention-action {
+  min-height: 100%;
+}
+
+html[data-look="3"] .pm-intervention-title-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: end;
+}
+
+html[data-look="3"] .pm-intervention-title-row > div,
+html[data-look="3"] .pm-intervention-card,
+html[data-look="3"] .pm-intervention-facts div {
+  min-width: 0;
+}
+
+html[data-look="3"] .pm-intervention-title-row span,
+html[data-look="3"] .pm-intervention-card-head,
+html[data-look="3"] .pm-intervention-facts dt,
+html[data-look="3"] .pm-intervention-facts dd {
+  font-family: var(--mono);
+  text-transform: uppercase;
+}
+
+html[data-look="3"] .pm-intervention-title-row span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--pm-muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .08em;
+}
+
+html[data-look="3"] .pm-intervention-title-row strong {
+  min-width: 58px;
+  padding-left: 13px;
+  border-left: 1px solid var(--pm-line);
+  color: var(--pm-accent);
+  font: 600 25px/1 var(--mono);
+  text-align: right;
+}
+
+html[data-look="3"] .pm-intervention-card {
+  margin-top: 28px;
+  padding: 17px 0 18px;
+  border-top: 3px solid var(--pm-accent);
+  border-bottom: 1px solid var(--pm-ink);
+}
+
+html[data-look="3"] .pm-intervention-card.active {
+  border-top-color: var(--pm-ink);
+}
+
+html[data-look="3"] .pm-intervention-card.completed {
+  border-top-color: #287443;
+}
+
+html[data-look="3"] .pm-intervention-card.dismissed {
+  border-top-color: var(--pm-muted);
+}
+
+html[data-look="3"] .pm-intervention-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 12px;
+  color: var(--pm-muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .06em;
+}
+
+html[data-look="3"] .pm-intervention-card-head b {
+  flex: 0 0 auto;
+  color: var(--pm-ink);
+}
+
+html[data-look="3"] .pm-intervention-card h2 {
+  margin: 14px 0 7px;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -.03em;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="3"] .pm-intervention-card p {
+  margin: 0;
+  color: var(--pm-muted);
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="3"] .pm-intervention-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 18px 0 0;
+  border-top: 1px solid var(--pm-line);
+  border-left: 1px solid var(--pm-line);
+}
+
+html[data-look="3"] .pm-intervention-facts div {
+  padding: 10px;
+  border-right: 1px solid var(--pm-line);
+  border-bottom: 1px solid var(--pm-line);
+}
+
+html[data-look="3"] .pm-intervention-facts dt,
+html[data-look="3"] .pm-intervention-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="3"] .pm-intervention-facts dt {
+  color: var(--pm-muted);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: .05em;
+}
+
+html[data-look="3"] .pm-intervention-facts dd {
+  margin-top: 6px;
+  color: var(--pm-ink);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+html[data-look="3"] .pm-signal.active { background: var(--pm-ink); }
+html[data-look="3"] .pm-signal.completed { background: #287443; }
+html[data-look="3"] .pm-signal.dismissed { background: var(--pm-muted); }
+
+html[data-look="3"] .pm-intervention-actions .pm-primary,
+html[data-look="3"] .pm-intervention-actions .pm-secondary,
+html[data-look="3"] .pm-intervention-actions .pm-dismiss {
+  width: 100%;
+  min-height: 48px;
+}
+
+html[data-look="3"] .pm-intervention-actions .pm-dismiss {
+  border-top: 1px solid transparent;
+}
+
+html[data-look="3"] .pm-intervention-action button:focus-visible {
+  outline: 3px solid var(--pm-accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 390px) {
+  html[data-look="3"] .pm-intervention-title-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  html[data-look="3"] .pm-intervention-title-row strong {
+    width: fit-content;
+    min-width: 0;
+    padding: 8px 0 0;
+    border-top: 1px solid var(--pm-line);
+    border-left: 0;
+    text-align: left;
+  }
+
+  html[data-look="3"] .pm-intervention-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-height: 700px) {
+  html[data-look="3"] .pm-intervention-action {
+    padding-top: 16px;
+    padding-bottom: 18px;
+  }
+
+  html[data-look="3"] .pm-intervention-action .pm-intervention-body {
+    padding-top: 18px;
+  }
+
+  html[data-look="3"] .pm-intervention-action .pm-signal {
+    margin-bottom: 16px;
+  }
+
+  html[data-look="3"] .pm-intervention-action .pm-intervention-card {
+    margin-top: 18px;
+  }
+
+  html[data-look="3"] .pm-intervention-action .pm-intervention-actions {
+    margin-top: 18px;
+    padding-top: 0;
+  }
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-intervention-title-row span,
+html[data-text-scale="large"][data-look="3"] .pm-intervention-card-head,
+html[data-text-scale="large"][data-look="3"] .pm-intervention-facts dt {
+  font-size: 11px;
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-intervention-card h2 {
+  font-size: 28px;
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-intervention-card p,
+html[data-text-scale="large"][data-look="3"] .pm-intervention-facts dd {
+  font-size: 14px;
+}
+
+html[data-text-scale="large"][data-look="3"] .pm-intervention-actions .pm-primary,
+html[data-text-scale="large"][data-look="3"] .pm-intervention-actions .pm-secondary,
+html[data-text-scale="large"][data-look="3"] .pm-intervention-actions .pm-dismiss {
+  min-height: 54px;
+  font-size: 15px;
+}
+
+@media (forced-colors: active) {
+  html[data-look="3"] .pm-intervention-card,
+  html[data-look="3"] .pm-intervention-facts,
+  html[data-look="3"] .pm-intervention-facts div,
+  html[data-look="3"] .pm-intervention-actions .pm-primary,
+  html[data-look="3"] .pm-intervention-actions .pm-secondary,
+  html[data-look="3"] .pm-intervention-actions .pm-dismiss {
+    border-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  html[data-look="3"] .pm-intervention-actions .pm-primary {
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  html[data-look="3"] .pm-signal,
+  html[data-look="3"] .pm-signal.active,
+  html[data-look="3"] .pm-signal.completed,
+  html[data-look="3"] .pm-signal.dismissed {
+    background: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="3"] .pm-intervention-action * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

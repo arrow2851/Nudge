@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.11.4`  
+**Current version:** `0.11.5`  
 **Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
@@ -111,8 +111,9 @@ A hard stop is required before changing the agreed feature scope, scenarios, rou
 - [x] Forty-eight Routine Completion renderer exports required
 - [x] Eight Task hierarchy renderers and stylesheets required
 - [x] Shared Intervention phase and deterministic-suggestion contract checked
-- [x] Looks #3, #4, #5, #6, and #7 intervention renderer and stylesheet contracts checked
+- [x] Looks #2, #3, #4, #5, #6, and #7 intervention renderer and stylesheet contracts checked
 - [x] Start, Next, Dismiss, Resume, Complete, Reopen, Undo, Return, and Reset hooks checked
+- [x] Warm Editorial no-journaling and no-writing-input checks encoded
 - [x] Playful Modular non-scoring language checked
 - [x] Bold Utility pressure-language exclusions checked
 - [x] Tactile Household defect and repair-language exclusions checked
@@ -147,11 +148,11 @@ A hard stop is required before changing the agreed feature scope, scenarios, rou
 3. [x] Look #5 — Playful Modular
 4. [x] Look #7 — Bold Utility
 5. [x] Look #6 — Tactile Household
-6. [ ] Look #2 — Warm Editorial — **next**
-7. [ ] Look #8 — Ambient Glass
+6. [x] Look #2 — Warm Editorial
+7. [ ] Look #8 — Ambient Glass — **next**
 8. [ ] Look #9 — Retro Digital
 
-Shared behaviors currently implemented in 5 of 8 Looks:
+Shared behaviors currently implemented in 6 of 8 Looks:
 
 - [~] Optional prompt and deterministic suggestion
 - [~] Start to concrete action state
@@ -162,7 +163,7 @@ Shared behaviors currently implemented in 5 of 8 Looks:
 - [~] Scenario-isolated state
 - [~] Cross-Look state preservation
 - [~] Existing routine and task state preserved
-- [~] No scoring, compliance measurement, defect framing, or negative dismissal state
+- [~] No scoring, compliance measurement, defect framing, required reflection, or negative dismissal state
 
 Reusable Lists begins only after Intervention-to-action is complete across all eight Looks.
 
@@ -178,14 +179,16 @@ Reusable Lists begins only after Intervention-to-action is complete across all e
 - [x] `0.11.2` — Look #5 Playful Modular Intervention-to-action
 - [x] `0.11.3` — Look #7 Bold Utility Intervention-to-action
 - [x] `0.11.4` — Look #6 Tactile Household Intervention-to-action
+- [x] `0.11.5` — Look #2 Warm Editorial Intervention-to-action
 
 ---
 
 # 10. Current next actions
 
-- [ ] Implement Intervention-to-action in Look #2 — Warm Editorial
-- [ ] Preserve shared intervention state across Looks #3, #4, #5, #6, and #7
+- [ ] Implement Intervention-to-action in Look #8 — Ambient Glass
+- [ ] Preserve shared intervention state across Looks #2 through #8
 - [ ] Preserve Routine Completion and Task hierarchy state
-- [ ] Keep suggestions optional, reversible, and non-guilt-based
-- [ ] Extend validator coverage through Look #2
+- [ ] Keep suggestions optional, reversible, non-guilt-based, and understandable without transparency
+- [ ] Require solid fallbacks for reduced transparency and unsupported backdrop filters
+- [ ] Extend validator coverage through Look #8
 - [ ] Keep exact-checkout, Android, screen-reader, single-version regression, and Ambient Glass paint evidence pending until actually performed

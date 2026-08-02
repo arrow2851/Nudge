@@ -113,9 +113,29 @@ Today / Needs Attention
 
 **Accessibility:** Completed state uses text, a checkmark, and line-through. Critical targets retain the 48 px floor; Large Text actions reach 54 px; forced-colors uses system colors.
 
-**Validation boundary:** The validator now encodes six interactive Looks and requires `look2-interactive.css`, but exact-checkout execution remains pending because direct cloning is DNS-blocked.
+**Validation boundary:** The validator encodes six interactive Looks and requires `look2-interactive.css`, but exact-checkout execution remains pending because direct cloning is DNS-blocked.
 
-**Next active Look:** Look #8 — Ambient Glass. It must preserve the same behavior while testing translucent hierarchy, solid fallbacks, and lower-end rendering risk.
+## 2026-08-01 — Look #8 treats transparency as enhancement, not structure
+
+**Milestone:** Version `0.9.6` implements the Routine Completion Loop in Look #8 — Ambient Glass.
+
+**Presentation:** Today uses one translucent priority surface, additional routines remain in readable panels, Area and Section navigation retains atmospheric depth, and Chore detail combines a focused card with practical facts and restrained completed-cycle feedback.
+
+**Semantic boundary:** Aurora, glow, blur, gradients, and translucent depth are decorative. Urgency, completion, recurrence, and navigation remain understandable through text, structure, borders, and controls when every decorative effect is removed.
+
+**Fallback requirement:** Browsers without backdrop-filter support and users requesting reduced transparency receive solid panel backgrounds. Forced Colors removes decorative effects and uses system colors.
+
+**Performance boundary:** Blur is limited to high-value surfaces rather than every row. This reduces compositing pressure but does not constitute lower-end hardware evidence.
+
+**Reversibility:** Completion opens or retains Chore detail and immediately exposes `Undo completion`.
+
+**Cross-Look state:** Looks #2 through #8 share semantic completion state. Visual switching changes presentation only.
+
+**Accessibility:** Completed state uses explicit text, checkmark, and line-through; critical targets retain the 48 px floor; Large Text actions reach 54 px.
+
+**Validation boundary:** The validator now encodes seven interactive Looks and requires Ambient Glass Reduced Transparency and no-backdrop-filter fallbacks. Exact-checkout execution, physical Android testing, actual screen-reader testing, and lower-end paint measurements remain pending.
+
+**Next active Look:** Look #9 — Retro Digital. It must preserve the same behavior while testing terminal-like density, explicit system status, and friendly command language.
 
 ## Feedback entry template
 

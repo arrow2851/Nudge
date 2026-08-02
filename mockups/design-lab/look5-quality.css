@@ -1,0 +1,326 @@
+/* Look #5 — Playful Modular quality pass */
+
+html[data-look="5"] {
+  --pl-muted: #515b73;
+}
+
+html[data-look="5"] .pl-header p,
+html[data-look="5"] .pl-detail-header p {
+  font-size: 12px;
+}
+
+html[data-look="5"] .pl-card-number,
+html[data-look="5"] .pl-card-copy small,
+html[data-look="5"] .pl-card-status small,
+html[data-look="5"] .pl-routine-copy small,
+html[data-look="5"] .pl-section-card small,
+html[data-look="5"] .pl-suggestion p {
+  font-size: 10px;
+}
+
+html[data-look="5"] .pl-card-copy em,
+html[data-look="5"] .pl-routine-copy strong,
+html[data-look="5"] .pl-section-card strong,
+html[data-look="5"] .pl-quiet {
+  font-size: 12px;
+}
+
+html[data-look="5"] .pl-pill,
+html[data-look="5"] .pl-suggestion > span {
+  font-size: 10px;
+}
+
+html[data-look="5"] .pl-area-card {
+  min-height: 118px;
+}
+
+html[data-look="5"] .pl-add,
+html[data-look="5"] .pl-primary,
+html[data-look="5"] .pl-secondary,
+html[data-look="5"] .pl-dismiss,
+html[data-look="5"] .pl-back {
+  min-height: 48px;
+  padding-inline: 14px;
+}
+
+html[data-look="5"] .pl-check {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+}
+
+html[data-look="5"] .pl-routine-row {
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+}
+
+html[data-look="5"] .pl-area-card:focus-visible,
+html[data-look="5"] .pl-section-card:focus-visible,
+html[data-look="5"] .pl-check:focus-visible,
+html[data-look="5"] .pl-add:focus-visible,
+html[data-look="5"] .pl-primary:focus-visible,
+html[data-look="5"] .pl-secondary:focus-visible,
+html[data-look="5"] .pl-dismiss:focus-visible,
+html[data-look="5"] .pl-back:focus-visible {
+  outline: 4px solid #111827;
+  outline-offset: 3px;
+}
+
+html[data-look="5"] .pl-card-copy,
+html[data-look="5"] .pl-routine-copy,
+html[data-look="5"] .pl-detail-header > div,
+html[data-look="5"] .pl-suggestion,
+html[data-look="5"] .pl-section-card {
+  min-width: 0;
+}
+
+html[data-look="5"] .pl-card-copy small,
+html[data-look="5"] .pl-card-status small,
+html[data-look="5"] .pl-routine-copy small,
+html[data-look="5"] .pl-section-card small,
+html[data-look="5"] .pl-intervention > p,
+html[data-look="5"] .pl-suggestion p,
+html[data-look="5"] .pl-actions button {
+  overflow-wrap: anywhere;
+}
+
+html[data-look="5"] .pl-intervention {
+  min-height: auto;
+  overflow: visible;
+}
+
+html[data-look="5"] .pl-actions {
+  flex-shrink: 0;
+}
+
+@media (max-width: 420px) {
+  html[data-look="5"] .pl-page {
+    padding-inline: 14px;
+  }
+
+  html[data-look="5"] .pl-area-card {
+    grid-template-columns: 30px 44px minmax(0, 1fr);
+    min-height: 0;
+    padding: 14px 12px;
+  }
+
+  html[data-look="5"] .pl-card-status {
+    grid-column: 2 / 4;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+    text-align: left;
+  }
+
+  html[data-look="5"] .pl-card-status small {
+    max-width: none;
+    margin-top: 0;
+  }
+
+  html[data-look="5"] .pl-detail-header {
+    align-items: flex-start;
+  }
+
+  html[data-look="5"] .pl-section-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 370px) {
+  html[data-look="5"] .pl-header h1,
+  html[data-look="5"] .pl-intervention h1 {
+    font-size: 28px;
+  }
+
+  html[data-look="5"] .pl-routine-row {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  html[data-look="5"] .pl-pill {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  html[data-look="5"] .pl-intervention {
+    padding-inline: 18px;
+  }
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-chip {
+  min-height: 32px;
+  padding: 6px 11px;
+  font-size: 11px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-header h1 {
+  max-width: none;
+  font-size: 38px;
+  line-height: 1.04;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-header p,
+html[data-text-scale="large"][data-look="5"] .pl-detail-header p,
+html[data-text-scale="large"][data-look="5"] .pl-intervention > p {
+  font-size: 14px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-summary strong {
+  font-size: 34px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-summary span {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-area-card {
+  grid-template-columns: 32px 48px minmax(0, 1fr);
+  min-height: 0;
+  padding: 16px 14px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-card-icon {
+  width: 46px;
+  height: 46px;
+  font-size: 22px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-card-number {
+  font-size: 12px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-card-copy strong {
+  font-size: 20px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-card-copy small,
+html[data-text-scale="large"][data-look="5"] .pl-card-status small,
+html[data-text-scale="large"][data-look="5"] .pl-routine-copy small,
+html[data-text-scale="large"][data-look="5"] .pl-section-card small,
+html[data-text-scale="large"][data-look="5"] .pl-suggestion p {
+  font-size: 12px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-card-copy em,
+html[data-text-scale="large"][data-look="5"] .pl-card-status b,
+html[data-text-scale="large"][data-look="5"] .pl-routine-copy strong,
+html[data-text-scale="large"][data-look="5"] .pl-section-card strong,
+html[data-text-scale="large"][data-look="5"] .pl-quiet,
+html[data-text-scale="large"][data-look="5"] .pl-pill {
+  font-size: 14px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-card-status {
+  grid-column: 2 / 4;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  text-align: left;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-card-status small {
+  max-width: none;
+  margin-top: 0;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-add,
+html[data-text-scale="large"][data-look="5"] .pl-primary,
+html[data-text-scale="large"][data-look="5"] .pl-secondary,
+html[data-text-scale="large"][data-look="5"] .pl-dismiss,
+html[data-text-scale="large"][data-look="5"] .pl-back {
+  min-height: 54px;
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-detail-header {
+  align-items: flex-start;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-detail-header h1 {
+  font-size: 35px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-block-title h2 {
+  font-size: 19px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-block-title span {
+  min-width: 34px;
+  height: 34px;
+  font-size: 12px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-routine-row {
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: start;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-pill {
+  grid-column: 2;
+  justify-self: start;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-section-grid {
+  grid-template-columns: 1fr;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-section-card {
+  min-height: 112px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-intervention h1 {
+  font-size: 38px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-suggestion > span {
+  font-size: 11px;
+}
+
+html[data-text-scale="large"][data-look="5"] .pl-suggestion h2 {
+  font-size: 26px;
+}
+
+@media (forced-colors: active) {
+  html[data-look="5"] .pl-area-card,
+  html[data-look="5"] .pl-summary,
+  html[data-look="5"] .pl-block,
+  html[data-look="5"] .pl-section-card,
+  html[data-look="5"] .pl-suggestion,
+  html[data-look="5"] .pl-empty,
+  html[data-look="5"] .pl-card-icon,
+  html[data-look="5"] .pl-check,
+  html[data-look="5"] .pl-chip {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  html[data-look="5"] .pl-pill,
+  html[data-look="5"] .pl-block-title span {
+    color: CanvasText;
+    background: Canvas;
+    border: 1px solid CanvasText;
+  }
+
+  html[data-look="5"] .pl-orbit {
+    border-style: solid;
+    border-color: CanvasText;
+  }
+
+  html[data-look="5"] .pl-orbit span {
+    display: none;
+  }
+
+  html[data-look="5"] .pl-primary,
+  html[data-look="5"] .pl-secondary,
+  html[data-look="5"] .pl-dismiss,
+  html[data-look="5"] .pl-add,
+  html[data-look="5"] .pl-back {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: ButtonText;
+    box-shadow: none;
+  }
+}

@@ -1,5 +1,5 @@
 export const DESIGN_LAB = Object.freeze({
-  version: '0.8.3',
+  version: '0.8.4',
   buildDate: '2026-08-01',
   branch: 'feature/design-lab',
   storageKey: 'nudge-design-lab-review-v1'
@@ -13,7 +13,7 @@ export const LOOKS = Object.freeze([
   { id: 6, name: 'Tactile Household', status: 'Gallery direction', description: 'Physical labels, controls, and satisfying household-tool cues.' },
   { id: 7, name: 'Bold Utility', status: 'Quality-passed gallery direction', description: 'High-contrast structure, thick rules, and unapologetically direct hierarchy.' },
   { id: 8, name: 'Ambient Glass', status: 'Quality-passed gallery direction', description: 'Soft translucent layers, atmospheric depth, and calm modern polish.' },
-  { id: 9, name: 'Retro Digital', status: 'New gallery direction', description: 'A friendly home operating system with segmented displays and terminal cues.' }
+  { id: 9, name: 'Retro Digital', status: 'Quality-passed gallery direction', description: 'A friendly home operating system with segmented displays and terminal cues.' }
 ]);
 
 export const ALLOWED_VIEWS = new Set(['areas', 'area', 'intervention']);

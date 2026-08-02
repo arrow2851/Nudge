@@ -2,13 +2,14 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.9.5`  
+**Current version:** `0.9.6`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.9.5 Look #2 interactive slice](CHECKLIST-PROGRESS-0.9.5.md)
+- [Latest checklist progress — 0.9.6 Look #8 interactive slice](CHECKLIST-PROGRESS-0.9.6.md)
+- [Look #8 interactive Routine Completion Loop](LOOK-8-INTERACTIVE.md)
 - [Look #2 interactive Routine Completion Loop](LOOK-2-INTERACTIVE.md)
 - [Look #6 interactive Routine Completion Loop](LOOK-6-INTERACTIVE.md)
 - [Look #7 interactive Routine Completion Loop](LOOK-7-INTERACTIVE.md)
@@ -52,8 +53,8 @@ Routine `go` messages advance automatically through this sequence:
 4. Look #7 — Bold Utility — **implemented**
 5. Look #6 — Tactile Household — **implemented**
 6. Look #2 — Warm Editorial — **implemented**
-7. Look #8 — Ambient Glass — **next**
-8. Look #9 — Retro Digital
+7. Look #8 — Ambient Glass — **implemented**
+8. Look #9 — Retro Digital — **next**
 
 The first flow in every Look is the Routine Completion Loop:
 
@@ -81,10 +82,11 @@ Look switching remains a Design Lab review control, prototype state remains isol
 - `0.9.3` — Look #7 Bold Utility: direct high-contrast hierarchy without guilt or alarm.
 - `0.9.4` — Look #6 Tactile Household: work orders, service cards, drawers, and job-card completion.
 - `0.9.5` — Look #2 Warm Editorial: a quiet daily page, contextual entries, and restrained completion notes.
+- `0.9.6` — Look #8 Ambient Glass: translucent hierarchy with solid fallbacks and restrained completed-cycle feedback.
 
-Looks #2 through #7 now share semantic completion state. Switching Looks changes presentation without resetting the route or routine result.
+Looks #2 through #8 now share semantic completion state. Switching Looks changes presentation without resetting the route or routine result.
 
-Direct cloning remains blocked by local DNS restrictions, so 0.9.5 does not claim an exact complete-checkout validator or browser run. See `LOOK-2-INTERACTIVE.md` for the complete evidence boundary.
+Direct cloning remains blocked by local DNS restrictions, so 0.9.6 does not claim an exact complete-checkout validator or browser run. Lower-end Ambient Glass paint and compositing measurements also remain pending. See `LOOK-8-INTERACTIVE.md` for the complete evidence boundary.
 
 ## Run locally
 
@@ -99,15 +101,15 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
-?look=2&screen=today&scenario=normal
-?look=2&screen=area&area=kitchen&scenario=backlog
-?look=2&screen=section&area=kitchen&section=Countertops%20%26%20Surfaces&scenario=normal
-?look=2&screen=chore&area=kitchen&section=Countertops%20%26%20Surfaces&chore=kitchen-wipe-stovetop-1&scenario=normal
-?look=6&screen=today&scenario=large-text
+?look=8&screen=today&scenario=normal
+?look=8&screen=area&area=kitchen&scenario=backlog
+?look=8&screen=section&area=kitchen&section=Countertops%20%26%20Surfaces&scenario=normal
+?look=8&screen=chore&area=kitchen&section=Countertops%20%26%20Surfaces&chore=kitchen-wipe-stovetop-1&scenario=normal
+?look=2&screen=today&scenario=large-text
 ```
 
 Append `capture=labelled` for an evidence frame or `capture=phone` for a clean phone frame.
 
 ## Next work
 
-Implement the Routine Completion Loop in Look #8 — Ambient Glass, preserving the shared behavior while testing translucent hierarchy, fallback surfaces, and lower-end rendering risk.
+Implement the Routine Completion Loop in Look #9 — Retro Digital, preserving the shared behavior while testing terminal-like density, explicit system status, and friendly command language.

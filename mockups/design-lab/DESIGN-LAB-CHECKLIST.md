@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.8.3`  
+**Current version:** `0.8.4`  
 **Purpose:** Maintain a complete gallery of genuinely different visual systems for the same Nudge product, then test pure directions and controlled synthesis without forcing premature elimination.
 
 This file is the source of truth for scope, progress, review gates, and decisions.
@@ -11,7 +11,7 @@ This file is the source of truth for scope, progress, review gates, and decision
 ## Status legend
 
 - `[x]` Completed or verified with the stated evidence
-- `[~]` Implemented but awaiting dedicated quality or real-device evidence
+- `[~]` Implemented but awaiting real-device or assistive-technology evidence
 - `[ ]` Not started
 - `[!]` Decision required
 - `[d]` Deferred
@@ -37,7 +37,7 @@ Required one-line response:
 
 > **Hard stop: review the Design Lab decision required before I continue.**
 
-The user has already approved promotion of Looks #5, #7, #8, and #9 and has removed the prior mandatory finalist-selection gate.
+The user has approved Looks #5, #7, #8, and #9 and removed the former mandatory finalist-selection gate.
 
 ---
 
@@ -45,7 +45,7 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 
 - [x] Create `feature/design-lab` from `main`
 - [x] Keep Look #1 unchanged under `mockups/prototype/`
-- [x] Keep all experimental files under `mockups/design-lab/`
+- [x] Keep experimental files under `mockups/design-lab/`
 - [x] Isolate Design Lab query and session state
 - [x] Keep visible experimental-build labels
 - [x] Open a draft PR for centralized review history
@@ -64,6 +64,7 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 - [x] Labelled and phone-only capture modes
 - [x] Validation harness
 - [x] Look #1 comparison reference
+- [x] Look #1 reference version sourced from shared configuration
 
 ## Shared screens
 
@@ -104,77 +105,54 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 
 ## Look #2 — Warm Editorial
 
-- [x] Areas, Area detail, and Intervention implemented
-- [x] Seven scenarios supported
-- [x] Dedicated code-level quality pass completed
+- [x] Three shared screens and seven scenarios
+- [x] Dedicated code-level quality pass
 - [x] Included in 0.7.2 browser evidence
 
 ## Look #3 — Precision Minimal
 
-- [x] Areas, Area detail, and Intervention implemented
-- [x] Seven scenarios supported
-- [x] Dedicated code-level quality pass completed
+- [x] Three shared screens and seven scenarios
+- [x] Dedicated code-level quality pass
 - [x] Included in 0.7.2 browser evidence
 
 ## Look #4 — Zen Focus
 
-- [x] Areas, Area detail, and Intervention implemented
-- [x] Seven scenarios supported
-- [x] Dedicated code-level quality pass completed
+- [x] Three shared screens and seven scenarios
+- [x] Dedicated code-level quality pass
 - [x] Included in 0.7.2 browser evidence
 
 ## Look #5 — Playful Modular
 
-- [x] Direction defined
-- [x] Areas implemented
-- [x] Area detail implemented
-- [x] Intervention implemented
-- [x] Seven scenarios supported
-- [x] Dedicated responsive, contrast, density, semantics, and blocking-quality pass
+- [x] Three shared screens and seven scenarios
+- [x] Dedicated responsive, contrast, density, semantics, Large Text, and forced-colors quality pass
 - [x] Dedicated quality stylesheet and evidence record
 - [ ] Browser and device evidence
 
 ## Look #6 — Tactile Household
 
-- [x] Areas, Area detail, and Intervention implemented
-- [x] Seven scenarios supported
-- [x] Dedicated code-level quality pass completed
+- [x] Three shared screens and seven scenarios
+- [x] Dedicated code-level quality pass
 - [x] Included in 0.7.2 browser evidence
 
 ## Look #7 — Bold Utility
 
-- [x] Direction defined
-- [x] Areas implemented
-- [x] Area detail implemented
-- [x] Intervention implemented
-- [x] Seven scenarios supported
-- [x] Dedicated responsive, contrast, density, tone, semantics, and blocking-quality pass
+- [x] Three shared screens and seven scenarios
+- [x] Dedicated responsive, contrast, density, tone, semantics, Large Text, and forced-colors quality pass
 - [x] Dedicated quality stylesheet and evidence record
 - [ ] Browser and device evidence
 
 ## Look #8 — Ambient Glass
 
-- [x] Direction defined
-- [x] Areas implemented
-- [x] Area detail implemented
-- [x] Intervention implemented
-- [x] Seven scenarios supported
-- [x] Dedicated responsive, contrast, transparency, performance-risk, semantics, and blocking-quality pass
-- [x] Repeated blur removed from cards and panels
-- [x] Unsupported-filter and reduced-transparency fallbacks
+- [x] Three shared screens and seven scenarios
+- [x] Dedicated responsive, contrast, transparency, fallback, performance-risk, semantics, and forced-colors quality pass
 - [x] Dedicated quality stylesheet and evidence record
-- [ ] Physical low-end-device performance measurement
 - [ ] Browser and device evidence
 
 ## Look #9 — Retro Digital
 
-- [x] Direction defined
-- [x] Areas implemented
-- [x] Area detail implemented
-- [x] Intervention implemented
-- [x] Seven scenarios supported
-- [x] Initial narrow-screen, Large Text, long-content, reduced-motion, and forced-colors foundations
-- [ ] Dedicated responsive, small-text, contrast, semantics, and blocking-quality pass
+- [x] Three shared screens and seven scenarios
+- [x] Dedicated responsive, microtext, contrast, meter, semantics, Large Text, and forced-colors quality pass
+- [x] Dedicated quality stylesheet and evidence record
 - [ ] Browser and device evidence
 
 ---
@@ -199,16 +177,17 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 - [x] Shared fixture checks
 - [x] Renderer export and routing checks
 - [x] Version consistency checks
+- [x] Stylesheet load-order checks
 - [x] CSS block-balance checks
-- [x] Route matrix expanded from 84 to 168 active-Look combinations
-- [x] Validator requires Look #5, #7, and #8 quality layers and load order
-- [ ] Execute updated validator in a complete checkout
+- [x] Route matrix expanded to 168 active-Look combinations
+- [x] Validator includes Look #5, #7, #8, and #9 quality layers
+- [ ] Execute the updated validator in a complete checkout
 
 ---
 
 # 6. Evidence
 
-## Completed for Looks #1, #2, #3, #4, and #6 in version 0.7.2
+## Completed in version 0.7.2 for Looks #1, #2, #3, #4, and #6
 
 - [x] Direct-route matrix
 - [x] Canonical viewport checks
@@ -221,7 +200,7 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 
 ## Still required
 
-- [ ] Repeat browser evidence for Looks #5, #7, #8, and #9
+- [ ] Browser evidence for Looks #5, #7, #8, and #9
 - [ ] Physical Android viewport checks
 - [ ] Actual screen-reader smoke tests
 - [ ] Comparative contact sheets for all nine directions including Look #1
@@ -230,9 +209,13 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 
 # 7. Interactive expansion
 
-The old requirement to select two or three finalists before interactive work is removed.
+The former requirement to select two or three finalists before interactive work is removed.
 
-Future interactive work may proceed as a pure-Look vertical slice, multiple smaller feature-specific Look experiments, or a controlled synthesis vertical slice.
+Future interactive work may proceed as:
+
+- [ ] A pure-Look vertical slice
+- [ ] Multiple smaller feature-specific Look experiments
+- [ ] A controlled synthesis vertical slice
 
 Each interactive slice must preserve the same product behavior and support:
 
@@ -258,13 +241,14 @@ Each interactive slice must preserve the same product behavior and support:
 - [x] `0.8.1` — Look #5 Playful Modular quality pass
 - [x] `0.8.2` — Look #7 Bold Utility quality pass
 - [x] `0.8.3` — Look #8 Ambient Glass quality pass
+- [x] `0.8.4` — Look #9 Retro Digital quality pass and completion of all per-Look code-level quality gates
 
 ---
 
 # 9. Current next actions
 
-- [ ] Complete Look #9 quality pass
-- [ ] Execute updated 168-route validation and browser evidence
-- [ ] Measure Look #8 on a physical lower-end device
+- [ ] Execute updated complete-checkout validation
+- [ ] Execute browser evidence for Looks #5, #7, #8, and #9
 - [ ] Prepare full-gallery contact sheets
+- [ ] Perform physical Android and actual screen-reader smoke tests when available
 - [ ] Decide later whether interactive expansion uses pure Looks, feature-specific variants, or controlled synthesis

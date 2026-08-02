@@ -91,9 +91,25 @@ Today / Needs Attention
 
 **Accessibility:** Color is decorative and supplemental. Completed state also uses explicit text, a checkmark, and line-through; critical targets retain the 48 px floor.
 
-**Validation boundary:** Source syntax, renderer contracts, stylesheet balance, and validator wiring were checked. Direct cloning remains DNS-blocked, so exact-checkout browser evidence is not claimed.
+## 2026-08-01 — Look #7 uses directness without changing Nudge's tone contract
 
-**Next active Look:** Look #7 — Bold Utility. It must preserve the same product behavior while testing direct high-contrast hierarchy under backlog and urgent states.
+**Milestone:** Version `0.9.3` implements the Routine Completion Loop in Look #7 — Bold Utility.
+
+**Presentation:** One large priority action, explicit queue counters, thick rules, square controls, high-contrast status panels, and a compact fact-grid Chore detail.
+
+**Tone boundary:** Bold hierarchy may be direct, but it must not shame the user, imply failure, or turn backlog into an alarm. The interface exposes priority while preserving choice.
+
+**Action separation:** Routine rows use separate completion and detail targets. The full row does not accidentally complete a chore.
+
+**Reversibility:** The completed screen states `DONE` and immediately presents Undo. Completion from Today, Area, or Section opens the same shared Chore detail state.
+
+**Cross-Look state:** Looks #3, #4, #5, and #7 share semantic completion state. Visual switching does not reset or duplicate behavior.
+
+**Accessibility:** Urgency colors are always repeated in text. Critical targets retain the 48 px floor; Large Text actions reach 54 px; forced-colors removes decorative shadows.
+
+**Validation boundary:** The validator now encodes four interactive Looks and requires `look7-interactive.css`, but exact-checkout execution remains pending because direct cloning is DNS-blocked.
+
+**Next active Look:** Look #6 — Tactile Household. It must preserve the same behavior while testing physical-control cues and household-tool affordances.
 
 ## Feedback entry template
 

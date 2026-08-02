@@ -3,15 +3,13 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.9.1`  
-**Purpose:** Maintain a complete gallery of genuinely different visual systems for the same Nudge product, then test pure directions without forcing premature elimination.
-
-This file is the source of truth for scope, progress, review gates, and decisions.
+**Current version:** `0.9.2`  
+**Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
 
 - `[x]` Completed or verified with the stated evidence
-- `[~]` Implemented but awaiting real-device or assistive-technology evidence
+- `[~]` Implemented but awaiting exact-checkout, device, or assistive-technology evidence
 - `[ ]` Not started
 - `[!]` Decision required
 - `[d]` Deferred
@@ -22,7 +20,7 @@ This file is the source of truth for scope, progress, review gates, and decision
 
 When the user says **go**, continue to the next unchecked milestone without routine clarification.
 
-The user delegated the first Look and the remaining Look order. Do not ask for another visual-selection decision during the recorded sequence.
+The user delegated the complete Look order. Do not ask for another visual-selection decision during the recorded sequence.
 
 A hard stop is required before:
 
@@ -42,36 +40,28 @@ Required one-line response:
 
 ---
 
-# 1. Safety and branch governance
+# 1. Safety and governance
 
 - [x] Create `feature/design-lab` from `main`
 - [x] Keep Look #1 unchanged under `mockups/prototype/`
 - [x] Keep experimental files under `mockups/design-lab/`
 - [x] Isolate Design Lab query and session state
 - [x] Keep visible experimental-build labels
-- [x] Open a draft PR for centralized review history
+- [x] Keep draft PR #1 as the centralized review record
 - [ ] Do not merge before migration boundaries are explicitly reviewed
 
 ---
 
-# 2. Shared comparison foundation
+# 2. Shared gallery foundation
 
-- [x] Shared shell and desktop/mobile review controls
-- [x] Immutable fixture
-- [x] Query routing for Look, screen, scenario, and Area
-- [x] Browser Back/Forward and Reset Review State
-- [x] Browser-native ES modules and per-Look renderers
-- [x] Separate Look-specific styles
+- [x] Shared shell and review controls
+- [x] Immutable fixture with seven scenarios
+- [x] Query routing and browser history
+- [x] Reset Review State
+- [x] Per-Look renderers and styles
 - [x] Labelled and phone-only capture modes
 - [x] Validation harness
-- [x] Look #1 comparison reference
-- [x] Look #1 reference version sourced from shared configuration
-
-## Shared screens
-
-- [x] Areas overview
-- [x] Representative Area detail
-- [x] Intervention
+- [x] Look #1 protected comparison reference
 
 ## Shared scenarios
 
@@ -87,201 +77,123 @@ Required one-line response:
 ## Fairness rules
 
 - [x] Every Look consumes the same fixture
-- [x] Every Look exposes equivalent actions within its implemented slice
-- [x] Urgency meaning remains equivalent
+- [x] Equivalent actions within each implemented slice
+- [x] Equivalent urgency meaning
 - [x] No Look receives easier content or extra functionality
-- [x] Look-specific wording may vary without changing meaning
+- [x] Wording may vary without changing meaning
 
 ---
 
-# 3. Complete visual gallery
+# 3. Gallery and interactive status
 
-## Look #1 — Soft Practical Utility baseline
+## Look #1 — Soft Practical Utility
 
-- [x] Protected production-reference role
-- [x] Areas reference
-- [x] Area-detail reference
-- [x] Clearly labeled comparison-only Intervention extrapolation
+- [x] Protected baseline reference
 - [~] Physical-device and actual screen-reader evidence pending
 
 ## Look #2 — Warm Editorial
 
-- [x] Three shared gallery screens and seven scenarios
-- [x] Dedicated code-level quality pass
-- [x] Included in 0.7.2 browser evidence
+- [x] Gallery screens, scenarios, quality pass, and 0.7.2 browser evidence
 - [ ] Routine Completion Loop
 
 ## Look #3 — Precision Minimal
 
-- [x] Three shared gallery screens and seven scenarios
-- [x] Dedicated code-level quality pass
-- [x] Included in 0.7.2 browser evidence
+- [x] Gallery screens, scenarios, quality pass, and 0.7.2 browser evidence
 - [x] Today / Needs Attention
 - [x] Area → Section → Chore navigation
-- [x] Completion, recurrence advancement, and Undo
-- [x] Shared completion state with Look #4
-- [x] Dedicated `look3-interactive.css`
-- [x] Interactive evidence and progress records
-- [~] Exact-checkout browser, physical-device, and actual screen-reader evidence pending
+- [x] Completion, recurrence advancement, attention updates, and Undo
+- [x] Shared completion state across interactive Looks
+- [x] Dedicated interactive stylesheet and record
+- [~] Exact-checkout browser, physical-device, and screen-reader evidence pending
 
 ## Look #4 — Zen Focus
 
-- [x] Three shared gallery screens and seven scenarios
-- [x] Dedicated code-level quality pass
-- [x] Included in 0.7.2 browser evidence
+- [x] Gallery screens, scenarios, quality pass, and 0.7.2 browser evidence
 - [x] Today / Needs Attention
 - [x] Area → Section → Chore navigation
-- [x] Completion, recurrence advancement, and Undo
-- [x] Dedicated `look4-interactive.css`
-- [x] Interactive evidence and progress records
-- [~] Exact-checkout browser, physical-device, and actual screen-reader evidence pending
+- [x] Completion, recurrence advancement, attention updates, and Undo
+- [x] Dedicated interactive stylesheet and record
+- [~] Exact-checkout browser, physical-device, and screen-reader evidence pending
 
 ## Look #5 — Playful Modular
 
-- [x] Three shared gallery screens and seven scenarios
-- [x] Dedicated responsive, contrast, density, semantics, Large Text, and forced-colors quality pass
-- [x] Included in 0.8.4 browser presentation evidence
-- [ ] Routine Completion Loop — next
+- [x] Gallery screens, scenarios, quality pass, and 0.8.4 browser presentation evidence
+- [x] Today / Needs Attention
+- [x] Area → Section → Chore navigation
+- [x] Completion, recurrence advancement, attention updates, and Undo
+- [x] Shared completion state across Looks #3, #4, and #5
+- [x] Dedicated `look5-interactive.css`
+- [x] `LOOK-5-INTERACTIVE.md` and `CHECKLIST-PROGRESS-0.9.2.md`
+- [~] Exact-checkout browser, physical-device, and screen-reader evidence pending
 
 ## Look #6 — Tactile Household
 
-- [x] Three shared gallery screens and seven scenarios
-- [x] Dedicated code-level quality pass
-- [x] Included in 0.7.2 browser evidence
+- [x] Gallery screens, scenarios, quality pass, and 0.7.2 browser evidence
 - [ ] Routine Completion Loop
 
 ## Look #7 — Bold Utility
 
-- [x] Three shared gallery screens and seven scenarios
-- [x] Dedicated responsive, contrast, density, tone, semantics, Large Text, and forced-colors quality pass
-- [x] Included in 0.8.4 browser presentation evidence
-- [ ] Routine Completion Loop
+- [x] Gallery screens, scenarios, quality pass, and 0.8.4 browser presentation evidence
+- [ ] Routine Completion Loop — **next**
 
 ## Look #8 — Ambient Glass
 
-- [x] Three shared gallery screens and seven scenarios
-- [x] Dedicated responsive, contrast, transparency, fallback, performance-risk, semantics, and forced-colors quality pass
-- [x] Included in 0.8.4 browser presentation evidence
+- [x] Gallery screens, scenarios, quality pass, and 0.8.4 browser presentation evidence
 - [ ] Routine Completion Loop
 - [~] Lower-end hardware paint evidence pending
 
 ## Look #9 — Retro Digital
 
-- [x] Three shared gallery screens and seven scenarios
-- [x] Dedicated responsive, microtext, contrast, meter, semantics, Large Text, and forced-colors quality pass
-- [x] Included in 0.8.4 browser presentation evidence
+- [x] Gallery screens, scenarios, quality pass, and 0.8.4 browser presentation evidence
 - [ ] Routine Completion Loop
 
 ---
 
-# 4. Gallery policy
-
-- [x] No direction must be rejected merely because another scores higher overall
-- [x] Pure-Look prototypes remain allowed
-- [x] Option A selected: one pure-Look vertical slice at a time
-- [x] All other Looks remain preserved while one Look is implemented
-- [x] Look order is a learning sequence, not a ranking
-- [x] Look switching remains Design Lab-only
-- [x] Unrestricted mixing within a screen remains prohibited
-- [x] Dark variants remain deferred variants, not numbered Looks
-
----
-
-# 5. Shared interactive foundation
+# 4. Shared interactive foundation
 
 - [x] Stable routine identifiers
 - [x] Light, Moderate, and Deep tier metadata
 - [x] Deterministic next-cycle labels
-- [x] Session-isolated completion store
-- [x] Scenario-specific completion state
+- [x] Scenario-isolated session completion store
 - [x] Complete and reopen actions
 - [x] Previous-status restoration
 - [x] Today, Area, Section, and Chore routes
-- [x] Browser-history-compatible route serialization
-- [x] Reset Review State clears route and completion state
-- [x] State can persist while switching between interactive Looks
+- [x] Browser-history-compatible serialization
+- [x] Reset clears route and completion state
+- [x] State persists while switching among interactive Looks
 - [x] Completed routines are deprioritized by `nextRoutine`
+- [x] Direct Chore routes infer Section when omitted
+- [x] Action handling occurs before generic Chore navigation
 
 ---
 
-# 6. Validation
+# 5. Validation and evidence
 
-- [x] Required-file checks
-- [x] Relative-import checks
-- [x] Shared fixture checks
-- [x] Renderer export and routing checks
-- [x] Version consistency checks encoded in the validator
-- [x] Stylesheet load-order checks
+- [x] Required-file and relative-import checks
+- [x] Fixture and renderer-export checks
+- [x] Version and stylesheet-order checks
 - [x] CSS block-balance checks
-- [x] Route matrix includes 168 gallery combinations
-- [x] Validator includes quality layers for Looks #5, #7, #8, and #9
-- [x] Validator includes interactive layers for Looks #3 and #4
-- [x] Validator checks shared completion, recurrence, Undo, state, and selector hooks
-- [ ] Execute the updated validator in an exact complete checkout
-
----
-
-# 7. Evidence
-
-## Completed in version 0.7.2 for Looks #1, #2, #3, #4, and #6
-
-- [x] Direct-route matrix
-- [x] Canonical viewport checks
-- [x] Stress-state routes
-- [x] Long-content and Large-Text action reachability
-- [x] Keyboard focus and Enter activation
-- [x] Automated accessibility-tree inspection
-- [x] Forced-colors and reduced-motion emulation
-- [x] Canonical labelled captures
-
-## Completed in the 0.8.4 evidence run for Looks #5, #7, #8, and #9
-
-- [x] 84 direct routes across four Looks, seven scenarios, and three screens
-- [x] 72 canonical viewport checks across six viewport sizes
-- [x] 28 stress-scenario checks
-- [x] Eight Long Content and Large Text action-reachability checks
-- [x] Forced-colors and reduced-motion emulation
-- [x] Keyboard focus visibility
-- [x] No horizontal-overflow failures
-- [x] No unnamed visible-button failures
-- [x] Minimum tested in-preview control size of 48 × 48 px
-- [x] Three nine-direction comparison contact sheets
-- [x] Narrative and machine-readable repository evidence records
-
-## Interactive evidence
-
-- [x] Look #4 committed-source, state, route, reconstructed-validator, and injected-browser evidence record
-- [x] Look #3 committed-source and interactive-contract evidence record
-- [x] Cross-Look shared-state architecture encoded for Looks #3 and #4
-- [ ] Exact-checkout cross-Look browser test
-
-## Still required independently
-
+- [x] 168-route gallery matrix encoded
+- [x] Interactive route contract encoded for Looks #3, #4, and #5
+- [x] Interactive stylesheets required for Looks #3, #4, and #5
+- [x] Shared completion, recurrence, Undo, and state hooks checked
+- [x] Look #5 application and renderer syntax checks
+- [x] Look #5 renderer contract checks for all routed states
 - [ ] Exact complete-checkout validator execution
+- [ ] Exact complete-checkout interactive browser run
 - [ ] Physical Android viewport checks
 - [ ] Actual screen-reader smoke tests
-- [ ] Ambient Glass lower-end hardware paint/compositing measurements
-- [ ] Single-version browser rerun for every Look from one identical build
+- [ ] Ambient Glass lower-end hardware paint measurements
+- [ ] Single-version browser rerun for every Look
 
 ---
 
-# 8. Interactive expansion
-
-## Decisions completed
-
-- [x] Select Option A — one pure-Look vertical slice at a time
-- [x] Select Routine Completion Loop as the first flow
-- [x] Delegate first Look and complete remaining order
-- [x] Keep Look switching Design Lab-only
-- [x] Keep prototype state isolated and deterministic
-- [x] Keep Look #1 protected and outside the implementation sequence
-
-## Pure-Look implementation order
+# 6. Pure-Look implementation order
 
 1. [x] Look #4 — Zen Focus
 2. [x] Look #3 — Precision Minimal
-3. [ ] Look #5 — Playful Modular
-4. [ ] Look #7 — Bold Utility
+3. [x] Look #5 — Playful Modular
+4. [ ] Look #7 — Bold Utility — **next**
 5. [ ] Look #6 — Tactile Household
 6. [ ] Look #2 — Warm Editorial
 7. [ ] Look #8 — Ambient Glass
@@ -289,56 +201,41 @@ Required one-line response:
 
 See `PURE-LOOK-IMPLEMENTATION-ORDER.md` for rationale and acceptance gates.
 
-## Routine Completion Loop required in each Look
+## Routine Completion Loop progress
 
-- [~] Today / Needs Attention entry — implemented in 2 of 8 Looks
-- [~] Areas → Area → Section → Chore detail navigation — implemented in 2 of 8 Looks
-- [~] Complete chore — implemented in 2 of 8 Looks
-- [~] Advance deterministic Light, Moderate, or Deep recurrence — implemented in 2 of 8 Looks
-- [~] Update attention counts and All Clear state — implemented in 2 of 8 Looks
-- [~] Undo or reopen — implemented in 2 of 8 Looks
-- [~] Preserve valid state through browser Back and Forward — implemented in 2 of 8 Looks
-- [~] Support Normal Day, Heavy Backlog, All Clear, New Area, Long Content, and Large Text — implemented in 2 of 8 Looks
-- [~] Keep completion and Undo keyboard reachable — implemented in 2 of 8 Looks
-- [~] Keep primary actions reachable on short screens — implemented in 2 of 8 Looks
+- [~] Today / Needs Attention — implemented in 3 of 8 Looks
+- [~] Area → Section → Chore navigation — implemented in 3 of 8 Looks
+- [~] Complete and advance recurrence — implemented in 3 of 8 Looks
+- [~] Update attention counts and All Clear — implemented in 3 of 8 Looks
+- [~] Undo or reopen — implemented in 3 of 8 Looks
+- [~] Browser-history-compatible routes — implemented in 3 of 8 Looks
+- [~] Shared scenarios and Large Text — implemented in 3 of 8 Looks
+- [~] Keyboard-reachable completion and Undo — implemented in 3 of 8 Looks
 
-## Later feature order after all eight Looks receive the Routine Completion Loop
+## Later feature order
 
 1. [ ] Task hierarchy loop
 2. [ ] Intervention-to-action loop
 3. [ ] Reusable Lists loop
 
-Use the same Look order for each later feature unless a documented technical dependency requires a change.
+Use the same Look order unless a documented technical dependency requires a change.
 
 ---
 
-# 9. Milestone log
+# 7. Milestone log
 
-- [x] `0.1.0–0.2.1` — Branch, shared foundation, and Warm Editorial
-- [x] `0.3.0` — Modular renderer architecture
-- [x] `0.4.0–0.4.1` — Precision Minimal gallery implementation and quality
-- [x] `0.5.0–0.5.1` — Zen Focus gallery implementation and quality
-- [x] `0.6.0–0.6.1` — Tactile Household gallery implementation and quality
-- [x] `0.7.0–0.7.2` — Review tooling, Look #1 mapping, browser evidence, and shared interaction fix
-- [x] `0.8.0` — Complete gallery with Looks #5, #7, #8, and #9
-- [x] `0.8.1` — Look #5 quality pass
-- [x] `0.8.2` — Look #7 quality pass
-- [x] `0.8.3` — Look #8 quality pass
-- [x] `0.8.4` — Look #9 quality pass and all per-Look code-level quality gates
-- [x] `0.8.5` — Full-gallery browser evidence record and contact sheets
-- [x] `0.8.6` — Interactive-expansion decision record and vertical-slice candidates
-- [x] `0.8.7` — Option A implementation sequence delegated and locked
+- [x] `0.1.0–0.8.7` — Gallery foundation, all Looks, quality passes, evidence, and delegated pure-Look sequence
 - [x] `0.9.0` — Look #4 Zen Focus Routine Completion Loop
 - [x] `0.9.1` — Look #3 Precision Minimal Routine Completion Loop
+- [x] `0.9.2` — Look #5 Playful Modular Routine Completion Loop
 
 ---
 
-# 10. Current next actions
+# 8. Current next actions
 
-- [ ] Implement Look #5 Today / Needs Attention
-- [ ] Implement Look #5 Area → Section → Chore navigation
-- [ ] Apply shared completion, recurrence advancement, attention updates, and Undo
-- [ ] Add Look #5 interactive responsive and accessibility layer
-- [ ] Validate Look #5 under Normal Day, Heavy Backlog, All Clear, New User, Long Content, and Large Text
-- [ ] Execute updated validation in an exact complete checkout when available
-- [ ] Perform physical Android and actual screen-reader smoke tests when available
+- [ ] Implement Look #7 Today / Needs Attention
+- [ ] Implement Look #7 Area → Section → Chore navigation
+- [ ] Apply shared completion, recurrence, attention updates, and Undo
+- [ ] Add Look #7 interactive responsive and accessibility layer
+- [ ] Extend validator through Look #7
+- [ ] Keep exact-checkout, Android, and screen-reader evidence pending until actually performed

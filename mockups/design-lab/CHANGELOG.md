@@ -1,5 +1,22 @@
 # Design Lab Changelog
 
+## 0.8.1 — 2026-08-01
+
+### Look #5 — Playful Modular quality pass
+
+- Darkened muted text to clear small-text contrast targets on every alternating card color
+- Increased very small metadata, status, recurrence, and suggestion labels
+- Increased completion controls to 48 × 48 px and critical actions to at least 48 px high
+- Added strong Look-specific keyboard focus indicators
+- Reflowed Area status and routine status on narrow phone widths
+- Added long-content wrapping for Area, Section, routine, recurrence, location, and action text
+- Replaced ineffective inherited Large Text scaling with explicit fixed-size overrides and layout reflow
+- Improved Area, summary, Section, routine-status, and Intervention semantics
+- Added forced-colors system-color treatment and removed decorative color dependence
+- Added `look5-quality.css`, `LOOK-5-QUALITY.md`, and `CHECKLIST-PROGRESS-0.8.1.md`
+- Extended validator coverage to the quality stylesheet and load order
+- Updated the Design Lab to `0.8.1`
+
 ## 0.8.0 — 2026-08-01
 
 ### Complete visual gallery

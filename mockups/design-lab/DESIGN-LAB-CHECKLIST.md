@@ -3,8 +3,8 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.8.6`  
-**Purpose:** Maintain a complete gallery of genuinely different visual systems for the same Nudge product, then test pure directions and controlled synthesis without forcing premature elimination.
+**Current version:** `0.8.7`  
+**Purpose:** Maintain a complete gallery of genuinely different visual systems for the same Nudge product, then test pure directions without forcing premature elimination.
 
 This file is the source of truth for scope, progress, review gates, and decisions.
 
@@ -22,23 +22,23 @@ This file is the source of truth for scope, progress, review gates, and decision
 
 When the user says **go**, continue to the next unchecked milestone without routine clarification.
 
+The user delegated the first Look and the remaining Look order. Do not ask for another visual-selection decision during the recorded sequence.
+
 A hard stop is required before:
 
-- Changing the three shared comparison screens
+- Changing the agreed Routine Completion Loop or later feature order
 - Changing shared scenario meaning or comparison fairness
-- Adding product functionality beyond the agreed comparison scope
-- Materially changing branch, routing, storage, architecture, or deployment
+- Adding product functionality beyond the agreed slice
+- Materially changing routing, storage, architecture, or deployment
 - Editing the protected Look #1 prototype
+- Introducing product-facing themes
 - Merging into `main`
 - Promoting dark variants into separate formal directions
 - Allowing unrestricted style mixing within a screen
-- Beginning interactive vertical-slice implementation before the prepared strategy is approved
 
 Required one-line response:
 
 > **Hard stop: review the Design Lab decision required before I continue.**
-
-The user has approved Looks #5, #7, #8, and #9 and removed the former mandatory finalist-selection gate.
 
 ---
 
@@ -166,10 +166,10 @@ The user has approved Looks #5, #7, #8, and #9 and removed the former mandatory 
 
 - [x] No direction must be rejected merely because another scores higher overall
 - [x] Pure-Look prototypes remain allowed
-- [x] Separate feature experiments may use different Looks
-- [x] Controlled synthesis is allowed
-- [x] Controlled synthesis requires one dominant system
-- [x] Every borrowed component must be documented
+- [x] Option A selected: one pure-Look vertical slice at a time
+- [x] All other Looks remain preserved while one Look is implemented
+- [x] Look order is a learning sequence, not a ranking
+- [x] Look switching remains Design Lab-only
 - [x] Unrestricted mixing within a screen remains prohibited
 - [x] Dark variants remain deferred variants, not numbered Looks
 
@@ -229,46 +229,49 @@ The user has approved Looks #5, #7, #8, and #9 and removed the former mandatory 
 
 # 7. Interactive expansion
 
-The former requirement to select two or three finalists before interactive work is removed.
+## Decisions completed
 
-## Planning completed
+- [x] Select Option A — one pure-Look vertical slice at a time
+- [x] Select Routine Completion Loop as the first flow
+- [x] Delegate first Look and complete remaining order
+- [x] Select Look #4 — Zen Focus first
+- [x] Keep Look switching Design Lab-only
+- [x] Keep prototype state isolated and deterministic
+- [x] Keep Look #1 protected and outside the implementation sequence
 
-- [x] Prepare the interactive-expansion decision record
-- [x] Define pure-Look, feature-specific, shared-core multi-Look, and fallback family strategies
-- [x] Define candidate vertical slices
-- [x] Recommend the Routine completion loop first
-- [x] Recommend one shared semantic behavior core with eight Design Lab visual adapters
-- [x] Recommend keeping Look switching inside the Design Lab only
-- [x] Recommend isolated deterministic prototype state
-- [x] Define semantic and Look-owned presentation boundaries
-- [x] Define cross-Look scripted acceptance criteria
-- [x] Define explicit first-slice exclusions
+## Pure-Look implementation order
 
-## Decision required
+1. [ ] Look #4 — Zen Focus
+2. [ ] Look #3 — Precision Minimal
+3. [ ] Look #5 — Playful Modular
+4. [ ] Look #7 — Bold Utility
+5. [ ] Look #6 — Tactile Household
+6. [ ] Look #2 — Warm Editorial
+7. [ ] Look #8 — Ambient Glass
+8. [ ] Look #9 — Retro Digital
 
-- [!] Approve the recommended four-part package or select an explicit alternative
+See `PURE-LOOK-IMPLEMENTATION-ORDER.md` for rationale and acceptance gates.
 
-Recommended package:
+## Routine Completion Loop required in each Look
 
-1. Shared behavior core with eight Design Lab visual adapters.
-2. Routine completion loop first.
-3. Look switching remains a Design Lab review control only.
-4. Prototype state remains isolated and deterministic.
+- [ ] Today / Needs Attention entry
+- [ ] Areas → Area → Section → Chore detail navigation
+- [ ] Complete chore
+- [ ] Advance deterministic Light, Moderate, or Deep recurrence
+- [ ] Update attention counts and all-clear state
+- [ ] Undo or reopen
+- [ ] Preserve valid state through browser Back and Forward
+- [ ] Support Normal Day, Heavy Backlog, All Clear, New Area, Long Content, and Large Text
+- [ ] Keep completion and undo keyboard reachable
+- [ ] Keep primary actions reachable on short screens
 
-## Vertical-slice implementation remains blocked
+## Later feature order after all eight Looks receive the Routine Completion Loop
 
-- [ ] Today / Needs Attention → Areas → Area → Section → Chore detail
-- [ ] Complete, advance recurrence, undo, and reopen
-- [ ] Preserve semantic state while switching Looks
-- [ ] Add Normal Day, Heavy Backlog, All Clear, New Area, Long Content, and Large Text states
-- [ ] Add browser-history and Reset Review State behavior
-- [ ] Run the scripted path across all eight active Looks
+1. [ ] Task hierarchy loop
+2. [ ] Intervention-to-action loop
+3. [ ] Reusable Lists loop
 
-## Later slices
-
-- [ ] Task add, edit, complete, reopen, reorder, main-task, and subtask flow
-- [ ] Intervention Start, alternative, Not Now, focused completion, and return flow
-- [ ] Reusable Lists, suggestions, check, reset, and reopen flow
+Use the same Look order for each later feature unless a documented technical dependency requires a change.
 
 ---
 
@@ -287,12 +290,15 @@ Recommended package:
 - [x] `0.8.4` — Look #9 Retro Digital quality pass and completion of all per-Look code-level quality gates
 - [x] `0.8.5` — Full-gallery browser evidence record, contact sheets, and repository status update
 - [x] `0.8.6` — Interactive-expansion decision record and vertical-slice candidates
+- [x] `0.8.7` — Option A implementation sequence delegated and locked
 
 ---
 
 # 9. Current next actions
 
-- [!] Review and approve the interactive-expansion strategy
+- [ ] Build the isolated deterministic state foundation for Look #4
+- [ ] Add Today / Needs Attention and the Look #4 route chain
+- [ ] Add Chore detail, completion, recurrence advance, and undo or reopen
+- [ ] Validate Look #4 under Normal Day, Heavy Backlog, All Clear, New Area, Long Content, and Large Text
 - [ ] Execute updated validation in an exact complete checkout when available
 - [ ] Perform physical Android and actual screen-reader smoke tests when available
-- [ ] Begin the approved vertical slice only after the hard stop is resolved

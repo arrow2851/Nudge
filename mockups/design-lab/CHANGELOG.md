@@ -1,5 +1,22 @@
 # Design Lab Changelog
 
+## 0.8.5 — 2026-08-01
+
+### Full-gallery browser evidence record
+
+- Added browser presentation evidence for Looks #5, #7, #8, and #9
+- Recorded 84/84 direct routes, 72/72 viewport checks, 28/28 stress checks, 8/8 Long Content and Large Text reachability checks, 4/4 media-emulation checks, and 4/4 keyboard-focus checks
+- Confirmed no tested horizontal-overflow or unnamed-visible-button failures
+- Confirmed a minimum tested in-preview control size of 48 × 48 px
+- Generated nine-direction comparison contact sheets for Areas, Area detail, and Intervention
+- Added `FULL-GALLERY-EVIDENCE-0.8.4.md` and `FULL-GALLERY-EVIDENCE-0.8.4.json`
+- Added `CHECKLIST-PROGRESS-0.8.5.md`
+- Updated gallery status, checklist, README, build labels, and Look metadata
+- Documented that the run used a reconstructed harness rather than an exact complete checkout
+- Left exact validator execution, physical Android testing, actual screen-reader testing, lower-end Ambient Glass performance testing, and a single-build all-Look rerun pending
+- Kept every repository change under `mockups/design-lab/`
+- Kept `main` and the protected Look #1 prototype unchanged
+
 ## 0.8.4 — 2026-08-01
 
 ### Look #9 — Retro Digital quality pass

@@ -2,82 +2,76 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.7.2`  
+**Current version:** `0.8.0`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.7.2 evidence milestone](CHECKLIST-PROGRESS-0.7.2.md)
-- [Round 1 evidence report](ROUND-1-EVIDENCE-0.7.2.md)
-- [Provisional Round 1 scorecard](ROUND-1-SCORECARD-0.7.2.md)
-- [Look #1 — Soft Practical Utility baseline](LOOK-1-SOFT-PRACTICAL-UTILITY.md)
-- [Round 1 review protocol](ROUND-1-REVIEW-PROTOCOL.md)
-- [Blank scorecard template](ROUND-1-SCORECARD.md)
-- [Round 1 active-Look route matrix](ROUND-1-ROUTES.md)
-- [Automated validation guide](VALIDATION.md)
-- [Shared scenario definitions](SCENARIOS.md)
-- [Look #2 — Warm Editorial](LOOK-2-WARM-EDITORIAL.md) and [quality pass](LOOK-2-QUALITY.md)
-- [Look #3 — Precision Minimal](LOOK-3-PRECISION-MINIMAL.md) and [quality pass](LOOK-3-QUALITY.md)
-- [Look #4 — Zen Focus](LOOK-4-ZEN-FOCUS.md) and [quality pass](LOOK-4-QUALITY.md)
-- [Look #6 — Tactile Household](LOOK-6-TACTILE-HOUSEHOLD.md) and [quality pass](LOOK-6-QUALITY.md)
+- [Latest checklist progress — 0.8.0 expanded gallery](CHECKLIST-PROGRESS-0.8.0.md)
+- [Expanded gallery directions](EXPANDED-GALLERY-LOOKS.md)
 - [Decisions and feedback log](DECISIONS.md)
+- [Round 1 evidence report](ROUND-1-EVIDENCE-0.7.2.md)
+- [Look #1 — Soft Practical Utility baseline](LOOK-1-SOFT-PRACTICAL-UTILITY.md)
+- [Shared scenario definitions](SCENARIOS.md)
+- [Automated validation guide](VALIDATION.md)
 - [Design Lab changelog](CHANGELOG.md)
-
-The checklist remains the source of truth for scope, progress, review gates, and plan adjustments.
 
 ## Safety boundary
 
 - The protected Look #1 prototype remains under `mockups/prototype/` on `main` and is unchanged.
 - Experimental and comparison-only files remain under `mockups/design-lab/`.
 - Design Lab state is isolated from Look #1.
-- Nothing should merge into `main` until selection and migration decisions are recorded.
+- Nothing should merge into `main` until migration boundaries are intentionally reviewed.
 
-## Round 1 directions
+## Complete visual gallery
 
-Baseline:
+Baseline reference:
 
 - Look #1 — Soft Practical Utility
 
-Active auditions:
+Active gallery directions:
 
 - Look #2 — Warm Editorial
 - Look #3 — Precision Minimal
 - Look #4 — Zen Focus
+- Look #5 — Playful Modular
 - Look #6 — Tactile Household
+- Look #7 — Bold Utility
+- Look #8 — Ambient Glass
+- Look #9 — Retro Digital
 
-All active auditions use the same three scored moments and seven scenarios.
+The user explicitly chose to retain every direction rather than select a single winner. The former mandatory finalist-selection gate is no longer active.
+
+Every active Look uses the same:
+
+- Areas overview
+- Representative Area detail
+- Intervention
+- Normal Day, Heavy Backlog, New User, All Clear, Large Household, Long Content, and Large Text scenarios
+- Routes, browser-history behavior, capture modes, and simulated actions
+
+## Gallery policy
+
+A later prototype may use:
+
+- One pure Look throughout.
+- Separate Look variants for different experiments.
+- Controlled synthesis with one dominant visual foundation and explicitly documented borrowed components.
+
+Unrestricted mixing within a single screen remains prohibited because it weakens coherence and makes evaluation meaningless.
 
 ## Evidence status
 
-The 0.7.2 evidence pass completed:
+Looks #2, #3, #4, and #6 completed dedicated code-level quality passes and the 0.7.2 browser evidence run.
 
-- 105 direct routes
-- 90 canonical viewport checks
-- 35 stress-state routes
-- 10 long/Large-Text action-reachability checks
-- keyboard focus and Enter activation
-- automated accessibility-tree inspection
-- forced-colors and reduced-motion emulation
-- 15 canonical labelled captures
-
-The browser pass found and corrected a shared click-routing defect: root `html[data-look]` intercepted non-Look clicks. Look handling and semantics are now scoped to `button[data-look]`.
-
-Physical-device and actual screen-reader testing remain pending. Read `ROUND-1-EVIDENCE-0.7.2.md` for exact results and limitations.
+Looks #5, #7, #8, and #9 now have initial responsive, Large Text, long-content, reduced-motion, and forced-colors foundations. Their dedicated quality passes and full browser/device evidence are still pending.
 
 ## Look #1 comparison reference
 
 `look1-reference.html` maps the shared fixture into the protected prototype's existing green, white-card, rounded-control visual language without editing `mockups/prototype/`.
 
-Routes:
-
-```text
-look1-reference.html?screen=areas&scenario=normal
-look1-reference.html?screen=area&area=kitchen&scenario=backlog
-look1-reference.html?screen=intervention&scenario=normal
-```
-
-The Look #1 Intervention is visibly labeled as a **comparison-only extrapolation** because the current prototype does not contain an equivalent screen.
+The Look #1 Intervention is visibly labeled as a **comparison-only extrapolation** because the protected prototype does not contain an equivalent screen.
 
 ## Run locally
 
@@ -89,17 +83,17 @@ python -m http.server 8080
 
 Open `http://localhost:8080`.
 
-## Capture modes
+## Example routes
 
-Append one of these parameters to an active-Look or Look #1 reference route:
+```text
+?look=5&screen=areas&scenario=normal
+?look=7&screen=area&area=kitchen&scenario=backlog
+?look=8&screen=intervention&scenario=long
+?look=9&screen=areas&scenario=large-text
+```
 
-- `capture=labelled` — stable 390 × 844 evidence frame with Look, screen, scenario, and version label.
-- `capture=phone` — clean phone frame without the evidence label.
+Append `capture=labelled` for an evidence frame or `capture=phone` for a clean phone frame.
 
-Use normal routes for interaction, responsive, browser-history, keyboard, and accessibility testing.
+## Next work
 
-## Provisional review result
-
-The automated and visual evidence provisionally ranks Look #3 and Look #4 as the strongest finalist candidates, with Look #2 as a credible focused-revision third candidate or component source. Look #1 remains the protected comparator, and Look #6 is provisionally Components only.
-
-No finalist decision has been recorded. The mandatory Round 1 selection gate must be reviewed before Round 2 begins.
+Complete dedicated quality passes for Looks #5, #7, #8, and #9, then extend browser and device evidence across the complete eight-Look gallery.

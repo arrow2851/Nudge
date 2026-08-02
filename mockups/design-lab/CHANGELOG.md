@@ -1,5 +1,25 @@
 # Design Lab Changelog
 
+## 0.8.6 — 2026-08-01
+
+### Interactive expansion planning
+
+- Added `INTERACTIVE-EXPANSION-DECISION.md`
+- Added `VERTICAL-SLICE-CANDIDATES.md`
+- Added `CHECKLIST-PROGRESS-0.8.6.md`
+- Compared pure-Look, feature-specific, shared-core multi-Look, and two-family fallback strategies
+- Recommended one shared semantic behavior core with eight Design Lab visual adapters
+- Recommended the Routine completion loop as the first vertical slice
+- Recommended keeping Look switching inside the Design Lab rather than adding a product-facing theme setting
+- Recommended deterministic isolated prototype state with no production integration
+- Defined semantic-layer and Look-owned presentation boundaries
+- Defined the scripted cross-Look acceptance path
+- Defined explicit first-slice exclusions
+- Recorded the pending architecture decision in `DECISIONS.md`
+- Updated README, checklist, build labels, and Design Lab metadata to `0.8.6`
+- Did not implement routing, state, or a vertical slice
+- Kept the protected Look #1 prototype and `main` unchanged
+
 ## 0.8.5 — 2026-08-01
 
 ### Full-gallery browser evidence record

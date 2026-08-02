@@ -8,6 +8,7 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
 const INTERACTIVE_LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
 const TASK_LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
+const INTERVENTION_LOOKS = [4];
 const SCENARIOS = ['normal', 'backlog', 'new', 'clear', 'large', 'long', 'large-text'];
 const GALLERY_VIEWS = ['areas', 'area', 'intervention'];
 const ROUTINE_VIEWS = ['today', 'areas', 'area', 'section', 'chore', 'intervention'];
@@ -42,7 +43,7 @@ const taskRenderers = new Map([
 const styles = [
   'styles.css', 'foundation.css', 'look2-interactive.css', 'look2-tasks.css',
   'look3.css', 'look3-interactive.css', 'look3-tasks.css',
-  'look4.css', 'look4-interactive.css', 'look4-tasks.css',
+  'look4.css', 'look4-interactive.css', 'look4-tasks.css', 'look4-intervention.css',
   'look6.css', 'look6-quality.css', 'look6-interactive.css', 'look6-tasks.css',
   'expanded-looks.css', 'look5-quality.css', 'look5-interactive.css', 'look5-tasks.css',
   'look7-quality.css', 'look7-interactive.css', 'look7-tasks.css',
@@ -53,7 +54,7 @@ const styles = [
 function requiredFiles() {
   const files = [
     'index.html', 'config.js', 'utils.js', 'fixtures.js', 'state.js',
-    'interactive-state.js', 'task-state.js', 'controls.js', 'app.js', 'quality.js',
+    'interactive-state.js', 'task-state.js', 'intervention-state.js', 'controls.js', 'app.js', 'quality.js',
     ...styles,
     'look1-reference.html', 'look1-reference.css', 'look1-reference.js', 'renderers/shared.js',
     ...LOOKS.map(id => `renderers/look${id}.js`),
@@ -65,7 +66,7 @@ function requiredFiles() {
 
 function importGraph() {
   const files = [
-    'fixtures.js', 'state.js', 'interactive-state.js', 'task-state.js', 'controls.js', 'app.js',
+    'fixtures.js', 'state.js', 'interactive-state.js', 'task-state.js', 'intervention-state.js', 'controls.js', 'app.js',
     'look1-reference.js', ...LOOKS.map(id => `renderers/look${id}.js`),
     ...[...taskRenderers.values()].map(([file]) => file)
   ];
@@ -103,7 +104,7 @@ function fixturesAndRoutes(shared) {
   check(JSON.stringify(Object.keys(shared.SCENARIOS)) === JSON.stringify(SCENARIOS), 'Scenario registry differs from the seven shared scenarios.');
   check(JSON.stringify(shared.LOOKS.map(item => item.id)) === JSON.stringify(LOOKS), 'Look registry differs from Looks #2–#9.');
   [...ROUTINE_VIEWS, 'tasks'].forEach(view => check(shared.ALLOWED_VIEWS.has(view), `Interactive view is not allowed: ${view}`));
-  check(shared.defaultState().look === 9 && shared.defaultState().view === 'tasks', 'Default review route is not Look #9 Tasks.');
+  check(shared.defaultState().look === 4 && shared.defaultState().view === 'intervention', 'Default review route is not Look #4 Intervention.');
 
   for (const [id, scenario] of Object.entries(shared.SCENARIOS)) {
     check(Array.isArray(scenario.areas), `${id}: areas must be an array.`);
@@ -120,7 +121,7 @@ function fixturesAndRoutes(shared) {
     const url = `?look=${look}&screen=${view}&scenario=${encodeURIComponent(scenario)}${view === 'area' ? `&area=${encodeURIComponent(validArea)}` : ''}`;
     check(url.includes(`look=${look}`) && url.includes(`screen=${view}`), `Route serialization failed: Look ${look}, ${view}.`);
   }
-  passes.push(`Checked ${LOOKS.length * SCENARIOS.length * GALLERY_VIEWS.length} gallery routes, ${INTERACTIVE_LOOKS.length * ROUTINE_VIEWS.length} routine combinations, and ${TASK_LOOKS.length} task Looks.`);
+  passes.push(`Checked ${LOOKS.length * SCENARIOS.length * GALLERY_VIEWS.length} gallery routes, ${INTERACTIVE_LOOKS.length * ROUTINE_VIEWS.length} routine combinations, ${TASK_LOOKS.length} task Looks, and ${INTERVENTION_LOOKS.length} Intervention Look.`);
 }
 
 function routineRenderers() {
@@ -210,6 +211,45 @@ function taskHierarchyContract() {
   passes.push('Checked shared Task hierarchy state and all eight renderer, action, drag, responsive, fallback, contrast, and accessibility contracts.');
 }
 
+function interventionContract() {
+  const app = read('app.js');
+  const controls = read('controls.js');
+  const interaction = read('intervention-state.js');
+  const renderer = read('renderers/look4.js');
+  const css = read('look4-intervention.css');
+
+  check(app.includes('new Set([4])'), 'app.js does not register Look #4 for Intervention-to-action.');
+  check(controls.includes('new Set([4])'), 'controls.js does not register Look #4 for Intervention-to-action guidance.');
+  [
+    'nudge-design-lab-intervention-action-v1', 'interventionSuggestions', 'applyInterventionState',
+    'showNextInterventionSuggestion', 'startInterventionAction', 'completeInterventionAction',
+    'reopenInterventionAction', 'undoInterventionStart', 'dismissIntervention',
+    'resumeIntervention', 'clearInterventionState', "'prompt'", "'active'", "'completed'", "'dismissed'"
+  ].forEach(token => check(interaction.includes(token), `intervention-state.js is missing ${token}.`));
+
+  [
+    'applyInterventionState', 'clearInterventionState', 'start-intervention', 'next-intervention',
+    'dismiss-intervention', 'resume-intervention', 'complete-intervention',
+    'reopen-intervention', 'undo-intervention', 'return-today', 'currentSourceData'
+  ].forEach(token => check(app.includes(token), `app.js is missing Intervention-to-action hook ${token}.`));
+
+  [
+    'data-action="start-intervention"', 'data-action="next-intervention"',
+    'data-action="dismiss-intervention"', 'data-action="resume-intervention"',
+    'data-action="complete-intervention"', 'data-action="reopen-intervention"',
+    'data-action="undo-intervention"', 'data-action="return-today"',
+    'You chose a place to begin.', 'That small step is finished.', 'Staying here is a valid choice.'
+  ].forEach(token => check(renderer.includes(token), `Look #4 Intervention renderer is missing ${token}.`));
+
+  ['.zen-action-state', 'min-height: 48px', 'forced-colors: active', 'prefers-reduced-motion: reduce', 'max-height: 720px'].forEach(token => {
+    check(css.includes(token), `Look #4 Intervention CSS is missing ${token}.`);
+  });
+
+  const noGuilt = `${interaction}\n${renderer}`.toUpperCase();
+  ['PENALTY FOR STAYING', 'NO PENALTY', 'NOTHING CHANGED'].forEach(token => check(noGuilt.includes(token), `Intervention no-guilt language is missing ${token}.`));
+  passes.push('Checked shared Intervention phases, deterministic alternatives, Start, Complete, Reopen, Undo, dismissal, reset, and Zen accessibility contracts.');
+}
+
 function versionsAndHtml(shared) {
   const version = shared.DESIGN_LAB.version;
   check(read('quality.js').includes(`const VERSION = '${version}'`), 'quality.js version mismatch.');
@@ -259,6 +299,7 @@ function main() {
   lookRoutineContract(8, 'renderers/look8.js', 'look8-interactive.css', ['.ag-chore-actions', '.ag-routine-open', 'prefers-reduced-transparency: reduce', '@supports not']);
   lookRoutineContract(9, 'renderers/look9.js', 'look9-interactive.css', ['.rd-chore-actions', '.rd-routine-open']);
   taskHierarchyContract();
+  interventionContract();
 
   if (shared) {
     fixturesAndRoutes(shared);
@@ -271,7 +312,7 @@ function main() {
   passes.forEach(item => console.log(`PASS  ${item}`));
   failures.forEach(item => console.error(`FAIL  ${item}`));
   if (failures.length) process.exitCode = 1;
-  else console.log('\nAll gallery, Routine Completion, and all-Look Task hierarchy checks passed.');
+  else console.log('\nAll gallery, Routine Completion, Task hierarchy, and Look #4 Intervention-to-action checks passed.');
 }
 
 main();

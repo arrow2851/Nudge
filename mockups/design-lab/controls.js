@@ -11,8 +11,9 @@ export function renderReviewControls(state, data, elements) {
     </button>`).join('');
 
   elements.screenControls.innerHTML = ROUND_ONE_CONTROLS.map(([id, label]) => {
-    const active = state.view === id || (id === 'areas' && state.view === 'area');
-    return `<button class="${active ? 'active' : ''}" data-view="${id}">${label}</button>`;
+    const active = state.view === id || (id === 'areas' && ['area', 'section', 'chore'].includes(state.view));
+    const unavailable = id === 'today' && state.look !== 4;
+    return `<button class="${active ? 'active' : ''}" data-view="${id}" ${unavailable ? 'aria-describedby="scenario-purpose"' : ''}>${label}</button>`;
   }).join('');
 
   elements.scenarioControls.innerHTML = Object.entries(SCENARIOS).map(([id, scenario]) => `
@@ -22,7 +23,7 @@ export function renderReviewControls(state, data, elements) {
   document.querySelector('#look-kicker').textContent = `Look #${look.id}`;
   document.querySelector('#look-name').textContent = look.name;
   document.querySelector('#look-description').textContent = look.description;
-  document.querySelector('#scenario-purpose').textContent = `${data.label}: ${data.purpose}`;
+  document.querySelector('#scenario-purpose').textContent = `${data.label}: ${data.purpose}${state.look !== 4 ? ' Today interaction is currently implemented only in Look #4.' : ''}`;
   document.querySelector('#build-meta').textContent = `v${DESIGN_LAB.version} · ${DESIGN_LAB.buildDate}`;
   return look;
 }

@@ -1,5 +1,23 @@
 # Design Lab Changelog
 
+## 0.8.7 — 2026-08-01
+
+### Pure-Look implementation order
+
+- Recorded the user's delegation of the first Look and the complete remaining order
+- Selected Look #4 — Zen Focus for the first Routine Completion Loop
+- Set the remaining order to Looks #3, #5, #7, #6, #2, #8, and #9
+- Clarified that the order is a learning and technical-risk sequence, not a ranking or elimination list
+- Added `PURE-LOOK-IMPLEMENTATION-ORDER.md`
+- Added `CHECKLIST-PROGRESS-0.8.7.md`
+- Resolved the visual-selection hard stop
+- Set routine `go` messages to advance through the recorded sequence
+- Set later feature order to Task hierarchy, Intervention-to-action, then Reusable Lists
+- Kept Look #1 protected and outside the implementation sequence
+- Kept Look switching Design Lab-only
+- Kept prototype state isolated and deterministic
+- Did not merge into `main`
+
 ## 0.8.6 — 2026-08-01
 
 ### Interactive expansion planning

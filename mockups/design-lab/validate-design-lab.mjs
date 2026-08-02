@@ -8,7 +8,7 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
 const INTERACTIVE_LOOKS = [...LOOKS];
 const TASK_LOOKS = [...LOOKS];
-const INTERVENTION_LOOKS = [3, 4, 5, 6, 7];
+const INTERVENTION_LOOKS = [2, 3, 4, 5, 6, 7];
 const SCENARIOS = ['normal', 'backlog', 'new', 'clear', 'large', 'long', 'large-text'];
 const GALLERY_VIEWS = ['areas', 'area', 'intervention'];
 const ROUTINE_VIEWS = ['today', 'areas', 'area', 'section', 'chore', 'intervention'];
@@ -41,6 +41,7 @@ const taskRenderers = new Map([
 ]);
 
 const interventionRenderers = new Map([
+  [2, ['renderers/look2-intervention.js', 'renderInterventionEditorialAction', 'look2-intervention.css', ['.ed-intervention-entry', '.ed-intervention-facts', 'max-height: 720px']]],
   [3, ['renderers/look3-intervention.js', 'renderInterventionPrecisionAction', 'look3-intervention.css', ['.pm-intervention-card', '.pm-intervention-facts', 'max-height: 700px']]],
   [4, ['renderers/look4.js', 'renderInterventionZen', 'look4-intervention.css', ['.zen-action-state', 'max-height: 720px']]],
   [5, ['renderers/look5-intervention.js', 'renderInterventionPlayfulAction', 'look5-intervention.css', ['.pl-intervention-choice', '.pl-intervention-context', 'max-height: 720px']]],
@@ -49,7 +50,7 @@ const interventionRenderers = new Map([
 ]);
 
 const styles = [
-  'styles.css', 'foundation.css', 'look2-interactive.css', 'look2-tasks.css',
+  'styles.css', 'foundation.css', 'look2-interactive.css', 'look2-tasks.css', 'look2-intervention.css',
   'look3.css', 'look3-interactive.css', 'look3-tasks.css', 'look3-intervention.css',
   'look4.css', 'look4-interactive.css', 'look4-tasks.css', 'look4-intervention.css',
   'look6.css', 'look6-quality.css', 'look6-interactive.css', 'look6-tasks.css', 'look6-intervention.css',
@@ -114,7 +115,7 @@ function fixturesAndRoutes(shared) {
   check(JSON.stringify(Object.keys(shared.SCENARIOS)) === JSON.stringify(SCENARIOS), 'Scenario registry differs from the seven shared scenarios.');
   check(JSON.stringify(shared.LOOKS.map(item => item.id)) === JSON.stringify(LOOKS), 'Look registry differs from Looks #2–#9.');
   [...ROUTINE_VIEWS, 'tasks'].forEach(view => check(shared.ALLOWED_VIEWS.has(view), `Interactive view is not allowed: ${view}`));
-  check(shared.defaultState().look === 6 && shared.defaultState().view === 'intervention', 'Default review route is not Look #6 Intervention.');
+  check(shared.defaultState().look === 2 && shared.defaultState().view === 'intervention', 'Default review route is not Look #2 Intervention.');
 
   for (const [id, scenario] of Object.entries(shared.SCENARIOS)) {
     check(Array.isArray(scenario.areas), `${id}: areas must be an array.`);
@@ -192,8 +193,8 @@ function interventionContract() {
   const app = read('app.js');
   const controls = read('controls.js');
   const interaction = read('intervention-state.js');
-  check(app.includes('new Set([3, 4, 5, 6, 7])'), 'app.js does not register Looks #3, #4, #5, #6, and #7 for Intervention-to-action.');
-  check(controls.includes('new Set([3, 4, 5, 6, 7])'), 'controls.js does not register Looks #3, #4, #5, #6, and #7 for Intervention guidance.');
+  check(app.includes('new Set([2, 3, 4, 5, 6, 7])'), 'app.js does not register Looks #2 through #7 for Intervention-to-action.');
+  check(controls.includes('new Set([2, 3, 4, 5, 6, 7])'), 'controls.js does not register Looks #2 through #7 for Intervention guidance.');
   ['nudge-design-lab-intervention-action-v1', 'interventionSuggestions', 'applyInterventionState', 'showNextInterventionSuggestion', 'startInterventionAction', 'completeInterventionAction', 'reopenInterventionAction', 'undoInterventionStart', 'dismissIntervention', 'resumeIntervention', 'clearInterventionState', "'prompt'", "'active'", "'completed'", "'dismissed'"].forEach(token => check(interaction.includes(token), `intervention-state.js is missing ${token}.`));
   ['applyInterventionState', 'clearInterventionState', 'start-intervention', 'next-intervention', 'dismiss-intervention', 'resume-intervention', 'complete-intervention', 'reopen-intervention', 'undo-intervention', 'return-today', 'currentSourceData'].forEach(token => check(app.includes(token), `app.js is missing Intervention-to-action hook ${token}.`));
 
@@ -206,13 +207,17 @@ function interventionContract() {
     ['min-height: 48px', 'forced-colors: active', 'prefers-reduced-motion: reduce', ...cssTokens].forEach(token => check(css.includes(token), `Look #${look} Intervention CSS is missing ${token}.`));
   }
 
+  const editorial = read('renderers/look2-intervention.js').toUpperCase();
+  ['EITHER CHOICE IS COMPLETE', 'NO REFLECTION, JOURNAL ENTRY, SCORE, REMINDER, OR REQUIREMENT', 'NOTHING NEEDS TO BE WRITTEN OR EXPLAINED'].forEach(token => check(editorial.includes(token), `Warm Editorial no-journaling language is missing ${token}.`));
+  ['<TEXTAREA', 'CONTENTEDITABLE=', 'NAME="REFLECTION"', 'NAME="JOURNAL"'].forEach(token => check(!editorial.includes(token), `Warm Editorial renderer contains an unapproved writing input: ${token}.`));
+
   const tactile = read('renderers/look6-intervention.js').toUpperCase();
   ['EITHER CHOICE IS COMPLETE', 'NO TIMER, SCORE, SERVICE GRADE', 'NO ACTION WAS STARTED', 'NOTHING IS OWED'].forEach(token => check(tactile.includes(token), `Tactile Household optional-choice language is missing ${token}.`));
   ['BROKEN', 'DEFECT', 'FAILED', 'REPAIR REQUIRED'].forEach(token => check(!tactile.includes(token), `Tactile Household renderer contains prohibited defect language: ${token}.`));
 
   const bold = read('renderers/look7-intervention.js').toUpperCase();
   ['ERROR', 'FAILURE', 'FAULT', 'ALARM', 'WARNING', 'NONCOMPLIANCE'].forEach(token => check(!bold.includes(token), `Bold Utility renderer contains prohibited pressure token: ${token}.`));
-  passes.push('Checked shared Intervention phases, deterministic alternatives, all reversible actions, five pure-Look renderers, language boundaries, and accessibility contracts.');
+  passes.push('Checked shared Intervention phases, deterministic alternatives, all reversible actions, six pure-Look renderers, language boundaries, and accessibility contracts.');
 }
 
 function versionsAndHtml(shared) {
@@ -277,7 +282,7 @@ function main() {
   passes.forEach(item => console.log(`PASS  ${item}`));
   failures.forEach(item => console.error(`FAIL  ${item}`));
   if (failures.length) process.exitCode = 1;
-  else console.log('\nAll gallery, Routine Completion, Task hierarchy, and Looks #3/#4/#5/#6/#7 Intervention-to-action checks passed.');
+  else console.log('\nAll gallery, Routine Completion, Task hierarchy, and Looks #2/#3/#4/#5/#6/#7 Intervention-to-action checks passed.');
 }
 
 main();

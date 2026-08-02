@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.8.2`  
+**Current version:** `0.8.3`  
 **Purpose:** Maintain a complete gallery of genuinely different visual systems for the same Nudge product, then test pure directions and controlled synthesis without forcing premature elimination.
 
 This file is the source of truth for scope, progress, review gates, and decisions.
@@ -130,7 +130,6 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 - [x] Area detail implemented
 - [x] Intervention implemented
 - [x] Seven scenarios supported
-- [x] Initial narrow-screen, Large Text, long-content, reduced-motion, and forced-colors foundations
 - [x] Dedicated responsive, contrast, density, semantics, and blocking-quality pass
 - [x] Dedicated quality stylesheet and evidence record
 - [ ] Browser and device evidence
@@ -149,7 +148,6 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 - [x] Area detail implemented
 - [x] Intervention implemented
 - [x] Seven scenarios supported
-- [x] Initial narrow-screen, Large Text, long-content, reduced-motion, and forced-colors foundations
 - [x] Dedicated responsive, contrast, density, tone, semantics, and blocking-quality pass
 - [x] Dedicated quality stylesheet and evidence record
 - [ ] Browser and device evidence
@@ -161,8 +159,11 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 - [x] Area detail implemented
 - [x] Intervention implemented
 - [x] Seven scenarios supported
-- [x] Initial narrow-screen, Large Text, long-content, reduced-motion, and forced-colors foundations
-- [ ] Dedicated responsive, contrast, performance-risk, semantics, and blocking-quality pass
+- [x] Dedicated responsive, contrast, transparency, performance-risk, semantics, and blocking-quality pass
+- [x] Repeated blur removed from cards and panels
+- [x] Unsupported-filter and reduced-transparency fallbacks
+- [x] Dedicated quality stylesheet and evidence record
+- [ ] Physical low-end-device performance measurement
 - [ ] Browser and device evidence
 
 ## Look #9 — Retro Digital
@@ -200,8 +201,7 @@ The user has already approved promotion of Looks #5, #7, #8, and #9 and has remo
 - [x] Version consistency checks
 - [x] CSS block-balance checks
 - [x] Route matrix expanded from 84 to 168 active-Look combinations
-- [x] New renderer files passed local `node --check`
-- [x] Expanded gallery and Look-specific quality styles passed local brace-balance checking
+- [x] Validator requires Look #5, #7, and #8 quality layers and load order
 - [ ] Execute updated validator in a complete checkout
 
 ---
@@ -257,13 +257,14 @@ Each interactive slice must preserve the same product behavior and support:
 - [x] `0.8.0` — Complete gallery with Looks #5, #7, #8, and #9
 - [x] `0.8.1` — Look #5 Playful Modular quality pass
 - [x] `0.8.2` — Look #7 Bold Utility quality pass
+- [x] `0.8.3` — Look #8 Ambient Glass quality pass
 
 ---
 
 # 9. Current next actions
 
-- [ ] Complete Look #8 quality pass
 - [ ] Complete Look #9 quality pass
 - [ ] Execute updated 168-route validation and browser evidence
+- [ ] Measure Look #8 on a physical lower-end device
 - [ ] Prepare full-gallery contact sheets
 - [ ] Decide later whether interactive expansion uses pure Looks, feature-specific variants, or controlled synthesis

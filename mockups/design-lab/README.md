@@ -2,16 +2,17 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.8.2`  
+**Current version:** `0.8.3`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.8.2 Look #7 quality](CHECKLIST-PROGRESS-0.8.2.md)
+- [Latest checklist progress — 0.8.3 Look #8 quality](CHECKLIST-PROGRESS-0.8.3.md)
 - [Expanded gallery directions](EXPANDED-GALLERY-LOOKS.md)
 - [Look #5 quality pass](LOOK-5-QUALITY.md)
 - [Look #7 quality pass](LOOK-7-QUALITY.md)
+- [Look #8 quality pass](LOOK-8-QUALITY.md)
 - [Decisions and feedback log](DECISIONS.md)
 - [Round 1 evidence report](ROUND-1-EVIDENCE-0.7.2.md)
 - [Look #1 — Soft Practical Utility baseline](LOOK-1-SOFT-PRACTICAL-UTILITY.md)
@@ -55,11 +56,13 @@ Unrestricted mixing within a single screen remains prohibited because it weakens
 
 ## Evidence status
 
-Looks #2, #3, #4, #5, #6, and #7 have completed dedicated code-level quality passes.
+Looks #2, #3, #4, #5, #6, #7, and #8 have completed dedicated code-level quality passes.
 
 Looks #1, #2, #3, #4, and #6 were included in the 0.7.2 browser evidence run. Browser/device evidence for Looks #5, #7, #8, and #9 remains pending.
 
-Looks #8 and #9 still require dedicated code-level quality passes.
+Look #8 now limits backdrop blur to a few focal surfaces and includes unsupported-filter and reduced-transparency fallbacks. Physical low-end-device performance measurement is still pending.
+
+Look #9 still requires its dedicated code-level quality pass.
 
 ## Look #1 comparison reference
 
@@ -90,4 +93,4 @@ Append `capture=labelled` for an evidence frame or `capture=phone` for a clean p
 
 ## Next work
 
-Complete the dedicated Look #8 and Look #9 quality passes, then extend browser and device evidence across the complete eight-Look gallery.
+Complete the dedicated Look #9 quality pass, then execute updated validation and browser/device evidence across the complete eight-Look gallery.

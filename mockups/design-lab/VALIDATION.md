@@ -16,7 +16,7 @@ A successful run exits with status `0`. Failed invariants are printed with a `FA
 - Shared shell, controller, routine, task, and intervention state files exist
 - Routine renderers for Looks #2 through #9 exist
 - Task renderers for all eight active Looks exist
-- Dedicated Intervention-to-action renderers/styles exist for Looks #3 and #4
+- Dedicated Intervention-to-action renderers/styles exist for Looks #3, #4, and #5
 - The protected Look #1 comparison reference exists
 - Every required stylesheet exists and loads in the expected order
 
@@ -39,7 +39,7 @@ A successful run exits with status `0`. Failed invariants are printed with a `FA
 
 ### Routes
 
-The validator covers Looks #2 through #9, all Routine Completion routes, Tasks for all eight Looks, and all seven scenarios. It also requires Look #3 Intervention as the default review route for version `0.11.1`.
+The validator covers Looks #2 through #9, all Routine Completion routes, Tasks for all eight Looks, and all seven scenarios. It also requires Look #5 Intervention as the default review route for version `0.11.2`.
 
 ### Routine Completion and Task hierarchy
 
@@ -54,12 +54,13 @@ The validator covers Looks #2 through #9, all Routine Completion routes, Tasks f
 - `intervention-state.js` contains the separate storage namespace and four-phase model
 - Suggestion cycling uses raw scenario data and remains deterministic
 - Start, Next, Dismiss, Resume, Complete, Reopen, Undo, Return-to-Today, and Reset hooks remain present
-- Looks #3 and #4 are registered as Intervention-to-action Looks
-- Both pure-Look renderers expose the equivalent action set
-- Both dedicated style contracts retain 48 px actions, Large Text handling, short-screen behavior, Forced Colors, visible focus, and Reduced Motion
+- Looks #3, #4, and #5 are registered as Intervention-to-action Looks
+- All three pure-Look renderers expose the equivalent action set
+- All three dedicated style contracts retain 48 px actions, Large Text handling, short-screen behavior, Forced Colors, visible focus, and Reduced Motion
 - Starting or completing an intervention does not alter routine or task state
-- No-guilt language confirms that staying, dismissing, and changing the suggestion carry no penalty
+- Optional-choice language confirms that staying, dismissing, and changing the suggestion carry no penalty
 - Precision Minimal metrics remain descriptive rather than evaluative
+- Playful Modular feedback remains free of points, streaks, rewards, rankings, and performance scoring
 
 ### Version and stylesheets
 
@@ -69,7 +70,7 @@ The validator covers Looks #2 through #9, all Routine Completion routes, Tasks f
 
 ## Evidence boundary
 
-The committed-source contract is recorded through version `0.11.1`. Direct repository cloning remains blocked by local DNS restrictions, so the exact complete-checkout validator and browser run have not been claimed.
+The committed-source contract is recorded through version `0.11.2`. Direct repository cloning remains blocked by local DNS restrictions, so the exact complete-checkout validator and browser run have not been claimed.
 
 Static validation does not replace runtime console checks, browser navigation testing, keyboard review, actual screen-reader output, physical Android presentation, real forced-colors behavior, or a single-version browser regression across every Look. Lower-end Ambient Glass paint measurements also remain pending.
 

@@ -195,7 +195,37 @@ Today / Needs Attention
 
 **Validation boundary:** The validator now requires two task renderers, two task stylesheets, the shared task engine, both Look registrations, cross-Look state hooks, and responsive/accessibility tokens. Exact-checkout execution, Android gesture testing, and actual screen-reader evidence remain pending.
 
-**Next active Look:** Look #5 — Playful Modular.
+## 2026-08-02 — Playful Modular uses warmth without scoring
+
+**Milestone:** Version `0.10.2` implements the Task hierarchy loop in Look #5 — Playful Modular.
+
+**Presentation:** The shared checklist becomes colorful modular cards with Active, Main, and Done summary blocks, friendly progress wording, and a visible hierarchy rail.
+
+**Motivation boundary:** Positive visual feedback is allowed, but points, streaks, rewards, rankings, and performance scoring remain outside the product model.
+
+**Semantic parity:** Look #5 exposes the same task controls and state transitions as Looks #3 and #4. It does not add priority, assignments, deletion, deeper nesting, or scheduling.
+
+**Responsive priority:** Optional time information disappears before the title area is compressed. Large Text retains clear editing and action targets.
+
+**Cross-Look state:** Looks #3, #4, and #5 render the same task state.
+
+## 2026-08-02 — Bold Utility uses directness without failure language
+
+**Milestone:** Version `0.10.3` implements the Task hierarchy loop in Look #7 — Bold Utility.
+
+**Presentation:** The shared checklist becomes a thick-rule register with factual Active, Main, and Done counts, large square controls, direct settings labels, and a strong subtask rail.
+
+**Tone boundary:** Active tasks are not errors, alarms, or failures. Counts describe the list without creating urgency beyond the underlying task state.
+
+**Semantic parity:** Look #7 keeps the exact shared hierarchy, completion, release, movement, and visibility behavior. It adds no priority system, assignments, scoring, deletion, deeper nesting, or scheduling.
+
+**Accessibility:** Completion uses a checkmark and line-through. Drag remains optional because Move, Indent, and Unindent actions remain available. Critical controls retain the 48 px floor.
+
+**Cross-Look state:** Looks #3, #4, #5, and #7 render the same task state.
+
+**Validation boundary:** The validator now requires four task renderers, four task stylesheets, the shared state engine, all four registrations, and responsive/accessibility hooks. Exact-checkout execution, Android gesture testing, and actual screen-reader evidence remain pending.
+
+**Next active Look:** Look #6 — Tactile Household.
 
 ## Feedback entry template
 

@@ -1,0 +1,353 @@
+/* Look #7 — Bold Utility quality pass */
+
+html[data-look="7"] {
+  --bu-blue: #174fc4;
+}
+
+html[data-look="7"] .bu-header > span,
+html[data-look="7"] .bu-detail span,
+html[data-look="7"] .bu-marquee,
+html[data-look="7"] .bu-index,
+html[data-look="7"] .bu-main small,
+html[data-look="7"] .bu-state small,
+html[data-look="7"] .bu-next,
+html[data-look="7"] .bu-detail > div:last-child small,
+html[data-look="7"] .bu-routine small,
+html[data-look="7"] .bu-tag,
+html[data-look="7"] .bu-intervention article span,
+html[data-look="7"] .bu-intervention article p {
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+html[data-look="7"] .bu-header p,
+html[data-look="7"] .bu-intervention-body > p {
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+html[data-look="7"] .bu-main strong,
+html[data-look="7"] .bu-state b,
+html[data-look="7"] .bu-routine strong,
+html[data-look="7"] .bu-section strong,
+html[data-look="7"] .bu-quiet {
+  font-size: 12px;
+}
+
+html[data-look="7"] .bu-add,
+html[data-look="7"] .bu-primary,
+html[data-look="7"] .bu-secondary,
+html[data-look="7"] .bu-dismiss,
+html[data-look="7"] .bu-back {
+  min-height: 48px;
+  padding-inline: 14px;
+  font-size: 12px;
+}
+
+html[data-look="7"] .bu-check {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+}
+
+html[data-look="7"] .bu-routine {
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  min-height: 72px;
+}
+
+html[data-look="7"] .bu-routine-copy,
+html[data-look="7"] .bu-main,
+html[data-look="7"] .bu-next,
+html[data-look="7"] .bu-state,
+html[data-look="7"] .bu-detail > div,
+html[data-look="7"] .bu-intervention article {
+  min-width: 0;
+}
+
+html[data-look="7"] .bu-main strong,
+html[data-look="7"] .bu-main small,
+html[data-look="7"] .bu-next,
+html[data-look="7"] .bu-state b,
+html[data-look="7"] .bu-state small,
+html[data-look="7"] .bu-routine strong,
+html[data-look="7"] .bu-routine small,
+html[data-look="7"] .bu-section strong,
+html[data-look="7"] .bu-intervention article h2,
+html[data-look="7"] .bu-intervention article p,
+html[data-look="7"] .bu-actions button {
+  overflow-wrap: anywhere;
+}
+
+html[data-look="7"] .bu-area:focus-visible,
+html[data-look="7"] .bu-section:focus-visible,
+html[data-look="7"] .bu-check:focus-visible,
+html[data-look="7"] .bu-add:focus-visible,
+html[data-look="7"] .bu-primary:focus-visible,
+html[data-look="7"] .bu-secondary:focus-visible,
+html[data-look="7"] .bu-dismiss:focus-visible,
+html[data-look="7"] .bu-back:focus-visible {
+  outline: 4px solid #174fc4;
+  outline-offset: 3px;
+}
+
+html[data-look="7"] .bu-intervention {
+  min-height: auto;
+  overflow: visible;
+}
+
+html[data-look="7"] .bu-marquee {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="7"] .bu-actions {
+  flex-shrink: 0;
+}
+
+@media (max-width: 420px) {
+  html[data-look="7"] .bu-page {
+    padding-inline: 14px;
+  }
+
+  html[data-look="7"] .bu-header-grid {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-look="7"] .bu-counter {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+  }
+
+  html[data-look="7"] .bu-counter strong {
+    font-size: 34px;
+  }
+
+  html[data-look="7"] .bu-table-head {
+    display: none;
+  }
+
+  html[data-look="7"] .bu-area {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    min-height: 0;
+    padding: 14px 8px;
+  }
+
+  html[data-look="7"] .bu-next {
+    grid-column: 2 / 4;
+  }
+
+  html[data-look="7"] .bu-state {
+    grid-column: 2 / 3;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  html[data-look="7"] .bu-arrow {
+    grid-column: 3;
+    grid-row: 3;
+    justify-self: end;
+  }
+
+  html[data-look="7"] .bu-detail {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  html[data-look="7"] .bu-detail > div:last-child {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  html[data-look="7"] .bu-intervention-body,
+  html[data-look="7"] .bu-actions {
+    padding-inline: 18px;
+  }
+}
+
+@media (max-width: 370px) {
+  html[data-look="7"] .bu-header h1 {
+    font-size: 35px;
+    line-height: 0.92;
+  }
+
+  html[data-look="7"] .bu-intervention h1 {
+    font-size: 40px;
+    line-height: 0.9;
+  }
+
+  html[data-look="7"] .bu-routine {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  html[data-look="7"] .bu-tag {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  html[data-look="7"] .bu-section {
+    align-items: flex-start;
+  }
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-header > span,
+html[data-text-scale="large"][data-look="7"] .bu-detail span,
+html[data-text-scale="large"][data-look="7"] .bu-marquee,
+html[data-text-scale="large"][data-look="7"] .bu-index,
+html[data-text-scale="large"][data-look="7"] .bu-main small,
+html[data-text-scale="large"][data-look="7"] .bu-state small,
+html[data-text-scale="large"][data-look="7"] .bu-next,
+html[data-text-scale="large"][data-look="7"] .bu-detail > div:last-child small,
+html[data-text-scale="large"][data-look="7"] .bu-routine small,
+html[data-text-scale="large"][data-look="7"] .bu-tag,
+html[data-text-scale="large"][data-look="7"] .bu-intervention article span,
+html[data-text-scale="large"][data-look="7"] .bu-intervention article p {
+  font-size: 12px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-header h1 {
+  font-size: 47px;
+  line-height: 0.92;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-header p,
+html[data-text-scale="large"][data-look="7"] .bu-intervention-body > p {
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-header-grid,
+html[data-text-scale="large"][data-look="7"] .bu-detail {
+  grid-template-columns: 1fr;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-counter {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-main strong,
+html[data-text-scale="large"][data-look="7"] .bu-state b,
+html[data-text-scale="large"][data-look="7"] .bu-routine strong,
+html[data-text-scale="large"][data-look="7"] .bu-section strong,
+html[data-text-scale="large"][data-look="7"] .bu-quiet {
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-table-head {
+  display: none;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-area {
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  min-height: 0;
+  padding-block: 16px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-next {
+  grid-column: 2 / 4;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-state {
+  grid-column: 2;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-arrow {
+  grid-column: 3;
+  grid-row: 3;
+  justify-self: end;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-add,
+html[data-text-scale="large"][data-look="7"] .bu-primary,
+html[data-text-scale="large"][data-look="7"] .bu-secondary,
+html[data-text-scale="large"][data-look="7"] .bu-dismiss,
+html[data-text-scale="large"][data-look="7"] .bu-back {
+  min-height: 54px;
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-detail h1 {
+  font-size: 39px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-detail > div:last-child {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-block-title h2 {
+  font-size: 22px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-routine {
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: start;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-tag {
+  grid-column: 2;
+  justify-self: start;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-section {
+  min-height: 62px;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-intervention h1 {
+  font-size: 56px;
+  line-height: 0.9;
+}
+
+html[data-text-scale="large"][data-look="7"] .bu-intervention article h2 {
+  font-size: 28px;
+}
+
+@media (forced-colors: active) {
+  html[data-look="7"] .bu-area,
+  html[data-look="7"] .bu-counter,
+  html[data-look="7"] .bu-detail,
+  html[data-look="7"] .bu-detail > div:last-child,
+  html[data-look="7"] .bu-intervention article,
+  html[data-look="7"] .bu-stop,
+  html[data-look="7"] .bu-check {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  html[data-look="7"] .bu-tag {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+  }
+
+  html[data-look="7"] .bu-primary,
+  html[data-look="7"] .bu-secondary,
+  html[data-look="7"] .bu-dismiss,
+  html[data-look="7"] .bu-add,
+  html[data-look="7"] .bu-back {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: ButtonText;
+    box-shadow: none;
+  }
+
+  html[data-look="7"] .bu-marquee,
+  html[data-look="7"] .bu-table-head {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+  }
+}

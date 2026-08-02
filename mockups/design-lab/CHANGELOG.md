@@ -1,5 +1,28 @@
 # Design Lab Changelog
 
+## 0.9.6 — 2026-08-01
+
+### Look #8 — Ambient Glass Routine Completion Loop
+
+- Reused the shared deterministic Routine Completion state engine
+- Added Ambient Glass Today / Needs Attention with one translucent priority card and a secondary queue
+- Added interactive Area, Section, and Chore routes
+- Replaced static completion placeholders with separate Complete and detail controls
+- Added Chore facts and restrained completed-cycle feedback with immediate Undo
+- Preserved deterministic Light, Moderate, and Deep recurrence advancement
+- Preserved derived attention-count and All Clear updates
+- Preserved browser-history-compatible route state
+- Preserved semantic completion state while switching among Looks #2 through #8
+- Added `look8-interactive.css` with narrow-screen, Large Text, focus, forced-colors, and reduced-motion handling
+- Added Reduced Transparency and no-backdrop-filter solid fallbacks
+- Limited blur to high-value surfaces while keeping semantic panels readable without transparency
+- Extended the validator to cover seven interactive Looks, forty-two interactive renderer exports, seven interactive stylesheets, and shared state hooks
+- Added `LOOK-8-INTERACTIVE.md` and `CHECKLIST-PROGRESS-0.9.6.md`
+- Set Look #9 — Retro Digital as the final Routine Completion implementation
+- Kept lower-end Ambient Glass paint and compositing measurements explicitly pending
+- Documented that direct cloning and exact-checkout browser execution remain DNS-blocked
+- Kept Look #1, `main`, production storage, and backend behavior unchanged
+
 ## 0.9.5 — 2026-08-01
 
 ### Look #2 — Warm Editorial Routine Completion Loop

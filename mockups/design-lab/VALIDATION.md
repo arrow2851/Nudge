@@ -7,72 +7,73 @@ cd mockups/design-lab
 node validate-design-lab.mjs
 ```
 
-A successful run exits with status `0`. Any failed invariant is printed with a `FAIL` prefix and exits with status `1`.
+A successful run exits with status `0`. Failed invariants are printed with a `FAIL` prefix and exit with status `1`.
 
 ## What the validator checks
 
 ### Required structure
 
 - Shared shell and controller files exist
-- All four Look renderers exist
-- All active Look stylesheets exist
-- Look #6 quality overrides exist and load after the base stylesheet
+- Renderers for Looks #2 through #9 exist
+- The protected Look #1 comparison reference exists
+- Existing and expanded gallery stylesheets exist
 
 ### Import graph
 
 - Every relative JavaScript import resolves to an existing file
-- Every renderer exports its expected Areas, Area detail, and Intervention functions
-- `app.js` imports and routes every expected renderer
+- Every Look renderer exports Areas, Area detail, and Intervention functions
+- `app.js` references and routes every expected renderer
 
 ### Shared fixtures
 
 - Exactly seven shared scenarios are present
-- Every scenario has labels, purpose, expected behavior, Areas, routines, and Intervention data
-- Area IDs are unique within each scenario
-- Routine statuses use the supported status set
-- Durations and recurrence data are valid
-- Normal Day has 3 attention routines
-- Heavy Backlog has 7 attention routines
-- New User has no Areas
-- All Clear has no overdue or due-today routines
-- Large Household has 9 Areas and 8 attention routines
-- Large Text enables the enlarged text scale
-- `getScenario()` returns a deep clone
-- Unknown scenarios fall back to Normal Day
+- Every scenario contains Areas, routines, and Intervention data
+- Every Area has a valid ID, name, and routine collection
+- All active Looks consume the same fixture registry
 
-### Routes and state
+### Routes
 
-The validator exercises all combinations of:
+The validator covers:
 
-- Looks `2`, `3`, `4`, and `6`
+- Looks `2`, `3`, `4`, `5`, `6`, `7`, `8`, and `9`
 - Screens `areas`, `area`, and `intervention`
 - Scenarios `normal`, `backlog`, `new`, `clear`, `large`, `long`, and `large-text`
 
-This produces **84 route combinations**. It verifies parsing, serialization, Area query handling, invalid-route fallbacks, browser-history method selection, isolated session storage, and reset behavior.
+This produces **168 active-Look route combinations**.
 
 ### Version and entry point
 
-- Semantic version formatting
-- Version agreement between `config.js`, `quality.js`, `index.html`, `README.md`, and the master checklist
-- Local HTML references resolve
-- Stylesheets load in the required order
+- Version agreement between `config.js`, `quality.js`, `look1-reference.js`, `index.html`, `README.md`, and the master checklist
+- `index.html` loads the existing styles, `expanded-looks.css`, and review styles
 - `app.js` loads as an ES module
 
 ### Stylesheets
 
+- Existing Look styles remain present
+- `expanded-looks.css` is loaded after the original Look styles and before review capture overrides
 - All active stylesheets have balanced braces
-- The Look #6 quality stylesheet remains last among Look-specific stylesheets
 
-## What this does not replace
+## Local checks completed for version 0.8.0
 
-The validator does not replace a real-browser review. The following still require browser or device evidence:
+- `renderers/look5.js` passed `node --check`
+- `renderers/look7.js` passed `node --check`
+- `renderers/look8.js` passed `node --check`
+- `renderers/look9.js` passed `node --check`
+- The updated validator passed `node --check`
+- `expanded-looks.css` had balanced opening and closing blocks
 
-- Console errors during actual rendering
+## What static validation does not replace
+
+The following still require browser or device evidence:
+
+- Runtime console errors
 - Browser Back and Forward behavior
 - Keyboard tab order and activation
-- Screen-reader output
-- 360 px, 390 px, 412 px, short, tall, and landscape layouts
-- Visual overflow, clipping, and text wrapping
-- Comparative preference scoring
+- Actual screen-reader output
+- Phone, short-screen, landscape, and desktop layouts
+- Visual overflow and clipping
+- Real forced-colors presentation
+- Blur and performance behavior for Ambient Glass
+- Small-text readability for Retro Digital
 
-Use [`ROUND-1-ROUTES.md`](ROUND-1-ROUTES.md) for the browser review route set.
+Use [`ROUND-1-ROUTES.md`](ROUND-1-ROUTES.md) for the complete gallery route set.

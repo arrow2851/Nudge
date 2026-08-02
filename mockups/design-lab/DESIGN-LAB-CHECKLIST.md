@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.10.6`  
+**Current version:** `0.10.7`  
 **Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
@@ -97,7 +97,7 @@ Each active Look has:
 
 Additional Look #8 boundary:
 
-- [x] Reduced-transparency and no-backdrop-filter solid fallbacks for Routine Completion and Tasks
+- [x] Reduced-transparency and no-backdrop-filter solid fallbacks
 - [~] Lower-end paint/compositing evidence pending
 
 ---
@@ -118,6 +118,17 @@ Additional Look #8 boundary:
 - [x] Direct Chore routes infer Section when omitted
 - [x] Action handling occurs before generic Chore navigation
 - [x] Mixed Today queues preserve each routine's Area identifier
+
+## Routine Completion Loop progress
+
+1. [x] Look #4 — Zen Focus
+2. [x] Look #3 — Precision Minimal
+3. [x] Look #5 — Playful Modular
+4. [x] Look #7 — Bold Utility
+5. [x] Look #6 — Tactile Household
+6. [x] Look #2 — Warm Editorial
+7. [x] Look #8 — Ambient Glass
+8. [x] Look #9 — Retro Digital
 
 ---
 
@@ -142,10 +153,34 @@ Additional Look #8 boundary:
 - [x] Completed items grouped at the bottom
 - [x] Hide Completed and Show Completed
 - [x] Reset clears task state
-- [x] Task state persists while switching between implemented task Looks
+- [x] Task state persists while switching among all eight active Looks
 - [d] Production mobile swipe implementation
 - [d] Nested subtasks beyond one level
 - [d] Production persistence, sync, collaboration, and notifications
+- [d] Deletion workflow
+
+## Task hierarchy loop progress
+
+1. [x] Look #4 — Zen Focus
+2. [x] Look #3 — Precision Minimal
+3. [x] Look #5 — Playful Modular
+4. [x] Look #7 — Bold Utility
+5. [x] Look #6 — Tactile Household
+6. [x] Look #2 — Warm Editorial
+7. [x] Look #8 — Ambient Glass
+8. [x] Look #9 — Retro Digital
+
+Shared behaviors implemented in 8 of 8 Looks:
+
+- [x] Add and inline edit
+- [x] Complete and reopen
+- [x] Main task and subtasks
+- [x] Progress and completion propagation
+- [x] Reorder and explicit movement controls
+- [x] Indent and unindent
+- [x] Subtask release when main-task mode is removed
+- [x] Completed-item grouping and hide/show
+- [x] Cross-Look task-state preservation
 
 ---
 
@@ -157,14 +192,14 @@ Additional Look #8 boundary:
 - [x] CSS block-balance checks encoded
 - [x] 168-route gallery matrix encoded
 - [x] Interactive route contract encoded for Looks #2 through #9
-- [x] Interactive stylesheets required for Looks #2 through #9
 - [x] Forty-eight Routine Completion renderer exports required
 - [x] Shared completion, recurrence, Undo, and state hooks checked
 - [x] Shared Task hierarchy state and action contract checked
-- [x] Look #2 through Look #8 task renderers and stylesheets required
+- [x] Eight task renderers and eight dedicated task stylesheets required
 - [x] Add, edit, main-task, subtask, release, progress, reorder, indent, completion, and hide/show hooks checked
-- [x] Responsive, Large Text, Forced Colors, and Reduced Motion hooks encoded
-- [x] Ambient Glass solid-fallback and Reduced Transparency hooks encoded for Routine Completion and Tasks
+- [x] Responsive, Large Text, Forced Colors, Increased Contrast, and Reduced Motion hooks encoded
+- [x] Ambient Glass solid-fallback and Reduced Transparency hooks encoded
+- [x] Retro Digital task-language checks reject error, fault, and failure terms
 - [ ] Exact complete-checkout validator execution
 - [ ] Exact complete-checkout interactive browser run
 - [ ] Physical Android viewport checks
@@ -188,42 +223,36 @@ Additional Look #8 boundary:
 
 See `PURE-LOOK-IMPLEMENTATION-ORDER.md` for rationale and acceptance gates.
 
-## Routine Completion Loop progress
+---
 
-- [x] Complete in 8 of 8 Looks
+# 8. Intervention-to-action sequence
 
-## Task hierarchy loop progress
+The next feature loop uses the same delegated order:
 
-1. [x] Look #4 — Zen Focus
-2. [x] Look #3 — Precision Minimal
-3. [x] Look #5 — Playful Modular
-4. [x] Look #7 — Bold Utility
-5. [x] Look #6 — Tactile Household
-6. [x] Look #2 — Warm Editorial
-7. [x] Look #8 — Ambient Glass
-8. [ ] Look #9 — Retro Digital — **next**
+1. [ ] Look #4 — Zen Focus — **next**
+2. [ ] Look #3 — Precision Minimal
+3. [ ] Look #5 — Playful Modular
+4. [ ] Look #7 — Bold Utility
+5. [ ] Look #6 — Tactile Household
+6. [ ] Look #2 — Warm Editorial
+7. [ ] Look #8 — Ambient Glass
+8. [ ] Look #9 — Retro Digital
 
-Shared behaviors currently implemented in 7 of 8 Looks:
+Acceptance goals for the first Look:
 
-- [~] Add and inline edit
-- [~] Complete and reopen
-- [~] Main task and subtasks
-- [~] Progress and completion propagation
-- [~] Reorder and explicit movement controls
-- [~] Indent and unindent
-- [~] Subtask release when main-task mode is removed
-- [~] Completed-item grouping and hide/show
-- [~] Cross-Look task-state preservation
+- [ ] Intervention appears after the deterministic trigger state
+- [ ] Suggested task remains optional and dismissible
+- [ ] Start action opens or creates a concrete task/action state
+- [ ] Different suggestion remains reversible and non-punitive
+- [ ] Not Now exits without guilt or penalty
+- [ ] Existing routine and task state remain intact
+- [ ] No production notifications, app blocking, usage tracking, or backend integration
 
-## Later feature order
-
-1. [~] Task hierarchy loop — in progress
-2. [ ] Intervention-to-action loop
-3. [ ] Reusable Lists loop
+Reusable Lists begins only after Intervention-to-action is complete across all eight Looks.
 
 ---
 
-# 8. Milestone log
+# 9. Milestone log
 
 - [x] `0.1.0–0.8.7` — Gallery foundation, all Looks, quality passes, evidence, and delegated pure-Look sequence
 - [x] `0.9.0–0.9.7` — Routine Completion Loop implemented across all eight active Looks
@@ -234,13 +263,14 @@ Shared behaviors currently implemented in 7 of 8 Looks:
 - [x] `0.10.4` — Look #6 Tactile Household Task hierarchy loop
 - [x] `0.10.5` — Look #2 Warm Editorial Task hierarchy loop
 - [x] `0.10.6` — Look #8 Ambient Glass Task hierarchy loop
+- [x] `0.10.7` — Look #9 Retro Digital Task hierarchy loop; Task hierarchy complete in all active Looks
 
 ---
 
-# 9. Current next actions
+# 10. Current next actions
 
-- [ ] Implement the shared Task hierarchy contract in Look #9 — Retro Digital
-- [ ] Preserve existing task state while switching among all eight active Looks
-- [ ] Keep system language clear without error or failure framing
-- [ ] Extend validator coverage through Look #9 Task hierarchy
-- [ ] Keep exact-checkout, Android, screen-reader, single-version regression, and lower-end paint evidence pending until actually performed
+- [ ] Implement the Intervention-to-action contract in Look #4 — Zen Focus
+- [ ] Preserve existing Routine Completion and Task hierarchy state
+- [ ] Keep intervention suggestions optional, dismissible, and non-guilt-based
+- [ ] Extend validator coverage for the new intervention state and actions
+- [ ] Keep exact-checkout, Android, screen-reader, single-version regression, and Ambient Glass paint evidence pending until actually performed

@@ -39,9 +39,9 @@ This is a learning and technical-risk sequence, not a ranking or permanent produ
 
 **Automatic continuation:** Routine `go` messages advance to the next unchecked milestone. A hard stop remains required for material scope, architecture, storage, deployment, Look #1, product-theme, or merge decisions.
 
-## 2026-08-01 — Look #4 establishes the interactive behavior contract
+## 2026-08-01 — Shared Routine Completion behavior contract
 
-**Milestone:** Version `0.9.0` implements the Routine Completion Loop in Look #4 — Zen Focus.
+**Established in:** Version `0.9.0`, Look #4 — Zen Focus.
 
 ```text
 Today / Needs Attention
@@ -61,71 +61,61 @@ Today / Needs Attention
 
 **Reversibility:** Completing from any supported screen opens or retains Chore detail so Undo remains immediately available.
 
-**Routes:** The Design Lab route contract includes `today`, `section`, and `chore`, with Area, Section, and Chore identifiers in the query string.
+**Routes:** The route contract includes `today`, `section`, and `chore`, with Area, Section, and Chore identifiers in the query string.
 
-**Evidence boundary:** Reconstructed-validator and injected-browser evidence may support implementation status, but exact-checkout, physical-device, and screen-reader evidence must remain explicit and separate.
+**Evidence boundary:** Exact-checkout, physical-device, and screen-reader evidence remain separate from committed-source contract inspection.
 
-## 2026-08-01 — Look #3 applies the contract without duplicating behavior
+## 2026-08-01 — Look #3 applies the contract with operational density
 
-**Milestone:** Version `0.9.1` implements the Routine Completion Loop in Look #3 — Precision Minimal.
+**Milestone:** Version `0.9.1`.
 
 **Presentation:** Compact queue, explicit metrics, square controls, monospaced metadata, and a fact-table Chore detail.
 
-**Shared state:** Switching between Looks #3 and #4 preserves route and completion state because semantic state is renderer-independent.
-
 **Shared correction:** `nextRoutine` deprioritizes completed routines before status sorting.
-
-**Accessibility:** Dense presentation does not reduce critical targets below 48 px; Large Text and status-label requirements remain intact.
 
 ## 2026-08-01 — Look #5 adds friendly modular feedback
 
-**Milestone:** Version `0.9.2` implements the Routine Completion Loop in Look #5 — Playful Modular.
+**Milestone:** Version `0.9.2`.
 
-**Presentation:** A colorful priority hero, secondary queue, modular Area and Section cards, separate completion/detail controls, and positive completed-state feedback.
+**Presentation:** Colorful priority hero, modular Area and Section cards, separate completion/detail controls, and positive reversible feedback.
 
-**Tone boundary:** Friendly language may make the action feel lighter, but it must not trivialize backlog, alter urgency, or imply guilt when work remains.
+**Tone boundary:** Friendly language may make the action feel lighter, but it must not trivialize backlog or imply guilt.
 
-**Reversibility:** Positive feedback never hides Undo. Completing from Today, Area, or Section still opens Chore detail with the same shared completion record.
+## 2026-08-01 — Look #7 uses directness without alarm
 
-**Cross-Look state:** Looks #3, #4, and #5 share semantic completion state. Switching visual systems changes presentation only.
+**Milestone:** Version `0.9.3`.
 
-**Accessibility:** Color is decorative and supplemental. Completed state also uses explicit text, a checkmark, and line-through; critical targets retain the 48 px floor.
+**Presentation:** One large priority action, explicit queue counters, thick rules, high-contrast status panels, and a compact fact-grid Chore detail.
 
-## 2026-08-01 — Look #7 uses directness without changing Nudge's tone contract
+**Tone boundary:** Bold hierarchy may be direct, but it must not shame the user, imply failure, or turn backlog into an alarm.
 
-**Milestone:** Version `0.9.3` implements the Routine Completion Loop in Look #7 — Bold Utility.
+## 2026-08-01 — Look #6 makes care tangible without implying brokenness
 
-**Presentation:** One large priority action, explicit queue counters, thick rules, square controls, high-contrast status panels, and a compact fact-grid Chore detail.
+**Milestone:** Version `0.9.4`.
 
-**Tone boundary:** Bold hierarchy may be direct, but it must not shame the user, imply failure, or turn backlog into an alarm. The interface exposes priority while preserving choice.
+**Presentation:** Work orders, service cards, Section drawers, inspection stamps, job facts, completion slips, and Reopen job card.
 
-**Action separation:** Routine rows use separate completion and detail targets. The full row does not accidentally complete a chore.
+**Tone boundary:** Physical maintenance metaphors may make work concrete, but they must not suggest that the user, household, or Area is defective.
 
-**Reversibility:** The completed screen states `DONE` and immediately presents Undo. Completion from Today, Area, or Section opens the same shared Chore detail state.
+## 2026-08-01 — Look #2 provides context without creating a diary obligation
 
-**Cross-Look state:** Looks #3, #4, #5, and #7 share semantic completion state. Visual switching does not reset or duplicate behavior.
+**Milestone:** Version `0.9.5` implements the Routine Completion Loop in Look #2 — Warm Editorial.
 
-**Accessibility:** Urgency colors are always repeated in text. Critical targets retain the 48 px floor; Large Text actions reach 54 px; forced-colors removes decorative shadows.
+**Presentation:** Today becomes a quiet daily page with one featured entry, secondary routines remain as additional notes, Sections read as smaller collections, and Chore detail combines narrative context with practical facts.
 
-## 2026-08-01 — Look #6 makes routine state feel physical, not punitive
+**Tone boundary:** Editorial language may add warmth and meaning, but it must not make routine completion feel like journaling homework, require reflection, or obscure the actual action and status.
 
-**Milestone:** Version `0.9.4` implements the Routine Completion Loop in Look #6 — Tactile Household.
+**Action separation:** Routine entries use separate completion and detail targets. Opening an entry does not complete it.
 
-**Presentation:** Today's work board, work orders, Area service cards, Section drawers, job cards, service intervals, bench-time labels, inspection stamps, and completion slips.
+**Reversibility:** The completed screen closes the entry with restrained feedback and immediately presents `Reopen this entry`.
 
-**Metaphor boundary:** Household-tool language should make the system understandable and tangible. It must not imply that the home, the user, or an overdue routine is broken.
+**Cross-Look state:** Looks #2 through #7 share semantic completion state. Visual switching changes presentation only.
 
-**Action separation:** Routine rows retain separate completion and job-card detail controls. Drawer rows navigate; they do not complete work.
+**Accessibility:** Completed state uses text, a checkmark, and line-through. Critical targets retain the 48 px floor; Large Text actions reach 54 px; forced-colors uses system colors.
 
-**Reversibility:** Completing a job closes its card and immediately presents `Reopen job card`. Reopen maps to the same shared Undo behavior and restores the prior fixture status.
+**Validation boundary:** The validator now encodes six interactive Looks and requires `look2-interactive.css`, but exact-checkout execution remains pending because direct cloning is DNS-blocked.
 
-**Cross-Look state:** Looks #3, #4, #5, #6, and #7 share semantic completion state. Physical metaphors are presentation-only.
-
-**Accessibility:** Stamps and colors are repeated in text. Completed state also uses a checkmark and line-through. Critical targets retain 48 px; Large Text actions reach 54 px; forced-colors removes decorative paper and shadow effects.
-
-**Validation boundary:** The validator now encodes five interactive Looks and requires `look6-interactive.css`, but exact-checkout execution remains pending because direct cloning is DNS-blocked.
-
-**Next active Look:** Look #2 — Warm Editorial. It must preserve the same behavior while testing journal-like hierarchy and narrative context without hiding direct completion controls.
+**Next active Look:** Look #8 — Ambient Glass. It must preserve the same behavior while testing translucent hierarchy, solid fallbacks, and lower-end rendering risk.
 
 ## Feedback entry template
 

@@ -3,8 +3,8 @@ import { SCENARIOS } from './fixtures.js';
 
 export function defaultState() {
   return {
-    look: 9,
-    view: 'today',
+    look: 4,
+    view: 'tasks',
     scenario: 'normal',
     areaId: null,
     sectionId: null,
@@ -19,8 +19,8 @@ export function readStateFromLocation() {
   const scenario = params.get('scenario');
 
   return {
-    look: LOOKS.some(item => item.id === look) ? look : 9,
-    view: ALLOWED_VIEWS.has(view) ? view : 'today',
+    look: LOOKS.some(item => item.id === look) ? look : 4,
+    view: ALLOWED_VIEWS.has(view) ? view : 'tasks',
     scenario: Object.hasOwn(SCENARIOS, scenario) ? scenario : 'normal',
     areaId: params.get('area') || null,
     sectionId: params.get('section') || null,

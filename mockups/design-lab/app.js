@@ -18,6 +18,7 @@ import {
   updateTaskTitle
 } from './task-state.js';
 import { renderAreaDetail, renderAreasEditorial, renderChoreEditorial, renderInterventionEditorial, renderSectionEditorial, renderTodayEditorial } from './renderers/look2.js';
+import { renderTasksEditorial } from './renderers/look2-tasks.js';
 import { renderAreaDetailPrecision, renderAreasPrecision, renderChorePrecision, renderInterventionPrecision, renderSectionPrecision, renderTodayPrecision } from './renderers/look3.js';
 import { renderTasksPrecision } from './renderers/look3-tasks.js';
 import { renderAreaDetailZen, renderAreasZen, renderChoreZen, renderInterventionZen, renderSectionZen, renderTodayZen } from './renderers/look4.js';
@@ -34,7 +35,7 @@ import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
 const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
-const TASK_HIERARCHY_LOOKS = new Set([3, 4, 5, 6, 7]);
+const TASK_HIERARCHY_LOOKS = new Set([2, 3, 4, 5, 6, 7]);
 
 const ROUTINE_RENDERERS = new Map([
   [2, { today: renderTodayEditorial, areas: renderAreasEditorial, area: renderAreaDetail, section: renderSectionEditorial, chore: renderChoreEditorial, intervention: renderInterventionEditorial }],
@@ -48,6 +49,7 @@ const ROUTINE_RENDERERS = new Map([
 ]);
 
 const TASK_RENDERERS = new Map([
+  [2, renderTasksEditorial],
   [3, renderTasksPrecision],
   [4, renderTasksZen],
   [5, renderTasksPlayful],
@@ -82,7 +84,7 @@ function renderLook(look, data, tasks) {
     const renderer = TASK_RENDERERS.get(look.id);
     return renderer
       ? renderer(tasks)
-      : renderUnsupported('The Task hierarchy loop is currently implemented in Looks #3, #4, #5, #6, and #7. Task state remains preserved while you compare Looks.');
+      : renderUnsupported('The Task hierarchy loop is currently implemented in Looks #2, #3, #4, #5, #6, and #7. Task state remains preserved while you compare Looks.');
   }
   return renderRoutine(look.id, data);
 }
@@ -346,7 +348,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 6;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 2;
     render({ routeAction: 'push' });
     return;
   }

@@ -1,5 +1,5 @@
 export const DESIGN_LAB = Object.freeze({
-  version: '0.9.6',
+  version: '0.9.7',
   buildDate: '2026-08-01',
   branch: 'feature/design-lab',
   storageKey: 'nudge-design-lab-review-v1'
@@ -13,7 +13,7 @@ export const LOOKS = Object.freeze([
   { id: 6, name: 'Tactile Household', status: 'Routine Completion Loop implemented', description: 'Physical labels, controls, and satisfying household-tool cues.' },
   { id: 7, name: 'Bold Utility', status: 'Routine Completion Loop implemented', description: 'High-contrast structure, thick rules, and unapologetically direct hierarchy.' },
   { id: 8, name: 'Ambient Glass', status: 'Routine Completion Loop implemented', description: 'Soft translucent layers, atmospheric depth, and calm modern polish.' },
-  { id: 9, name: 'Retro Digital', status: 'Next interactive implementation', description: 'A friendly home operating system with segmented displays and terminal cues.' }
+  { id: 9, name: 'Retro Digital', status: 'Routine Completion Loop implemented', description: 'A friendly home operating system with segmented displays and terminal cues.' }
 ]);
 
 export const ALLOWED_VIEWS = new Set(['today', 'areas', 'area', 'section', 'chore', 'intervention']);

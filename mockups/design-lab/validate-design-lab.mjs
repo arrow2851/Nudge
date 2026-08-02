@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
 const SCENARIOS = ['normal', 'backlog', 'new', 'clear', 'large', 'long', 'large-text'];
-const VIEWS = ['areas', 'area', 'intervention'];
+const GALLERY_VIEWS = ['areas', 'area', 'intervention'];
+const LOOK4_INTERACTIVE_VIEWS = ['today', 'areas', 'area', 'section', 'chore', 'intervention'];
 const failures = [];
 const passes = [];
 const read = file => fs.readFileSync(path.join(ROOT, file), 'utf8');
@@ -17,7 +18,7 @@ const check = (condition, message) => condition ? undefined : failures.push(mess
 const rendererFunctions = new Map([
   [2, ['renderAreasEditorial', 'renderAreaDetail', 'renderInterventionEditorial']],
   [3, ['renderAreasPrecision', 'renderAreaDetailPrecision', 'renderInterventionPrecision']],
-  [4, ['renderAreasZen', 'renderAreaDetailZen', 'renderInterventionZen']],
+  [4, ['renderTodayZen', 'renderAreasZen', 'renderAreaDetailZen', 'renderSectionZen', 'renderChoreZen', 'renderInterventionZen']],
   [5, ['renderAreasPlayful', 'renderAreaDetailPlayful', 'renderInterventionPlayful']],
   [6, ['renderAreasTactile', 'renderAreaDetailTactile', 'renderInterventionTactile']],
   [7, ['renderAreasBold', 'renderAreaDetailBold', 'renderInterventionBold']],
@@ -26,13 +27,13 @@ const rendererFunctions = new Map([
 ]);
 
 const styles = [
-  'styles.css','foundation.css','look3.css','look4.css','look6.css','look6-quality.css',
+  'styles.css','foundation.css','look3.css','look4.css','look4-interactive.css','look6.css','look6-quality.css',
   'expanded-looks.css','look5-quality.css','look7-quality.css','look8-quality.css','look9-quality.css','review.css'
 ];
 
 function requiredFiles() {
   const files = [
-    'index.html','config.js','utils.js','fixtures.js','state.js','controls.js','app.js','quality.js',
+    'index.html','config.js','utils.js','fixtures.js','state.js','interactive-state.js','controls.js','app.js','quality.js',
     ...styles,
     'look1-reference.html','look1-reference.css','look1-reference.js','renderers/shared.js',
     ...LOOKS.map(id => `renderers/look${id}.js`)
@@ -42,7 +43,7 @@ function requiredFiles() {
 }
 
 function importGraph() {
-  const files = ['fixtures.js','state.js','controls.js','app.js','look1-reference.js',...LOOKS.map(id => `renderers/look${id}.js`)];
+  const files = ['fixtures.js','state.js','interactive-state.js','controls.js','app.js','look1-reference.js',...LOOKS.map(id => `renderers/look${id}.js`)];
   let edges = 0;
   for (const file of files.filter(exists)) {
     for (const match of read(file).matchAll(/from\s+['"]([^'"]+)['"]/g)) {
@@ -58,7 +59,7 @@ function importGraph() {
 function evaluateShared() {
   const strip = source => source.replace(/^\s*import\s+[^;]+;\s*$/gm,'').replace(/\bexport\s+(?=(?:const|let|var|function|class)\b)/g,'');
   const source = `${strip(read('config.js'))}\n${strip(read('utils.js'))}\n${strip(read('fixtures.js'))}\n${strip(read('state.js'))}\n` +
-    'globalThis.__lab={DESIGN_LAB,LOOKS,SCENARIOS,getScenario};';
+    'globalThis.__lab={DESIGN_LAB,LOOKS,ALLOWED_VIEWS,SCENARIOS,getScenario};';
   const sandbox = { URLSearchParams, location:{search:'',pathname:'/mockups/design-lab/'}, history:{pushState(){},replaceState(){}}, sessionStorage:{setItem(){},removeItem(){},getItem(){return null;}}, console };
   vm.createContext(sandbox);
   vm.runInContext(source, sandbox);
@@ -68,6 +69,7 @@ function evaluateShared() {
 function fixturesAndRoutes(shared) {
   check(JSON.stringify(Object.keys(shared.SCENARIOS)) === JSON.stringify(SCENARIOS), 'Scenario registry differs from the seven shared scenarios.');
   check(JSON.stringify(shared.LOOKS.map(item => item.id)) === JSON.stringify(LOOKS), 'Look registry differs from Looks #2–#9.');
+  LOOK4_INTERACTIVE_VIEWS.forEach(view => check(shared.ALLOWED_VIEWS.has(view), `Look #4 interactive view is not allowed: ${view}`));
   for (const [id, scenario] of Object.entries(shared.SCENARIOS)) {
     check(Array.isArray(scenario.areas), `${id}: areas must be an array.`);
     check(Boolean(scenario.intervention?.task), `${id}: intervention task missing.`);
@@ -77,11 +79,11 @@ function fixturesAndRoutes(shared) {
     }
   }
   const validArea = shared.SCENARIOS.normal.areas[0].id;
-  for (const look of LOOKS) for (const scenario of SCENARIOS) for (const view of VIEWS) {
+  for (const look of LOOKS) for (const scenario of SCENARIOS) for (const view of GALLERY_VIEWS) {
     const url = `?look=${look}&screen=${view}&scenario=${encodeURIComponent(scenario)}${view === 'area' ? `&area=${encodeURIComponent(validArea)}` : ''}`;
     check(url.includes(`look=${look}`) && url.includes(`screen=${view}`), `Route serialization failed: Look ${look}, ${view}.`);
   }
-  passes.push(`Checked ${LOOKS.length * SCENARIOS.length * VIEWS.length} gallery routes.`);
+  passes.push(`Checked ${LOOKS.length * SCENARIOS.length * GALLERY_VIEWS.length} gallery routes and ${LOOK4_INTERACTIVE_VIEWS.length} Look #4 views.`);
 }
 
 function renderers() {
@@ -96,6 +98,32 @@ function renderers() {
     check(app.includes(`look.id === ${look}`), `app.js is missing Look #${look} routing.`);
   }
   passes.push('Checked renderer exports and routing branches.');
+}
+
+function interactiveContract() {
+  const app = read('app.js');
+  const state = read('state.js');
+  const interaction = read('interactive-state.js');
+  const renderer = read('renderers/look4.js');
+  const css = read('look4-interactive.css');
+
+  ['applyRoutineState','completeRoutine','reopenRoutine','clearInteractiveState'].forEach(name => {
+    check(app.includes(name), `app.js does not use ${name}.`);
+  });
+  ['sectionId','choreId'].forEach(name => {
+    check(state.includes(name), `state.js is missing ${name}.`);
+  });
+  ['routine-completion-v1','nextLabel','previousStatus','nextStatus'].forEach(token => {
+    check(interaction.includes(token), `interactive-state.js is missing ${token}.`);
+  });
+  ['data-action="complete-routine"','data-action="reopen-routine"','data-section-id','data-chore-id'].forEach(token => {
+    check(renderer.includes(token), `Look #4 renderer is missing ${token}.`);
+  });
+  ['forced-colors: active','prefers-reduced-motion: reduce','.zen-chore-actions','.zen-routine-open'].forEach(token => {
+    check(css.includes(token), `Look #4 interactive CSS is missing ${token}.`);
+  });
+  check(app.indexOf("const actionTarget") < app.indexOf("const choreButton"), 'Action handling must run before generic chore navigation.');
+  passes.push('Checked Look #4 completion, recurrence, undo, routing, and accessibility hooks.');
 }
 
 function versionsAndHtml(shared) {
@@ -131,6 +159,7 @@ function main() {
   let shared;
   try { shared = evaluateShared(); passes.push('Evaluated shared modules.'); } catch (error) { failures.push(`Shared-module evaluation failed: ${error.message}`); }
   renderers();
+  interactiveContract();
   if (shared) {
     fixturesAndRoutes(shared);
     versionsAndHtml(shared);
@@ -141,7 +170,7 @@ function main() {
   passes.forEach(item => console.log(`PASS  ${item}`));
   failures.forEach(item => console.error(`FAIL  ${item}`));
   if (failures.length) process.exitCode = 1;
-  else console.log('\nAll expanded-gallery checks passed.');
+  else console.log('\nAll expanded-gallery and Look #4 interactive checks passed.');
 }
 
 main();

@@ -42,7 +42,7 @@ function promptView(item) {
         <p>${esc(item.location)}</p>
       </article>
       ${cardFacts(item, 'prompt')}
-      <p class="th-intervention-boundary">No timer, score, service grade, reminder, or requirement is created.</p>
+      <p class="th-intervention-boundary">No timer, score, reminder, follow-up, or requirement is created.</p>
     </div>
     <div class="th-intervention-actions">
       <button class="th-primary" data-action="start-intervention">Pick up this action card</button>
@@ -92,7 +92,7 @@ function completedView(item) {
         <span class="th-tab">COMPLETE</span>
         <h2 id="th-completed-title">${esc(item.task)}</h2>
         <p>${esc(item.location)}</p>
-        <div class="th-completion-slip" role="status"><strong>Filed complete</strong><span>No score or service rating added</span></div>
+        <div class="th-completion-slip" role="status"><strong>Filed complete</strong><span>No score or rating added</span></div>
       </article>
       ${cardFacts(item, 'completed')}
       <p class="th-intervention-boundary">No points, streak, ranking, grade, or performance measure was added.</p>
@@ -111,7 +111,7 @@ function dismissedView(item) {
       <header class="th-intervention-heading">
         <span class="th-label">CARD LEFT IN TRAY</span>
         <h1>Keep using the current app.</h1>
-        <p>No action was started. No Task, reminder, follow-up, penalty, service note, or missed-opportunity state was created.</p>
+        <p>No action was started. No Task, reminder, follow-up, penalty, overdue state, or missed-opportunity state was created.</p>
       </header>
       <article class="th-intervention-card dismissed" role="status">
         <span class="th-drawer-pull th-card-pull" aria-hidden="true"></span>

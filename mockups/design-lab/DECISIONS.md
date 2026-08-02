@@ -153,6 +153,32 @@ Today / Needs Attention
 
 **Sequence result:** The Routine Completion Loop is complete across all active Looks. The next recorded feature loop is Task hierarchy, beginning with Look #4 — Zen Focus.
 
+## 2026-08-02 — Task hierarchy remains a simple checklist
+
+**Milestone:** Version `0.10.0` implements the first Task hierarchy loop in Look #4 — Zen Focus.
+
+**Product boundary:** Tasks remain a checklist rather than becoming a project-management workspace. The primary row contains only a drag handle, completion control, editable title, optional time shorthand, settings disclosure, and a separate subtask plus when applicable.
+
+**Creation:** A plus in the upper-right and an Add Task action below the list both create empty editable tasks. New tasks receive focus immediately.
+
+**Hierarchy depth:** The Design Lab supports one level of subtasks only. Nested subtasks beyond that level remain outside the approved simple model.
+
+**Main-task rule:** Any regular task can become a main task. Turning off main-task mode releases every subtask as a regular top-level task immediately after the former main task.
+
+**Completion rule:** Completing every subtask completes the main task. Reopening any subtask reopens the main task. Completing or reopening the main task applies the same state to its subtasks.
+
+**Ordering rule:** Incomplete items remain above completed items. Reordering is constrained within the incomplete or completed group so the completed-bottom rule remains stable.
+
+**Gesture boundary:** Native pointer drag is included for review. Explicit Move Up, Move Down, Indent, and Unindent controls are the accessible fallback and the reliable prototype path. Production touch hold and swipe behavior require physical-device validation and remain deferred.
+
+**State boundary:** Task hierarchy uses a separate scenario-isolated Design Lab session-storage namespace. It does not alter routine fixtures, production persistence, or account data.
+
+**Visibility:** Completed items remain at the bottom by default and can be hidden or shown without changing their state.
+
+**Cross-Look behavior:** Task state is preserved while switching Looks, but only Look #4 currently renders the Task hierarchy screen. Look #3 is next in the delegated order.
+
+**Validation boundary:** Source-level validation now checks the Tasks route, state module, add/edit actions, main/subtask rules, progress, reorder hooks, explicit movement controls, completed grouping, hide/show, responsive hooks, Forced Colors, and Reduced Motion. Exact-checkout browser, Android gesture, and actual screen-reader evidence remain pending.
+
 ## Feedback entry template
 
 ```text

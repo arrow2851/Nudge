@@ -1,5 +1,30 @@
 # Design Lab Changelog
 
+## 0.9.0 — 2026-08-01
+
+### Look #4 — Zen Focus Routine Completion Loop
+
+- Added isolated deterministic interactive state under a dedicated session-storage namespace
+- Added stable routine identifiers and prototype Light, Moderate, and Deep recurrence tiers
+- Expanded route state to Today, Area, Section, and Chore detail
+- Implemented Today / Needs Attention for Zen Focus
+- Implemented Area → Section → Chore navigation
+- Implemented completion from Today, Area, Section, and Chore detail
+- Advanced completed routines to deterministic next-cycle states
+- Recalculated attention counts and All Clear from the updated state
+- Added immediate Undo or reopen behavior
+- Changed direct completion to open completed Chore detail so Undo remains visible
+- Added browser-history-compatible Section and Chore query parameters
+- Added `interactive-state.js` and `look4-interactive.css`
+- Added narrow-screen, short-screen, landscape, Large Text, forced-colors, and reduced-motion treatment
+- Raised critical interactive targets to at least 48 px
+- Extended the validator for the six-view Look #4 interaction contract
+- Completed syntax, module, route, renderer, reconstructed-validator, and injected-Chromium smoke checks
+- Added `LOOK-4-INTERACTIVE.md` and `CHECKLIST-PROGRESS-0.9.0.md`
+- Documented the injected-reconstruction evidence boundary; exact-checkout browser validation remains pending
+- Set Look #3 — Precision Minimal as the next interactive implementation
+- Kept Look #1, `main`, production storage, and backend behavior unchanged
+
 ## 0.8.7 — 2026-08-01
 
 ### Pure-Look implementation order

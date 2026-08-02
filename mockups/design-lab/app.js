@@ -49,13 +49,14 @@ import { renderAreaDetailAmbient, renderAreasAmbient, renderChoreAmbient, render
 import { renderInterventionAmbientAction } from './renderers/look8-intervention.js';
 import { renderTasksAmbient } from './renderers/look8-tasks.js';
 import { renderAreaDetailRetro, renderAreasRetro, renderChoreRetro, renderInterventionRetro, renderSectionRetro, renderTodayRetro } from './renderers/look9.js';
+import { renderInterventionRetroAction } from './renderers/look9-intervention.js';
 import { renderTasksRetro } from './renderers/look9-tasks.js';
 import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
 const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
 const TASK_HIERARCHY_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
-const INTERVENTION_ACTION_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8]);
+const INTERVENTION_ACTION_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
 
 const ROUTINE_RENDERERS = new Map([
   [2, { today: renderTodayEditorial, areas: renderAreasEditorial, area: renderAreaDetail, section: renderSectionEditorial, chore: renderChoreEditorial, intervention: renderInterventionEditorialAction }],
@@ -65,7 +66,7 @@ const ROUTINE_RENDERERS = new Map([
   [6, { today: renderTodayTactile, areas: renderAreasTactile, area: renderAreaDetailTactile, section: renderSectionTactile, chore: renderChoreTactile, intervention: renderInterventionTactileAction }],
   [7, { today: renderTodayBold, areas: renderAreasBold, area: renderAreaDetailBold, section: renderSectionBold, chore: renderChoreBold, intervention: renderInterventionBoldAction }],
   [8, { today: renderTodayAmbient, areas: renderAreasAmbient, area: renderAreaDetailAmbient, section: renderSectionAmbient, chore: renderChoreAmbient, intervention: renderInterventionAmbientAction }],
-  [9, { today: renderTodayRetro, areas: renderAreasRetro, area: renderAreaDetailRetro, section: renderSectionRetro, chore: renderChoreRetro, intervention: renderInterventionRetro }]
+  [9, { today: renderTodayRetro, areas: renderAreasRetro, area: renderAreaDetailRetro, section: renderSectionRetro, chore: renderChoreRetro, intervention: renderInterventionRetroAction }]
 ]);
 
 const TASK_RENDERERS = new Map([
@@ -363,8 +364,8 @@ function runAction(action, target) {
       render();
     },
     'demo-add-area': () => showToast('Area creation remains outside this interactive slice.'),
-    'start-demo': () => showToast('Intervention-to-action is implemented in Looks #2, #3, #4, #5, #6, #7, and #8.'),
-    'different-demo': () => showToast('Alternative suggestion behavior is implemented in Looks #2, #3, #4, #5, #6, #7, and #8.'),
+    'start-demo': () => showToast('Intervention-to-action is implemented in every active Design Lab Look.'),
+    'different-demo': () => showToast('Alternative suggestion behavior is implemented in every active Design Lab Look.'),
     'not-now-demo': () => showToast('Intervention dismissed without guilt.')
   };
   actions[action]?.();
@@ -420,7 +421,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 8;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 9;
     render({ routeAction: 'push' });
     return;
   }
@@ -467,7 +468,7 @@ document.addEventListener('click', event => {
     if (nav.dataset.nav === 'today') setView('today');
     else if (nav.dataset.nav === 'areas') setView('areas');
     else if (nav.dataset.nav === 'tasks') setView('tasks');
-    else showToast('Reusable Lists follow after the Intervention-to-action loop.');
+    else showToast('Reusable Lists are the next Design Lab feature loop.');
   }
 });
 

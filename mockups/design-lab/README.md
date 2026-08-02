@@ -2,13 +2,14 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.11.6`  
+**Current version:** `0.11.7`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.11.6 Look #8 Intervention-to-action](CHECKLIST-PROGRESS-0.11.6.md)
+- [Latest checklist progress — 0.11.7 all-Look Intervention-to-action](CHECKLIST-PROGRESS-0.11.7.md)
+- [Look #9 Intervention-to-action implementation](LOOK-9-INTERVENTION-ACTION.md)
 - [Look #8 Intervention-to-action implementation](LOOK-8-INTERVENTION-ACTION.md)
 - [Look #2 Intervention-to-action implementation](LOOK-2-INTERVENTION-ACTION.md)
 - [Look #6 Intervention-to-action implementation](LOOK-6-INTERVENTION-ACTION.md)
@@ -64,9 +65,9 @@ Tasks
 → Hide or show completed
 ```
 
-## Intervention-to-action — 7 of 8 Looks
+### Intervention-to-action — 8 of 8 complete
 
-Versions `0.11.0` through `0.11.6` implement the shared intervention contract in Looks #4, #3, #5, #7, #6, #2, and #8:
+Versions `0.11.0` through `0.11.7` implement the shared intervention contract in every active Look:
 
 ```text
 Prompt
@@ -99,14 +100,15 @@ Shared behavior includes:
 ### Look-specific treatment
 
 - **Look #4 — Zen Focus:** one quiet choice at a time, calm action cards, and low-pressure language.
-- **Look #3 — Precision Minimal:** explicit phase labels, source/elapsed/action metrics, compact facts, and direct controls without scoring or compliance judgments.
-- **Look #5 — Playful Modular:** friendly modular cards, option and context blocks, positive but non-scoring completion language, and a neutral kept-scrolling state.
-- **Look #7 — Bold Utility:** high-contrast status blocks and direct controls without error, alarm, failure, or noncompliance framing.
-- **Look #6 — Tactile Household:** optional action cards, tray and drawer-pull cues, a completion slip, and physical organization without defect or repair language.
-- **Look #2 — Warm Editorial:** practical editorial context, one featured action entry, and explicit no-journaling or explanation requirements.
-- **Look #8 — Ambient Glass:** selective translucent surfaces, mostly solid action cards, and explicit solid Reduced Transparency and no-backdrop-filter modes.
+- **Look #3 — Precision Minimal:** explicit phase labels and descriptive operational facts without scoring.
+- **Look #5 — Playful Modular:** friendly modular cards and positive but non-gamified feedback.
+- **Look #7 — Bold Utility:** high-contrast status blocks without error, alarm, failure, or noncompliance framing.
+- **Look #6 — Tactile Household:** optional action cards and physical organization without defect or repair language.
+- **Look #2 — Warm Editorial:** practical context without journaling, reflection, or explanation requirements.
+- **Look #8 — Ambient Glass:** selective translucency with solid Reduced Transparency and no-backdrop-filter modes.
+- **Look #9 — Retro Digital:** neutral system records, fixture-snapshot wording, and no failure-state semantics.
 
-Switching among Looks #2 through #8 changes presentation without resetting the intervention phase or selected suggestion.
+Switching among Looks #2 through #9 changes presentation without resetting the intervention phase or selected suggestion.
 
 ## Intervention-to-action sequence
 
@@ -117,9 +119,11 @@ Switching among Looks #2 through #8 changes presentation without resetting the i
 5. Look #6 — Tactile Household — **implemented**
 6. Look #2 — Warm Editorial — **implemented**
 7. Look #8 — Ambient Glass — **implemented**
-8. Look #9 — Retro Digital — **next**
+8. Look #9 — Retro Digital — **implemented**
 
-Reusable Lists follows after Intervention-to-action is implemented across all Looks.
+## Next feature loop
+
+Reusable Lists begins in Look #4 — Zen Focus and follows the same delegated Look order.
 
 ## Validation boundary
 
@@ -128,16 +132,16 @@ The static validator now covers:
 - Eight Routine Completion Looks and forty-eight routine renderer exports.
 - Eight Task hierarchy renderers and dedicated stylesheets.
 - Shared Intervention phase engine and deterministic alternatives.
-- Seven pure-Look intervention renderers and dedicated style layers.
+- Eight pure-Look intervention renderers and dedicated style layers.
 - Start, Next, Dismiss, Resume, Complete, Reopen, Undo, and Return-to-Today actions.
 - Cross-Look intervention-state preservation.
-- Warm Editorial no-journaling language and no-writing-input checks.
-- Playful Modular non-scoring language.
+- Warm Editorial no-journaling checks.
+- Playful Modular non-scoring checks.
 - Bold Utility pressure-language exclusions.
 - Tactile Household defect and repair-language exclusions.
-- Ambient Glass Reduced Transparency and no-backdrop-filter solid fallbacks.
-- Responsive, short-screen, Large Text, Forced Colors, and Reduced Motion contracts.
-- Retro Digital language checks remain active for its completed Task hierarchy slice.
+- Ambient Glass Reduced Transparency and no-backdrop-filter fallbacks.
+- Retro Digital fixture-snapshot, contrast, and neutral non-failure checks.
+- Responsive, short-screen, Large Text, Forced Colors, Increased Contrast, and Reduced Motion contracts.
 
 Still pending:
 
@@ -161,21 +165,18 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
-?look=8&screen=intervention&scenario=normal
-?look=8&screen=intervention&scenario=backlog
-?look=8&screen=intervention&scenario=new
-?look=8&screen=intervention&scenario=long
-?look=8&screen=intervention&scenario=large-text
+?look=9&screen=intervention&scenario=normal
+?look=9&screen=intervention&scenario=backlog
+?look=9&screen=intervention&scenario=new
+?look=9&screen=intervention&scenario=long
+?look=9&screen=intervention&scenario=large-text
 ?look=2&screen=intervention&scenario=normal
-?look=6&screen=intervention&scenario=normal
-?look=7&screen=intervention&scenario=normal
-?look=5&screen=intervention&scenario=normal
-?look=3&screen=intervention&scenario=normal
 ?look=4&screen=intervention&scenario=normal
+?look=8&screen=intervention&scenario=normal
 ```
 
 Append `capture=labelled` for an evidence frame or `capture=phone` for a clean phone frame.
 
 ## Next work
 
-Implement the same Intervention-to-action behavior contract in Look #9 — Retro Digital with neutral non-failure system language.
+Begin Reusable Lists in Look #4 — Zen Focus while preserving the completed Routine Completion, Task hierarchy, and Intervention-to-action contracts.

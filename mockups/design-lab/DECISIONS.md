@@ -135,13 +135,29 @@ Today / Needs Attention
 
 **Reversibility decision:** Completion from any supported screen opens or retains Chore detail so Undo is immediately visible. Reopening deletes the completion record and restores the routine's prior fixture status.
 
-**Route decision:** The Design Lab route contract now includes `today`, `section`, and `chore`, plus `area`, `section`, and `chore` identifiers in the query string. Look #4 is the only Look currently permitted to render the added interactive screens; other Looks return to their supported Areas route.
+**Route decision:** The Design Lab route contract now includes `today`, `section`, and `chore`, plus `area`, `section`, and `chore` identifiers in the query string.
 
 **Validation decision:** The milestone may be marked implemented based on syntax, module, route, renderer, reconstructed-validator, and injected-Chromium smoke evidence. The exact-checkout limitation must remain explicit and physical-device or screen-reader evidence must not be inferred.
 
 **Product boundary:** No Area creation, recurrence editing, notifications, backend, production persistence, task hierarchy, Lists, user-facing themes, Look #1 changes, or merge into `main` were introduced.
 
-**Next active Look:** Look #3 — Precision Minimal. It must preserve the Look #4 behavioral contract while testing denser, faster scanning and repeated operational use.
+## 2026-08-01 — Look #3 applies the shared contract without duplicating behavior
+
+**Milestone:** Version `0.9.1` implements the Routine Completion Loop in Look #3 — Precision Minimal.
+
+**Presentation decision:** Precision Minimal uses a compact queue, explicit metrics, square completion controls, monospaced metadata, and a fact-table Chore detail. These are presentation differences only; completion, recurrence, Undo, routing, and fixture semantics remain shared.
+
+**Cross-Look state decision:** Looks #3 and #4 are registered as interactive. Switching between them preserves the active route and completion state because the semantic state store is not owned by either renderer.
+
+**Default review decision:** Version `0.9.1` opens on Look #3 Today so the newest slice is immediately reviewable. Reset Review State also returns to Look #3 Today for this milestone.
+
+**Shared correction:** The `nextRoutine` helper now deprioritizes completed routines before status sorting. This prevents a completed routine that advanced to Upcoming from remaining the Area's preferred next action.
+
+**Accessibility decision:** Dense presentation does not reduce target size. Critical controls remain at least 48 px, Large Text actions reach at least 54 px, row layouts stack when necessary, and status remains textual.
+
+**Validation boundary:** The static validator now covers both interactive Looks, but direct cloning and exact-checkout browser execution remain DNS-blocked. No exact browser evidence, physical-device evidence, or screen-reader evidence is inferred.
+
+**Next active Look:** Look #5 — Playful Modular. It must preserve the same behavioral contract while testing friendly modular grouping and completion feedback.
 
 ## Feedback entry template
 

@@ -32,11 +32,12 @@ import { renderTasksBold } from './renderers/look7-tasks.js';
 import { renderAreaDetailAmbient, renderAreasAmbient, renderChoreAmbient, renderInterventionAmbient, renderSectionAmbient, renderTodayAmbient } from './renderers/look8.js';
 import { renderTasksAmbient } from './renderers/look8-tasks.js';
 import { renderAreaDetailRetro, renderAreasRetro, renderChoreRetro, renderInterventionRetro, renderSectionRetro, renderTodayRetro } from './renderers/look9.js';
+import { renderTasksRetro } from './renderers/look9-tasks.js';
 import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
 const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
-const TASK_HIERARCHY_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8]);
+const TASK_HIERARCHY_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
 
 const ROUTINE_RENDERERS = new Map([
   [2, { today: renderTodayEditorial, areas: renderAreasEditorial, area: renderAreaDetail, section: renderSectionEditorial, chore: renderChoreEditorial, intervention: renderInterventionEditorial }],
@@ -56,7 +57,8 @@ const TASK_RENDERERS = new Map([
   [5, renderTasksPlayful],
   [6, renderTasksTactile],
   [7, renderTasksBold],
-  [8, renderTasksAmbient]
+  [8, renderTasksAmbient],
+  [9, renderTasksRetro]
 ]);
 
 let state = readStateFromLocation();
@@ -86,7 +88,7 @@ function renderLook(look, data, tasks) {
     const renderer = TASK_RENDERERS.get(look.id);
     return renderer
       ? renderer(tasks)
-      : renderUnsupported('The Task hierarchy loop is currently implemented in Looks #2 through #8. Task state remains preserved while you compare Looks.');
+      : renderUnsupported('Task hierarchy is implemented in every active Design Lab Look.');
   }
   return renderRoutine(look.id, data);
 }
@@ -350,7 +352,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 8;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 9;
     render({ routeAction: 'push' });
     return;
   }

@@ -19,6 +19,21 @@ function writeStore(store) {
   }
 }
 
+function slug(value) {
+  return String(value || 'routine')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 54) || 'routine';
+}
+
+function tierForRepeat(repeat) {
+  const value = String(repeat || '').toLowerCase();
+  if (value.includes('6 week') || value.includes('month') || value.includes('3 month')) return 'Deep';
+  if (value.includes('2 week') || value.includes('weekly') || value.includes('weekdays')) return 'Moderate';
+  return 'Light';
+}
+
 function nextLabelFor(routine) {
   if (routine.status === 'as-needed') return 'Available again whenever it is useful';
   if (routine.tier === 'Deep') return 'Next Deep cycle · in about 6 weeks';
@@ -29,7 +44,9 @@ function nextLabelFor(routine) {
 export function applyRoutineState(data, scenarioId) {
   const scenarioState = readStore()[scenarioId] || {};
   data.areas.forEach(area => {
-    area.routines.forEach(routine => {
+    area.routines.forEach((routine, index) => {
+      routine.id ||= `${area.id}-${slug(routine.title)}-${index + 1}`;
+      routine.tier ||= tierForRepeat(routine.repeat);
       const completion = scenarioState[routine.id];
       if (!completion) return;
       routine.originalStatus = completion.previousStatus;

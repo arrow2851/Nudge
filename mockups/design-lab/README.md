@@ -2,13 +2,14 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.10.2`  
+**Current version:** `0.10.3`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.10.2 Look #5 Task hierarchy](CHECKLIST-PROGRESS-0.10.2.md)
+- [Latest checklist progress — 0.10.3 Look #7 Task hierarchy](CHECKLIST-PROGRESS-0.10.3.md)
+- [Look #7 Task hierarchy implementation](LOOK-7-TASK-HIERARCHY.md)
 - [Look #5 Task hierarchy implementation](LOOK-5-TASK-HIERARCHY.md)
 - [Look #3 Task hierarchy implementation](LOOK-3-TASK-HIERARCHY.md)
 - [Look #4 Task hierarchy implementation](LOOK-4-TASK-HIERARCHY.md)
@@ -51,9 +52,9 @@ Today / Needs Attention
 
 The eight Looks share semantic routine-completion state. Switching Looks changes presentation without resetting the route or routine result.
 
-## Task hierarchy — 3 of 8 Looks
+## Task hierarchy — 4 of 8 Looks
 
-Versions `0.10.0` through `0.10.2` implement the approved simple checklist model in Looks #4, #3, and #5:
+Versions `0.10.0` through `0.10.3` implement the approved simple checklist model in Looks #4, #3, #5, and #7:
 
 ```text
 Tasks
@@ -80,21 +81,22 @@ Shared rules include:
 - Completed items move to the bottom and may be hidden or shown.
 - Native pointer drag plus explicit Move, Indent, and Unindent controls.
 
-Task state uses a separate scenario-isolated Design Lab session-storage namespace. Switching among Looks #3, #4, and #5 changes presentation without resetting the task list or hierarchy.
+Task state uses a separate scenario-isolated Design Lab session-storage namespace. Switching among implemented task Looks changes presentation without resetting the task list or hierarchy.
 
 ### Look-specific treatment
 
 - **Look #4 — Zen Focus:** calm cards, generous spacing, soft progress, and low-pressure language.
 - **Look #3 — Precision Minimal:** compact operational table, Active/Main/Done metrics, fixed control columns, and explicit progress data.
 - **Look #5 — Playful Modular:** colorful task blocks, friendly progress language, clear hierarchy rails, and positive—but non-scoring—feedback.
+- **Look #7 — Bold Utility:** thick rules, direct controls, factual Active/Main/Done counts, and strong hierarchy rails without failure-state language.
 
 ## Task hierarchy sequence
 
 1. Look #4 — Zen Focus — **implemented**
 2. Look #3 — Precision Minimal — **implemented**
 3. Look #5 — Playful Modular — **implemented**
-4. Look #7 — Bold Utility — **next**
-5. Look #6 — Tactile Household
+4. Look #7 — Bold Utility — **implemented**
+5. Look #6 — Tactile Household — **next**
 6. Look #2 — Warm Editorial
 7. Look #8 — Ambient Glass
 8. Look #9 — Retro Digital
@@ -107,7 +109,7 @@ The static validator now covers:
 
 - Eight Routine Completion Looks and forty-eight routine renderer exports.
 - Shared Task hierarchy state and action contract.
-- Look #3, Look #4, and Look #5 task renderers and stylesheets.
+- Look #3, Look #4, Look #5, and Look #7 task renderers and stylesheets.
 - Add, edit, complete, reopen, main-task, subtask, release, progress, reorder, indent, unindent, and completed-visibility hooks.
 - Cross-Look task-state preservation.
 - Responsive, Large Text, Forced Colors, and Reduced Motion contracts.
@@ -135,11 +137,12 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
+?look=7&screen=tasks&scenario=normal
+?look=7&screen=tasks&scenario=backlog
+?look=7&screen=tasks&scenario=new
+?look=7&screen=tasks&scenario=long
+?look=7&screen=tasks&scenario=large-text
 ?look=5&screen=tasks&scenario=normal
-?look=5&screen=tasks&scenario=backlog
-?look=5&screen=tasks&scenario=new
-?look=5&screen=tasks&scenario=long
-?look=5&screen=tasks&scenario=large-text
 ?look=3&screen=tasks&scenario=normal
 ?look=4&screen=tasks&scenario=normal
 ```
@@ -148,4 +151,4 @@ Append `capture=labelled` for an evidence frame or `capture=phone` for a clean p
 
 ## Next work
 
-Implement the same Task hierarchy behavior contract in Look #7 — Bold Utility.
+Implement the same Task hierarchy behavior contract in Look #6 — Tactile Household.

@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.9.2`  
+**Current version:** `0.9.3`  
 **Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
@@ -22,17 +22,7 @@ When the user says **go**, continue to the next unchecked milestone without rout
 
 The user delegated the complete Look order. Do not ask for another visual-selection decision during the recorded sequence.
 
-A hard stop is required before:
-
-- Changing the agreed Routine Completion Loop or later feature order
-- Changing shared scenario meaning or comparison fairness
-- Adding product functionality beyond the agreed slice
-- Materially changing routing, storage, architecture, or deployment
-- Editing the protected Look #1 prototype
-- Introducing product-facing themes
-- Merging into `main`
-- Promoting dark variants into separate formal directions
-- Allowing unrestricted style mixing within a screen
+A hard stop is required before changing the agreed feature scope, scenarios, routing/storage architecture, Look #1, product-facing themes, deployment, or merge status.
 
 Required one-line response:
 
@@ -98,43 +88,40 @@ Required one-line response:
 
 ## Look #3 — Precision Minimal
 
-- [x] Gallery screens, scenarios, quality pass, and 0.7.2 browser evidence
-- [x] Today / Needs Attention
-- [x] Area → Section → Chore navigation
-- [x] Completion, recurrence advancement, attention updates, and Undo
-- [x] Shared completion state across interactive Looks
+- [x] Gallery and quality evidence
+- [x] Complete Routine Completion Loop
 - [x] Dedicated interactive stylesheet and record
 - [~] Exact-checkout browser, physical-device, and screen-reader evidence pending
 
 ## Look #4 — Zen Focus
 
-- [x] Gallery screens, scenarios, quality pass, and 0.7.2 browser evidence
-- [x] Today / Needs Attention
-- [x] Area → Section → Chore navigation
-- [x] Completion, recurrence advancement, attention updates, and Undo
+- [x] Gallery and quality evidence
+- [x] Complete Routine Completion Loop
 - [x] Dedicated interactive stylesheet and record
 - [~] Exact-checkout browser, physical-device, and screen-reader evidence pending
 
 ## Look #5 — Playful Modular
 
-- [x] Gallery screens, scenarios, quality pass, and 0.8.4 browser presentation evidence
-- [x] Today / Needs Attention
-- [x] Area → Section → Chore navigation
-- [x] Completion, recurrence advancement, attention updates, and Undo
-- [x] Shared completion state across Looks #3, #4, and #5
-- [x] Dedicated `look5-interactive.css`
-- [x] `LOOK-5-INTERACTIVE.md` and `CHECKLIST-PROGRESS-0.9.2.md`
+- [x] Gallery and quality evidence
+- [x] Complete Routine Completion Loop
+- [x] Dedicated interactive stylesheet and record
 - [~] Exact-checkout browser, physical-device, and screen-reader evidence pending
 
 ## Look #6 — Tactile Household
 
 - [x] Gallery screens, scenarios, quality pass, and 0.7.2 browser evidence
-- [ ] Routine Completion Loop
+- [ ] Routine Completion Loop — **next**
 
 ## Look #7 — Bold Utility
 
 - [x] Gallery screens, scenarios, quality pass, and 0.8.4 browser presentation evidence
-- [ ] Routine Completion Loop — **next**
+- [x] Today / Needs Attention
+- [x] Area → Section → Chore navigation
+- [x] Completion, recurrence advancement, attention updates, and Undo
+- [x] Shared completion state across Looks #3, #4, #5, and #7
+- [x] Dedicated `look7-interactive.css`
+- [x] `LOOK-7-INTERACTIVE.md` and `CHECKLIST-PROGRESS-0.9.3.md`
+- [~] Exact-checkout browser, physical-device, and screen-reader evidence pending
 
 ## Look #8 — Ambient Glass
 
@@ -169,16 +156,15 @@ Required one-line response:
 
 # 5. Validation and evidence
 
-- [x] Required-file and relative-import checks
-- [x] Fixture and renderer-export checks
-- [x] Version and stylesheet-order checks
-- [x] CSS block-balance checks
+- [x] Required-file and relative-import checks encoded
+- [x] Fixture and renderer-export checks encoded
+- [x] Version and stylesheet-order checks encoded
+- [x] CSS block-balance checks encoded
 - [x] 168-route gallery matrix encoded
-- [x] Interactive route contract encoded for Looks #3, #4, and #5
-- [x] Interactive stylesheets required for Looks #3, #4, and #5
+- [x] Interactive route contract encoded for Looks #3, #4, #5, and #7
+- [x] Interactive stylesheets required for Looks #3, #4, #5, and #7
 - [x] Shared completion, recurrence, Undo, and state hooks checked
-- [x] Look #5 application and renderer syntax checks
-- [x] Look #5 renderer contract checks for all routed states
+- [x] Look #7 six-export renderer and routed-state contracts inspected
 - [ ] Exact complete-checkout validator execution
 - [ ] Exact complete-checkout interactive browser run
 - [ ] Physical Android viewport checks
@@ -193,8 +179,8 @@ Required one-line response:
 1. [x] Look #4 — Zen Focus
 2. [x] Look #3 — Precision Minimal
 3. [x] Look #5 — Playful Modular
-4. [ ] Look #7 — Bold Utility — **next**
-5. [ ] Look #6 — Tactile Household
+4. [x] Look #7 — Bold Utility
+5. [ ] Look #6 — Tactile Household — **next**
 6. [ ] Look #2 — Warm Editorial
 7. [ ] Look #8 — Ambient Glass
 8. [ ] Look #9 — Retro Digital
@@ -203,14 +189,14 @@ See `PURE-LOOK-IMPLEMENTATION-ORDER.md` for rationale and acceptance gates.
 
 ## Routine Completion Loop progress
 
-- [~] Today / Needs Attention — implemented in 3 of 8 Looks
-- [~] Area → Section → Chore navigation — implemented in 3 of 8 Looks
-- [~] Complete and advance recurrence — implemented in 3 of 8 Looks
-- [~] Update attention counts and All Clear — implemented in 3 of 8 Looks
-- [~] Undo or reopen — implemented in 3 of 8 Looks
-- [~] Browser-history-compatible routes — implemented in 3 of 8 Looks
-- [~] Shared scenarios and Large Text — implemented in 3 of 8 Looks
-- [~] Keyboard-reachable completion and Undo — implemented in 3 of 8 Looks
+- [~] Today / Needs Attention — implemented in 4 of 8 Looks
+- [~] Area → Section → Chore navigation — implemented in 4 of 8 Looks
+- [~] Complete and advance recurrence — implemented in 4 of 8 Looks
+- [~] Update attention counts and All Clear — implemented in 4 of 8 Looks
+- [~] Undo or reopen — implemented in 4 of 8 Looks
+- [~] Browser-history-compatible routes — implemented in 4 of 8 Looks
+- [~] Shared scenarios and Large Text — implemented in 4 of 8 Looks
+- [~] Keyboard-reachable completion and Undo — implemented in 4 of 8 Looks
 
 ## Later feature order
 
@@ -228,14 +214,15 @@ Use the same Look order unless a documented technical dependency requires a chan
 - [x] `0.9.0` — Look #4 Zen Focus Routine Completion Loop
 - [x] `0.9.1` — Look #3 Precision Minimal Routine Completion Loop
 - [x] `0.9.2` — Look #5 Playful Modular Routine Completion Loop
+- [x] `0.9.3` — Look #7 Bold Utility Routine Completion Loop
 
 ---
 
 # 8. Current next actions
 
-- [ ] Implement Look #7 Today / Needs Attention
-- [ ] Implement Look #7 Area → Section → Chore navigation
+- [ ] Implement Look #6 Today / Needs Attention
+- [ ] Implement Look #6 Area → Section → Chore navigation
 - [ ] Apply shared completion, recurrence, attention updates, and Undo
-- [ ] Add Look #7 interactive responsive and accessibility layer
-- [ ] Extend validator through Look #7
+- [ ] Add Look #6 interactive responsive and accessibility layer
+- [ ] Extend validator through Look #6
 - [ ] Keep exact-checkout, Android, and screen-reader evidence pending until actually performed

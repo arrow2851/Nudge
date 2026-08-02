@@ -52,19 +52,15 @@ This file records review decisions, intentional interaction differences, plan ad
 
 ## 2026-08-01 — Interactive expansion package prepared
 
-**Status:** Pending user decision; no implementation started.
+**Status:** Historical planning recommendation; superseded by the Option A decision below.
 
-**Recommended strategy:** One shared semantic behavior core with eight Design Lab visual adapters.
+**Recommended strategy at the time:** One shared semantic behavior core with eight Design Lab visual adapters.
 
 **Recommended first slice:** Routine completion loop from Today or Needs Attention through Area, Section, Chore detail, completion, recurrence advancement, and undo or reopen.
 
 **Recommended Look-switch boundary:** Design Lab review control only. Do not infer a user-facing theme feature.
 
 **Recommended state boundary:** Deterministic isolated prototype state with no production integration.
-
-**Reason:** This package preserves every visual direction without duplicating product behavior eight times or making one Look an accidental permanent winner.
-
-**Hard stop:** Implementation requires explicit approval because it introduces material routing, state, component, and architecture commitments.
 
 **Decision documents:**
 
@@ -86,13 +82,36 @@ This file records review decisions, intentional interaction differences, plan ad
 - Look #1 remains protected and is not eligible unless separately promoted.
 - Nothing is merged into `main`.
 
-**Remaining implementation gate:** Select the first active Look from Looks #2 through #9.
+## 2026-08-01 — First Look and remaining order delegated
 
-**Recommendation:** Look #4 — Zen Focus. It has the strongest fit with Nudge's low-pressure emotional model and should expose whether the Routine Completion Loop can remain calm while still supporting clear navigation, recurrence, completion, and undo.
+**User decision:** The assistant should select the first Look and the complete remaining order. Future routine `go` messages should continue without asking the user to select again.
 
-**Secondary recommendation:** Look #3 — Precision Minimal if the priority is operational density and fast repeated checklist use rather than emotional tone.
+**Selected first Look:** Look #4 — Zen Focus.
 
-**Status:** Option A is approved; implementation remains blocked only until the first Look is selected.
+**Reason:** It best represents Nudge's calm, low-pressure purpose and is the strongest first test of whether urgency, navigation, recurrence, completion, and undo can remain clear without becoming demanding.
+
+**Implementation order:**
+
+1. Look #4 — Zen Focus
+2. Look #3 — Precision Minimal
+3. Look #5 — Playful Modular
+4. Look #7 — Bold Utility
+5. Look #6 — Tactile Household
+6. Look #2 — Warm Editorial
+7. Look #8 — Ambient Glass
+8. Look #9 — Retro Digital
+
+**Meaning of the order:** This is a learning and technical-risk sequence, not a ranking, elimination, or permanent product-design decision.
+
+**Feature order after the Routine Completion Loop is implemented in all eight Looks:**
+
+1. Task hierarchy loop.
+2. Intervention-to-action loop.
+3. Reusable Lists loop.
+
+**Automatic continuation rule:** Routine `go` messages advance to the next unchecked milestone in `PURE-LOOK-IMPLEMENTATION-ORDER.md`. A hard stop is required only for a material change to scope, architecture, storage, deployment, Look #1 protection, product-facing themes, or merge status.
+
+**Status:** The visual-selection gate is resolved. The next active milestone is the Look #4 Routine Completion Loop foundation.
 
 ## Feedback entry template
 

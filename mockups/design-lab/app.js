@@ -111,9 +111,14 @@ function normalizeStateForData(data) {
       state.sectionId = null;
     }
   }
-  if (state.view === 'chore' && !area.routines.some(item => item.id === state.choreId)) {
-    state.view = state.sectionId ? 'section' : 'area';
-    state.choreId = null;
+  if (state.view === 'chore') {
+    const routine = area.routines.find(item => item.id === state.choreId);
+    if (!routine) {
+      state.view = state.sectionId ? 'section' : 'area';
+      state.choreId = null;
+    } else if (!state.sectionId) {
+      state.sectionId = routine.section || 'General';
+    }
   }
 }
 
@@ -226,7 +231,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 4;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 3;
     if (!INTERACTIVE_LOOKS.has(state.look) && ['today', 'section', 'chore'].includes(state.view)) {
       state.view = 'areas';
       resetPath();

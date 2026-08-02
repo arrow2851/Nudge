@@ -8,13 +8,13 @@ import { renderAreaDetailPrecision, renderAreasPrecision, renderChorePrecision, 
 import { renderAreaDetailZen, renderAreasZen, renderChoreZen, renderInterventionZen, renderSectionZen, renderTodayZen } from './renderers/look4.js';
 import { renderAreaDetailPlayful, renderAreasPlayful, renderChorePlayful, renderInterventionPlayful, renderSectionPlayful, renderTodayPlayful } from './renderers/look5.js';
 import { renderAreaDetailTactile, renderAreasTactile, renderInterventionTactile } from './renderers/look6.js';
-import { renderAreaDetailBold, renderAreasBold, renderInterventionBold } from './renderers/look7.js';
+import { renderAreaDetailBold, renderAreasBold, renderChoreBold, renderInterventionBold, renderSectionBold, renderTodayBold } from './renderers/look7.js';
 import { renderAreaDetailAmbient, renderAreasAmbient, renderInterventionAmbient } from './renderers/look8.js';
 import { renderAreaDetailRetro, renderAreasRetro, renderInterventionRetro } from './renderers/look9.js';
 import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
-const INTERACTIVE_LOOKS = new Set([3, 4, 5]);
+const INTERACTIVE_LOOKS = new Set([3, 4, 5, 7]);
 
 let state = readStateFromLocation();
 let currentData = null;
@@ -68,7 +68,10 @@ function renderLook(look, data) {
   }
 
   if (look.id === 7) {
+    if (state.view === 'today') return renderTodayBold(data);
     if (state.view === 'intervention') return renderInterventionBold(data);
+    if (state.view === 'chore') return renderChoreBold(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
+    if (state.view === 'section') return renderSectionBold(data, state.areaId, state.sectionId, renderUnsupported);
     if (state.view === 'area') return renderAreaDetailBold(data, state.areaId, renderUnsupported);
     if (state.view === 'areas') return renderAreasBold(data);
   }
@@ -85,7 +88,7 @@ function renderLook(look, data) {
     if (state.view === 'areas') return renderAreasRetro(data);
   }
 
-  return renderUnsupported('This interactive screen is currently implemented in Looks #3, #4, and #5.');
+  return renderUnsupported('This interactive screen is currently implemented in Looks #3, #4, #5, and #7.');
 }
 
 function syncBottomNavigation() {
@@ -164,7 +167,7 @@ function resetReviewState() {
 
 function setView(view) {
   if (view === 'today' && !INTERACTIVE_LOOKS.has(state.look)) {
-    showToast('Today interaction is currently available in Looks #3, #4, and #5.');
+    showToast('Today interaction is currently available in Looks #3, #4, #5, and #7.');
     return;
   }
   state.view = view;
@@ -238,7 +241,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 5;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 7;
     if (!INTERACTIVE_LOOKS.has(state.look) && ['today', 'section', 'chore'].includes(state.view)) {
       state.view = 'areas';
       resetPath();

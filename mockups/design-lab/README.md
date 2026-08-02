@@ -2,13 +2,15 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.8.4`  
+**Current version:** `0.8.5`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.8.4 Look #9 quality](CHECKLIST-PROGRESS-0.8.4.md)
+- [Latest checklist progress — 0.8.5 full-gallery evidence](CHECKLIST-PROGRESS-0.8.5.md)
+- [Full-gallery browser evidence report](FULL-GALLERY-EVIDENCE-0.8.4.md)
+- [Machine-readable evidence summary](FULL-GALLERY-EVIDENCE-0.8.4.json)
 - [Expanded gallery directions](EXPANDED-GALLERY-LOOKS.md)
 - [Look #5 quality pass](LOOK-5-QUALITY.md)
 - [Look #7 quality pass](LOOK-7-QUALITY.md)
@@ -59,7 +61,11 @@ Unrestricted mixing within a single screen remains prohibited because it weakens
 
 All active directions from Look #2 through Look #9 have completed dedicated code-level quality passes.
 
-Looks #1, #2, #3, #4, and #6 were included in the 0.7.2 browser evidence run. Browser/device evidence for Looks #5, #7, #8, and #9 remains pending.
+Looks #1, #2, #3, #4, and #6 were included in the 0.7.2 browser evidence run. Looks #5, #7, #8, and #9 completed the 0.8.4 browser presentation matrix recorded in the full-gallery evidence report. Together, the two runs provide browser evidence for every gallery direction, although they were not executed from one identical build.
+
+The new-Look matrix passed 84 direct routes, 72 viewport checks, 28 stress checks, eight Long Content and Large Text reachability checks, four media-emulation checks, and four keyboard-focus checks. No tested route produced horizontal overflow or an unnamed visible button, and the minimum tested in-preview control size was 48 × 48 px.
+
+The exact complete-checkout validator, physical Android checks, actual screen-reader smoke testing, and a single-version all-Look rerun remain pending. The evidence report states the reconstruction boundary in full.
 
 Look #1 remains a protected comparison reference. Its Intervention is visibly labeled as a comparison-only extrapolation because the protected prototype does not contain an equivalent screen.
 
@@ -86,4 +92,4 @@ Append `capture=labelled` for an evidence frame or `capture=phone` for a clean p
 
 ## Next work
 
-Execute the complete-checkout validator and browser evidence protocol for Looks #5, #7, #8, and #9, then prepare full-gallery comparison contact sheets.
+Prepare the interactive-expansion decision record and candidate vertical slices. Do not implement a vertical slice until the dominant pure-Look, feature-specific variant, or controlled-synthesis direction is intentionally chosen.

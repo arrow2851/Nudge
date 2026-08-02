@@ -17,13 +17,14 @@ A successful run exits with status `0`. Failed invariants are printed with a `FA
 - Renderers for Looks #2 through #9 exist
 - The protected Look #1 comparison reference exists
 - Existing and expanded gallery stylesheets exist
-- The Look #5, Look #7, and Look #8 dedicated quality stylesheets exist
+- Dedicated quality stylesheets for Looks #5, #7, #8, and #9 exist
 
 ### Import graph
 
 - Every relative JavaScript import resolves to an existing file
 - Every Look renderer exports Areas, Area detail, and Intervention functions
 - `app.js` references and routes every expected renderer
+- The Look #1 comparison reference imports the shared Design Lab version
 
 ### Shared fixtures
 
@@ -44,26 +45,27 @@ This produces **168 active-Look route combinations**.
 
 ### Version and entry point
 
-- Version agreement between `config.js`, `quality.js`, `look1-reference.js`, `index.html`, `README.md`, and the master checklist
-- `index.html` loads the original Look styles, `expanded-looks.css`, Look #5, Look #7, and Look #8 quality styles, and review styles
-- Stylesheet order is enforced so quality overrides load after the expanded-gallery base and before capture-only review styles
+- Version agreement between `config.js`, `quality.js`, `index.html`, `README.md`, and the master checklist
+- The Look #1 reference sources its version from `config.js`
+- `index.html` loads the original Look styles, expanded gallery base, all four added quality layers, and review styles
+- Stylesheet order is enforced so quality overrides load after their base styles and before capture-only review styles
 - `app.js` loads as an ES module
 
 ### Stylesheets
 
 - Existing Look styles remain present
 - `expanded-looks.css` remains the shared base for Looks #5, #7, #8, and #9
-- `look5-quality.css`, `look7-quality.css`, and `look8-quality.css` remain separate auditable override layers
+- `look5-quality.css`, `look7-quality.css`, `look8-quality.css`, and `look9-quality.css` remain separate auditable override layers
 - All active stylesheets have balanced braces when the validator runs in a complete checkout
 
-## Code-level checks completed for version 0.8.3
+## Code-level checks completed through version 0.8.4
 
-- Look #8 renderer structure and accessible-label changes were reviewed.
-- The validator was updated to require `look8-quality.css` and its load order.
-- Contrast ratios were calculated for the original and corrected gradient endpoints and muted text.
-- Narrow-screen, Large Text, long-content, touch-target, transparency, fallback, and forced-colors paths were reviewed in source.
-- Repeated backdrop blur was removed from Area cards and panels; only a few focal surfaces retain reduced blur.
-- Solid fallbacks were added for unsupported backdrop filtering and reduced-transparency preferences.
+- Every active direction has a dedicated code-level quality pass.
+- Renderer semantics and accessible-label changes were reviewed for Looks #5, #7, #8, and #9.
+- Contrast calculations were completed for the new directions' primary palettes.
+- Narrow-screen, Large Text, long-content, touch-target, focus, forced-colors, and tone paths were reviewed in source.
+- Ambient Glass includes blur reduction and fallback paths.
+- Retro Digital includes corrected meter logic and microtext remediation.
 - Shared scenarios, fixture data, route meaning, and product functionality were not changed.
 
 ## What static validation does not replace
@@ -77,7 +79,7 @@ The following still require browser or device evidence:
 - Phone, short-screen, landscape, and desktop layouts
 - Visual overflow and clipping
 - Real forced-colors presentation
-- Physical-device paint, compositing, and scrolling performance for Ambient Glass
-- Small-text readability for Retro Digital
+- Ambient Glass paint and compositing behavior on lower-end hardware
+- Retro Digital readability at different physical display brightness levels
 
 Use [`ROUND-1-ROUTES.md`](ROUND-1-ROUTES.md) for the complete gallery route set.

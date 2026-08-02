@@ -1,5 +1,22 @@
 # Design Lab Changelog
 
+## 0.8.2 — 2026-08-01
+
+### Look #7 — Bold Utility quality pass
+
+- Increased 7–9 px operational labels to readable standard sizes
+- Increased completion controls to 48 × 48 px and critical actions to at least 48 px high
+- Reflowed the five-column Area table into multi-row narrow-screen and Large Text layouts
+- Added strong Look-specific focus indicators
+- Added long-content wrapping for Area, routine, Section, status, app, and action labels
+- Darkened the action blue from `#2868ff` to `#174fc4`, raising white-text contrast to approximately `7.11:1`
+- Improved Area, summary, routine-status, Section, and Intervention semantics
+- Reframed `STOP. CHOOSE.` as `PAUSE. DECIDE.` and explicitly stated that staying or switching is valid
+- Expanded forced-colors handling and removed nonessential shadows
+- Added `look7-quality.css`, `LOOK-7-QUALITY.md`, and `CHECKLIST-PROGRESS-0.8.2.md`
+- Extended validator coverage to the Look #7 quality stylesheet and load order
+- Updated the Design Lab to `0.8.2`
+
 ## 0.8.1 — 2026-08-01
 
 ### Look #5 — Playful Modular quality pass

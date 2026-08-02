@@ -4,6 +4,17 @@ import { renderReviewControls } from './controls.js';
 import { clearStoredState, commitState, defaultState, readStateFromLocation } from './state.js';
 import { applyRoutineState, clearInteractiveState, completeRoutine, findRoutine, reopenRoutine } from './interactive-state.js';
 import {
+  applyInterventionState,
+  clearInterventionState,
+  completeInterventionAction,
+  dismissIntervention,
+  reopenInterventionAction,
+  resumeIntervention,
+  showNextInterventionSuggestion,
+  startInterventionAction,
+  undoInterventionStart
+} from './intervention-state.js';
+import {
   addTask,
   clearTaskState,
   getTaskState,
@@ -38,6 +49,7 @@ import { esc } from './utils.js';
 
 const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
 const TASK_HIERARCHY_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
+const INTERVENTION_ACTION_LOOKS = new Set([4]);
 
 const ROUTINE_RENDERERS = new Map([
   [2, { today: renderTodayEditorial, areas: renderAreasEditorial, area: renderAreaDetail, section: renderSectionEditorial, chore: renderChoreEditorial, intervention: renderInterventionEditorial }],
@@ -62,6 +74,7 @@ const TASK_RENDERERS = new Map([
 ]);
 
 let state = readStateFromLocation();
+let currentSourceData = null;
 let currentData = null;
 let currentTasks = null;
 let draggedTask = null;
@@ -143,7 +156,8 @@ function normalizeStateForData(data) {
 }
 
 function render({ routeAction = 'none' } = {}) {
-  currentData = applyRoutineState(getScenario(state.scenario), state.scenario);
+  currentSourceData = applyRoutineState(getScenario(state.scenario), state.scenario);
+  currentData = applyInterventionState(currentSourceData, state.scenario);
   currentTasks = getTaskState(state.scenario);
   normalizeStateForData(currentData);
   const look = renderReviewControls(state, currentData, elements);
@@ -176,8 +190,9 @@ function resetReviewState() {
   clearStoredState();
   clearInteractiveState();
   clearTaskState();
+  clearInterventionState();
   render({ routeAction: 'push' });
-  showToast('Design Lab, routine completion, and task hierarchy state reset.');
+  showToast('Design Lab, routine, task, and intervention state reset.');
 }
 
 function setView(view) {
@@ -218,12 +233,17 @@ function taskIdFromTarget(target) {
   return target.dataset.taskId;
 }
 
+function interventionEnabled() {
+  return INTERVENTION_ACTION_LOOKS.has(state.look) && state.view === 'intervention';
+}
+
 function runAction(action, target) {
   const actions = {
     'back-areas': () => setView('areas'),
     'open-areas': () => setView('areas'),
     'back-area': () => openArea(state.areaId),
     'back-section': () => state.sectionId ? openSection(state.areaId, state.sectionId) : openArea(state.areaId),
+    'return-today': () => setView('today'),
     'reset-review': resetReviewState,
     'reset-route': resetReviewState,
     'complete-routine': () => {
@@ -243,6 +263,48 @@ function runAction(action, target) {
       if (!routine || !reopenRoutine(state.scenario, routine.id)) return;
       render();
       showToast('Completion undone. The routine is back in its previous state.');
+    },
+    'start-intervention': () => {
+      if (!interventionEnabled()) return;
+      const { result } = startInterventionAction(currentSourceData, state.scenario);
+      if (!result) return;
+      render();
+      showToast(`Started: ${result.task}.`);
+    },
+    'next-intervention': () => {
+      if (!interventionEnabled()) return;
+      const { result } = showNextInterventionSuggestion(currentSourceData, state.scenario);
+      render();
+      if (result) showToast(`Another option: ${result.task}.`);
+    },
+    'dismiss-intervention': () => {
+      if (!interventionEnabled()) return;
+      dismissIntervention(currentSourceData, state.scenario);
+      render();
+      showToast('Suggestion dismissed. Nothing else changed.');
+    },
+    'resume-intervention': () => {
+      if (!interventionEnabled()) return;
+      resumeIntervention(currentSourceData, state.scenario);
+      render();
+    },
+    'complete-intervention': () => {
+      if (!interventionEnabled()) return;
+      if (!completeInterventionAction(currentSourceData, state.scenario).result) return;
+      render();
+      showToast('Small action completed.');
+    },
+    'reopen-intervention': () => {
+      if (!interventionEnabled()) return;
+      if (!reopenInterventionAction(currentSourceData, state.scenario).result) return;
+      render();
+      showToast('Action reopened.');
+    },
+    'undo-intervention': () => {
+      if (!interventionEnabled()) return;
+      if (!undoInterventionStart(currentSourceData, state.scenario).result) return;
+      render();
+      showToast('Start undone. The suggestion is available again.');
     },
     'add-task-top': () => {
       const { result } = addTask(state.scenario, { position: 'top' });
@@ -295,8 +357,8 @@ function runAction(action, target) {
       render();
     },
     'demo-add-area': () => showToast('Area creation remains outside this interactive slice.'),
-    'start-demo': () => showToast('The Intervention-to-action loop follows the Task hierarchy sequence.'),
-    'different-demo': () => showToast('Alternative suggestions belong to the later Intervention slice.'),
+    'start-demo': () => showToast('Intervention-to-action is currently implemented in Look #4.'),
+    'different-demo': () => showToast('Alternative suggestion behavior is currently implemented in Look #4.'),
     'not-now-demo': () => showToast('Intervention dismissed without guilt.')
   };
   actions[action]?.();
@@ -352,7 +414,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 9;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 4;
     render({ routeAction: 'push' });
     return;
   }

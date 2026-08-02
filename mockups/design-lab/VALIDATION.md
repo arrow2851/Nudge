@@ -15,7 +15,7 @@ A successful run exits with status `0`. Failed invariants are printed with a `FA
 
 - Shared shell, controller, routine state, and task state files exist
 - Routine renderers for Looks #2 through #9 exist
-- Task renderers for Looks #3 and #4 exist
+- Task renderers for Looks #3, #4, and #5 exist
 - The protected Look #1 comparison reference exists
 - Every required base, quality, interaction, task, and review stylesheet exists
 
@@ -23,7 +23,7 @@ A successful run exits with status `0`. Failed invariants are printed with a `FA
 
 - Every relative JavaScript import resolves to an existing file
 - Every Look renderer exports the six Routine Completion screens
-- Look #3 and Look #4 export their Task hierarchy screen
+- Looks #3, #4, and #5 export their Task hierarchy screens
 - `app.js` references the shared routine and task renderer registries
 - The Look #1 comparison reference imports the shared Design Lab version
 
@@ -42,7 +42,7 @@ The validator covers:
 
 - Looks `2`, `3`, `4`, `5`, `6`, `7`, `8`, and `9`
 - Routine screens `today`, `areas`, `area`, `section`, `chore`, and `intervention`
-- Task screen `tasks` for Looks #3 and #4
+- Task screen `tasks` for Looks #3, #4, and #5
 - Scenarios `normal`, `backlog`, `new`, `clear`, `large`, `long`, and `large-text`
 
 The original gallery route matrix remains **168 active-Look combinations**. Routine Completion and Task hierarchy contracts are checked in addition to that matrix.
@@ -57,18 +57,18 @@ The original gallery route matrix remains **168 active-Look combinations**. Rout
 ### Task hierarchy
 
 - `task-state.js` contains the separate storage namespace and one-level hierarchy model
-- Looks #3 and #4 are registered as Task hierarchy Looks
-- Both task renderers expose equivalent controls and actions
-- Both task stylesheets retain 48 px action heights, Large Text handling, Forced Colors, and Reduced Motion
+- Looks #3, #4, and #5 are registered as Task hierarchy Looks
+- All three task renderers expose equivalent controls and actions
+- All three task stylesheets retain 48 px action heights, Large Text handling, Forced Colors, and Reduced Motion
 - Pointer drag hooks and explicit Move, Indent, and Unindent fallbacks remain present
 - Completed-item grouping and Hide/Show Completed remain encoded
-- The default review route opens Look #3 Tasks in version `0.10.1`
+- The default review route opens Look #5 Tasks in version `0.10.2`
 
 ### Version and entry point
 
 - Version agreement between `config.js`, `quality.js`, `index.html`, `README.md`, and the master checklist
 - The Look #1 reference sources its version from `config.js`
-- Stylesheet order is enforced so each task layer loads after its Look's base and interaction layers
+- Stylesheet order is enforced so each task layer loads after its Look's base, quality, and interaction layers
 - `app.js` loads as an ES module
 
 ### Stylesheets
@@ -76,12 +76,12 @@ The original gallery route matrix remains **168 active-Look combinations**. Rout
 - Existing Look styles remain present
 - `expanded-looks.css` remains the shared base for Looks #5, #7, #8, and #9
 - Quality and interaction layers remain separate and auditable
-- `look3-tasks.css` and `look4-tasks.css` remain pure-Look task layers
+- `look3-tasks.css`, `look4-tasks.css`, and `look5-tasks.css` remain pure-Look task layers
 - All active stylesheets have balanced braces when the validator runs in a complete checkout
 
 ## Evidence boundary
 
-The current source-level contract is recorded through version `0.10.1`. Direct repository cloning remains blocked by local DNS restrictions, so the exact complete-checkout validator and browser run have not been claimed.
+The current source-level contract is recorded through version `0.10.2`. Direct repository cloning remains blocked by local DNS restrictions, so the exact complete-checkout validator and browser run have not been claimed.
 
 Static validation does not replace:
 

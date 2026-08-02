@@ -2,13 +2,14 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.10.0`  
+**Current version:** `0.10.1`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.10.0 Look #4 Task hierarchy](CHECKLIST-PROGRESS-0.10.0.md)
+- [Latest checklist progress — 0.10.1 Look #3 Task hierarchy](CHECKLIST-PROGRESS-0.10.1.md)
+- [Look #3 Task hierarchy implementation](LOOK-3-TASK-HIERARCHY.md)
 - [Look #4 Task hierarchy implementation](LOOK-4-TASK-HIERARCHY.md)
 - [All-Look Routine Completion progress](CHECKLIST-PROGRESS-0.9.7.md)
 - [Pure-Look implementation order](PURE-LOOK-IMPLEMENTATION-ORDER.md)
@@ -49,9 +50,9 @@ Today / Needs Attention
 
 The eight Looks share semantic routine-completion state. Switching Looks changes presentation without resetting the route or routine result.
 
-## Task hierarchy started
+## Task hierarchy — 2 of 8 Looks
 
-Version `0.10.0` implements the approved simple checklist model in Look #4 — Zen Focus:
+Versions `0.10.0` and `0.10.1` implement the approved simple checklist model in Looks #4 and #3:
 
 ```text
 Tasks
@@ -67,7 +68,7 @@ Tasks
 → Hide or show completed items
 ```
 
-Implemented rules include:
+Shared rules include:
 
 - A plus at the top and Add Task below the list.
 - Left drag handle, separate completion control, editable title, optional time shorthand, settings disclosure, and a separate subtask plus.
@@ -78,13 +79,18 @@ Implemented rules include:
 - Completed items move to the bottom and may be hidden or shown.
 - Native pointer drag plus explicit Move, Indent, and Unindent controls.
 
-Task state uses a separate scenario-isolated Design Lab session-storage namespace. Other Looks preserve that state while showing that their Task hierarchy presentation is not implemented yet.
+Task state uses a separate scenario-isolated Design Lab session-storage namespace. Switching between Looks #3 and #4 changes presentation without resetting the task list or hierarchy.
+
+### Look-specific treatment
+
+- **Look #4 — Zen Focus:** calm cards, generous spacing, soft progress, and low-pressure language.
+- **Look #3 — Precision Minimal:** compact operational table, Active/Main/Done metrics, fixed control columns, and explicit progress data.
 
 ## Task hierarchy sequence
 
 1. Look #4 — Zen Focus — **implemented**
-2. Look #3 — Precision Minimal — **next**
-3. Look #5 — Playful Modular
+2. Look #3 — Precision Minimal — **implemented**
+3. Look #5 — Playful Modular — **next**
 4. Look #7 — Bold Utility
 5. Look #6 — Tactile Household
 6. Look #2 — Warm Editorial
@@ -98,8 +104,10 @@ After Task hierarchy is implemented across all Looks, the feature order remains 
 The static validator now covers:
 
 - Eight Routine Completion Looks and forty-eight routine renderer exports.
-- Look #4 Task hierarchy route, state module, renderer, and stylesheet.
+- Shared Task hierarchy state and action contract.
+- Look #3 and Look #4 task renderers and stylesheets.
 - Add, edit, complete, reopen, main-task, subtask, release, progress, reorder, indent, unindent, and completed-visibility hooks.
+- Cross-Look task-state preservation.
 - Responsive, Large Text, Forced Colors, and Reduced Motion contracts.
 - Ambient Glass reduced-transparency and no-backdrop-filter fallbacks.
 
@@ -125,15 +133,16 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
+?look=3&screen=tasks&scenario=normal
+?look=3&screen=tasks&scenario=backlog
+?look=3&screen=tasks&scenario=new
+?look=3&screen=tasks&scenario=long
+?look=3&screen=tasks&scenario=large-text
 ?look=4&screen=tasks&scenario=normal
-?look=4&screen=tasks&scenario=backlog
-?look=4&screen=tasks&scenario=new
-?look=4&screen=tasks&scenario=long
-?look=4&screen=tasks&scenario=large-text
 ```
 
 Append `capture=labelled` for an evidence frame or `capture=phone` for a clean phone frame.
 
 ## Next work
 
-Implement the same Task hierarchy behavior contract in Look #3 — Precision Minimal.
+Implement the same Task hierarchy behavior contract in Look #5 — Playful Modular.

@@ -30,7 +30,8 @@ import {
 } from './task-state.js';
 import { renderAreaDetail, renderAreasEditorial, renderChoreEditorial, renderInterventionEditorial, renderSectionEditorial, renderTodayEditorial } from './renderers/look2.js';
 import { renderTasksEditorial } from './renderers/look2-tasks.js';
-import { renderAreaDetailPrecision, renderAreasPrecision, renderChorePrecision, renderInterventionPrecision, renderSectionPrecision, renderTodayPrecision } from './renderers/look3.js';
+import { renderAreaDetailPrecision, renderAreasPrecision, renderChorePrecision, renderSectionPrecision, renderTodayPrecision } from './renderers/look3.js';
+import { renderInterventionPrecisionAction } from './renderers/look3-intervention.js';
 import { renderTasksPrecision } from './renderers/look3-tasks.js';
 import { renderAreaDetailZen, renderAreasZen, renderChoreZen, renderInterventionZen, renderSectionZen, renderTodayZen } from './renderers/look4.js';
 import { renderTasksZen } from './renderers/look4-tasks.js';
@@ -49,11 +50,11 @@ import { esc } from './utils.js';
 
 const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
 const TASK_HIERARCHY_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
-const INTERVENTION_ACTION_LOOKS = new Set([4]);
+const INTERVENTION_ACTION_LOOKS = new Set([3, 4]);
 
 const ROUTINE_RENDERERS = new Map([
   [2, { today: renderTodayEditorial, areas: renderAreasEditorial, area: renderAreaDetail, section: renderSectionEditorial, chore: renderChoreEditorial, intervention: renderInterventionEditorial }],
-  [3, { today: renderTodayPrecision, areas: renderAreasPrecision, area: renderAreaDetailPrecision, section: renderSectionPrecision, chore: renderChorePrecision, intervention: renderInterventionPrecision }],
+  [3, { today: renderTodayPrecision, areas: renderAreasPrecision, area: renderAreaDetailPrecision, section: renderSectionPrecision, chore: renderChorePrecision, intervention: renderInterventionPrecisionAction }],
   [4, { today: renderTodayZen, areas: renderAreasZen, area: renderAreaDetailZen, section: renderSectionZen, chore: renderChoreZen, intervention: renderInterventionZen }],
   [5, { today: renderTodayPlayful, areas: renderAreasPlayful, area: renderAreaDetailPlayful, section: renderSectionPlayful, chore: renderChorePlayful, intervention: renderInterventionPlayful }],
   [6, { today: renderTodayTactile, areas: renderAreasTactile, area: renderAreaDetailTactile, section: renderSectionTactile, chore: renderChoreTactile, intervention: renderInterventionTactile }],
@@ -357,8 +358,8 @@ function runAction(action, target) {
       render();
     },
     'demo-add-area': () => showToast('Area creation remains outside this interactive slice.'),
-    'start-demo': () => showToast('Intervention-to-action is currently implemented in Look #4.'),
-    'different-demo': () => showToast('Alternative suggestion behavior is currently implemented in Look #4.'),
+    'start-demo': () => showToast('Intervention-to-action is currently implemented in Looks #3 and #4.'),
+    'different-demo': () => showToast('Alternative suggestion behavior is currently implemented in Looks #3 and #4.'),
     'not-now-demo': () => showToast('Intervention dismissed without guilt.')
   };
   actions[action]?.();
@@ -414,7 +415,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 4;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 3;
     render({ routeAction: 'push' });
     return;
   }

@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.10.5`  
+**Current version:** `0.10.6`  
 **Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
@@ -97,7 +97,7 @@ Each active Look has:
 
 Additional Look #8 boundary:
 
-- [x] Reduced-transparency and no-backdrop-filter solid fallbacks
+- [x] Reduced-transparency and no-backdrop-filter solid fallbacks for Routine Completion and Tasks
 - [~] Lower-end paint/compositing evidence pending
 
 ---
@@ -161,10 +161,10 @@ Additional Look #8 boundary:
 - [x] Forty-eight Routine Completion renderer exports required
 - [x] Shared completion, recurrence, Undo, and state hooks checked
 - [x] Shared Task hierarchy state and action contract checked
-- [x] Look #2 through Look #7 task renderers and stylesheets required
+- [x] Look #2 through Look #8 task renderers and stylesheets required
 - [x] Add, edit, main-task, subtask, release, progress, reorder, indent, completion, and hide/show hooks checked
 - [x] Responsive, Large Text, Forced Colors, and Reduced Motion hooks encoded
-- [x] Ambient Glass solid-fallback and Reduced Transparency hooks encoded
+- [x] Ambient Glass solid-fallback and Reduced Transparency hooks encoded for Routine Completion and Tasks
 - [ ] Exact complete-checkout validator execution
 - [ ] Exact complete-checkout interactive browser run
 - [ ] Physical Android viewport checks
@@ -200,10 +200,10 @@ See `PURE-LOOK-IMPLEMENTATION-ORDER.md` for rationale and acceptance gates.
 4. [x] Look #7 — Bold Utility
 5. [x] Look #6 — Tactile Household
 6. [x] Look #2 — Warm Editorial
-7. [ ] Look #8 — Ambient Glass — **next**
-8. [ ] Look #9 — Retro Digital
+7. [x] Look #8 — Ambient Glass
+8. [ ] Look #9 — Retro Digital — **next**
 
-Shared behaviors currently implemented in 6 of 8 Looks:
+Shared behaviors currently implemented in 7 of 8 Looks:
 
 - [~] Add and inline edit
 - [~] Complete and reopen
@@ -233,13 +233,14 @@ Shared behaviors currently implemented in 6 of 8 Looks:
 - [x] `0.10.3` — Look #7 Bold Utility Task hierarchy loop
 - [x] `0.10.4` — Look #6 Tactile Household Task hierarchy loop
 - [x] `0.10.5` — Look #2 Warm Editorial Task hierarchy loop
+- [x] `0.10.6` — Look #8 Ambient Glass Task hierarchy loop
 
 ---
 
 # 9. Current next actions
 
-- [ ] Implement the shared Task hierarchy contract in Look #8 — Ambient Glass
-- [ ] Preserve existing task state while switching among Looks #2, #3, #4, #5, #6, #7, and #8
-- [ ] Preserve solid fallbacks and keep transparency decorative
-- [ ] Extend validator coverage through Look #8 Task hierarchy
-- [ ] Keep exact-checkout, Android, screen-reader, and lower-end paint evidence pending until actually performed
+- [ ] Implement the shared Task hierarchy contract in Look #9 — Retro Digital
+- [ ] Preserve existing task state while switching among all eight active Looks
+- [ ] Keep system language clear without error or failure framing
+- [ ] Extend validator coverage through Look #9 Task hierarchy
+- [ ] Keep exact-checkout, Android, screen-reader, single-version regression, and lower-end paint evidence pending until actually performed

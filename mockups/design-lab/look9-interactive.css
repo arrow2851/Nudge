@@ -263,7 +263,8 @@ html[data-look="9"] .rd-section small {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  html[data-look="9"] .rd-tag {
+  html[data-look="9"] .rd-routine-open .rd-tag {
+    grid-column: auto;
     justify-self: start;
   }
 }

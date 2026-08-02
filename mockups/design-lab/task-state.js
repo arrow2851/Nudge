@@ -28,6 +28,18 @@ const NORMAL_TASKS = [
   task('expense-report', 'Submit expense report', { completed: true, time: '5m' })
 ];
 
+function groupCompleted(items) {
+  return [
+    ...items.filter(item => !item.completed),
+    ...items.filter(item => item.completed)
+  ];
+}
+
+function groupState(state) {
+  state.tasks.forEach(item => { item.children = groupCompleted(item.children); });
+  state.tasks = groupCompleted(state.tasks);
+}
+
 function seedTasks(scenario) {
   if (scenario === 'new') return [];
   if (scenario === 'clear') {
@@ -91,13 +103,15 @@ function seedTasks(scenario) {
 }
 
 function initialState(scenario) {
-  return {
+  const state = {
     scenario,
     nextId: 100,
     hideCompleted: false,
     openSettingsId: null,
     tasks: seedTasks(scenario)
   };
+  groupState(state);
+  return state;
 }
 
 function readStore() {
@@ -123,6 +137,7 @@ function normalize(state, scenario) {
   safe.hideCompleted = Boolean(safe.hideCompleted);
   safe.openSettingsId = safe.openSettingsId || null;
   safe.tasks = safe.tasks.map(item => task(item.id, item.title ?? '', item));
+  groupState(safe);
   return safe;
 }
 
@@ -140,6 +155,7 @@ function mutate(scenario, change) {
   const store = readStore();
   const state = normalize(store[scenario], scenario);
   const result = change(state);
+  groupState(state);
   store[scenario] = state;
   writeStore(store);
   return { state: clone(state), result };
@@ -165,14 +181,14 @@ function syncParent(parent) {
   parent.completed = parent.children.every(child => child.completed);
 }
 
-function newTask(state, parentId = null) {
+function newTask(state) {
   const id = `task-${state.scenario}-${state.nextId++}`;
-  return task(id, '', { time: '', main: false, parentId });
+  return task(id, '', { time: '', main: false });
 }
 
 export function addTask(scenario, { parentId = null, position = 'bottom' } = {}) {
   return mutate(scenario, state => {
-    const created = newTask(state, parentId);
+    const created = newTask(state);
     if (parentId) {
       const parent = state.tasks.find(item => item.id === parentId);
       if (!parent) return null;
@@ -182,7 +198,9 @@ export function addTask(scenario, { parentId = null, position = 'bottom' } = {})
     } else if (position === 'top') {
       state.tasks.unshift(created);
     } else {
-      state.tasks.push(created);
+      const firstCompleted = state.tasks.findIndex(item => item.completed);
+      if (firstCompleted < 0) state.tasks.push(created);
+      else state.tasks.splice(firstCompleted, 0, created);
     }
     state.openSettingsId = null;
     return created.id;
@@ -241,11 +259,16 @@ export function moveTask(scenario, id, direction) {
   return mutate(scenario, state => {
     const parent = parentFor(state, id);
     const list = parent ? parent.children : state.tasks;
-    const index = list.findIndex(item => item.id === id);
-    const nextIndex = index + direction;
-    if (index < 0 || nextIndex < 0 || nextIndex >= list.length) return false;
-    const [item] = list.splice(index, 1);
-    list.splice(nextIndex, 0, item);
+    const item = list.find(candidate => candidate.id === id);
+    if (!item) return false;
+    const peers = list.filter(candidate => candidate.completed === item.completed);
+    const peerIndex = peers.findIndex(candidate => candidate.id === id);
+    const targetPeer = peers[peerIndex + direction];
+    if (!targetPeer) return false;
+    const itemIndex = list.findIndex(candidate => candidate.id === id);
+    const targetIndex = list.findIndex(candidate => candidate.id === targetPeer.id);
+    list[itemIndex] = targetPeer;
+    list[targetIndex] = item;
     return true;
   });
 }
@@ -257,7 +280,7 @@ export function moveTaskBefore(scenario, sourceId, targetId, sourceParentId = ''
     const list = parent ? parent.children : state.tasks;
     const sourceIndex = list.findIndex(item => item.id === sourceId);
     const targetIndex = list.findIndex(item => item.id === targetId);
-    if (sourceIndex < 0 || targetIndex < 0) return false;
+    if (sourceIndex < 0 || targetIndex < 0 || list[sourceIndex].completed !== list[targetIndex].completed) return false;
     const [item] = list.splice(sourceIndex, 1);
     const adjustedTarget = sourceIndex < targetIndex ? targetIndex - 1 : targetIndex;
     list.splice(adjustedTarget, 0, item);
@@ -272,6 +295,7 @@ export function indentTask(scenario, id) {
     const item = state.tasks[index];
     if (item.children.length) return false;
     const parent = state.tasks[index - 1];
+    if (parent.completed !== item.completed) return false;
     state.tasks.splice(index, 1);
     parent.main = true;
     item.main = false;

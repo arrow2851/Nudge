@@ -1,5 +1,26 @@
 # Design Lab Changelog
 
+## 0.11.0 — 2026-08-02
+
+### Look #4 — Zen Focus Intervention-to-action loop
+
+- Added the shared scenario-isolated `intervention-state.js` engine
+- Added deterministic suggestion cycling beginning with the scenario fixture
+- Added routine-derived alternatives and setup-safe alternatives for scenarios without Areas
+- Added Prompt, Active, Completed, and Dismissed phases
+- Replaced Look #4 demo buttons with Start, Different suggestion, Not Now, Complete, Reopen, Undo Start, Resume, and Return-to-Today actions
+- Preserved raw scenario data as the source for stable alternative cycling
+- Kept intervention state isolated from Routine Completion and Task Hierarchy state
+- Added guilt-free dismissal that explicitly confirms nothing changed
+- Added `look4-intervention.css` with short-screen, narrow-screen, Large Text, Forced Colors, focus, and Reduced Motion handling
+- Extended Reset Review State to clear intervention state
+- Extended validation to the shared phase engine, deterministic alternatives, all reversible actions, reset integration, stylesheet order, and no-guilt language
+- Added `LOOK-4-INTERVENTION-ACTION.md` and `CHECKLIST-PROGRESS-0.11.0.md`
+- Set Look #3 — Precision Minimal as the next Intervention-to-action implementation
+- Kept real app detection, app blocking, timers, notifications, accounts, backend integration, and production storage outside the Design Lab boundary
+- Kept exact-checkout browser, physical Android, screen-reader, single-version regression, and Ambient Glass paint evidence pending
+- Kept Look #1 and `main` unchanged
+
 ## 0.10.7 — 2026-08-02
 
 ### Look #9 — Retro Digital Task hierarchy loop

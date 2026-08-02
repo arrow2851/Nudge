@@ -100,7 +100,7 @@ function dismissedView(item) {
       <header class="bu-intervention-heading">
         <span>NUDGE / SWITCH DISMISSED</span>
         <h1>CURRENT APP<br>CONTINUES.</h1>
-        <p>No action was started. No Task, reminder, follow-up, penalty, warning, or missed-opportunity state was created.</p>
+        <p>No action was started. No Task, reminder, follow-up, penalty, or missed-opportunity state was created.</p>
       </header>
       <article class="bu-intervention-card dismissed" role="status">
         <div class="bu-intervention-band"><span>NO CHANGE</span><b>VALID CHOICE</b></div>
@@ -108,7 +108,7 @@ function dismissedView(item) {
         <p>Reopen the suggestion only when it would be useful.</p>
       </article>
       ${factGrid(item, 'dismissed')}
-      <p class="bu-intervention-boundary">DISMISSAL IS A COMPLETE RESPONSE, NOT A FAILED ACTION.</p>
+      <p class="bu-intervention-boundary">DISMISSAL IS A COMPLETE RESPONSE. NOTHING IS OWED.</p>
     </div>
     <div class="bu-intervention-actions">
       <button class="bu-secondary" data-action="resume-intervention">SHOW SUGGESTION AGAIN</button>

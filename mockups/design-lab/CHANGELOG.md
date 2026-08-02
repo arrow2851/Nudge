@@ -1,5 +1,27 @@
 # Design Lab Changelog
 
+## 0.10.5 — 2026-08-02
+
+### Look #2 — Warm Editorial Task hierarchy loop
+
+- Reused the shared scenario-isolated Task hierarchy state engine
+- Added `renderers/look2-tasks.js` and `look2-tasks.css`
+- Added a calm practical task page with Active, Main Tasks, and Completed summary counts
+- Preserved top and bottom empty-task creation with immediate inline editing focus
+- Preserved separate drag, completion, title, optional time, options, and subtask controls
+- Added main-task progress count, percentage, and quiet progress track
+- Preserved one-level hierarchy, completion propagation, and subtask release
+- Preserved pointer drag plus Move Up, Move Down, Indent, and Unindent controls
+- Preserved completed-item grouping and Hide/Show Completed
+- Preserved shared task state across Looks #2 through #7
+- Kept editorial context practical without reflection or diary requirements
+- Extended validation to six task Looks and six task stylesheets
+- Added `LOOK-2-TASK-HIERARCHY.md` and `CHECKLIST-PROGRESS-0.10.5.md`
+- Set Look #8 — Ambient Glass as the next Task hierarchy implementation
+- Kept production persistence, notifications, collaboration, nested subtasks, deletion, and production gestures outside the Design Lab boundary
+- Kept exact-checkout browser, Android gesture, and screen-reader evidence pending
+- Kept Look #1 and `main` unchanged
+
 ## 0.10.4 — 2026-08-02
 
 ### Look #6 — Tactile Household Task hierarchy loop

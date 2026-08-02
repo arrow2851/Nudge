@@ -1,0 +1,44 @@
+{
+  "version": "0.8.4",
+  "date": "2026-08-01",
+  "branch": "feature/design-lab",
+  "scope": {
+    "freshBrowserEvidenceLooks": [5, 7, 8, 9],
+    "archivedEvidenceLooks": [1, 2, 3, 4, 6],
+    "screens": ["areas", "area", "intervention"],
+    "scenarios": ["normal", "backlog", "new", "clear", "large", "long", "large-text"],
+    "viewports": [
+      {"width": 360, "height": 800},
+      {"width": 390, "height": 844},
+      {"width": 412, "height": 915},
+      {"width": 390, "height": 700},
+      {"width": 844, "height": 390},
+      {"width": 1440, "height": 900}
+    ]
+  },
+  "results": {
+    "directRoutes": {"passed": 84, "total": 84},
+    "canonicalViewportChecks": {"passed": 72, "total": 72},
+    "stressScenarioChecks": {"passed": 28, "total": 28},
+    "longAndLargeTextReachability": {"passed": 8, "total": 8},
+    "forcedColorsAndReducedMotion": {"passed": 4, "total": 4},
+    "keyboardFocusVisibility": {"passed": 4, "total": 4},
+    "horizontalOverflowFailures": 0,
+    "unnamedVisibleButtonFailures": 0,
+    "minimumVisiblePreviewControlWidthPx": 48,
+    "minimumVisiblePreviewControlHeightPx": 48
+  },
+  "contactSheets": [
+    "Areas — All Clear",
+    "Area detail — Long Content",
+    "Intervention — Large Text"
+  ],
+  "reconstructionBoundary": "The fresh Look 5, 7, 8, and 9 run used retained committed renderer and base-style files plus a reconstructed shared scenario and quality-delta harness. It was not an execution of validate-design-lab.mjs against an exact complete checkout.",
+  "pending": [
+    "Exact complete-checkout validator execution",
+    "Physical Android-device checks",
+    "Actual screen-reader smoke testing",
+    "Ambient Glass lower-end hardware paint and compositing measurements",
+    "Single-version browser rerun of all Looks"
+  ]
+}

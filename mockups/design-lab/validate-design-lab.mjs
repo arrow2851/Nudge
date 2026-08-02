@@ -8,7 +8,7 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
 const INTERACTIVE_LOOKS = [...LOOKS];
 const TASK_LOOKS = [...LOOKS];
-const INTERVENTION_LOOKS = [2, 3, 4, 5, 6, 7];
+const INTERVENTION_LOOKS = [2, 3, 4, 5, 6, 7, 8];
 const SCENARIOS = ['normal', 'backlog', 'new', 'clear', 'large', 'long', 'large-text'];
 const GALLERY_VIEWS = ['areas', 'area', 'intervention'];
 const ROUTINE_VIEWS = ['today', 'areas', 'area', 'section', 'chore', 'intervention'];
@@ -46,7 +46,8 @@ const interventionRenderers = new Map([
   [4, ['renderers/look4.js', 'renderInterventionZen', 'look4-intervention.css', ['.zen-action-state', 'max-height: 720px']]],
   [5, ['renderers/look5-intervention.js', 'renderInterventionPlayfulAction', 'look5-intervention.css', ['.pl-intervention-choice', '.pl-intervention-context', 'max-height: 720px']]],
   [6, ['renderers/look6-intervention.js', 'renderInterventionTactileAction', 'look6-intervention.css', ['.th-intervention-card', '.th-intervention-facts', 'max-height: 720px']]],
-  [7, ['renderers/look7-intervention.js', 'renderInterventionBoldAction', 'look7-intervention.css', ['.bu-intervention-card', '.bu-intervention-facts', 'max-height: 720px']]]
+  [7, ['renderers/look7-intervention.js', 'renderInterventionBoldAction', 'look7-intervention.css', ['.bu-intervention-card', '.bu-intervention-facts', 'max-height: 720px']]],
+  [8, ['renderers/look8-intervention.js', 'renderInterventionAmbientAction', 'look8-intervention.css', ['.ag-intervention-card', '.ag-intervention-facts', 'max-height: 720px', 'prefers-reduced-transparency: reduce', '@supports not']]]
 ]);
 
 const styles = [
@@ -56,7 +57,7 @@ const styles = [
   'look6.css', 'look6-quality.css', 'look6-interactive.css', 'look6-tasks.css', 'look6-intervention.css',
   'expanded-looks.css', 'look5-quality.css', 'look5-interactive.css', 'look5-tasks.css', 'look5-intervention.css',
   'look7-quality.css', 'look7-interactive.css', 'look7-tasks.css', 'look7-intervention.css',
-  'look8-quality.css', 'look8-interactive.css', 'look8-tasks.css',
+  'look8-quality.css', 'look8-interactive.css', 'look8-tasks.css', 'look8-intervention.css',
   'look9-quality.css', 'look9-interactive.css', 'look9-tasks.css', 'review.css'
 ];
 
@@ -115,7 +116,7 @@ function fixturesAndRoutes(shared) {
   check(JSON.stringify(Object.keys(shared.SCENARIOS)) === JSON.stringify(SCENARIOS), 'Scenario registry differs from the seven shared scenarios.');
   check(JSON.stringify(shared.LOOKS.map(item => item.id)) === JSON.stringify(LOOKS), 'Look registry differs from Looks #2–#9.');
   [...ROUTINE_VIEWS, 'tasks'].forEach(view => check(shared.ALLOWED_VIEWS.has(view), `Interactive view is not allowed: ${view}`));
-  check(shared.defaultState().look === 2 && shared.defaultState().view === 'intervention', 'Default review route is not Look #2 Intervention.');
+  check(shared.defaultState().look === 8 && shared.defaultState().view === 'intervention', 'Default review route is not Look #8 Intervention.');
 
   for (const [id, scenario] of Object.entries(shared.SCENARIOS)) {
     check(Array.isArray(scenario.areas), `${id}: areas must be an array.`);
@@ -193,8 +194,8 @@ function interventionContract() {
   const app = read('app.js');
   const controls = read('controls.js');
   const interaction = read('intervention-state.js');
-  check(app.includes('new Set([2, 3, 4, 5, 6, 7])'), 'app.js does not register Looks #2 through #7 for Intervention-to-action.');
-  check(controls.includes('new Set([2, 3, 4, 5, 6, 7])'), 'controls.js does not register Looks #2 through #7 for Intervention guidance.');
+  check(app.includes('new Set([2, 3, 4, 5, 6, 7, 8])'), 'app.js does not register Looks #2 through #8 for Intervention-to-action.');
+  check(controls.includes('new Set([2, 3, 4, 5, 6, 7, 8])'), 'controls.js does not register Looks #2 through #8 for Intervention guidance.');
   ['nudge-design-lab-intervention-action-v1', 'interventionSuggestions', 'applyInterventionState', 'showNextInterventionSuggestion', 'startInterventionAction', 'completeInterventionAction', 'reopenInterventionAction', 'undoInterventionStart', 'dismissIntervention', 'resumeIntervention', 'clearInterventionState', "'prompt'", "'active'", "'completed'", "'dismissed'"].forEach(token => check(interaction.includes(token), `intervention-state.js is missing ${token}.`));
   ['applyInterventionState', 'clearInterventionState', 'start-intervention', 'next-intervention', 'dismiss-intervention', 'resume-intervention', 'complete-intervention', 'reopen-intervention', 'undo-intervention', 'return-today', 'currentSourceData'].forEach(token => check(app.includes(token), `app.js is missing Intervention-to-action hook ${token}.`));
 
@@ -217,7 +218,13 @@ function interventionContract() {
 
   const bold = read('renderers/look7-intervention.js').toUpperCase();
   ['ERROR', 'FAILURE', 'FAULT', 'ALARM', 'WARNING', 'NONCOMPLIANCE'].forEach(token => check(!bold.includes(token), `Bold Utility renderer contains prohibited pressure token: ${token}.`));
-  passes.push('Checked shared Intervention phases, deterministic alternatives, all reversible actions, six pure-Look renderers, language boundaries, and accessibility contracts.');
+
+  const ambient = read('renderers/look8-intervention.js').toUpperCase();
+  ['EITHER CHOICE IS COMPLETE', 'TRANSPARENCY IS DECORATIVE', 'NO ACTION WAS STARTED', 'NOTHING IS OWED'].forEach(token => check(ambient.includes(token), `Ambient Glass fallback-safe language is missing ${token}.`));
+  const ambientCss = read('look8-intervention.css');
+  ['prefers-reduced-transparency: reduce', '@supports not', 'background: #f8faff', 'backdrop-filter: none'].forEach(token => check(ambientCss.includes(token), `Ambient Glass intervention fallback is missing ${token}.`));
+
+  passes.push('Checked shared Intervention phases, deterministic alternatives, all reversible actions, seven pure-Look renderers, language boundaries, transparency fallbacks, and accessibility contracts.');
 }
 
 function versionsAndHtml(shared) {
@@ -282,7 +289,7 @@ function main() {
   passes.forEach(item => console.log(`PASS  ${item}`));
   failures.forEach(item => console.error(`FAIL  ${item}`));
   if (failures.length) process.exitCode = 1;
-  else console.log('\nAll gallery, Routine Completion, Task hierarchy, and Looks #2/#3/#4/#5/#6/#7 Intervention-to-action checks passed.');
+  else console.log('\nAll gallery, Routine Completion, Task hierarchy, and Looks #2/#3/#4/#5/#6/#7/#8 Intervention-to-action checks passed.');
 }
 
 main();

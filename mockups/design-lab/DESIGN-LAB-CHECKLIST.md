@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.8.5`  
+**Current version:** `0.8.6`  
 **Purpose:** Maintain a complete gallery of genuinely different visual systems for the same Nudge product, then test pure directions and controlled synthesis without forcing premature elimination.
 
 This file is the source of truth for scope, progress, review gates, and decisions.
@@ -32,6 +32,7 @@ A hard stop is required before:
 - Merging into `main`
 - Promoting dark variants into separate formal directions
 - Allowing unrestricted style mixing within a screen
+- Beginning interactive vertical-slice implementation before the prepared strategy is approved
 
 Required one-line response:
 
@@ -230,21 +231,44 @@ The user has approved Looks #5, #7, #8, and #9 and removed the former mandatory 
 
 The former requirement to select two or three finalists before interactive work is removed.
 
-Future interactive work may proceed as:
+## Planning completed
 
-- [ ] A pure-Look vertical slice
-- [ ] Multiple smaller feature-specific Look experiments
-- [ ] A controlled synthesis vertical slice
+- [x] Prepare the interactive-expansion decision record
+- [x] Define pure-Look, feature-specific, shared-core multi-Look, and fallback family strategies
+- [x] Define candidate vertical slices
+- [x] Recommend the Routine completion loop first
+- [x] Recommend one shared semantic behavior core with eight Design Lab visual adapters
+- [x] Recommend keeping Look switching inside the Design Lab only
+- [x] Recommend isolated deterministic prototype state
+- [x] Define semantic and Look-owned presentation boundaries
+- [x] Define cross-Look scripted acceptance criteria
+- [x] Define explicit first-slice exclusions
 
-Each interactive slice must preserve the same product behavior and support:
+## Decision required
 
-- [ ] Today → Areas → Area → Section → Chore detail
-- [ ] Add and complete chores
-- [ ] Light, Moderate, and Deep recurrence
-- [ ] Task add, edit, complete, reopen, reorder, and indent
-- [ ] Reusable Lists and suggestions
-- [ ] Intervention Start, alternative, and Not Now actions
-- [ ] Empty, error, and recurring states
+- [!] Approve the recommended four-part package or select an explicit alternative
+
+Recommended package:
+
+1. Shared behavior core with eight Design Lab visual adapters.
+2. Routine completion loop first.
+3. Look switching remains a Design Lab review control only.
+4. Prototype state remains isolated and deterministic.
+
+## Vertical-slice implementation remains blocked
+
+- [ ] Today / Needs Attention → Areas → Area → Section → Chore detail
+- [ ] Complete, advance recurrence, undo, and reopen
+- [ ] Preserve semantic state while switching Looks
+- [ ] Add Normal Day, Heavy Backlog, All Clear, New Area, Long Content, and Large Text states
+- [ ] Add browser-history and Reset Review State behavior
+- [ ] Run the scripted path across all eight active Looks
+
+## Later slices
+
+- [ ] Task add, edit, complete, reopen, reorder, main-task, and subtask flow
+- [ ] Intervention Start, alternative, Not Now, focused completion, and return flow
+- [ ] Reusable Lists, suggestions, check, reset, and reopen flow
 
 ---
 
@@ -262,13 +286,13 @@ Each interactive slice must preserve the same product behavior and support:
 - [x] `0.8.3` — Look #8 Ambient Glass quality pass
 - [x] `0.8.4` — Look #9 Retro Digital quality pass and completion of all per-Look code-level quality gates
 - [x] `0.8.5` — Full-gallery browser evidence record, contact sheets, and repository status update
+- [x] `0.8.6` — Interactive-expansion decision record and vertical-slice candidates
 
 ---
 
 # 9. Current next actions
 
-- [ ] Prepare the interactive-expansion decision record
-- [ ] Define candidate pure-Look, feature-specific, and controlled-synthesis vertical slices without implementing them
+- [!] Review and approve the interactive-expansion strategy
 - [ ] Execute updated validation in an exact complete checkout when available
 - [ ] Perform physical Android and actual screen-reader smoke tests when available
-- [ ] Decide intentionally which vertical-slice strategy to implement
+- [ ] Begin the approved vertical slice only after the hard stop is resolved

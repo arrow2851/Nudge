@@ -2,13 +2,14 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.11.0`  
+**Current version:** `0.11.1`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.11.0 Look #4 Intervention-to-action](CHECKLIST-PROGRESS-0.11.0.md)
+- [Latest checklist progress — 0.11.1 Look #3 Intervention-to-action](CHECKLIST-PROGRESS-0.11.1.md)
+- [Look #3 Intervention-to-action implementation](LOOK-3-INTERVENTION-ACTION.md)
 - [Look #4 Intervention-to-action implementation](LOOK-4-INTERVENTION-ACTION.md)
 - [All-Look Task hierarchy progress](CHECKLIST-PROGRESS-0.10.7.md)
 - [All-Look Routine Completion progress](CHECKLIST-PROGRESS-0.9.7.md)
@@ -26,13 +27,9 @@ The Design Lab compares alternate visual systems without changing the approved L
 - Design Lab routine, task, and intervention state are isolated from Look #1 and production storage.
 - Nothing should merge into `main` until migration boundaries are intentionally reviewed.
 
-## Complete visual gallery
+## Complete feature loops
 
-Look #1 remains the protected Soft Practical Utility baseline. Active gallery directions are Looks #2 through #9. Every direction remains preserved; implementation order is a learning sequence, not a ranking or elimination list.
-
-## Routine Completion — 8 of 8 complete
-
-Every active Look implements:
+### Routine Completion — 8 of 8 complete
 
 ```text
 Today / Needs Attention
@@ -46,11 +43,7 @@ Today / Needs Attention
 → Undo or reopen
 ```
 
-The eight Looks share semantic routine-completion state. Switching Looks changes presentation without resetting the route or routine result.
-
-## Task hierarchy — 8 of 8 complete
-
-Versions `0.10.0` through `0.10.7` implement the approved simple checklist model in all active Looks:
+### Task hierarchy — 8 of 8 complete
 
 ```text
 Tasks
@@ -62,53 +55,54 @@ Tasks
 → Track progress
 → Reorder
 → Indent or unindent
-→ Release subtasks when main-task mode is removed
-→ Hide or show completed items
+→ Release subtasks
+→ Hide or show completed
 ```
 
-Shared rules include separate controls, one hierarchy level, completion propagation, subtask release, completed-item grouping, explicit movement alternatives, and one scenario-isolated state across all eight Looks.
+## Intervention-to-action — 2 of 8 Looks
 
-## Intervention-to-action — 1 of 8 Looks
-
-Version `0.11.0` establishes the shared Intervention-to-action contract in Look #4 — Zen Focus:
+Versions `0.11.0` and `0.11.1` implement the shared intervention contract in Looks #4 and #3:
 
 ```text
 Prompt
-→ Start suggestion
-→ Active action
+→ Start action
+→ Active
 → Complete
-→ Reopen
+→ Reopen or Undo start
 
 Prompt
-→ Different suggestion
-→ Deterministic next option
+→ Next option
+→ Deterministic alternative
 
 Prompt
-→ Not Now
-→ Quiet dismissed state
+→ Not now
+→ Dismissed
 → Show suggestion again
 ```
 
-Shared behavior now includes:
+Shared behavior includes:
 
-- A separate scenario-isolated intervention state namespace.
-- Deterministic alternatives derived from the scenario suggestion and available routines.
-- Setup-safe alternatives when no Areas exist.
+- Separate scenario-isolated intervention state.
 - Prompt, Active, Completed, and Dismissed phases.
-- Immediate completion, reopen, undo-start, dismissal, and resume actions.
+- Scenario-first suggestions with deterministic routine-based alternatives.
+- Setup-safe alternatives when no Areas exist.
+- Reversible Start, Complete, Reopen, Undo, Next, Dismiss, Resume, and Return-to-Today actions.
 - Reset Review State clears intervention state.
-- Starting an action does not silently modify Routine Completion or Task Hierarchy state.
-- No production app blocking, usage tracking, timers, notifications, accounts, or backend integration.
+- Routine Completion and Task hierarchy state remain unchanged.
+- No live usage tracking, app blocking, timers, notifications, accounts, or backend integration.
 
-### Look #4 treatment
+### Look-specific treatment
 
-Zen Focus presents one quiet decision at a time. Active, completed, and dismissed states use calm status cards. Dismissal explicitly confirms that nothing changed and no penalty was added.
+- **Look #4 — Zen Focus:** one quiet choice at a time, calm action cards, and low-pressure language.
+- **Look #3 — Precision Minimal:** explicit phase labels, source/elapsed/action metrics, compact facts, and direct controls without scoring or compliance judgments.
+
+Switching between Looks #3 and #4 changes presentation without resetting the intervention phase or selected suggestion.
 
 ## Intervention-to-action sequence
 
 1. Look #4 — Zen Focus — **implemented**
-2. Look #3 — Precision Minimal — **next**
-3. Look #5 — Playful Modular
+2. Look #3 — Precision Minimal — **implemented**
+3. Look #5 — Playful Modular — **next**
 4. Look #7 — Bold Utility
 5. Look #6 — Tactile Household
 6. Look #2 — Warm Editorial
@@ -122,11 +116,11 @@ Reusable Lists follows after Intervention-to-action is implemented across all Lo
 The static validator now covers:
 
 - Eight Routine Completion Looks and forty-eight routine renderer exports.
-- Eight Task hierarchy renderers and eight dedicated task stylesheets.
-- Shared Task hierarchy behavior and cross-Look state preservation.
-- The shared Intervention phase engine and deterministic alternatives.
-- Look #4 Start, Next, Dismiss, Resume, Complete, Reopen, Undo, and Return-to-Today actions.
-- Intervention reset integration and dedicated stylesheet order.
+- Eight Task hierarchy renderers and dedicated stylesheets.
+- Shared Intervention phase engine and deterministic alternatives.
+- Two pure-Look intervention renderers and dedicated style layers.
+- Start, Next, Dismiss, Resume, Complete, Reopen, Undo, and Return-to-Today actions.
+- Cross-Look intervention-state preservation.
 - Responsive, short-screen, Large Text, Forced Colors, and Reduced Motion contracts.
 - Ambient Glass transparency fallbacks and Retro Digital language checks.
 
@@ -152,16 +146,16 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
+?look=3&screen=intervention&scenario=normal
+?look=3&screen=intervention&scenario=backlog
+?look=3&screen=intervention&scenario=new
+?look=3&screen=intervention&scenario=long
+?look=3&screen=intervention&scenario=large-text
 ?look=4&screen=intervention&scenario=normal
-?look=4&screen=intervention&scenario=backlog
-?look=4&screen=intervention&scenario=new
-?look=4&screen=intervention&scenario=long
-?look=4&screen=intervention&scenario=large-text
-?look=9&screen=tasks&scenario=normal
 ```
 
 Append `capture=labelled` for an evidence frame or `capture=phone` for a clean phone frame.
 
 ## Next work
 
-Implement the same Intervention-to-action behavior contract in Look #3 — Precision Minimal.
+Implement the same Intervention-to-action behavior contract in Look #5 — Playful Modular.

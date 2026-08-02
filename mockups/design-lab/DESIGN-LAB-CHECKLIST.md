@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.11.2`  
+**Current version:** `0.11.3`  
 **Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
@@ -111,9 +111,10 @@ A hard stop is required before changing the agreed feature scope, scenarios, rou
 - [x] Forty-eight Routine Completion renderer exports required
 - [x] Eight Task hierarchy renderers and stylesheets required
 - [x] Shared Intervention phase and deterministic-suggestion contract checked
-- [x] Looks #3, #4, and #5 intervention renderer and stylesheet contracts checked
+- [x] Looks #3, #4, #5, and #7 intervention renderer and stylesheet contracts checked
 - [x] Start, Next, Dismiss, Resume, Complete, Reopen, Undo, Return, and Reset hooks checked
 - [x] Playful Modular optional-choice and non-scoring language checked
+- [x] Bold Utility optional-choice and prohibited pressure-language checks encoded
 - [x] Responsive, short-screen, Large Text, Forced Colors, Increased Contrast, and Reduced Motion hooks encoded
 - [x] Ambient Glass solid fallbacks and Retro Digital language checks encoded
 - [ ] Exact complete-checkout validator execution
@@ -143,13 +144,13 @@ A hard stop is required before changing the agreed feature scope, scenarios, rou
 1. [x] Look #4 — Zen Focus
 2. [x] Look #3 — Precision Minimal
 3. [x] Look #5 — Playful Modular
-4. [ ] Look #7 — Bold Utility — **next**
-5. [ ] Look #6 — Tactile Household
+4. [x] Look #7 — Bold Utility
+5. [ ] Look #6 — Tactile Household — **next**
 6. [ ] Look #2 — Warm Editorial
 7. [ ] Look #8 — Ambient Glass
 8. [ ] Look #9 — Retro Digital
 
-Shared behaviors currently implemented in 3 of 8 Looks:
+Shared behaviors currently implemented in 4 of 8 Looks:
 
 - [~] Optional prompt and deterministic suggestion
 - [~] Start to concrete action state
@@ -160,7 +161,7 @@ Shared behaviors currently implemented in 3 of 8 Looks:
 - [~] Scenario-isolated state
 - [~] Cross-Look state preservation
 - [~] Existing routine and task state preserved
-- [~] No scoring, compliance measurement, or negative dismissal state
+- [~] No scoring, compliance measurement, alarm framing, or negative dismissal state
 
 Reusable Lists begins only after Intervention-to-action is complete across all eight Looks.
 
@@ -174,14 +175,15 @@ Reusable Lists begins only after Intervention-to-action is complete across all e
 - [x] `0.11.0` — Look #4 Zen Focus Intervention-to-action
 - [x] `0.11.1` — Look #3 Precision Minimal Intervention-to-action
 - [x] `0.11.2` — Look #5 Playful Modular Intervention-to-action
+- [x] `0.11.3` — Look #7 Bold Utility Intervention-to-action
 
 ---
 
 # 10. Current next actions
 
-- [ ] Implement Intervention-to-action in Look #7 — Bold Utility
-- [ ] Preserve shared intervention state across Looks #3, #4, #5, and #7
+- [ ] Implement Intervention-to-action in Look #6 — Tactile Household
+- [ ] Preserve shared intervention state across Looks #3, #4, #5, #7, and #6
 - [ ] Preserve Routine Completion and Task hierarchy state
 - [ ] Keep suggestions optional, reversible, and non-guilt-based
-- [ ] Extend validator coverage through Look #7
+- [ ] Extend validator coverage through Look #6
 - [ ] Keep exact-checkout, Android, screen-reader, single-version regression, and Ambient Glass paint evidence pending until actually performed

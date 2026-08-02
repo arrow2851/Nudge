@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.10.0`  
+**Current version:** `0.10.1`  
 **Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
@@ -142,6 +142,7 @@ Additional Look #8 boundary:
 - [x] Completed items grouped at the bottom
 - [x] Hide Completed and Show Completed
 - [x] Reset clears task state
+- [x] Task state persists while switching between implemented task Looks
 - [d] Production mobile swipe implementation
 - [d] Nested subtasks beyond one level
 - [d] Production persistence, sync, collaboration, and notifications
@@ -159,7 +160,8 @@ Additional Look #8 boundary:
 - [x] Interactive stylesheets required for Looks #2 through #9
 - [x] Forty-eight Routine Completion renderer exports required
 - [x] Shared completion, recurrence, Undo, and state hooks checked
-- [x] Look #4 Task hierarchy route, state, renderer, and stylesheet required
+- [x] Shared Task hierarchy state and action contract checked
+- [x] Look #3 and Look #4 task renderers and stylesheets required
 - [x] Add, edit, main-task, subtask, release, progress, reorder, indent, completion, and hide/show hooks checked
 - [x] Responsive, Large Text, Forced Colors, and Reduced Motion hooks encoded
 - [x] Ambient Glass solid-fallback and Reduced Transparency hooks encoded
@@ -193,15 +195,15 @@ See `PURE-LOOK-IMPLEMENTATION-ORDER.md` for rationale and acceptance gates.
 ## Task hierarchy loop progress
 
 1. [x] Look #4 — Zen Focus
-2. [ ] Look #3 — Precision Minimal — **next**
-3. [ ] Look #5 — Playful Modular
+2. [x] Look #3 — Precision Minimal
+3. [ ] Look #5 — Playful Modular — **next**
 4. [ ] Look #7 — Bold Utility
 5. [ ] Look #6 — Tactile Household
 6. [ ] Look #2 — Warm Editorial
 7. [ ] Look #8 — Ambient Glass
 8. [ ] Look #9 — Retro Digital
 
-Shared behaviors currently implemented in 1 of 8 Looks:
+Shared behaviors currently implemented in 2 of 8 Looks:
 
 - [~] Add and inline edit
 - [~] Complete and reopen
@@ -211,6 +213,7 @@ Shared behaviors currently implemented in 1 of 8 Looks:
 - [~] Indent and unindent
 - [~] Subtask release when main-task mode is removed
 - [~] Completed-item grouping and hide/show
+- [~] Cross-Look task-state preservation
 
 ## Later feature order
 
@@ -225,13 +228,14 @@ Shared behaviors currently implemented in 1 of 8 Looks:
 - [x] `0.1.0–0.8.7` — Gallery foundation, all Looks, quality passes, evidence, and delegated pure-Look sequence
 - [x] `0.9.0–0.9.7` — Routine Completion Loop implemented across all eight active Looks
 - [x] `0.10.0` — Look #4 Zen Focus Task hierarchy loop
+- [x] `0.10.1` — Look #3 Precision Minimal Task hierarchy loop
 
 ---
 
 # 9. Current next actions
 
-- [ ] Implement the shared Task hierarchy contract in Look #3 — Precision Minimal
-- [ ] Preserve the existing task state while switching between Looks #4 and #3
+- [ ] Implement the shared Task hierarchy contract in Look #5 — Playful Modular
+- [ ] Preserve existing task state while switching among Looks #3, #4, and #5
 - [ ] Keep the simple checklist anatomy and behavior equivalent
-- [ ] Extend validator coverage through Look #3 Task hierarchy
+- [ ] Extend validator coverage through Look #5 Task hierarchy
 - [ ] Keep exact-checkout, Android, and screen-reader evidence pending until actually performed

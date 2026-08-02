@@ -4,7 +4,7 @@ import { renderReviewControls } from './controls.js';
 import { clearStoredState, commitState, defaultState, readStateFromLocation } from './state.js';
 import { applyRoutineState, clearInteractiveState, completeRoutine, findRoutine, reopenRoutine } from './interactive-state.js';
 import { renderAreaDetail, renderAreasEditorial, renderInterventionEditorial } from './renderers/look2.js';
-import { renderAreaDetailPrecision, renderAreasPrecision, renderInterventionPrecision } from './renderers/look3.js';
+import { renderAreaDetailPrecision, renderAreasPrecision, renderChorePrecision, renderInterventionPrecision, renderSectionPrecision, renderTodayPrecision } from './renderers/look3.js';
 import { renderAreaDetailZen, renderAreasZen, renderChoreZen, renderInterventionZen, renderSectionZen, renderTodayZen } from './renderers/look4.js';
 import { renderAreaDetailPlayful, renderAreasPlayful, renderInterventionPlayful } from './renderers/look5.js';
 import { renderAreaDetailTactile, renderAreasTactile, renderInterventionTactile } from './renderers/look6.js';
@@ -13,6 +13,8 @@ import { renderAreaDetailAmbient, renderAreasAmbient, renderInterventionAmbient 
 import { renderAreaDetailRetro, renderAreasRetro, renderInterventionRetro } from './renderers/look9.js';
 import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
+
+const INTERACTIVE_LOOKS = new Set([3, 4]);
 
 let state = readStateFromLocation();
 let currentData = null;
@@ -33,7 +35,10 @@ function renderLook(look, data) {
   }
 
   if (look.id === 3) {
+    if (state.view === 'today') return renderTodayPrecision(data);
     if (state.view === 'intervention') return renderInterventionPrecision(data);
+    if (state.view === 'chore') return renderChorePrecision(data, state.areaId, state.sectionId, state.choreId, renderUnsupported);
+    if (state.view === 'section') return renderSectionPrecision(data, state.areaId, state.sectionId, renderUnsupported);
     if (state.view === 'area') return renderAreaDetailPrecision(data, state.areaId, renderUnsupported);
     if (state.view === 'areas') return renderAreasPrecision(data);
   }
@@ -77,7 +82,7 @@ function renderLook(look, data) {
     if (state.view === 'areas') return renderAreasRetro(data);
   }
 
-  return renderUnsupported('This interactive screen is currently implemented only for Look #4 — Zen Focus.');
+  return renderUnsupported('This interactive screen is currently implemented in Looks #3 and #4.');
 }
 
 function syncBottomNavigation() {
@@ -92,7 +97,7 @@ function normalizeStateForData(data) {
   if (!['area', 'section', 'chore'].includes(state.view)) return;
   const area = data.areas.find(item => item.id === state.areaId);
   if (!area) {
-    state.view = state.look === 4 ? 'today' : 'areas';
+    state.view = INTERACTIVE_LOOKS.has(state.look) ? 'today' : 'areas';
     state.areaId = null;
     state.sectionId = null;
     state.choreId = null;
@@ -146,8 +151,8 @@ function resetReviewState() {
 }
 
 function setView(view) {
-  if (view === 'today' && state.look !== 4) {
-    showToast('Today interaction is currently available in Look #4 — Zen Focus.');
+  if (view === 'today' && !INTERACTIVE_LOOKS.has(state.look)) {
+    showToast('Today interaction is currently available in Looks #3 and #4.');
     return;
   }
   state.view = view;
@@ -222,7 +227,7 @@ document.addEventListener('click', event => {
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
     state.look = LOOKS.some(look => look.id === requested) ? requested : 4;
-    if (state.look !== 4 && ['today', 'section', 'chore'].includes(state.view)) {
+    if (!INTERACTIVE_LOOKS.has(state.look) && ['today', 'section', 'chore'].includes(state.view)) {
       state.view = 'areas';
       resetPath();
     }

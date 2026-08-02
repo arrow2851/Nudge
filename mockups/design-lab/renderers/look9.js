@@ -4,7 +4,8 @@ function areaRows(areas) {
   return areas.map((area, index) => {
     const status = statusFor(area);
     const next = nextRoutine(area);
-    return `<button class="rd-area ${status.className}" data-area-id="${esc(area.id)}" aria-label="${esc(`${area.name}. ${status.label}. ${next ? `Next routine: ${next.title}.` : ''}`)}"><span class="rd-slot">A${index + 1}</span><span class="rd-copy"><strong>${esc(area.name)}</strong><small>${area.routines.length} ROUTINES · ${area.sections || 0} SECTIONS</small><em>${next ? esc(next.title) : 'NO ROUTINE DATA'}</em></span><span class="rd-meter"><i style="--level:${Math.min(4, attentionCount(area))}" aria-hidden="true"></i><b>${esc(status.count)}</b><small>${esc(status.label)}</small></span></button>`;
+    const meterLevel = `${Math.min(4, attentionCount(area)) * 25}%`;
+    return `<button class="rd-area ${status.className}" data-area-id="${esc(area.id)}" aria-label="${esc(`${area.name}. ${status.label}. ${next ? `Next routine: ${next.title}.` : ''}`)}"><span class="rd-slot">A${index + 1}</span><span class="rd-copy"><strong>${esc(area.name)}</strong><small>${area.routines.length} ROUTINES · ${area.sections || 0} SECTIONS</small><em>${next ? esc(next.title) : 'NO ROUTINE DATA'}</em></span><span class="rd-meter"><i style="--level:${meterLevel}" aria-hidden="true"></i><b>${esc(status.count)}</b><small>${esc(status.label)}</small></span></button>`;
   }).join('');
 }
 

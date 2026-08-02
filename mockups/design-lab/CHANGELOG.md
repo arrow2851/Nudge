@@ -1,5 +1,29 @@
 # Design Lab Changelog
 
+## 0.10.0 — 2026-08-02
+
+### Look #4 — Zen Focus Task hierarchy loop
+
+- Added the Tasks route and made Look #4 Tasks the active review entry
+- Added a separate scenario-isolated `task-state.js` store
+- Added top and bottom empty-task creation with immediate inline editing focus
+- Added the agreed row anatomy: drag handle, completion control, editable title, optional time shorthand, settings disclosure, and separate subtask plus
+- Added one-level main-task and subtask relationships
+- Added subtask progress counts and progress bar
+- Added completion propagation between main tasks and subtasks
+- Added subtask release when main-task mode is turned off
+- Added native pointer drag reorder hooks
+- Added explicit Move Up, Move Down, Indent, and Unindent controls
+- Added completed-item bottom grouping and Hide/Show Completed
+- Added Normal, Backlog, New User, All Clear, Large Household, Long Content, and Large Text task fixtures
+- Added `renderers/look4-tasks.js` and `look4-tasks.css`
+- Extended validation for task state, Tasks routing, all hierarchy actions, responsive behavior, Forced Colors, and Reduced Motion
+- Added `LOOK-4-TASK-HIERARCHY.md` and `CHECKLIST-PROGRESS-0.10.0.md`
+- Set Look #3 — Precision Minimal as the next Task hierarchy implementation
+- Kept production persistence, notifications, collaboration, nested subtasks, and mobile gesture implementation outside the Design Lab boundary
+- Kept exact-checkout browser, Android gesture, and screen-reader evidence pending
+- Kept Look #1 and `main` unchanged
+
 ## 0.9.7 — 2026-08-01
 
 ### Look #9 — Retro Digital Routine Completion Loop

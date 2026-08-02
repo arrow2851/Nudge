@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
 const INTERACTIVE_LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
-const TASK_LOOKS = [2, 3, 4, 5, 6, 7, 8];
+const TASK_LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
 const SCENARIOS = ['normal', 'backlog', 'new', 'clear', 'large', 'long', 'large-text'];
 const GALLERY_VIEWS = ['areas', 'area', 'intervention'];
 const ROUTINE_VIEWS = ['today', 'areas', 'area', 'section', 'chore', 'intervention'];
@@ -35,7 +35,8 @@ const taskRenderers = new Map([
   [5, ['renderers/look5-tasks.js', 'renderTasksPlayful', 'look5-tasks.css', ['.pl-task-row', '.pl-task-settings', '.pl-task-progress']]],
   [6, ['renderers/look6-tasks.js', 'renderTasksTactile', 'look6-tasks.css', ['.th-task-row', '.th-task-settings', '.th-task-progress']]],
   [7, ['renderers/look7-tasks.js', 'renderTasksBold', 'look7-tasks.css', ['.bu-task-row', '.bu-task-settings', '.bu-task-progress']]],
-  [8, ['renderers/look8-tasks.js', 'renderTasksAmbient', 'look8-tasks.css', ['.ag-task-row', '.ag-task-settings', '.ag-task-progress', 'prefers-reduced-transparency: reduce', '@supports not']]]
+  [8, ['renderers/look8-tasks.js', 'renderTasksAmbient', 'look8-tasks.css', ['.ag-task-row', '.ag-task-settings', '.ag-task-progress', 'prefers-reduced-transparency: reduce', '@supports not']]],
+  [9, ['renderers/look9-tasks.js', 'renderTasksRetro', 'look9-tasks.css', ['.rd-task-row', '.rd-task-settings', '.rd-task-progress', 'prefers-contrast: more']]]
 ]);
 
 const styles = [
@@ -46,7 +47,7 @@ const styles = [
   'expanded-looks.css', 'look5-quality.css', 'look5-interactive.css', 'look5-tasks.css',
   'look7-quality.css', 'look7-interactive.css', 'look7-tasks.css',
   'look8-quality.css', 'look8-interactive.css', 'look8-tasks.css',
-  'look9-quality.css', 'look9-interactive.css', 'review.css'
+  'look9-quality.css', 'look9-interactive.css', 'look9-tasks.css', 'review.css'
 ];
 
 function requiredFiles() {
@@ -102,7 +103,7 @@ function fixturesAndRoutes(shared) {
   check(JSON.stringify(Object.keys(shared.SCENARIOS)) === JSON.stringify(SCENARIOS), 'Scenario registry differs from the seven shared scenarios.');
   check(JSON.stringify(shared.LOOKS.map(item => item.id)) === JSON.stringify(LOOKS), 'Look registry differs from Looks #2–#9.');
   [...ROUTINE_VIEWS, 'tasks'].forEach(view => check(shared.ALLOWED_VIEWS.has(view), `Interactive view is not allowed: ${view}`));
-  check(shared.defaultState().look === 8 && shared.defaultState().view === 'tasks', 'Default review route is not Look #8 Tasks.');
+  check(shared.defaultState().look === 9 && shared.defaultState().view === 'tasks', 'Default review route is not Look #9 Tasks.');
 
   for (const [id, scenario] of Object.entries(shared.SCENARIOS)) {
     check(Array.isArray(scenario.areas), `${id}: areas must be an array.`);
@@ -172,9 +173,9 @@ function taskHierarchyContract() {
   const taskState = read('task-state.js');
   const controls = read('controls.js');
 
-  check(app.includes('new Set([2, 3, 4, 5, 6, 7, 8])'), 'app.js does not register Looks #2 through #8 for Task hierarchy.');
+  check(app.includes('new Set([2, 3, 4, 5, 6, 7, 8, 9])'), 'app.js does not register every active Look for Task hierarchy.');
   check(app.includes('TASK_RENDERERS'), 'app.js is missing the task renderer registry.');
-  check(controls.includes('new Set([2, 3, 4, 5, 6, 7, 8])'), 'controls.js does not register Looks #2 through #8 for Task hierarchy guidance.');
+  check(controls.includes('new Set([2, 3, 4, 5, 6, 7, 8, 9])'), 'controls.js does not register every active Look for Task hierarchy guidance.');
 
   [
     'nudge-design-lab-task-hierarchy-v1', 'addTask', 'updateTaskTitle', 'toggleTaskCompletion',
@@ -203,7 +204,10 @@ function taskHierarchyContract() {
       check(css.includes(token), `Look #${look} task CSS is missing ${token}.`);
     });
   }
-  passes.push('Checked shared Task hierarchy state and Looks #2–#8 renderer, action, drag, responsive, fallback, and accessibility contracts.');
+
+  const retro = read('renderers/look9-tasks.js').toUpperCase();
+  ['ERROR', 'FAILURE', 'FAULT'].forEach(token => check(!retro.includes(token), `Look #9 task language contains prohibited failure-state token: ${token}.`));
+  passes.push('Checked shared Task hierarchy state and all eight renderer, action, drag, responsive, fallback, contrast, and accessibility contracts.');
 }
 
 function versionsAndHtml(shared) {
@@ -267,7 +271,7 @@ function main() {
   passes.forEach(item => console.log(`PASS  ${item}`));
   failures.forEach(item => console.error(`FAIL  ${item}`));
   if (failures.length) process.exitCode = 1;
-  else console.log('\nAll gallery, Routine Completion, and Looks #2–#8 Task hierarchy checks passed.');
+  else console.log('\nAll gallery, Routine Completion, and all-Look Task hierarchy checks passed.');
 }
 
 main();

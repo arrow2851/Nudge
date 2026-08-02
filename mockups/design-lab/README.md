@@ -2,13 +2,15 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.8.5`  
+**Current version:** `0.8.6`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.8.5 full-gallery evidence](CHECKLIST-PROGRESS-0.8.5.md)
+- [Latest checklist progress — 0.8.6 interactive expansion planning](CHECKLIST-PROGRESS-0.8.6.md)
+- [Interactive expansion decision record](INTERACTIVE-EXPANSION-DECISION.md)
+- [Vertical slice candidates](VERTICAL-SLICE-CANDIDATES.md)
 - [Full-gallery browser evidence report](FULL-GALLERY-EVIDENCE-0.8.4.md)
 - [Machine-readable evidence summary](FULL-GALLERY-EVIDENCE-0.8.4.json)
 - [Expanded gallery directions](EXPANDED-GALLERY-LOOKS.md)
@@ -69,6 +71,17 @@ The exact complete-checkout validator, physical Android checks, actual screen-re
 
 Look #1 remains a protected comparison reference. Its Intervention is visibly labeled as a comparison-only extrapolation because the protected prototype does not contain an equivalent screen.
 
+## Interactive expansion recommendation
+
+The prepared decision package recommends:
+
+1. One shared semantic behavior core with eight Design Lab visual adapters.
+2. The Routine completion loop as the first vertical slice.
+3. Look switching as a Design Lab review control only, not a product-facing theme feature.
+4. Isolated deterministic prototype state with no production integration.
+
+No vertical slice has been implemented. This is a material architecture and scope decision and remains intentionally blocked pending approval.
+
 ## Run locally
 
 ```bash
@@ -92,4 +105,4 @@ Append `capture=labelled` for an evidence frame or `capture=phone` for a clean p
 
 ## Next work
 
-Prepare the interactive-expansion decision record and candidate vertical slices. Do not implement a vertical slice until the dominant pure-Look, feature-specific variant, or controlled-synthesis direction is intentionally chosen.
+Approve the recommended interactive-expansion package or select an explicit alternative. Do not implement routing, state, or a vertical slice before that decision.

@@ -2,7 +2,7 @@ import { DESIGN_LAB, LOOKS, ROUND_ONE_CONTROLS } from './config.js';
 import { SCENARIOS } from './fixtures.js';
 import { esc } from './utils.js';
 
-const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8]);
+const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
 
 export function renderReviewControls(state, data, elements) {
   elements.lookControls.innerHTML = LOOKS.map(look => `
@@ -25,7 +25,7 @@ export function renderReviewControls(state, data, elements) {
   document.querySelector('#look-kicker').textContent = `Look #${look.id}`;
   document.querySelector('#look-name').textContent = look.name;
   document.querySelector('#look-description').textContent = look.description;
-  document.querySelector('#scenario-purpose').textContent = `${data.label}: ${data.purpose}${!INTERACTIVE_LOOKS.has(state.look) ? ' Today interaction is currently implemented in Looks #2 through #8.' : ''}`;
+  document.querySelector('#scenario-purpose').textContent = `${data.label}: ${data.purpose}`;
   document.querySelector('#build-meta').textContent = `v${DESIGN_LAB.version} · ${DESIGN_LAB.buildDate}`;
   return look;
 }

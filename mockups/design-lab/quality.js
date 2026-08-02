@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '0.9.7';
+  const VERSION = '0.10.0';
   const initialParams = new URLSearchParams(location.search);
   const captureMode = initialParams.get('capture');
 
@@ -28,7 +28,7 @@
 
     const routeParams = new URLSearchParams(location.search);
     const lookKicker = document.querySelector('#look-kicker')?.textContent?.trim() || 'Look';
-    const screen = routeParams.get('screen') || 'today';
+    const screen = routeParams.get('screen') || 'tasks';
     const area = routeParams.get('area');
     const section = routeParams.get('section');
     const chore = routeParams.get('chore');
@@ -77,7 +77,7 @@
     const scenario = document.querySelector('[data-scenario].active')?.textContent?.trim();
     if (lookName && scenario) document.title = `Nudge Design Lab — ${lookName} · ${scenario}`;
 
-    setText(document.querySelector('#build-meta'), `v${VERSION} · 2026-08-01`);
+    setText(document.querySelector('#build-meta'), `v${VERSION} · 2026-08-02`);
     setText(document.querySelector('#mobile-build'), `v${VERSION}`);
     syncCaptureHeader(lookName, scenario);
   }

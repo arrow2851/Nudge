@@ -225,7 +225,39 @@ Today / Needs Attention
 
 **Validation boundary:** The validator now requires four task renderers, four task stylesheets, the shared state engine, all four registrations, and responsive/accessibility hooks. Exact-checkout execution, Android gesture testing, and actual screen-reader evidence remain pending.
 
-**Next active Look:** Look #6 — Tactile Household.
+## 2026-08-02 — Tactile Household organizes work without defect language
+
+**Milestone:** Version `0.10.4` implements the Task hierarchy loop in Look #6 — Tactile Household.
+
+**Presentation:** The shared checklist becomes paper-like task cards with drawer-style subtask grouping, physical-looking controls, and Active Cards, Main Tasks, and Filed Done counts.
+
+**Metaphor boundary:** Cards, drawers, clips, and filing language organize work. They must not suggest that the user, household, or task list is broken, defective, or in need of repair.
+
+**Semantic parity:** Look #6 preserves the shared add, edit, hierarchy, completion, release, movement, and visibility behavior without adding maintenance-specific task functionality.
+
+**Accessibility:** The physical appearance does not replace labels or state. Completion uses a checkmark and line-through, and explicit movement controls remain available.
+
+**Cross-Look state:** Looks #3, #4, #5, #6, and #7 render the same task state.
+
+## 2026-08-02 — Warm Editorial provides context without reflection requirements
+
+**Milestone:** Version `0.10.5` implements the Task hierarchy loop in Look #2 — Warm Editorial.
+
+**Presentation:** The shared checklist becomes a calm practical page with serif titles, restrained Active, Main Tasks, and Completed facts, quiet progress notes, and a simple hierarchy rule.
+
+**Editorial boundary:** Warmth and context may improve readability, but Tasks must not become a diary. The user is never asked to explain, reflect on, or narrate completion.
+
+**Semantic parity:** Look #2 keeps the same add, edit, hierarchy, completion, release, movement, and visibility behavior. It adds no notes field, reflection prompt, scoring, priority system, assignments, deletion, deeper nesting, or scheduling.
+
+**Responsive priority:** Optional time disappears before task-title space is reduced. Large Text retains clear editing and 54 px actions.
+
+**Accessibility:** Completion uses a checkmark and line-through; subtasks use indentation plus a visible mustard rule; drag remains optional because Move, Indent, and Unindent actions remain available.
+
+**Cross-Look state:** Looks #2 through #7 render the same task state.
+
+**Validation boundary:** The validator now requires six task renderers, six task stylesheets, the shared state engine, all six registrations, and responsive/accessibility hooks. Exact-checkout execution, Android gesture testing, and actual screen-reader evidence remain pending.
+
+**Next active Look:** Look #8 — Ambient Glass, with transparency retained as an enhancement rather than a dependency.
 
 ## Feedback entry template
 

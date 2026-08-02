@@ -111,7 +111,37 @@ This file records review decisions, intentional interaction differences, plan ad
 
 **Automatic continuation rule:** Routine `go` messages advance to the next unchecked milestone in `PURE-LOOK-IMPLEMENTATION-ORDER.md`. A hard stop is required only for a material change to scope, architecture, storage, deployment, Look #1 protection, product-facing themes, or merge status.
 
-**Status:** The visual-selection gate is resolved. The next active milestone is the Look #4 Routine Completion Loop foundation.
+## 2026-08-01 — Look #4 establishes the interactive behavior contract
+
+**Milestone:** Version `0.9.0` implements the Routine Completion Loop in Look #4 — Zen Focus.
+
+**Behavior established:**
+
+```text
+Today / Needs Attention
+→ Areas
+→ Area detail
+→ Section
+→ Chore detail
+→ Complete
+→ Recurrence advances
+→ Attention counts update
+→ Undo or reopen
+```
+
+**State decision:** Completion records use a separate Design Lab session-storage namespace. Shared fixtures remain immutable; deterministic completion state is applied after cloning the selected scenario.
+
+**Recurrence decision:** The prototype uses three semantic tiers—Light, Moderate, and Deep—with deterministic next-cycle labels. It does not attempt calendar synchronization or production scheduling rules.
+
+**Reversibility decision:** Completion from any supported screen opens or retains Chore detail so Undo is immediately visible. Reopening deletes the completion record and restores the routine's prior fixture status.
+
+**Route decision:** The Design Lab route contract now includes `today`, `section`, and `chore`, plus `area`, `section`, and `chore` identifiers in the query string. Look #4 is the only Look currently permitted to render the added interactive screens; other Looks return to their supported Areas route.
+
+**Validation decision:** The milestone may be marked implemented based on syntax, module, route, renderer, reconstructed-validator, and injected-Chromium smoke evidence. The exact-checkout limitation must remain explicit and physical-device or screen-reader evidence must not be inferred.
+
+**Product boundary:** No Area creation, recurrence editing, notifications, backend, production persistence, task hierarchy, Lists, user-facing themes, Look #1 changes, or merge into `main` were introduced.
+
+**Next active Look:** Look #3 — Precision Minimal. It must preserve the Look #4 behavioral contract while testing denser, faster scanning and repeated operational use.
 
 ## Feedback entry template
 

@@ -2,24 +2,20 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.8.6`  
+**Current version:** `0.8.7`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.8.6 interactive expansion planning](CHECKLIST-PROGRESS-0.8.6.md)
+- [Latest checklist progress — 0.8.7 pure-Look order](CHECKLIST-PROGRESS-0.8.7.md)
+- [Pure-Look implementation order](PURE-LOOK-IMPLEMENTATION-ORDER.md)
 - [Interactive expansion decision record](INTERACTIVE-EXPANSION-DECISION.md)
 - [Vertical slice candidates](VERTICAL-SLICE-CANDIDATES.md)
 - [Full-gallery browser evidence report](FULL-GALLERY-EVIDENCE-0.8.4.md)
 - [Machine-readable evidence summary](FULL-GALLERY-EVIDENCE-0.8.4.json)
 - [Expanded gallery directions](EXPANDED-GALLERY-LOOKS.md)
-- [Look #5 quality pass](LOOK-5-QUALITY.md)
-- [Look #7 quality pass](LOOK-7-QUALITY.md)
-- [Look #8 quality pass](LOOK-8-QUALITY.md)
-- [Look #9 quality pass](LOOK-9-QUALITY.md)
 - [Decisions and feedback log](DECISIONS.md)
-- [Round 1 evidence report](ROUND-1-EVIDENCE-0.7.2.md)
 - [Look #1 — Soft Practical Utility baseline](LOOK-1-SOFT-PRACTICAL-UTILITY.md)
 - [Shared scenario definitions](SCENARIOS.md)
 - [Automated validation guide](VALIDATION.md)
@@ -49,38 +45,48 @@ Active gallery directions:
 - Look #8 — Ambient Glass
 - Look #9 — Retro Digital
 
-The user explicitly chose to retain every direction rather than select a single winner. The former mandatory finalist-selection gate is no longer active.
-
-Every active Look uses the same three screens, seven scenarios, routes, history behavior, capture modes, and simulated actions.
-
-## Gallery policy
-
-A later prototype may use one pure Look, separate Look variants for different experiments, or controlled synthesis with one dominant visual foundation and documented borrowed components.
-
-Unrestricted mixing within a single screen remains prohibited because it weakens coherence and makes evaluation meaningless.
+Every direction remains preserved. The implementation sequence below is not a ranking or elimination list.
 
 ## Quality and evidence status
 
 All active directions from Look #2 through Look #9 have completed dedicated code-level quality passes.
 
-Looks #1, #2, #3, #4, and #6 were included in the 0.7.2 browser evidence run. Looks #5, #7, #8, and #9 completed the 0.8.4 browser presentation matrix recorded in the full-gallery evidence report. Together, the two runs provide browser evidence for every gallery direction, although they were not executed from one identical build.
+Looks #1, #2, #3, #4, and #6 were included in the 0.7.2 browser evidence run. Looks #5, #7, #8, and #9 completed the 0.8.4 browser presentation matrix. Together, the two runs provide browser evidence for every gallery direction, although they were not executed from one identical build.
 
-The new-Look matrix passed 84 direct routes, 72 viewport checks, 28 stress checks, eight Long Content and Large Text reachability checks, four media-emulation checks, and four keyboard-focus checks. No tested route produced horizontal overflow or an unnamed visible button, and the minimum tested in-preview control size was 48 × 48 px.
+The exact complete-checkout validator, physical Android checks, actual screen-reader smoke testing, and a single-version all-Look rerun remain pending.
 
-The exact complete-checkout validator, physical Android checks, actual screen-reader smoke testing, and a single-version all-Look rerun remain pending. The evidence report states the reconstruction boundary in full.
+## Approved interactive strategy
 
-Look #1 remains a protected comparison reference. Its Intervention is visibly labeled as a comparison-only extrapolation because the protected prototype does not contain an equivalent screen.
+The user selected **Option A**: build one pure-Look vertical slice at a time.
 
-## Interactive expansion recommendation
+The assistant was delegated responsibility for the first Look and all remaining ordering. Routine `go` messages now advance automatically through this sequence:
 
-The prepared decision package recommends:
+1. Look #4 — Zen Focus
+2. Look #3 — Precision Minimal
+3. Look #5 — Playful Modular
+4. Look #7 — Bold Utility
+5. Look #6 — Tactile Household
+6. Look #2 — Warm Editorial
+7. Look #8 — Ambient Glass
+8. Look #9 — Retro Digital
 
-1. One shared semantic behavior core with eight Design Lab visual adapters.
-2. The Routine completion loop as the first vertical slice.
-3. Look switching as a Design Lab review control only, not a product-facing theme feature.
-4. Isolated deterministic prototype state with no production integration.
+The first flow in every Look is the Routine Completion Loop:
 
-No vertical slice has been implemented. This is a material architecture and scope decision and remains intentionally blocked pending approval.
+```text
+Today / Needs Attention
+→ Areas
+→ Area detail
+→ Section
+→ Chore detail
+→ Complete
+→ Recurrence advances
+→ Attention count updates
+→ Undo or reopen
+```
+
+After all eight Looks receive this flow, the feature order is Task hierarchy, Intervention-to-action, then Reusable Lists.
+
+Look switching remains a Design Lab review control, prototype state remains isolated and deterministic, and Look #1 remains outside the implementation sequence.
 
 ## Run locally
 
@@ -95,9 +101,9 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
-?look=5&screen=areas&scenario=normal
-?look=7&screen=area&area=kitchen&scenario=backlog
-?look=8&screen=intervention&scenario=long
+?look=4&screen=areas&scenario=normal
+?look=3&screen=area&area=kitchen&scenario=backlog
+?look=5&screen=intervention&scenario=long
 ?look=9&screen=areas&scenario=large-text
 ```
 
@@ -105,4 +111,4 @@ Append `capture=labelled` for an evidence frame or `capture=phone` for a clean p
 
 ## Next work
 
-Approve the recommended interactive-expansion package or select an explicit alternative. Do not implement routing, state, or a vertical slice before that decision.
+Begin the Look #4 Routine Completion Loop foundation: isolated deterministic state, Today / Needs Attention, Area and Section navigation, Chore detail, completion, recurrence advance, and undo or reopen.

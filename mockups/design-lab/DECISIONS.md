@@ -257,7 +257,51 @@ Today / Needs Attention
 
 **Validation boundary:** The validator now requires six task renderers, six task stylesheets, the shared state engine, all six registrations, and responsive/accessibility hooks. Exact-checkout execution, Android gesture testing, and actual screen-reader evidence remain pending.
 
-**Next active Look:** Look #8 — Ambient Glass, with transparency retained as an enhancement rather than a dependency.
+## 2026-08-02 — Ambient Glass task meaning survives solid mode
+
+**Milestone:** Version `0.10.6` implements the Task hierarchy loop in Look #8 — Ambient Glass.
+
+**Presentation:** Translucency is limited to high-value header, summary, progress, and options surfaces. Task rows remain mostly solid.
+
+**Fallback boundary:** Task hierarchy, completion, movement, and progress remain understandable with blur, transparency, gradients, and decorative aurora removed.
+
+**Performance boundary:** Limiting blur reduces expected compositing pressure but is not lower-end hardware evidence.
+
+**Cross-Look state:** Looks #2 through #8 render the same task state.
+
+## 2026-08-02 — Retro Digital completes Task hierarchy without failure states
+
+**Milestone:** Version `0.10.7` implements the Task hierarchy loop in Look #9 — Retro Digital and completes the sequence across all active Looks.
+
+**Presentation:** The shared checklist becomes a neutral Task Directory with Available, Main Tasks, and Complete counters, segmented progress, and explicit options.
+
+**Language boundary:** Unfinished work is never described as an error, fault, malfunction, or failure. Validator checks reject prohibited failure-state terms.
+
+**Sequence result:** Task hierarchy is complete across all eight active Looks. Intervention-to-action begins with Look #4.
+
+## 2026-08-02 — Intervention-to-action is optional, concrete, and reversible
+
+**Milestone:** Version `0.11.0` implements the first Intervention-to-action loop in Look #4 — Zen Focus.
+
+**State boundary:** Intervention-to-action uses a third scenario-isolated session-storage namespace. It does not modify Routine Completion or Task Hierarchy state.
+
+**Suggestion rule:** The scenario fixture remains the first suggestion. Additional options are derived deterministically from available scenario routines. Scenarios without Areas receive setup-safe alternatives.
+
+**Phase model:** Prompt, Active, Completed, and Dismissed are the only semantic phases.
+
+**Start rule:** Start creates a concrete action state within the Intervention screen. It does not silently create a production Task or begin background tracking.
+
+**Reversibility:** Complete can be reopened, Start can be undone, a different suggestion can be selected, and a dismissed prompt can be resumed.
+
+**Dismissal rule:** Not Now creates no penalty, shame state, reminder, or changed routine/task state. The dismissed screen explicitly confirms that nothing changed.
+
+**Trigger boundary:** App name and elapsed minutes remain deterministic scenario fixtures. Real app detection, redirect enforcement, blocking, usage tracking, and notifications remain outside this slice.
+
+**Zen presentation:** One quiet choice is shown at a time. Status cards communicate Active, Completed, and Dismissed states without urgency escalation.
+
+**Validation boundary:** Source contracts require the phase engine, deterministic suggestions, every reversible action, reset integration, dedicated stylesheet order, 48 px targets, Large Text, short-screen handling, Forced Colors, Reduced Motion, and no-guilt language. Exact-checkout browser, Android, and screen-reader evidence remain pending.
+
+**Next active Look:** Look #3 — Precision Minimal.
 
 ## Feedback entry template
 

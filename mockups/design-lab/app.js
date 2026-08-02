@@ -23,6 +23,7 @@ import { renderTasksPrecision } from './renderers/look3-tasks.js';
 import { renderAreaDetailZen, renderAreasZen, renderChoreZen, renderInterventionZen, renderSectionZen, renderTodayZen } from './renderers/look4.js';
 import { renderTasksZen } from './renderers/look4-tasks.js';
 import { renderAreaDetailPlayful, renderAreasPlayful, renderChorePlayful, renderInterventionPlayful, renderSectionPlayful, renderTodayPlayful } from './renderers/look5.js';
+import { renderTasksPlayful } from './renderers/look5-tasks.js';
 import { renderAreaDetailTactile, renderAreasTactile, renderChoreTactile, renderInterventionTactile, renderSectionTactile, renderTodayTactile } from './renderers/look6.js';
 import { renderAreaDetailBold, renderAreasBold, renderChoreBold, renderInterventionBold, renderSectionBold, renderTodayBold } from './renderers/look7.js';
 import { renderAreaDetailAmbient, renderAreasAmbient, renderChoreAmbient, renderInterventionAmbient, renderSectionAmbient, renderTodayAmbient } from './renderers/look8.js';
@@ -31,7 +32,7 @@ import { renderUnsupported } from './renderers/shared.js';
 import { esc } from './utils.js';
 
 const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
-const TASK_HIERARCHY_LOOKS = new Set([3, 4]);
+const TASK_HIERARCHY_LOOKS = new Set([3, 4, 5]);
 
 const ROUTINE_RENDERERS = new Map([
   [2, { today: renderTodayEditorial, areas: renderAreasEditorial, area: renderAreaDetail, section: renderSectionEditorial, chore: renderChoreEditorial, intervention: renderInterventionEditorial }],
@@ -46,7 +47,8 @@ const ROUTINE_RENDERERS = new Map([
 
 const TASK_RENDERERS = new Map([
   [3, renderTasksPrecision],
-  [4, renderTasksZen]
+  [4, renderTasksZen],
+  [5, renderTasksPlayful]
 ]);
 
 let state = readStateFromLocation();
@@ -76,7 +78,7 @@ function renderLook(look, data, tasks) {
     const renderer = TASK_RENDERERS.get(look.id);
     return renderer
       ? renderer(tasks)
-      : renderUnsupported('The Task hierarchy loop is currently implemented in Looks #3 and #4. Task state remains preserved while you compare Looks.');
+      : renderUnsupported('The Task hierarchy loop is currently implemented in Looks #3, #4, and #5. Task state remains preserved while you compare Looks.');
   }
   return renderRoutine(look.id, data);
 }
@@ -340,7 +342,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 3;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 5;
     render({ routeAction: 'push' });
     return;
   }

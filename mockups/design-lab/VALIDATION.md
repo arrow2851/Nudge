@@ -17,7 +17,7 @@ A successful run exits with status `0`. Failed invariants are printed with a `FA
 - Renderers for Looks #2 through #9 exist
 - The protected Look #1 comparison reference exists
 - Existing and expanded gallery stylesheets exist
-- The Look #5 dedicated quality stylesheet exists
+- The Look #5 and Look #7 dedicated quality stylesheets exist
 
 ### Import graph
 
@@ -45,24 +45,24 @@ This produces **168 active-Look route combinations**.
 ### Version and entry point
 
 - Version agreement between `config.js`, `quality.js`, `look1-reference.js`, `index.html`, `README.md`, and the master checklist
-- `index.html` loads the original Look styles, `expanded-looks.css`, `look5-quality.css`, and review styles
-- Stylesheet order is enforced so Look #5 quality overrides load after the expanded-gallery base and before capture-only review styles
+- `index.html` loads the original Look styles, `expanded-looks.css`, Look #5 and Look #7 quality styles, and review styles
+- Stylesheet order is enforced so quality overrides load after the expanded-gallery base and before capture-only review styles
 - `app.js` loads as an ES module
 
 ### Stylesheets
 
 - Existing Look styles remain present
 - `expanded-looks.css` remains the shared base for Looks #5, #7, #8, and #9
-- `look5-quality.css` remains a separate auditable override layer
-- All active stylesheets have balanced braces
+- `look5-quality.css` and `look7-quality.css` remain separate auditable override layers
+- All active stylesheets have balanced braces when the validator runs in a complete checkout
 
-## Code-level checks completed for version 0.8.1
+## Code-level checks completed for version 0.8.2
 
-- Look #5 renderer semantics were reviewed after the accessible-label changes
-- `look5-quality.css` block balance was checked
-- The validator was updated to require the file and its load order
-- Contrast ratios were calculated for all alternating Look #5 card surfaces and key controls
-- Shared scenarios, fixture data, and route meaning were not changed
+- Look #7 renderer structure and accessible-label changes were reviewed.
+- The validator was updated to require `look7-quality.css` and its load order.
+- Contrast ratios were calculated for blue, red, yellow, cream, black, and white combinations.
+- Narrow-screen, Large Text, long-content, touch-target, tone, and forced-colors paths were reviewed in source.
+- Shared scenarios, fixture data, route meaning, and product functionality were not changed.
 
 ## What static validation does not replace
 

@@ -1,5 +1,29 @@
 # Design Lab Changelog
 
+## 0.10.1 — 2026-08-02
+
+### Look #3 — Precision Minimal Task hierarchy loop
+
+- Reused the shared scenario-isolated Task hierarchy state engine
+- Added `renderers/look3-tasks.js` and `look3-tasks.css`
+- Added a compact operational task register with Active, Main, and Done metrics
+- Preserved top and bottom empty-task creation with immediate inline editing focus
+- Preserved the agreed row anatomy: drag handle, completion control, editable title, optional time shorthand, settings disclosure, and separate subtask plus
+- Preserved one-level main-task and subtask relationships
+- Added explicit progress count, percentage, and progress track
+- Preserved completion propagation between main tasks and subtasks
+- Preserved subtask release when main-task mode is turned off
+- Preserved pointer drag hooks and explicit Move Up, Move Down, Indent, and Unindent controls
+- Preserved completed-item bottom grouping and Hide/Show Completed
+- Preserved task state while switching between Looks #3 and #4
+- Refactored the app controller to shared routine and task renderer registries
+- Extended validation to two task Looks, both task renderers, both task stylesheets, and cross-Look state hooks
+- Added `LOOK-3-TASK-HIERARCHY.md` and `CHECKLIST-PROGRESS-0.10.1.md`
+- Set Look #5 — Playful Modular as the next Task hierarchy implementation
+- Kept production persistence, notifications, collaboration, nested subtasks, deletion, and mobile gesture implementation outside the Design Lab boundary
+- Kept exact-checkout browser, Android gesture, and screen-reader evidence pending
+- Kept Look #1 and `main` unchanged
+
 ## 0.10.0 — 2026-08-02
 
 ### Look #4 — Zen Focus Task hierarchy loop

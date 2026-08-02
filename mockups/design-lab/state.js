@@ -2,7 +2,14 @@ import { ALLOWED_VIEWS, DESIGN_LAB, LOOKS } from './config.js';
 import { SCENARIOS } from './fixtures.js';
 
 export function defaultState() {
-  return { look: 2, view: 'areas', scenario: 'normal', areaId: null };
+  return {
+    look: 4,
+    view: 'today',
+    scenario: 'normal',
+    areaId: null,
+    sectionId: null,
+    choreId: null
+  };
 }
 
 export function readStateFromLocation() {
@@ -10,13 +17,14 @@ export function readStateFromLocation() {
   const look = Number(params.get('look'));
   const view = params.get('screen');
   const scenario = params.get('scenario');
-  const areaId = params.get('area');
 
   return {
-    look: LOOKS.some(item => item.id === look) ? look : 2,
-    view: ALLOWED_VIEWS.has(view) ? view : 'areas',
+    look: LOOKS.some(item => item.id === look) ? look : 4,
+    view: ALLOWED_VIEWS.has(view) ? view : 'today',
     scenario: Object.hasOwn(SCENARIOS, scenario) ? scenario : 'normal',
-    areaId: areaId || null
+    areaId: params.get('area') || null,
+    sectionId: params.get('section') || null,
+    choreId: params.get('chore') || null
   };
 }
 
@@ -25,7 +33,9 @@ export function urlForState(state) {
   params.set('look', state.look);
   params.set('screen', state.view);
   params.set('scenario', state.scenario);
-  if (state.view === 'area' && state.areaId) params.set('area', state.areaId);
+  if (['area', 'section', 'chore'].includes(state.view) && state.areaId) params.set('area', state.areaId);
+  if (['section', 'chore'].includes(state.view) && state.sectionId) params.set('section', state.sectionId);
+  if (state.view === 'chore' && state.choreId) params.set('chore', state.choreId);
   return `${location.pathname}?${params}`;
 }
 

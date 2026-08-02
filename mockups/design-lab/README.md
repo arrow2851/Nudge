@@ -2,13 +2,14 @@
 
 The Design Lab compares alternate visual systems without changing the approved Look #1 prototype.
 
-**Current version:** `0.9.0`  
+**Current version:** `0.9.1`  
 **Development branch:** `feature/design-lab`
 
 ## Project tracking
 
 - [Master Design Lab execution checklist](DESIGN-LAB-CHECKLIST.md)
-- [Latest checklist progress — 0.9.0 Look #4 interactive slice](CHECKLIST-PROGRESS-0.9.0.md)
+- [Latest checklist progress — 0.9.1 Look #3 interactive slice](CHECKLIST-PROGRESS-0.9.1.md)
+- [Look #3 interactive Routine Completion Loop](LOOK-3-INTERACTIVE.md)
 - [Look #4 interactive Routine Completion Loop](LOOK-4-INTERACTIVE.md)
 - [Pure-Look implementation order](PURE-LOOK-IMPLEMENTATION-ORDER.md)
 - [Interactive expansion decision record](INTERACTIVE-EXPANSION-DECISION.md)
@@ -63,8 +64,8 @@ The user selected **Option A**: build one pure-Look vertical slice at a time.
 The assistant was delegated responsibility for the first Look and all remaining ordering. Routine `go` messages advance automatically through this sequence:
 
 1. Look #4 — Zen Focus — **Routine Completion Loop implemented**
-2. Look #3 — Precision Minimal — **next**
-3. Look #5 — Playful Modular
+2. Look #3 — Precision Minimal — **Routine Completion Loop implemented**
+3. Look #5 — Playful Modular — **next**
 4. Look #7 — Bold Utility
 5. Look #6 — Tactile Household
 6. Look #2 — Warm Editorial
@@ -89,22 +90,28 @@ After all eight Looks receive this flow, the feature order is Task hierarchy, In
 
 Look switching remains a Design Lab review control, prototype state remains isolated and deterministic, and Look #1 remains outside the implementation sequence.
 
-## Version 0.9.0 — Look #4 interactive slice
+## Interactive slices completed
 
-Look #4 now supports:
+### Version 0.9.0 — Look #4 Zen Focus
 
-- Today / Needs Attention.
-- Areas, Area detail, Section, and Chore detail routes.
-- Completion from multiple entry points.
-- Deterministic Light, Moderate, and Deep next-cycle labels.
-- Derived attention-count and All Clear updates.
-- Immediate Undo or reopen.
-- Session-isolated prototype completion state.
-- Browser Back and Forward route restoration.
-- Normal Day, Heavy Backlog, New User, All Clear, Large Household, Long Content, and Large Text fixtures.
-- Keyboard-operable actions, visible focus, 48 px critical targets, forced colors, and reduced motion.
+Look #4 established the shared behavior contract with a calm, low-pressure presentation and one useful action emphasized at a time.
 
-The browser smoke evidence used an injected reconstruction of the committed modules because direct checkout and local browser navigation remain restricted. See `LOOK-4-INTERACTIVE.md` for the complete evidence boundary.
+### Version 0.9.1 — Look #3 Precision Minimal
+
+Look #3 applies the same behavior to a denser operational presentation:
+
+- Compact Today queue with explicit counts.
+- Area, Section, and Chore metrics.
+- Square 48 px completion controls.
+- Monospaced status, duration, tier, and route metadata.
+- Deterministic recurrence and immediate Undo.
+- Shared completion state across Looks #3 and #4.
+- Narrow-screen and Large Text reflow.
+- Forced-colors, reduced-motion, and focus-visible treatment.
+
+During the Look #3 implementation, the shared next-routine selector was corrected so completed routines do not remain the preferred Area summary item after advancing to Upcoming.
+
+Direct cloning remains blocked by local DNS restrictions, so this milestone does not claim an exact complete-checkout browser run. See `LOOK-3-INTERACTIVE.md` for the full evidence boundary.
 
 ## Run locally
 
@@ -119,15 +126,15 @@ Open `http://localhost:8080`.
 ## Example routes
 
 ```text
-?look=4&screen=today&scenario=normal
-?look=4&screen=area&area=kitchen&scenario=backlog
-?look=4&screen=section&area=kitchen&section=Countertops%20%26%20Surfaces&scenario=normal
-?look=4&screen=chore&area=kitchen&section=Countertops%20%26%20Surfaces&chore=kitchen-wipe-stovetop-1&scenario=normal
-?look=9&screen=areas&scenario=large-text
+?look=3&screen=today&scenario=normal
+?look=3&screen=area&area=kitchen&scenario=backlog
+?look=3&screen=section&area=kitchen&section=Countertops%20%26%20Surfaces&scenario=normal
+?look=3&screen=chore&area=kitchen&section=Countertops%20%26%20Surfaces&chore=kitchen-wipe-stovetop-1&scenario=normal
+?look=4&screen=today&scenario=large-text
 ```
 
 Append `capture=labelled` for an evidence frame or `capture=phone` for a clean phone frame.
 
 ## Next work
 
-Implement the Routine Completion Loop in Look #3 — Precision Minimal, preserving Look #4's established behavioral contract while adapting the presentation for faster scanning and denser repeated use.
+Implement the Routine Completion Loop in Look #5 — Playful Modular, preserving the shared behavior while testing friendly modular grouping and completion feedback.

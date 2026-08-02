@@ -71,6 +71,29 @@ This file records review decisions, intentional interaction differences, plan ad
 - `INTERACTIVE-EXPANSION-DECISION.md`
 - `VERTICAL-SLICE-CANDIDATES.md`
 
+## 2026-08-01 — Option A selected for interactive expansion
+
+**User decision:** Build one pure-Look vertical slice first.
+
+**Approved strategy:** Option A — one selected Look receives the first complete interactive Routine Completion Loop.
+
+**What remains unchanged:**
+
+- The other Looks remain preserved in the visual gallery.
+- Selecting the first implementation Look does not reject or delete any other direction.
+- Look switching is not being introduced as a user-facing theme feature.
+- Prototype state remains isolated and deterministic.
+- Look #1 remains protected and is not eligible unless separately promoted.
+- Nothing is merged into `main`.
+
+**Remaining implementation gate:** Select the first active Look from Looks #2 through #9.
+
+**Recommendation:** Look #4 — Zen Focus. It has the strongest fit with Nudge's low-pressure emotional model and should expose whether the Routine Completion Loop can remain calm while still supporting clear navigation, recurrence, completion, and undo.
+
+**Secondary recommendation:** Look #3 — Precision Minimal if the priority is operational density and fast repeated checklist use rather than emotional tone.
+
+**Status:** Option A is approved; implementation remains blocked only until the first Look is selected.
+
 ## Feedback entry template
 
 ```text

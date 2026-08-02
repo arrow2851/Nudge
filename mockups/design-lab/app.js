@@ -29,6 +29,7 @@ import {
   updateTaskTitle
 } from './task-state.js';
 import { renderAreaDetail, renderAreasEditorial, renderChoreEditorial, renderInterventionEditorial, renderSectionEditorial, renderTodayEditorial } from './renderers/look2.js';
+import { renderInterventionEditorialAction } from './renderers/look2-intervention.js';
 import { renderTasksEditorial } from './renderers/look2-tasks.js';
 import { renderAreaDetailPrecision, renderAreasPrecision, renderChorePrecision, renderSectionPrecision, renderTodayPrecision } from './renderers/look3.js';
 import { renderInterventionPrecisionAction } from './renderers/look3-intervention.js';
@@ -53,10 +54,10 @@ import { esc } from './utils.js';
 
 const INTERACTIVE_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
 const TASK_HIERARCHY_LOOKS = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
-const INTERVENTION_ACTION_LOOKS = new Set([3, 4, 5, 6, 7]);
+const INTERVENTION_ACTION_LOOKS = new Set([2, 3, 4, 5, 6, 7]);
 
 const ROUTINE_RENDERERS = new Map([
-  [2, { today: renderTodayEditorial, areas: renderAreasEditorial, area: renderAreaDetail, section: renderSectionEditorial, chore: renderChoreEditorial, intervention: renderInterventionEditorial }],
+  [2, { today: renderTodayEditorial, areas: renderAreasEditorial, area: renderAreaDetail, section: renderSectionEditorial, chore: renderChoreEditorial, intervention: renderInterventionEditorialAction }],
   [3, { today: renderTodayPrecision, areas: renderAreasPrecision, area: renderAreaDetailPrecision, section: renderSectionPrecision, chore: renderChorePrecision, intervention: renderInterventionPrecisionAction }],
   [4, { today: renderTodayZen, areas: renderAreasZen, area: renderAreaDetailZen, section: renderSectionZen, chore: renderChoreZen, intervention: renderInterventionZen }],
   [5, { today: renderTodayPlayful, areas: renderAreasPlayful, area: renderAreaDetailPlayful, section: renderSectionPlayful, chore: renderChorePlayful, intervention: renderInterventionPlayfulAction }],
@@ -361,8 +362,8 @@ function runAction(action, target) {
       render();
     },
     'demo-add-area': () => showToast('Area creation remains outside this interactive slice.'),
-    'start-demo': () => showToast('Intervention-to-action is implemented in Looks #3, #4, #5, #6, and #7.'),
-    'different-demo': () => showToast('Alternative suggestion behavior is implemented in Looks #3, #4, #5, #6, and #7.'),
+    'start-demo': () => showToast('Intervention-to-action is implemented in Looks #2, #3, #4, #5, #6, and #7.'),
+    'different-demo': () => showToast('Alternative suggestion behavior is implemented in Looks #2, #3, #4, #5, #6, and #7.'),
     'not-now-demo': () => showToast('Intervention dismissed without guilt.')
   };
   actions[action]?.();
@@ -418,7 +419,7 @@ document.addEventListener('click', event => {
   const lookButton = event.target.closest('button[data-look]');
   if (lookButton) {
     const requested = Number(lookButton.dataset.look);
-    state.look = LOOKS.some(look => look.id === requested) ? requested : 6;
+    state.look = LOOKS.some(look => look.id === requested) ? requested : 2;
     render({ routeAction: 'push' });
     return;
   }

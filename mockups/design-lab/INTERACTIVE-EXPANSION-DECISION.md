@@ -1,89 +1,37 @@
 # Interactive Expansion Decision Record
 
-**Design Lab milestone:** `0.8.6`  
-**Status:** Decision prepared; implementation intentionally blocked pending approval  
+**Design Lab milestone:** `0.8.7`  
+**Status:** Approved; visual-selection gate resolved  
 **Branch:** `feature/design-lab`
 
-## Why a decision is required
+## Approved strategy
 
-The visual-gallery phase proved that Nudge can support multiple coherent visual systems. The next phase changes the nature of the work: it introduces real interaction state, navigation, completion behavior, recurrence, task hierarchy, and reusable components.
+The user selected **Option A: one pure-Look vertical slice at a time**.
 
-That work should not begin until the relationship between product behavior and the eight active visual directions is explicit. Otherwise, implementation could accidentally:
+The visual gallery remains intact. Implementing one Look first does not reject, delete, merge, or permanently select that design.
 
-- Turn one Look into the de facto product winner.
-- Duplicate behavior eight times and create inconsistent bugs.
-- Mix visual systems without a coherent rule.
-- Add a user-facing theme feature that was never approved.
-- Create storage, routing, or architecture that is difficult to migrate.
+## Delegated selection
 
-## Decisions required before implementation
+The user delegated the first Look and the complete remaining order to the assistant and stated that future routine messages will simply say `go`.
 
-Four decisions are intentionally grouped into one implementation gate.
+### Selected implementation order
 
-### Decision 1 — Expansion strategy
+1. Look #4 — Zen Focus
+2. Look #3 — Precision Minimal
+3. Look #5 — Playful Modular
+4. Look #7 — Bold Utility
+5. Look #6 — Tactile Household
+6. Look #2 — Warm Editorial
+7. Look #8 — Ambient Glass
+8. Look #9 — Retro Digital
 
-#### Option A: One pure-Look vertical slice
+The rationale and acceptance gates are recorded in [`PURE-LOOK-IMPLEMENTATION-ORDER.md`](PURE-LOOK-IMPLEMENTATION-ORDER.md).
 
-Build the first complete interaction flow in one selected Look.
+This is a learning and technical-risk sequence, not a ranking or elimination list.
 
-**Advantages**
+## First vertical slice
 
-- Lowest initial implementation cost.
-- Fastest path to a deep prototype.
-- Simplest visual and component architecture.
-
-**Disadvantages**
-
-- Conflicts with the user's preference to retain every direction.
-- Risks turning the first Look into an accidental permanent choice.
-- Provides no proof that behavior can remain shared across Looks.
-
-**Use when:** The immediate goal is speed and one presentation direction is acceptable.
-
-#### Option B: Feature-specific visual variants
-
-Use different Looks for different experimental surfaces—for example, a dense Look for Tasks and a calm Look for Intervention.
-
-**Advantages**
-
-- Lets each Look work where it is strongest.
-- Avoids implementing every screen eight times.
-- Can reveal which visual qualities belong to which product moments.
-
-**Disadvantages**
-
-- Can feel like several unrelated apps.
-- Makes navigation transitions harder to evaluate.
-- Creates ambiguity over whether the variants are experiments or the intended product.
-
-**Use when:** The goal is component discovery rather than a coherent end-to-end experience.
-
-#### Option C: Shared behavior core with eight Design Lab theme adapters — recommended
-
-Build one semantic interaction tree and one state model. Each Look supplies presentation tokens and a limited set of Look-specific layout adapters. The Look switch remains a Design Lab review control, not a user-facing product preference.
-
-**Advantages**
-
-- Preserves every visual direction.
-- Prevents behavior from being copied eight times.
-- Makes cross-Look comparison fair because routes, states, and actions are identical.
-- Allows a pure Look or controlled synthesis to be chosen later without rewriting product behavior.
-- Exposes which designs require legitimate structural exceptions.
-
-**Disadvantages**
-
-- Higher initial architecture cost.
-- Some highly distinctive Looks cannot be expressed through tokens alone.
-- Requires strict boundaries between semantic components and visual adapters.
-- Eight-Look regression testing remains substantial.
-
-**Use when:** The goal is to retain the complete gallery while building credible interaction depth.
-
-### Decision 2 — First vertical slice
-
-Candidate slices are detailed in [`VERTICAL-SLICE-CANDIDATES.md`](VERTICAL-SLICE-CANDIDATES.md).
-
-**Recommended first slice:** Routine completion loop.
+The first interactive implementation is the **Routine Completion Loop** in Look #4 — Zen Focus.
 
 ```text
 Today / Needs Attention
@@ -93,102 +41,97 @@ Today / Needs Attention
 → Chore detail
 → Complete
 → Updated recurrence and next-action state
+→ Undo or reopen
 ```
 
-This is the best first slice because it crosses the app's core information architecture, tests urgency without guilt, exercises completion feedback, and gives every Look enough structure to demonstrate its strengths.
+## Why Look #4 begins
 
-### Decision 3 — Look switching exposure
+Zen Focus best represents Nudge's low-pressure emotional model. It is the strongest first test of whether the product can make urgency, navigation, completion, recurrence, and undo clear without becoming visually demanding or guilt-driven.
 
-#### Option A: Design Lab only — recommended
+Look #3 follows immediately afterward to test the same behavior under a denser operational system.
 
-The reviewer can switch Looks inside the experimental build. No theme selector appears in the product UI.
+## Approved state boundary
 
-#### Option B: Product-facing themes
+The first slice uses isolated deterministic prototype state inside `mockups/design-lab/`.
 
-Users can choose among Looks in Settings.
+Approved:
 
-This is a new product feature, creates preference storage and migration requirements, and should not be inferred from the user's desire to preserve the experiments.
+- Seeded local fixtures.
+- Temporary session or local prototype state.
+- Explicit semantic state interfaces.
+- Browser-history behavior.
+- Reset Review State.
 
-**Recommendation:** Keep Look switching in the Design Lab only until user-facing themes are separately approved.
+Not approved:
 
-### Decision 4 — Prototype state boundary
+- Production backend integration.
+- Account synchronization.
+- Permanent data migration.
+- Notifications or operating-system app blocking.
+- Production application storage changes.
 
-#### Option A: Isolated deterministic prototype state — recommended
+## Look switching boundary
 
-Use local seeded fixtures and session/local state inside `mockups/design-lab/`. Do not connect production services or alter application storage.
+Look switching remains a **Design Lab review control**. It is not introduced as a user-facing product theme feature.
 
-#### Option B: Production-like persistence
+Under Option A, the first slice is implemented and certified in one Look at a time. Gallery switching may continue to show the existing static directions, but unfinished Looks must not imply that they contain the interactive slice.
 
-Introduce durable local schemas, data migration, or backend-shaped service boundaries.
+## Look #1 boundary
 
-**Recommendation:** Keep the first vertical slice isolated and deterministic. Define semantic state interfaces, but defer permanent storage and production routing.
+Look #1 remains the protected baseline under `mockups/prototype/` and is outside the pure-Look implementation sequence.
 
-## Recommended decision package
+Promoting Look #1 into the interactive architecture would require a separate explicit decision.
 
-Approve all four together:
+## Routine Completion Loop states
 
-1. **Strategy:** Shared behavior core with eight Design Lab theme adapters.
-2. **First slice:** Routine completion loop.
-3. **Look switch:** Design Lab review control only.
-4. **State:** Isolated deterministic prototype state with no production integration.
+Each Look must eventually support:
 
-## Proposed implementation boundaries after approval
-
-### Shared semantic layer
-
-- One route and state model.
-- One action vocabulary.
-- One accessibility structure.
-- One set of fixture scenarios.
-- One completion and recurrence model.
-- One test contract across every Look.
-
-### Look-owned presentation layer
-
-- Color, typography, spacing, borders, elevation, icon treatment, and motion intent.
-- Approved layout adapters where a Look's structure genuinely differs.
-- Look-specific copy tone only when semantic meaning remains equivalent.
-- No Look-specific product functionality.
-
-### First-slice states
-
-- Normal day.
-- Heavy backlog.
-- All clear.
+- Normal Day.
+- Heavy Backlog.
+- All Clear.
 - New or unconfigured Area.
-- Long content.
+- Long Content.
 - Large Text.
 - Chore incomplete.
 - Chore completing.
 - Chore completed.
 - Recurrence advanced.
-- Safe undo or reopen state.
+- Safe undo or reopen.
 
-### Explicit exclusions
+## Acceptance gates for each Look
 
-- Production backend integration.
-- Account synchronization.
-- Notifications or operating-system app blocking.
-- User-facing theme selection.
-- Full Tasks hierarchy.
-- Full reusable Lists.
-- Dark variants.
-- Editing the protected Look #1 prototype.
-- Merging into `main`.
-
-## Acceptance gates for the first interactive slice
-
-- Identical behavior and action availability across all active Looks.
-- No duplicated Look-specific business logic.
-- Browser Back and Forward preserve state correctly.
+- The full scripted path is usable from Today through undo or reopen.
 - Completion and undo are keyboard reachable.
+- Browser Back and Forward preserve valid state.
 - Large Text does not hide the primary action.
 - Long names and recurrence labels do not overflow horizontally.
 - Status is never represented by color alone.
-- Every Look can complete the same scripted test path.
-- Look switching does not reset the semantic interaction state unless Reset Review State is used.
-- Look #1 remains a separate protected reference unless an explicit decision promotes it into the shared interactive architecture.
+- Primary actions remain reachable on short screens.
+- Product meaning remains equivalent to the approved flow.
+- No production integration is introduced.
 
-## Hard-stop rule
+## Later feature order
 
-Implementation of the vertical slice is a material architecture and scope decision. It must not begin until the recommended package or an alternative package is intentionally approved.
+After every active Look receives the Routine Completion Loop:
+
+1. Task hierarchy loop.
+2. Intervention-to-action loop.
+3. Reusable Lists loop.
+
+The same Look order applies to later features unless a documented technical dependency requires a change.
+
+## Automatic continuation rule
+
+Routine `go` messages advance to the next unchecked milestone in the recorded sequence without another visual-selection question.
+
+A hard stop is still required before:
+
+- Changing the agreed flow or feature order.
+- Introducing material routing, storage, architecture, or deployment changes outside the isolated prototype boundary.
+- Editing Look #1.
+- Adding product-facing themes.
+- Merging into `main`.
+
+## Next active milestone
+
+Build the Look #4 Routine Completion Loop foundation: deterministic state model, Today / Needs Attention entry, Area and Section navigation, Chore detail, completion, recurrence advancement, and undo or reopen.

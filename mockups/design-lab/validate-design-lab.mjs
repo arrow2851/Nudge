@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
 const INTERACTIVE_LOOKS = [2, 3, 4, 5, 6, 7, 8, 9];
-const TASK_LOOKS = [2, 3, 4, 5, 6, 7];
+const TASK_LOOKS = [2, 3, 4, 5, 6, 7, 8];
 const SCENARIOS = ['normal', 'backlog', 'new', 'clear', 'large', 'long', 'large-text'];
 const GALLERY_VIEWS = ['areas', 'area', 'intervention'];
 const ROUTINE_VIEWS = ['today', 'areas', 'area', 'section', 'chore', 'intervention'];
@@ -34,7 +34,8 @@ const taskRenderers = new Map([
   [4, ['renderers/look4-tasks.js', 'renderTasksZen', 'look4-tasks.css', ['.zen-task-row', '.zen-task-settings', '.zen-task-progress']]],
   [5, ['renderers/look5-tasks.js', 'renderTasksPlayful', 'look5-tasks.css', ['.pl-task-row', '.pl-task-settings', '.pl-task-progress']]],
   [6, ['renderers/look6-tasks.js', 'renderTasksTactile', 'look6-tasks.css', ['.th-task-row', '.th-task-settings', '.th-task-progress']]],
-  [7, ['renderers/look7-tasks.js', 'renderTasksBold', 'look7-tasks.css', ['.bu-task-row', '.bu-task-settings', '.bu-task-progress']]]
+  [7, ['renderers/look7-tasks.js', 'renderTasksBold', 'look7-tasks.css', ['.bu-task-row', '.bu-task-settings', '.bu-task-progress']]],
+  [8, ['renderers/look8-tasks.js', 'renderTasksAmbient', 'look8-tasks.css', ['.ag-task-row', '.ag-task-settings', '.ag-task-progress', 'prefers-reduced-transparency: reduce', '@supports not']]]
 ]);
 
 const styles = [
@@ -44,7 +45,7 @@ const styles = [
   'look6.css', 'look6-quality.css', 'look6-interactive.css', 'look6-tasks.css',
   'expanded-looks.css', 'look5-quality.css', 'look5-interactive.css', 'look5-tasks.css',
   'look7-quality.css', 'look7-interactive.css', 'look7-tasks.css',
-  'look8-quality.css', 'look8-interactive.css',
+  'look8-quality.css', 'look8-interactive.css', 'look8-tasks.css',
   'look9-quality.css', 'look9-interactive.css', 'review.css'
 ];
 
@@ -101,7 +102,7 @@ function fixturesAndRoutes(shared) {
   check(JSON.stringify(Object.keys(shared.SCENARIOS)) === JSON.stringify(SCENARIOS), 'Scenario registry differs from the seven shared scenarios.');
   check(JSON.stringify(shared.LOOKS.map(item => item.id)) === JSON.stringify(LOOKS), 'Look registry differs from Looks #2–#9.');
   [...ROUTINE_VIEWS, 'tasks'].forEach(view => check(shared.ALLOWED_VIEWS.has(view), `Interactive view is not allowed: ${view}`));
-  check(shared.defaultState().look === 2 && shared.defaultState().view === 'tasks', 'Default review route is not Look #2 Tasks.');
+  check(shared.defaultState().look === 8 && shared.defaultState().view === 'tasks', 'Default review route is not Look #8 Tasks.');
 
   for (const [id, scenario] of Object.entries(shared.SCENARIOS)) {
     check(Array.isArray(scenario.areas), `${id}: areas must be an array.`);
@@ -171,9 +172,9 @@ function taskHierarchyContract() {
   const taskState = read('task-state.js');
   const controls = read('controls.js');
 
-  check(app.includes('new Set([2, 3, 4, 5, 6, 7])'), 'app.js does not register Looks #2 through #7 for Task hierarchy.');
+  check(app.includes('new Set([2, 3, 4, 5, 6, 7, 8])'), 'app.js does not register Looks #2 through #8 for Task hierarchy.');
   check(app.includes('TASK_RENDERERS'), 'app.js is missing the task renderer registry.');
-  check(controls.includes('new Set([2, 3, 4, 5, 6, 7])'), 'controls.js does not register Looks #2 through #7 for Task hierarchy guidance.');
+  check(controls.includes('new Set([2, 3, 4, 5, 6, 7, 8])'), 'controls.js does not register Looks #2 through #8 for Task hierarchy guidance.');
 
   [
     'nudge-design-lab-task-hierarchy-v1', 'addTask', 'updateTaskTitle', 'toggleTaskCompletion',
@@ -202,7 +203,7 @@ function taskHierarchyContract() {
       check(css.includes(token), `Look #${look} task CSS is missing ${token}.`);
     });
   }
-  passes.push('Checked shared Task hierarchy state and Looks #2/#3/#4/#5/#6/#7 renderer, action, drag, responsive, and accessibility contracts.');
+  passes.push('Checked shared Task hierarchy state and Looks #2–#8 renderer, action, drag, responsive, fallback, and accessibility contracts.');
 }
 
 function versionsAndHtml(shared) {
@@ -266,7 +267,7 @@ function main() {
   passes.forEach(item => console.log(`PASS  ${item}`));
   failures.forEach(item => console.error(`FAIL  ${item}`));
   if (failures.length) process.exitCode = 1;
-  else console.log('\nAll gallery, Routine Completion, and Looks #2/#3/#4/#5/#6/#7 Task hierarchy checks passed.');
+  else console.log('\nAll gallery, Routine Completion, and Looks #2–#8 Task hierarchy checks passed.');
 }
 
 main();

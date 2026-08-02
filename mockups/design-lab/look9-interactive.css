@@ -1,0 +1,355 @@
+/* Look #9 — Retro Digital interactive Routine Completion Loop */
+
+html[data-look="9"] .rd-today-page,
+html[data-look="9"] .rd-section-page,
+html[data-look="9"] .rd-chore-page {
+  position: relative;
+}
+
+html[data-look="9"] .rd-priority,
+html[data-look="9"] .rd-chore-card,
+html[data-look="9"] .rd-clear,
+html[data-look="9"] .rd-system-note,
+html[data-look="9"] .rd-completion-log,
+html[data-look="9"] .rd-chore-facts {
+  border: 1px solid var(--rd-line);
+  background: rgba(24, 32, 31, .97);
+}
+
+html[data-look="9"] .rd-priority {
+  margin-top: 18px;
+  padding: 15px;
+  box-shadow: inset 3px 0 var(--rd-green);
+}
+
+html[data-look="9"] .rd-priority.overdue {
+  box-shadow: inset 3px 0 var(--rd-red);
+}
+
+html[data-look="9"] .rd-priority.today {
+  box-shadow: inset 3px 0 var(--rd-amber);
+}
+
+html[data-look="9"] .rd-priority-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--rd-line);
+  color: var(--rd-green);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+html[data-look="9"] .rd-priority-head b {
+  color: var(--rd-amber);
+  font: inherit;
+}
+
+html[data-look="9"] .rd-priority.overdue .rd-priority-head b {
+  color: var(--rd-red);
+}
+
+html[data-look="9"] .rd-priority h2 {
+  margin: 15px 0 7px;
+  color: var(--rd-ink);
+  font-size: 19px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-priority p,
+html[data-look="9"] .rd-clear p,
+html[data-look="9"] .rd-system-note p,
+html[data-look="9"] .rd-completion-log p,
+html[data-look="9"] .rd-chore-card p {
+  margin: 0;
+  color: var(--rd-muted);
+  font-size: 10px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-priority-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+html[data-look="9"] .rd-priority-actions button,
+html[data-look="9"] .rd-wide-action,
+html[data-look="9"] .rd-chore-actions button {
+  width: 100%;
+  min-height: 48px;
+}
+
+html[data-look="9"] .rd-area-priority {
+  margin-top: 0;
+}
+
+html[data-look="9"] .rd-clear,
+html[data-look="9"] .rd-completion-log,
+html[data-look="9"] .rd-system-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 13px;
+  align-items: start;
+  margin-top: 20px;
+  padding: 16px;
+}
+
+html[data-look="9"] .rd-clear > span,
+html[data-look="9"] .rd-completion-log > span {
+  color: var(--rd-green);
+  font-size: 20px;
+}
+
+html[data-look="9"] .rd-clear strong,
+html[data-look="9"] .rd-completion-log strong,
+html[data-look="9"] .rd-system-note strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--rd-green);
+  font-size: 11px;
+}
+
+html[data-look="9"] .rd-wide-action {
+  margin-top: 12px;
+}
+
+html[data-look="9"] .rd-routine {
+  padding-right: 8px;
+}
+
+html[data-look="9"] .rd-routine-open {
+  min-width: 0;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 7px 0;
+  border: 0;
+  background: transparent;
+  color: var(--rd-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+html[data-look="9"] .rd-routine.completed .rd-routine-copy strong {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  color: var(--rd-muted);
+}
+
+html[data-look="9"] .rd-routine.completed .rd-check {
+  color: var(--rd-green);
+  border-color: var(--rd-green);
+}
+
+html[data-look="9"] .rd-routine.completed .rd-tag {
+  color: var(--rd-green);
+  border-color: var(--rd-green);
+}
+
+html[data-look="9"] .rd-routine-open:focus-visible,
+html[data-look="9"] .rd-priority-actions button:focus-visible,
+html[data-look="9"] .rd-chore-actions button:focus-visible {
+  outline: 4px solid #fff;
+  outline-offset: 3px;
+}
+
+html[data-look="9"] .rd-chore-card {
+  margin-top: 16px;
+  padding: 16px;
+  box-shadow: inset 3px 0 var(--rd-green);
+}
+
+html[data-look="9"] .rd-chore-card.overdue {
+  box-shadow: inset 3px 0 var(--rd-red);
+}
+
+html[data-look="9"] .rd-chore-card.today {
+  box-shadow: inset 3px 0 var(--rd-amber);
+}
+
+html[data-look="9"] .rd-chore-card.completed {
+  box-shadow: inset 3px 0 var(--rd-green);
+}
+
+html[data-look="9"] .rd-record-id {
+  display: block;
+  margin-top: 12px;
+  color: var(--rd-muted);
+  font-size: 9px;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-chore-card h1 {
+  margin: 12px 0 7px;
+  color: var(--rd-ink);
+  font-size: 25px;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-record-status {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 6px 8px;
+  border: 1px solid var(--rd-line);
+  color: var(--rd-amber);
+  font-size: 9px;
+}
+
+html[data-look="9"] .rd-chore-card.completed .rd-record-status {
+  color: var(--rd-green);
+  border-color: var(--rd-green);
+}
+
+html[data-look="9"] .rd-chore-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 13px 0 0;
+}
+
+html[data-look="9"] .rd-chore-facts > div {
+  min-width: 0;
+  padding: 12px;
+  border-right: 1px solid var(--rd-line);
+  border-bottom: 1px solid var(--rd-line);
+}
+
+html[data-look="9"] .rd-chore-facts > div:nth-child(2n) {
+  border-right: 0;
+}
+
+html[data-look="9"] .rd-chore-facts > div:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+html[data-look="9"] .rd-chore-facts dt {
+  color: var(--rd-green);
+  font-size: 8px;
+  letter-spacing: .08em;
+}
+
+html[data-look="9"] .rd-chore-facts dd {
+  margin: 6px 0 0;
+  color: var(--rd-ink);
+  font-size: 11px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+html[data-look="9"] .rd-chore-actions {
+  margin-top: 13px;
+}
+
+html[data-look="9"] .rd-section strong,
+html[data-look="9"] .rd-section small {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 420px) {
+  html[data-look="9"] .rd-priority-actions {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-look="9"] .rd-routine-open {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  html[data-look="9"] .rd-tag {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 370px) {
+  html[data-look="9"] .rd-chore-facts {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-look="9"] .rd-chore-facts > div,
+  html[data-look="9"] .rd-chore-facts > div:nth-child(2n),
+  html[data-look="9"] .rd-chore-facts > div:nth-last-child(-n + 2) {
+    border-right: 0;
+    border-bottom: 1px solid var(--rd-line);
+  }
+
+  html[data-look="9"] .rd-chore-facts > div:last-child {
+    border-bottom: 0;
+  }
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-priority-head,
+html[data-text-scale="large"][data-look="9"] .rd-record-id,
+html[data-text-scale="large"][data-look="9"] .rd-record-status,
+html[data-text-scale="large"][data-look="9"] .rd-chore-facts dt {
+  font-size: 12px;
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-priority h2,
+html[data-text-scale="large"][data-look="9"] .rd-chore-card h1 {
+  font-size: 28px;
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-priority p,
+html[data-text-scale="large"][data-look="9"] .rd-clear p,
+html[data-text-scale="large"][data-look="9"] .rd-system-note p,
+html[data-text-scale="large"][data-look="9"] .rd-completion-log p,
+html[data-text-scale="large"][data-look="9"] .rd-chore-card p,
+html[data-text-scale="large"][data-look="9"] .rd-chore-facts dd {
+  font-size: 14px;
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-priority-actions button,
+html[data-text-scale="large"][data-look="9"] .rd-wide-action,
+html[data-text-scale="large"][data-look="9"] .rd-chore-actions button {
+  min-height: 54px;
+  font-size: 15px;
+}
+
+html[data-text-scale="large"][data-look="9"] .rd-routine-open {
+  min-height: 70px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="9"] *,
+  html[data-look="9"] *::before,
+  html[data-look="9"] *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-look="9"] .rd-priority,
+  html[data-look="9"] .rd-chore-card,
+  html[data-look="9"] .rd-clear,
+  html[data-look="9"] .rd-system-note,
+  html[data-look="9"] .rd-completion-log,
+  html[data-look="9"] .rd-chore-facts,
+  html[data-look="9"] .rd-routine-open,
+  html[data-look="9"] .rd-record-status {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+
+  html[data-look="9"] .rd-chore-facts > div {
+    border-color: CanvasText;
+  }
+
+  html[data-look="9"] .rd-routine.completed .rd-check,
+  html[data-look="9"] .rd-routine.completed .rd-tag {
+    color: CanvasText;
+    border-color: CanvasText;
+  }
+}

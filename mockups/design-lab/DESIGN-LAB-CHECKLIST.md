@@ -3,7 +3,7 @@
 **Branch:** `feature/design-lab`  
 **Protected baseline:** Look #1 in `mockups/prototype/` on `main`  
 **Design Lab path:** `mockups/design-lab/`  
-**Current version:** `0.11.5`  
+**Current version:** `0.11.6`  
 **Purpose:** Preserve the complete visual gallery while implementing equivalent pure-Look product slices in the delegated order.
 
 ## Status legend
@@ -111,14 +111,15 @@ A hard stop is required before changing the agreed feature scope, scenarios, rou
 - [x] Forty-eight Routine Completion renderer exports required
 - [x] Eight Task hierarchy renderers and stylesheets required
 - [x] Shared Intervention phase and deterministic-suggestion contract checked
-- [x] Looks #2, #3, #4, #5, #6, and #7 intervention renderer and stylesheet contracts checked
+- [x] Looks #2 through #8 intervention renderer and stylesheet contracts checked
 - [x] Start, Next, Dismiss, Resume, Complete, Reopen, Undo, Return, and Reset hooks checked
 - [x] Warm Editorial no-journaling and no-writing-input checks encoded
 - [x] Playful Modular non-scoring language checked
 - [x] Bold Utility pressure-language exclusions checked
 - [x] Tactile Household defect and repair-language exclusions checked
+- [x] Ambient Glass solid fallback, Reduced Transparency, and decorative-transparency checks encoded
 - [x] Responsive, short-screen, Large Text, Forced Colors, Increased Contrast, and Reduced Motion hooks encoded
-- [x] Ambient Glass solid fallbacks and Retro Digital language checks encoded
+- [x] Retro Digital Task hierarchy language checks encoded
 - [ ] Exact complete-checkout validator execution
 - [ ] Exact complete-checkout interactive browser run
 - [ ] Physical Android viewport and gesture checks
@@ -149,10 +150,10 @@ A hard stop is required before changing the agreed feature scope, scenarios, rou
 4. [x] Look #7 — Bold Utility
 5. [x] Look #6 — Tactile Household
 6. [x] Look #2 — Warm Editorial
-7. [ ] Look #8 — Ambient Glass — **next**
-8. [ ] Look #9 — Retro Digital
+7. [x] Look #8 — Ambient Glass
+8. [ ] Look #9 — Retro Digital — **next**
 
-Shared behaviors currently implemented in 6 of 8 Looks:
+Shared behaviors currently implemented in 7 of 8 Looks:
 
 - [~] Optional prompt and deterministic suggestion
 - [~] Start to concrete action state
@@ -164,6 +165,7 @@ Shared behaviors currently implemented in 6 of 8 Looks:
 - [~] Cross-Look state preservation
 - [~] Existing routine and task state preserved
 - [~] No scoring, compliance measurement, defect framing, required reflection, or negative dismissal state
+- [~] Ambient Glass solid fallback modes preserve all intervention meaning
 
 Reusable Lists begins only after Intervention-to-action is complete across all eight Looks.
 
@@ -180,15 +182,16 @@ Reusable Lists begins only after Intervention-to-action is complete across all e
 - [x] `0.11.3` — Look #7 Bold Utility Intervention-to-action
 - [x] `0.11.4` — Look #6 Tactile Household Intervention-to-action
 - [x] `0.11.5` — Look #2 Warm Editorial Intervention-to-action
+- [x] `0.11.6` — Look #8 Ambient Glass Intervention-to-action
 
 ---
 
 # 10. Current next actions
 
-- [ ] Implement Intervention-to-action in Look #8 — Ambient Glass
-- [ ] Preserve shared intervention state across Looks #2 through #8
+- [ ] Implement Intervention-to-action in Look #9 — Retro Digital
+- [ ] Preserve shared intervention state across all eight active Looks
 - [ ] Preserve Routine Completion and Task hierarchy state
-- [ ] Keep suggestions optional, reversible, non-guilt-based, and understandable without transparency
-- [ ] Require solid fallbacks for reduced transparency and unsupported backdrop filters
-- [ ] Extend validator coverage through Look #8
+- [ ] Keep system language optional, reversible, neutral, and free of error/failure framing
+- [ ] Extend validator coverage through Look #9
+- [ ] Close the Intervention-to-action sequence and prepare Reusable Lists as the next feature loop
 - [ ] Keep exact-checkout, Android, screen-reader, single-version regression, and Ambient Glass paint evidence pending until actually performed

@@ -4,14 +4,14 @@ Nudge is an Android-first, local-first productivity app that organizes recurring
 
 ## Current status
 
-The interactive browser prototype remains the product and interaction reference. Native Android Phases 1–4 are complete and verified on `feature/android-app-development`. Development now proceeds to Phase 5: Areas, Sections, and recurring Chores.
+The interactive browser prototype remains the product and interaction reference. Native Android Phases 1–6 are complete and verified on `feature/android-app-development`. Development now proceeds to Phase 7: Today aggregation.
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
 - [Native Android development checklist](docs/progress/android-development.md)
 - [Compose design system](docs/design-system.md)
 - [Local data foundation](docs/local-data-foundation.md)
 - [Android development pull request](https://github.com/arrow2851/Nudge/pull/2)
-- [Verified Phase 4 Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30834579590)
+- [Verified Phase 5–6 Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30854956621)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 
@@ -31,7 +31,7 @@ The interactive browser prototype remains the product and interaction reference.
 - Nudge-specific success and warning semantic colors
 - Shared typography, spacing, shapes, elevations, touch targets, and motion timings
 - Production Today, Areas, Tasks, and Lists navigation shell
-- Reusable buttons, cards, rows, chips, fields, empty states, dialogs, sheets, snackbars, and section labels
+- Reusable buttons, cards, rows, chips, fields, empty states, dialogs, scrollable sheets, snackbars, and section labels
 - Canonical light, dark, and 160% font-scale preview states
 - Preview-driven visual-regression strategy documented in `docs/design-system.md`
 
@@ -65,6 +65,35 @@ The interactive browser prototype remains the product and interaction reference.
 - Additive Room migration 1→2 that preserves existing tasks
 - Unit, repository, migration, navigation, and complete emulator workflow tests
 
+### Verified native recurring-care vertical slice
+
+- Repository-backed Areas overview with attention summaries
+- Area creation, editing, ordering, archiving, and House/Car templates
+- Optional Sections with creation, editing, ordering, archiving, and safe child release
+- Recurring Chore creation and editing with General-area support
+- Daily, weekly, monthly, custom interval, and As Needed schedules
+- Calendar-based and completion-based cadence behavior
+- Light, Moderate, and Deep completion grading
+- Completion history, recurrence advancement, and snackbar Undo
+- Area-level quick completion and Section groups for Needs Attention, Coming Up, As Needed, and Paused
+- Scrollable long-form Chore editor sheets
+- Repository, recurrence, migration-preservation, ViewModel, and emulator workflow tests
+
+### Verified native reusable Lists vertical slice
+
+- Repository-backed reusable and one-off Lists overview
+- Contextual List and List Item creation
+- Optional quantity or note per item
+- Active and checked grouping with checked-item Undo
+- One-level subitems with move, indent, unindent, and safe parent removal behavior
+- Reusable-list Return Checked and Clear Checked actions
+- Learned catalog suggestions from completed items
+- Suggestion ranking by favorite, use count, and recency
+- Preferred quantity restoration when a suggestion is selected
+- Safe Room upserts, sparse ordering, and archive conventions
+- Migration preservation for Lists, catalog history, quantities, and checked state
+- ViewModel, repository, migration, navigation, and complete emulator workflow tests
+
 ### Implemented browser-prototype slices
 
 - Simplified Today screen with Due Today, Overdue, Lists, Recent Activity, grading, and Undo
@@ -77,16 +106,16 @@ The interactive browser prototype remains the product and interaction reference.
 - Dense Section routine checklists grouped by Needs Attention, Coming Up, As Needed, and Paused
 - Top and bottom chore-add controls with Add & another for rapid setup
 - House and Car templates that add missing Sections and starter chores without duplicating existing setup
-- Reusable As-needed chores that remain available after completion
+- Reusable As Needed chores that remain available after completion
 - Task and Chore details with recurrence-aware Chore behavior
 - Single checklist-style Tasks destination
 - Reusable Lists collection and list-detail routes
-- Shared Task/List item behavior: inline creation, tap-to-edit sheets, hold-to-reorder, and swipe-right indentation
-- Main Task and Main List item subitems with thin completion progress
-- Parent completion cascades to children; child completion recalculates the parent
-- Completed root items move to the bottom with Show/Hide Completed controls
+- Shared Task/List item behavior: inline creation, tap-to-edit sheets, ordering, and indentation
+- Main Task and List item subitems
+- Parent completion cascades to children; child completion recalculates the parent where applicable
+- Completed root items move to the bottom with visibility controls
 - Task-only Due Date and optional gray due shorthand
-- List history suggestions during creation and existing-item editing
+- List history suggestions during item creation
 
 ## Product pillars
 
@@ -187,7 +216,7 @@ nudge/
 
 ## Immediate next step
 
-Begin Phase 5 by replacing the Areas foundation screen with repository-backed Areas, optional Sections, recurring Chores, completion grading, schedule behavior, templates, and complete persistence tests.
+Begin Phase 7 by replacing the Today foundation screen with a repository-backed aggregation of overdue and due-now Tasks, recurring Chores, relevant Lists, recent activity, completion grading, and Undo.
 
 ## License
 

@@ -1,10 +1,13 @@
 package com.arrow2851.nudge
 
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodes
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNode
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -50,6 +53,7 @@ class NudgeAppTest {
     fun completeTasksWorkflowPersistsAndSupportsUndoAndSubtasks() {
         composeRule.onNodeWithContentDescription("Tasks destination").performClick()
         composeRule.onNodeWithContentDescription("Add task").performClick()
+        waitForNode(hasSetTextAction())
         composeRule.onNode(hasSetTextAction()).performTextInput("Phase 4 task")
         composeRule.onNode(hasSetTextAction()).performImeAction()
         composeRule.onNodeWithText("Phase 4 task").assertIsDisplayed()
@@ -60,6 +64,7 @@ class NudgeAppTest {
         composeRule.onNodeWithText("Task details").assertIsDisplayed()
         composeRule.onNodeWithTag("main-task-switch-Phase 4 task").performClick()
         composeRule.onNodeWithText("Add subtask").performClick()
+        waitForNode(hasSetTextAction())
         composeRule.onNode(hasSetTextAction()).performTextInput("Phase 4 child")
         composeRule.onNode(hasSetTextAction()).performImeAction()
         composeRule.onNodeWithText("Phase 4 child").assertIsDisplayed()
@@ -79,21 +84,33 @@ class NudgeAppTest {
         composeRule.onNodeWithText("Wipe countertops").assertIsDisplayed()
         composeRule.onNodeWithTag("complete-chore-Wipe countertops").performClick()
         composeRule.onNodeWithTag("complete-light").performClick()
-        composeRule.waitUntil(timeoutMillis = 5_000L) {
-            composeRule
-                .onAllNodesWithText("Completed; next occurrence scheduled")
-                .fetchSemanticsNodes()
-                .isNotEmpty()
-        }
+        waitForText("Completed; next occurrence scheduled")
         composeRule.onNodeWithText("Completed; next occurrence scheduled").assertIsDisplayed()
 
         composeRule.onNodeWithContentDescription("Add chore").performClick()
         composeRule.onNodeWithTag("chore-name-field").performTextInput("Polish fixtures")
         composeRule.onNodeWithText("As needed").performClick()
         composeRule.onNodeWithTag("save-chore").performClick()
+        waitForText("Chore added")
+        waitForText("1 as needed", substring = true)
         composeRule.onNodeWithTag("section-detail-Kitchen")
             .performScrollToNode(hasTestTag("chore-row-Polish fixtures"))
         composeRule.onNodeWithTag("chore-row-Polish fixtures").assertIsDisplayed()
         composeRule.onNodeWithText("AS NEEDED").assertIsDisplayed()
+    }
+
+    private fun waitForNode(matcher: SemanticsMatcher) {
+        composeRule.waitUntil(timeoutMillis = 5_000L) {
+            composeRule.onAllNodes(matcher).fetchSemanticsNodes().isNotEmpty()
+        }
+    }
+
+    private fun waitForText(text: String, substring: Boolean = false) {
+        composeRule.waitUntil(timeoutMillis = 5_000L) {
+            composeRule
+                .onAllNodesWithText(text, substring = substring)
+                .fetchSemanticsNodes()
+                .isNotEmpty()
+        }
     }
 }

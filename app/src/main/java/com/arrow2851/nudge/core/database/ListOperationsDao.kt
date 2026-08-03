@@ -16,6 +16,9 @@ interface ListOperationsDao {
     @Query("SELECT * FROM reusable_lists WHERE id = :listId AND archived_at IS NULL LIMIT 1")
     fun observeActiveListWithItems(listId: String): Flow<ReusableListWithItemsEntity?>
 
+    @Query("SELECT * FROM reusable_lists WHERE archived_at IS NULL ORDER BY sort_order, name")
+    suspend fun getActiveLists(): List<ReusableListEntity>
+
     @Query("SELECT * FROM reusable_lists WHERE id = :listId LIMIT 1")
     suspend fun getList(listId: String): ReusableListEntity?
 

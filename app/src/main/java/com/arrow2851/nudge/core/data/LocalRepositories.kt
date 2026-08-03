@@ -19,6 +19,7 @@ import com.arrow2851.nudge.core.model.ReusableListWithItems
 import com.arrow2851.nudge.core.model.Section
 import com.arrow2851.nudge.core.model.Task
 import com.arrow2851.nudge.core.model.TaskStatus
+import com.arrow2851.nudge.core.model.TimeProvider
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -45,6 +46,7 @@ class LocalAreaRepository @Inject constructor(
 
 class LocalTaskRepository @Inject constructor(
     private val taskDao: TaskDao,
+    private val timeProvider: TimeProvider,
 ) : TaskRepository {
     override fun observeRootTasks(): Flow<List<Task>> = taskDao.observeRootTasks()
         .map { tasks -> tasks.map { it.toDomain() } }
@@ -61,7 +63,7 @@ class LocalTaskRepository @Inject constructor(
         taskId = taskId,
         status = if (completedAt == null) TaskStatus.Inbox.name else TaskStatus.Completed.name,
         completedAt = completedAt,
-        updatedAt = completedAt ?: System.currentTimeMillis(),
+        updatedAt = timeProvider.nowEpochMillis(),
     )
 
     override suspend fun archiveTask(taskId: String, archivedAt: Long) =
@@ -109,6 +111,7 @@ class LocalCompletionRepository @Inject constructor(
 
 class LocalReusableListRepository @Inject constructor(
     private val reusableListDao: ReusableListDao,
+    private val timeProvider: TimeProvider,
 ) : ReusableListRepository {
     override fun observeLists(): Flow<List<ReusableList>> = reusableListDao.observeActiveLists()
         .map { lists -> lists.map { it.toDomain() } }
@@ -135,7 +138,7 @@ class LocalReusableListRepository @Inject constructor(
             itemId = itemId,
             checked = checkedAt != null,
             checkedAt = checkedAt,
-            updatedAt = checkedAt ?: System.currentTimeMillis(),
+            updatedAt = timeProvider.nowEpochMillis(),
         )
 
     override suspend fun archiveList(listId: String, archivedAt: Long) =

@@ -166,7 +166,7 @@ class NudgeAppTest {
         composeRule.onNodeWithContentDescription("Today destination").performClick()
         waitForNode(hasTestTag("today-due-Phase 7 due chore"), timeoutMillis = 10_000L)
         composeRule.onNodeWithText("Due today").assertIsDisplayed()
-        composeRule.onNodeWithText("Lists").assertIsDisplayed()
+        waitForText("Lists")
         composeRule.onNodeWithText("Recent Activity").assertIsDisplayed()
 
         waitForNode(

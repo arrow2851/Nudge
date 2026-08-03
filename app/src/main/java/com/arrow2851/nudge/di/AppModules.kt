@@ -10,6 +10,7 @@ import com.arrow2851.nudge.core.data.AreaRepository
 import com.arrow2851.nudge.core.data.ChoreRepository
 import com.arrow2851.nudge.core.data.CompletionRepository
 import com.arrow2851.nudge.core.data.DataStorePreferencesRepository
+import com.arrow2851.nudge.core.data.ListWorkflowRepository
 import com.arrow2851.nudge.core.data.LocalAreaRepository
 import com.arrow2851.nudge.core.data.LocalChoreRepository
 import com.arrow2851.nudge.core.data.LocalCompletionRepository
@@ -17,6 +18,7 @@ import com.arrow2851.nudge.core.data.LocalReusableListRepository
 import com.arrow2851.nudge.core.data.LocalTaskRepository
 import com.arrow2851.nudge.core.data.PreferencesRepository
 import com.arrow2851.nudge.core.data.ReusableListRepository
+import com.arrow2851.nudge.core.data.RoomListWorkflowRepository
 import com.arrow2851.nudge.core.data.TaskRepository
 import com.arrow2851.nudge.core.database.AreaDao
 import com.arrow2851.nudge.core.database.ChoreDao
@@ -112,6 +114,12 @@ abstract class RepositoryModule {
     abstract fun bindReusableListRepository(
         implementation: LocalReusableListRepository,
     ): ReusableListRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindListWorkflowRepository(
+        implementation: RoomListWorkflowRepository,
+    ): ListWorkflowRepository
 
     @Binds
     @Singleton

@@ -4,13 +4,14 @@
 **Package:** `com.arrow2851.nudge`  
 **Minimum Android:** API 26  
 **Compile and target Android:** API 37  
-**Current milestone:** Phase 7 — Today aggregation  
+**Current milestone:** Phase 8 — Recurrence and recommendation engines  
 **Phase 1 status:** Completed and verified on August 3, 2026  
 **Phase 2 status:** Completed and verified on August 3, 2026  
 **Phase 3 status:** Completed and verified on August 3, 2026  
 **Phase 4 status:** Completed and verified on August 3, 2026  
 **Phase 5 status:** Completed and verified on August 3, 2026  
-**Phase 6 status:** Completed and verified on August 3, 2026
+**Phase 6 status:** Completed and verified on August 3, 2026  
+**Phase 7 status:** Completed and verified on August 3, 2026
 
 This file is the persistent checklist for native application development. Update it whenever a build task changes state or a product decision alters the implementation order.
 
@@ -461,12 +462,72 @@ This file is the persistent checklist for native application development. Update
 - [x] Room remains at version 2 because List tables already existed; migration-preservation tests verify existing List data survives 1→2.
 - [x] Lint, JVM tests, schema generation, APK assembly, migration tests, repository tests, navigation, and all 21 emulator tests pass in CI.
 
-**Phase 6 is closed.** Native development proceeds to Phase 7: Today aggregation.
+**Phase 6 is closed.**
 
-## Implementation order after Phase 6
+## Phase 7 — Today aggregation
 
-1. Today aggregation
-2. Recurrence and recommendation engines
-3. Direct Android intervention
-4. Notifications, widgets, shortcuts, and backup
-5. Release hardening
+### Cross-domain Today read model
+
+- [x] Replace the Today foundation content with repository-backed observable state
+- [x] Aggregate active Tasks, recurring Chores, reusable Lists, and completion history
+- [x] Group scheduled work deterministically into Due Today and Overdue using the device timezone
+- [x] Exclude paused and As Needed Chores from scheduled urgency
+- [x] Add Area and Section context to recurring-care rows
+- [x] Add loading, empty, fatal-error, and recoverable-mutation states
+- [x] Keep Room at version 2 by adding only a read-only completion-history DAO
+
+### Today sections and actions
+
+- [x] Add Due Today with direct Task and Chore completion
+- [x] Add collapsible Overdue review
+- [x] Add reusable and one-off List quick access
+- [x] Add Recent Activity across completed Tasks, graded Chores, and checked List Items
+- [x] Add Task completion and snackbar Undo
+- [x] Add Chore completion, Light/Moderate/Deep grading, recurrence advancement, and snackbar Undo
+- [x] Navigate Today rows to Tasks, Areas, Sections, and List detail routes
+
+### Optional guidance
+
+- [x] Preserve Daily Progress as a preference-gated card that remains off by default
+- [x] Preserve Quick Win as a preference-gated card that remains off by default
+- [x] Select Quick Win from nudge-eligible overdue or due-today work
+- [x] Prefer the shortest estimated action, then urgency and stable title ordering
+- [x] Keep optional guidance absent from the default Today experience
+
+### Phase 7 tests and verification
+
+- [x] Add Today ViewModel tests for due classification, List summaries, activity, progress, and Quick Win
+- [x] Add Today ViewModel tests for Task and graded-Chore completion and Undo
+- [x] Add a complete on-device Today workflow using independently created data
+- [x] Verify Due Today, Lists, Recent Activity, completion, snackbar Undo, and item restoration
+- [x] Preserve all Tasks, recurring-care, Lists, navigation, quick-add, migration, and repository regression coverage
+
+### Phase 7 verification evidence
+
+- [x] [Android CI run 229](https://github.com/arrow2851/Nudge/actions/runs/30861757348) completed successfully
+- [x] Commit tested: `1d59e26d5283fafd31b92b56dcbe1c2d24cfee78`
+- [x] Lint, JVM tests, schema export, and assemble job: `91845035216`
+- [x] Twenty-two-test emulator job: `91846041839`
+- [x] Debug APK artifact: `8874696475`
+- [x] Room schemas artifact: `8874696728`
+- [x] Verification reports artifact: `8874697017`
+- [x] Instrumentation reports artifact: `8874860518`
+
+### Phase 7 exit criteria
+
+- [x] Today renders entirely from repository-backed Tasks, recurring-care, Lists, preferences, and completion history.
+- [x] Due Today and Overdue classification is deterministic in the device timezone and excludes paused or As Needed work.
+- [x] Lists and Recent Activity expose useful cross-domain context without duplicating source-of-truth mutations.
+- [x] Task and Chore completion, Chore grading, recurrence advancement, and Undo reuse existing transactional repositories.
+- [x] Daily Progress and Quick Win remain optional and disabled by default.
+- [x] Room remains at version 2 because Today adds only a read model over existing tables.
+- [x] Lint, JVM tests, schema generation, APK assembly, migration tests, repository tests, navigation, and all 22 emulator tests pass in CI.
+
+**Phase 7 is closed.** Native development proceeds to Phase 8: recurrence and recommendation engines.
+
+## Implementation order after Phase 7
+
+1. Recurrence and recommendation engines
+2. Direct Android intervention
+3. Notifications, widgets, shortcuts, and backup
+4. Release hardening

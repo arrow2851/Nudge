@@ -4,13 +4,14 @@ Nudge is an Android-first, local-first productivity app that organizes recurring
 
 ## Current status
 
-The interactive browser prototype remains the product and interaction reference. Native Android Phases 1 and 2 are complete and verified on `feature/android-app-development`. Development now proceeds to Phase 3: the local data foundation.
+The interactive browser prototype remains the product and interaction reference. Native Android Phases 1–3 are complete and verified on `feature/android-app-development`. Development now proceeds to Phase 4: the complete Tasks vertical slice.
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
 - [Native Android development checklist](docs/progress/android-development.md)
 - [Compose design system](docs/design-system.md)
+- [Local data foundation](docs/local-data-foundation.md)
 - [Android development pull request](https://github.com/arrow2851/Nudge/pull/2)
-- [Verified Phase 2 Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30821406558)
+- [Verified Phase 3 Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30826025127)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 
@@ -18,27 +19,35 @@ The interactive browser prototype remains the product and interaction reference.
 
 - Kotlin and Jetpack Compose application module
 - Material 3 and Navigation Compose
-- Hilt 2.59.2 dependency injection with KSP and AGP 9 support
-- Room, DataStore, WorkManager, and Kotlin Serialization dependencies
+- Hilt dependency injection with KSP and AGP 9 support
 - API 26 minimum and API 37 compile/target configuration
 - Java 17, AGP 9.3, and Gradle 9.5 build configuration
 - Hilt-enabled application and single Compose activity
-- GitHub Actions lint, test, assemble, APK artifact, and emulator workflow
+- GitHub Actions lint, test, assemble, schema, APK artifact, and emulator workflow
 
 ### Verified Compose design system
 
 - Approved prototype colors mapped to light and dark Material 3 roles
 - Nudge-specific success and warning semantic colors
-- Shared 12–32 sp typography hierarchy with system font scaling
-- Shared 4–32 dp spacing scale
-- Shared shapes, elevations, 48 dp touch targets, and motion timings
+- Shared typography, spacing, shapes, elevations, touch targets, and motion timings
 - Production Today, Areas, Tasks, and Lists navigation shell
 - Reusable buttons, cards, rows, chips, fields, empty states, dialogs, sheets, snackbars, and section labels
-- Explicit accessibility semantics for primary navigation
 - Canonical light, dark, and 160% font-scale preview states
 - Preview-driven visual-regression strategy documented in `docs/design-system.md`
-- Token contract tests and emulator interaction tests
-- Production shell navigation and quick-add bottom sheet verified on Android API 35
+
+### Verified local data foundation
+
+- Immutable domain models for Areas, Sections, Tasks, Chores, Schedules, Completions, Lists, List Items, catalog suggestions, and preferences
+- UUID-compatible IDs, UTC epoch-millisecond timestamps, sparse ordering, completion timestamps, and archive conventions
+- Room database version 1 with nine related tables, foreign keys, indices, converters, DAOs, and observable `Flow` queries
+- Committed Room schema at `app/schemas/com.arrow2851.nudge.core.database.NudgeDatabase/1.json`
+- Explicit migration registration and no-destructive-fallback policy
+- Repository interfaces separated from Room-backed implementations
+- DataStore-backed application preferences
+- Hilt modules for database, DAOs, repositories, DataStore, time, IDs, and WorkManager
+- Hilt-enabled periodic maintenance boundary for future recurrence and reminders
+- Deterministic transactional seed fixtures
+- JVM convention tests, Room repository integration tests, schema creation validation, and emulator verification
 
 ### Implemented browser-prototype slices
 
@@ -107,6 +116,7 @@ The bootstrap scripts download the official Gradle wrapper JAR only when it is m
 
 - [Native Android development checklist](docs/progress/android-development.md)
 - [Compose design system](docs/design-system.md)
+- [Local data foundation](docs/local-data-foundation.md)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 - [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
@@ -114,7 +124,6 @@ The bootstrap scripts download the official Gradle wrapper JAR only when it is m
 - [Tasks checklist milestone notes](docs/progress/tasks-destination.md)
 - [Reusable Lists milestone notes](docs/progress/lists-destination.md)
 - [Product requirements](docs/product-requirements.md)
-- [Screens and rough wireframes](docs/screens-and-wireframes.md)
 - [Technical architecture](docs/technical-architecture.md)
 - [Delivery roadmap](docs/roadmap.md)
 - [Open questions](docs/open-questions.md)
@@ -140,6 +149,7 @@ The bootstrap scripts download the official Gradle wrapper JAR only when it is m
 ```text
 nudge/
 ├── app/                         # Native Android application module
+│   └── schemas/                 # Committed Room schema history
 ├── gradle/                      # Version catalog and wrapper configuration
 ├── mockups/
 │   └── prototype/               # Live browser prototype
@@ -148,6 +158,7 @@ nudge/
 │   ├── progress/
 │   │   └── android-development.md
 │   ├── design-system.md
+│   ├── local-data-foundation.md
 │   ├── product-requirements.md
 │   ├── technical-architecture.md
 │   └── roadmap.md
@@ -160,7 +171,7 @@ nudge/
 
 ## Immediate next step
 
-Begin Phase 3 by defining the local domain model, Room schema, repositories, DataStore preferences, migration policy, deterministic development fixtures, and persistence tests.
+Begin Phase 4 by replacing the Tasks foundation screen with repository-backed state and implementing the full checklist workflow: inline creation, editing, completion, subtasks, ordering, indentation, due dates, preferences, Undo, and tests.
 
 ## License
 

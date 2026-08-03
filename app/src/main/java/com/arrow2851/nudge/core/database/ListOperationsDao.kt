@@ -25,6 +25,9 @@ interface ListOperationsDao {
     @Query("SELECT * FROM list_items WHERE id = :itemId LIMIT 1")
     suspend fun getItem(itemId: String): ListItemEntity?
 
+    @Query("SELECT * FROM list_items WHERE list_id = :listId AND archived_at IS NULL ORDER BY is_checked, sort_order")
+    suspend fun getActiveItems(listId: String): List<ListItemEntity>
+
     @Query(
         """
         SELECT * FROM list_items

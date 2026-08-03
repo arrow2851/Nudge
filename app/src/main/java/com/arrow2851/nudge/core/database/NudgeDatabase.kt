@@ -10,6 +10,7 @@ import androidx.room.migration.Migration
         AreaEntity::class,
         SectionEntity::class,
         TaskEntity::class,
+        TaskMainFlagEntity::class,
         ChoreEntity::class,
         ChoreScheduleEntity::class,
         CompletionEntity::class,
@@ -24,16 +25,29 @@ import androidx.room.migration.Migration
 abstract class NudgeDatabase : RoomDatabase() {
     abstract fun areaDao(): AreaDao
     abstract fun taskDao(): TaskDao
+    abstract fun taskOperationsDao(): TaskOperationsDao
     abstract fun choreDao(): ChoreDao
     abstract fun completionDao(): CompletionDao
     abstract fun reusableListDao(): ReusableListDao
 
     companion object {
         const val Name = "nudge.db"
-        const val Version = 1
+        const val Version = 2
     }
 }
 
 object NudgeMigrations {
-    val All: Array<Migration> = emptyArray()
+    val Migration1To2 = Migration(1, 2) { database ->
+        database.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `task_main_flags` (
+                `task_id` TEXT NOT NULL,
+                PRIMARY KEY(`task_id`),
+                FOREIGN KEY(`task_id`) REFERENCES `tasks`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE
+            )
+            """.trimIndent(),
+        )
+    }
+
+    val All: Array<Migration> = arrayOf(Migration1To2)
 }

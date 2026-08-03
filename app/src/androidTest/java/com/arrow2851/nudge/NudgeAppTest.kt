@@ -149,6 +149,41 @@ class NudgeAppTest {
         waitForTextCount("2 cartons", minimumCount = 2, timeoutMillis = 10_000L)
     }
 
+    @Test
+    fun todayAggregatesDueChoreAndSupportsCompletionUndo() {
+        composeRule.onNodeWithContentDescription("Areas destination").performClick()
+        composeRule.onNodeWithContentDescription("Add area").performClick()
+        composeRule.onNodeWithTag("area-name-field").performTextInput("Phase 7 Area")
+        composeRule.onNodeWithTag("save-area").performClick()
+        waitForNode(hasTestTag("area-card-Phase 7 Area"), timeoutMillis = 10_000L)
+        composeRule.onNodeWithTag("area-card-Phase 7 Area").performClick()
+
+        composeRule.onNodeWithContentDescription("Add chore").performClick()
+        composeRule.onNodeWithTag("chore-name-field").performTextInput("Phase 7 due chore")
+        composeRule.onNodeWithTag("save-chore").performScrollTo().performClick()
+        waitForNode(hasTestTag("chore-row-Phase 7 due chore"), timeoutMillis = 10_000L)
+
+        composeRule.onNodeWithContentDescription("Today destination").performClick()
+        waitForNode(hasTestTag("today-due-Phase 7 due chore"), timeoutMillis = 10_000L)
+        composeRule.onNodeWithText("Due today").assertIsDisplayed()
+        composeRule.onNodeWithText("Lists").assertIsDisplayed()
+        composeRule.onNodeWithText("Recent Activity").assertIsDisplayed()
+
+        waitForNode(
+            hasTestTag("today-complete-Phase 7 due chore"),
+            timeoutMillis = 10_000L,
+            useUnmergedTree = true,
+        )
+        composeRule.onNodeWithTag(
+            "today-complete-Phase 7 due chore",
+            useUnmergedTree = true,
+        ).performClick()
+        waitForText("Completed; next occurrence scheduled", timeoutMillis = 10_000L)
+        composeRule.onNodeWithText("Undo").performClick()
+        waitForText("Completion undone", timeoutMillis = 10_000L)
+        waitForNode(hasTestTag("today-due-Phase 7 due chore"), timeoutMillis = 10_000L)
+    }
+
     private fun waitForNode(
         matcher: SemanticsMatcher,
         timeoutMillis: Long = 5_000L,

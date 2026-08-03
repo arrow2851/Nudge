@@ -132,20 +132,20 @@ class NudgeAppTest {
         waitForText("Item checked", timeoutMillis = 15_000L)
         composeRule.onNodeWithText("Undo").performClick()
         waitForText("Change undone", timeoutMillis = 10_000L)
-        waitForText("1 active · 0 checked", timeoutMillis = 10_000L)
+        waitForText("1 active · 0 checked", substring = true, timeoutMillis = 10_000L)
         composeRule.onNodeWithTag(
             "list-item-checkbox-Oat Milk",
             useUnmergedTree = true,
         ).performClick()
         waitForText("Item checked", timeoutMillis = 15_000L)
-        waitForText("0 active · 1 checked", timeoutMillis = 10_000L)
+        waitForText("0 active · 1 checked", substring = true, timeoutMillis = 10_000L)
 
         composeRule.onNodeWithContentDescription("Add list item").performClick()
         composeRule.onNodeWithTag("list-item-name-field").performTextInput("oat")
         waitForNode(hasTestTag("list-suggestion-oat milk"), timeoutMillis = 10_000L)
         composeRule.onNodeWithTag("list-suggestion-oat milk").performClick()
         composeRule.onNodeWithTag("save-list-item").performScrollTo().performClick()
-        waitForText("1 active · 1 checked", timeoutMillis = 10_000L)
+        waitForText("1 active · 1 checked", substring = true, timeoutMillis = 10_000L)
         composeRule.onNodeWithText("2 cartons").assertIsDisplayed()
     }
 

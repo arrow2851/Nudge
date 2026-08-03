@@ -15,12 +15,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -29,7 +28,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -110,7 +108,7 @@ fun ListsOverviewScreen(
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
-                                    if (overview.list.isReusable) Icons.Default.Refresh else Icons.Default.Checklist,
+                                    if (overview.list.isReusable) Icons.Default.Refresh else Icons.Default.CheckCircle,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.primary,
                                 )
@@ -222,8 +220,8 @@ fun ListDetailScreen(
         state is ListsUiState.Error -> ListFatalError(state.message)
         overview == null -> ListFatalError("List not found.")
         else -> {
-            val selected = selectedItemId?.let(ready::item)
-            val parent = subitemParentId?.let(ready::item)
+            val selected = selectedItemId?.let { ready?.item(it) }
+            val parent = subitemParentId?.let { ready?.item(it) }
             LazyColumn(
                 modifier = Modifier.fillMaxSize().testTag("list-detail-${overview.list.name}"),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
@@ -405,7 +403,7 @@ fun ListDetailScreen(
                     }
                 },
             )
-            ready.recoverableError?.let {
+            ready?.recoverableError?.let {
                 ListErrorBanner(it, viewModel::dismissRecoverableError)
             }
         }

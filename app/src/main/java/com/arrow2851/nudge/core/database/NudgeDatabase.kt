@@ -29,6 +29,7 @@ abstract class NudgeDatabase : RoomDatabase() {
     abstract fun choreDao(): ChoreDao
     abstract fun careOperationsDao(): CareOperationsDao
     abstract fun completionDao(): CompletionDao
+    abstract fun todayDao(): TodayDao
     abstract fun reusableListDao(): ReusableListDao
     abstract fun listOperationsDao(): ListOperationsDao
 

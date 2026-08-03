@@ -2,6 +2,7 @@ package com.arrow2851.nudge.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +40,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.arrow2851.nudge.ui.components.NudgeBottomSheet
 import com.arrow2851.nudge.ui.components.NudgeButton
-import com.arrow2851.nudge.ui.components.NudgeButtonStyle
 import com.arrow2851.nudge.ui.components.NudgeCard
 import com.arrow2851.nudge.ui.components.NudgeChip
 import com.arrow2851.nudge.ui.components.NudgeDestination
@@ -314,7 +314,7 @@ private fun FoundationPage(
     eyebrow: String,
     title: String,
     message: String,
-    content: @Composable Column.() -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
         modifier = Modifier

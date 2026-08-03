@@ -181,8 +181,10 @@ class TodayViewModelTest {
         val completedTaskEvent = taskEvent.await() as TodayEvent.ItemCompleted
         assertEquals(now, tasks.nodes.value.single().task.completedAt)
 
+        val taskUndoEvent = async(UnconfinedTestDispatcher(testScheduler)) { viewModel.events.first() }
         viewModel.undoCompletion(completedTaskEvent.undo)
         advanceUntilIdle()
+        assertEquals(TodayEvent.Message("Completion undone"), taskUndoEvent.await())
         assertNull(tasks.nodes.value.single().task.completedAt)
 
         val choreEvent = async(UnconfinedTestDispatcher(testScheduler)) { viewModel.events.first() }
@@ -192,8 +194,10 @@ class TodayViewModelTest {
         assertEquals(CompletionGrade.Deep, chores.lastGrade)
         assertTrue(chores.chores.value.single().chore.nextDueAt != startToday)
 
+        val choreUndoEvent = async(UnconfinedTestDispatcher(testScheduler)) { viewModel.events.first() }
         viewModel.undoCompletion(completedChoreEvent.undo)
         advanceUntilIdle()
+        assertEquals(TodayEvent.Message("Completion undone"), choreUndoEvent.await())
         assertEquals(startToday, chores.chores.value.single().chore.nextDueAt)
     }
 

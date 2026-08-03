@@ -7,10 +7,10 @@ import com.arrow2851.nudge.core.data.ListWorkflowRepository
 import com.arrow2851.nudge.core.model.ListCatalogItem
 import com.arrow2851.nudge.core.model.ListItem
 import com.arrow2851.nudge.core.model.ReusableList
-import com.arrow2851.nudge.core.model.ReusableListWithItems
 import com.arrow2851.nudge.core.model.TimeProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -73,6 +73,7 @@ sealed interface ListsEvent {
     ) : ListsEvent
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ListsViewModel @Inject constructor(
     private val repository: ListWorkflowRepository,

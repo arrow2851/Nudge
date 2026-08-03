@@ -33,6 +33,10 @@ Tables:
 
 Foreign keys protect Area/Section, parent/subitem, Chore/Schedule, List/Item, and completion-history relationships. UI-facing DAO queries return `Flow` and apply active/archive filtering and stable ordering.
 
+The generated schema is committed at:
+
+`app/schemas/com.arrow2851.nudge.core.database.NudgeDatabase/1.json`
+
 ## Migration policy
 
 1. `exportSchema` remains enabled.
@@ -68,5 +72,21 @@ Validation includes:
 
 - JVM convention and converter tests
 - In-memory Room repository integration tests
+- Area/Section ordering and relationship tests
+- Task completion state and timestamp tests
+- Reusable-list item and suggestion tests
 - Seed idempotency tests
 - Exported-schema creation validation with `MigrationTestHelper`
+- Existing app-shell navigation and modal interaction tests
+
+## Verified evidence
+
+Phase 3 was verified on August 3, 2026:
+
+- Android CI run: `30826025127`
+- Tested code commit: `c5aa9d7d1f45095194f900f56a5a9767e549223e`
+- Lint, JVM tests, schema export, and APK job: `91727740611`
+- Repository, schema, seed, and UI emulator job: `91729098110`
+- Debug APK artifact: `8861007957`
+- Room schemas artifact: `8861008650`
+- Instrumentation reports artifact: `8861930353`

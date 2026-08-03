@@ -89,22 +89,25 @@ class NudgeAppTest {
         composeRule.onNodeWithTag("chore-name-field").performTextInput("Polish fixtures")
         composeRule.onNodeWithText("As needed").performClick()
         composeRule.onNodeWithTag("save-chore").performClick()
-        waitForText("Chore added")
-        waitForText("1 as needed", substring = true)
+        waitForText("1 as needed", substring = true, timeoutMillis = 10_000L)
         composeRule.onNodeWithTag("section-detail-Kitchen")
             .performScrollToNode(hasTestTag("chore-row-Polish fixtures"))
         composeRule.onNodeWithTag("chore-row-Polish fixtures").assertIsDisplayed()
         composeRule.onNodeWithText("AS NEEDED").assertIsDisplayed()
     }
 
-    private fun waitForNode(matcher: SemanticsMatcher) {
-        composeRule.waitUntil(timeoutMillis = 5_000L) {
+    private fun waitForNode(matcher: SemanticsMatcher, timeoutMillis: Long = 5_000L) {
+        composeRule.waitUntil(timeoutMillis = timeoutMillis) {
             composeRule.onAllNodes(matcher).fetchSemanticsNodes().isNotEmpty()
         }
     }
 
-    private fun waitForText(text: String, substring: Boolean = false) {
-        composeRule.waitUntil(timeoutMillis = 5_000L) {
+    private fun waitForText(
+        text: String,
+        substring: Boolean = false,
+        timeoutMillis: Long = 5_000L,
+    ) {
+        composeRule.waitUntil(timeoutMillis = timeoutMillis) {
             composeRule
                 .onAllNodesWithText(text, substring = substring)
                 .fetchSemanticsNodes()

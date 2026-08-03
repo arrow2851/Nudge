@@ -18,12 +18,15 @@ class NudgeDatabaseMigrationTest {
 
     @Test
     fun versionOneSchemaCreatesEveryCoreTable() {
-        val database = helper.createDatabase(NudgeDatabase.Version)
+        val database = helper.createDatabase(
+            name = "phase3-schema-test.db",
+            version = NudgeDatabase.Version,
+        )
         val tableNames = mutableSetOf<String>()
 
-        database.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").use { statement ->
-            while (statement.step()) {
-                tableNames += statement.getText(0)
+        database.query("SELECT name FROM sqlite_master WHERE type = 'table'").use { cursor ->
+            while (cursor.moveToNext()) {
+                tableNames += cursor.getString(0)
             }
         }
         database.close()

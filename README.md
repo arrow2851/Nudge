@@ -4,14 +4,14 @@ Nudge is an Android-first, local-first productivity app that organizes recurring
 
 ## Current status
 
-The interactive browser prototype remains the product and interaction reference. Native Android Phases 1–6 are complete and verified on `feature/android-app-development`. Development now proceeds to Phase 7: Today aggregation.
+The interactive browser prototype remains the product and interaction reference. Native Android Phases 1–7 are complete and verified on `feature/android-app-development`. Development now proceeds to Phase 8: recurrence and recommendation engines.
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
 - [Native Android development checklist](docs/progress/android-development.md)
 - [Compose design system](docs/design-system.md)
 - [Local data foundation](docs/local-data-foundation.md)
 - [Android development pull request](https://github.com/arrow2851/Nudge/pull/2)
-- [Verified Phase 5–6 Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30854956621)
+- [Verified Phase 7 Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30861757348)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 
@@ -93,6 +93,21 @@ The interactive browser prototype remains the product and interaction reference.
 - Safe Room upserts, sparse ordering, and archive conventions
 - Migration preservation for Lists, catalog history, quantities, and checked state
 - ViewModel, repository, migration, navigation, and complete emulator workflow tests
+
+### Verified native Today aggregation
+
+- Repository-backed cross-domain aggregation of Tasks, recurring Chores, reusable Lists, and completion history
+- Deterministic Due Today and Overdue grouping in the device timezone
+- Paused and As Needed Chores excluded from scheduled urgency
+- Contextual Area and Section labels for recurring care
+- Quick access to active Lists with checked and active counts
+- Recent Activity across completed Tasks, graded Chores, and checked List Items
+- Task and Chore completion directly from Today with shared snackbar Undo
+- Light, Moderate, and Deep grading from Today for supported Chores
+- Optional Daily Progress and Quick Win cards controlled by existing preferences and off by default
+- Quick Win selection prioritizes short, nudge-eligible overdue or due-today work
+- Room-backed recent-completion read model without a database schema bump
+- Aggregation, grading, completion, Undo, navigation, and full emulator workflow tests
 
 ### Implemented browser-prototype slices
 
@@ -216,7 +231,7 @@ nudge/
 
 ## Immediate next step
 
-Begin Phase 7 by replacing the Today foundation screen with a repository-backed aggregation of overdue and due-now Tasks, recurring Chores, relevant Lists, recent activity, completion grading, and Undo.
+Begin Phase 8 by extracting recurrence maintenance and recommendation logic into explicit engines, then connect them to the existing WorkManager boundary and Today prioritization model.
 
 ## License
 

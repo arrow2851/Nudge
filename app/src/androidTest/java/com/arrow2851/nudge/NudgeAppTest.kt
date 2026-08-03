@@ -146,7 +146,7 @@ class NudgeAppTest {
         composeRule.onNodeWithTag("list-suggestion-oat milk").performClick()
         composeRule.onNodeWithTag("save-list-item").performScrollTo().performClick()
         waitForText("1 active · 1 checked", substring = true, timeoutMillis = 10_000L)
-        composeRule.onNodeWithText("2 cartons").assertIsDisplayed()
+        waitForTextCount("2 cartons", minimumCount = 2, timeoutMillis = 10_000L)
     }
 
     private fun waitForNode(
@@ -172,6 +172,16 @@ class NudgeAppTest {
                 .onAllNodesWithText(text, substring = substring)
                 .fetchSemanticsNodes()
                 .isNotEmpty()
+        }
+    }
+
+    private fun waitForTextCount(
+        text: String,
+        minimumCount: Int,
+        timeoutMillis: Long = 5_000L,
+    ) {
+        composeRule.waitUntil(timeoutMillis = timeoutMillis) {
+            composeRule.onAllNodesWithText(text).fetchSemanticsNodes().size >= minimumCount
         }
     }
 }

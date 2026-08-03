@@ -21,9 +21,9 @@ class NudgeDatabaseMigrationTest {
         val database = helper.createDatabase(NudgeDatabase.Version)
         val tableNames = mutableSetOf<String>()
 
-        database.query("SELECT name FROM sqlite_master WHERE type = 'table'").use { cursor ->
-            while (cursor.moveToNext()) {
-                tableNames += cursor.getString(0)
+        database.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").use { statement ->
+            while (statement.step()) {
+                tableNames += statement.getText(0)
             }
         }
         database.close()

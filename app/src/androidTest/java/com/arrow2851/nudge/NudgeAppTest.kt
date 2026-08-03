@@ -1,7 +1,6 @@
 package com.arrow2851.nudge
 
 import androidx.compose.ui.test.assertCountEquals
-import androidx.compose.ui.test.assertExists
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
@@ -20,7 +19,9 @@ class NudgeAppTest {
     fun appLaunchesAndSwitchesDestinations() {
         composeRule.onNodeWithText("Android foundation is running.").assertExists()
 
-        composeRule.onNodeWithText("Areas").performClick()
-        composeRule.onAllNodesWithText("Areas").assertCountEquals(2)
+        listOf("Areas", "Tasks", "Lists", "Today").forEach { destination ->
+            composeRule.onNodeWithText(destination).performClick()
+            composeRule.onAllNodesWithText(destination).assertCountEquals(2)
+        }
     }
 }

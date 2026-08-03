@@ -30,6 +30,7 @@ abstract class NudgeDatabase : RoomDatabase() {
     abstract fun careOperationsDao(): CareOperationsDao
     abstract fun completionDao(): CompletionDao
     abstract fun reusableListDao(): ReusableListDao
+    abstract fun listOperationsDao(): ListOperationsDao
 
     companion object {
         const val Name = "nudge.db"

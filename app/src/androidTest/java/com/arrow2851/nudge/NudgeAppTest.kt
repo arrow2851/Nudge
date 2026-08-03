@@ -1,8 +1,8 @@
 package com.arrow2851.nudge
 
-import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -16,12 +16,30 @@ class NudgeAppTest {
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun appLaunchesAndSwitchesDestinations() {
-        composeRule.onNodeWithText("Android foundation is running.").assertExists()
+    fun productionShellLaunchesAndSwitchesDestinations() {
+        composeRule.onNodeWithText("Small steps, right now.").assertIsDisplayed()
 
-        listOf("Areas", "Tasks", "Lists", "Today").forEach { destination ->
-            composeRule.onNodeWithText(destination).performClick()
-            composeRule.onAllNodesWithText(destination).assertCountEquals(2)
+        val destinations = listOf(
+            "Areas" to "Keep recurring care visible.",
+            "Tasks" to "One-time tasks stay lightweight.",
+            "Lists" to "Reusable lists remember what matters.",
+            "Today" to "Small steps, right now.",
+        )
+
+        destinations.forEach { (destination, expectedHeadline) ->
+            composeRule
+                .onNodeWithContentDescription("$destination destination")
+                .performClick()
+            composeRule.onNodeWithText(expectedHeadline).assertIsDisplayed()
         }
+    }
+
+    @Test
+    fun quickAddUsesTheSharedBottomSheetAndField() {
+        composeRule.onNodeWithContentDescription("Quick add").performClick()
+        composeRule.onNodeWithText("Capture the thought now. Destination-specific details come next.")
+            .assertIsDisplayed()
+        composeRule.onNodeWithText("Name").assertIsDisplayed()
+        composeRule.onNodeWithText("Save").assertIsDisplayed()
     }
 }

@@ -147,11 +147,11 @@ class RoomListWorkflowRepository @Inject constructor(
         val checkedAt = now.takeIf { checked }
         if (checked && !item.isChecked) {
             val normalized = normalizeName(item.name)
-            val existingCatalog = dao.getCatalogItem(normalized)
-            val catalog = existingCatalog?.toDomain()?.copy(
+            val existingDomain = dao.getCatalogItem(normalized)?.toDomain()
+            val catalog = existingDomain?.copy(
                 displayName = item.name,
-                defaultQuantity = item.quantity ?: existingCatalog.defaultQuantity,
-                timesUsed = existingCatalog.timesUsed + 1,
+                defaultQuantity = item.quantity ?: existingDomain.defaultQuantity,
+                timesUsed = existingDomain.timesUsed + 1,
                 lastUsedAt = now,
             ) ?: ListCatalogItem(
                 id = idGenerator.newId(),
@@ -238,17 +238,8 @@ class RoomListWorkflowRepository @Inject constructor(
         database.withTransaction {
             val item = dao.getItem(itemId) ?: return@withTransaction
             val archivedAt = timeProvider.nowEpochMillis()
-            val children = dao.getChildren(itemId)
-            children.forEachIndexed { index, child ->
-                dao.updateParentAndOrder(
-                    itemId = child.id,
-                    parentItemId = null,
-                    sortOrder = item.sortOrder + index + 1L,
-                    updatedAt = archivedAt,
-                )
-            }
+            releaseChildren(item, archivedAt)
             dao.archiveItem(itemId, archivedAt)
-            if (children.isNotEmpty()) rebalance(item.listId, null)
         }
     }
 
@@ -257,7 +248,29 @@ class RoomListWorkflowRepository @Inject constructor(
     }
 
     override suspend fun clearCheckedItems(listId: String) {
-        dao.archiveCheckedItems(listId, timeProvider.nowEpochMillis())
+        database.withTransaction {
+            val archivedAt = timeProvider.nowEpochMillis()
+            dao.getActiveItems(listId)
+                .filter { it.isChecked && it.parentItemId == null }
+                .forEach { releaseChildren(it, archivedAt) }
+            dao.archiveCheckedItems(listId, archivedAt)
+        }
+    }
+
+    private suspend fun releaseChildren(
+        item: com.arrow2851.nudge.core.database.ListItemEntity,
+        updatedAt: Long,
+    ) {
+        val children = dao.getChildren(item.id)
+        children.forEachIndexed { index, child ->
+            dao.updateParentAndOrder(
+                itemId = child.id,
+                parentItemId = null,
+                sortOrder = item.sortOrder + index + 1L,
+                updatedAt = updatedAt,
+            )
+        }
+        if (children.isNotEmpty()) rebalance(item.listId, null)
     }
 
     private suspend fun rebalance(listId: String, parentItemId: String?) {

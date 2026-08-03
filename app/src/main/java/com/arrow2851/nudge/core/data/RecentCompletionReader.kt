@@ -6,11 +6,15 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class RecentCompletionReader @Inject constructor(
+interface RecentCompletionReader {
+    fun observeRecent(limit: Int = 40): Flow<List<Completion>>
+}
+
+class RoomRecentCompletionReader @Inject constructor(
     database: NudgeDatabase,
-) {
+) : RecentCompletionReader {
     private val dao = database.todayDao()
 
-    fun observeRecent(limit: Int = 40): Flow<List<Completion>> =
+    override fun observeRecent(limit: Int): Flow<List<Completion>> =
         dao.observeRecentCompletions(limit).map { rows -> rows.map { it.toDomain() } }
 }

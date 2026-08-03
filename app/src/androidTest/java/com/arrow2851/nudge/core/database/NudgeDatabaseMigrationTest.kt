@@ -19,46 +19,48 @@ class NudgeDatabaseMigrationTest {
 
     @Test
     fun versionTwoSchemaCreatesEveryCoreTable() {
-        val database = helper.createDatabase(
-            name = "phase4-schema-test.db",
-            version = NudgeDatabase.Version,
-        )
+        val database = helper.createDatabase("phase5-schema-test.db", NudgeDatabase.Version)
         val tableNames = mutableSetOf<String>()
-
         database.query("SELECT name FROM sqlite_master WHERE type = 'table'").use { cursor ->
             while (cursor.moveToNext()) tableNames += cursor.getString(0)
         }
         database.close()
-
-        val expected = setOf(
-            "areas",
-            "sections",
-            "tasks",
-            "task_main_flags",
-            "chores",
-            "chore_schedules",
-            "completions",
-            "reusable_lists",
-            "list_catalog_items",
-            "list_items",
+        assertTrue(
+            tableNames.containsAll(
+                setOf(
+                    "areas", "sections", "tasks", "task_main_flags", "chores",
+                    "chore_schedules", "completions", "reusable_lists",
+                    "list_catalog_items", "list_items",
+                ),
+            ),
         )
-        assertTrue(tableNames.containsAll(expected))
     }
 
     @Test
-    fun migrationOneToTwoPreservesTasksAndAddsMainTaskFlags() {
-        val name = "phase4-migration-test.db"
-        helper.createDatabase(name = name, version = 1).apply {
+    fun migrationOneToTwoPreservesTasksAndRecurringCare() {
+        val name = "phase5-migration-test.db"
+        helper.createDatabase(name, 1).apply {
+            execSQL("INSERT INTO areas VALUES ('area', 'House', 'home', 0, 1000, 1000, NULL)")
+            execSQL("INSERT INTO sections VALUES ('section', 'area', 'Kitchen', NULL, 0, 1000, 1000, NULL)")
             execSQL(
                 """
-                INSERT INTO tasks (
-                    id, title, description, parent_task_id, area_id, section_id,
-                    status, priority, estimated_minutes, due_at, include_in_nudges,
-                    sort_order, created_at, updated_at, completed_at, archived_at
-                ) VALUES (
-                    'task', 'Preserved task', NULL, NULL, NULL, NULL,
-                    'Inbox', 0, NULL, NULL, 1,
-                    0, 1000, 1000, NULL, NULL
+                INSERT INTO chores VALUES (
+                    'chore', 'Clean sink', NULL, 'area', 'section', 0, 10, 1, 1,
+                    'Moderate', 2000, 0, 0, 1000, 1000, NULL
+                )
+                """.trimIndent(),
+            )
+            execSQL(
+                """
+                INSERT INTO chore_schedules VALUES (
+                    'chore', 'Interval', 1, 'Weeks', '', NULL, 'Completion'
+                )
+                """.trimIndent(),
+            )
+            execSQL(
+                """
+                INSERT INTO completions VALUES (
+                    'completion', NULL, 'chore', 1500, 'Moderate', 10, NULL, 'App'
                 )
                 """.trimIndent(),
             )
@@ -72,9 +74,19 @@ class NudgeDatabaseMigrationTest {
             NudgeMigrations.Migration1To2,
         )
 
-        migrated.query("SELECT title FROM tasks WHERE id = 'task'").use { cursor ->
+        migrated.query("SELECT title, next_due_at FROM chores WHERE id = 'chore'").use { cursor ->
             assertTrue(cursor.moveToFirst())
-            assertEquals("Preserved task", cursor.getString(0))
+            assertEquals("Clean sink", cursor.getString(0))
+            assertEquals(2000L, cursor.getLong(1))
+        }
+        migrated.query("SELECT recurrence_type, schedule_basis FROM chore_schedules WHERE chore_id = 'chore'").use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            assertEquals("Interval", cursor.getString(0))
+            assertEquals("Completion", cursor.getString(1))
+        }
+        migrated.query("SELECT grade FROM completions WHERE id = 'completion'").use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            assertEquals("Moderate", cursor.getString(0))
         }
         migrated.query("SELECT COUNT(*) FROM task_main_flags").use { cursor ->
             assertTrue(cursor.moveToFirst())

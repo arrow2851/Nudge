@@ -4,10 +4,12 @@ Nudge is an Android-first, local-first productivity app that organizes recurring
 
 ## Current status
 
-The interactive browser prototype remains the product and interaction reference. Native Android development has begun on `feature/android-app-development`, with the Phase 1 project foundation, dependency stack, launch shell, tests, and CI configuration now in place.
+The interactive browser prototype remains the product and interaction reference. Native Android Phase 1 is complete and verified on `feature/android-app-development`. Development now proceeds to Phase 2: the shared Compose app shell and approved Nudge design system.
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
 - [Native Android development checklist](docs/progress/android-development.md)
+- [Phase 1 pull request](https://github.com/arrow2851/Nudge/pull/2)
+- [Verified Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30787951345)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 - [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
@@ -15,19 +17,21 @@ The interactive browser prototype remains the product and interaction reference.
 - [Tasks checklist milestone notes](docs/progress/tasks-destination.md)
 - [Reusable Lists milestone notes](docs/progress/lists-destination.md)
 
-### Native Android foundation
+### Verified native Android foundation
 
 - Kotlin and Jetpack Compose application module
 - Material 3 and Navigation Compose
-- Hilt dependency injection with KSP
+- Hilt 2.59.2 dependency injection with KSP and AGP 9 support
 - Room, DataStore, WorkManager, and Kotlin Serialization dependencies
 - API 26 minimum and API 37 compile/target configuration
-- Java 17 and Gradle 9.5 build configuration
+- Java 17, AGP 9.3, and Gradle 9.5 build configuration
 - Verified Gradle bootstrap scripts
 - Hilt-enabled application and single Compose activity
 - Temporary Today, Areas, Tasks, and Lists navigation shell
 - JVM and Compose instrumentation smoke tests
-- GitHub Actions lint, test, assemble, and APK artifact workflow
+- GitHub Actions lint, test, assemble, APK artifact, and emulator workflow
+- Debug APK successfully installed and launched on an Android API 35 emulator
+- All four navigation destinations exercised successfully in the connected test
 
 ### Implemented browser-prototype slices
 
@@ -71,7 +75,7 @@ Requirements:
 
 - JDK 17
 - Android SDK platform 37
-- Android SDK build tools 36.0.0
+- Android SDK build tools 37.0.0
 
 macOS or Linux:
 
@@ -83,6 +87,12 @@ Windows:
 
 ```bat
 gradlew.bat :app:assembleDebug
+```
+
+Connected emulator test:
+
+```bash
+bash ./gradlew :app:connectedDebugAndroidTest
 ```
 
 The bootstrap scripts download the official Gradle wrapper JAR only when it is missing and verify its published SHA-256 checksum before execution.
@@ -145,7 +155,7 @@ nudge/
 
 ## Immediate next step
 
-Pass the Phase 1 CI build and verify installation on an emulator or physical phone. Development then moves to Phase 2: the shared Compose app shell and approved Nudge design system.
+Begin Phase 2 by translating the approved prototype tokens and navigation behavior into the production Compose design system and shared app shell.
 
 ## License
 

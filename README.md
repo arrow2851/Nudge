@@ -4,9 +4,10 @@ Nudge is an Android-first, local-first productivity app that organizes recurring
 
 ## Current status
 
-The interactive browser prototype is live and under active feature-by-feature development. The native Android implementation has not started yet.
+The interactive browser prototype remains the product and interaction reference. Native Android development has begun on `feature/android-app-development`, with the Phase 1 project foundation, dependency stack, launch shell, tests, and CI configuration now in place.
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
+- [Native Android development checklist](docs/progress/android-development.md)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 - [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
@@ -14,7 +15,21 @@ The interactive browser prototype is live and under active feature-by-feature de
 - [Tasks checklist milestone notes](docs/progress/tasks-destination.md)
 - [Reusable Lists milestone notes](docs/progress/lists-destination.md)
 
-### Implemented prototype slices
+### Native Android foundation
+
+- Kotlin and Jetpack Compose application module
+- Material 3 and Navigation Compose
+- Hilt dependency injection with KSP
+- Room, DataStore, WorkManager, and Kotlin Serialization dependencies
+- API 26 minimum and API 37 compile/target configuration
+- Java 17 and Gradle 9.5 build configuration
+- Verified Gradle bootstrap scripts
+- Hilt-enabled application and single Compose activity
+- Temporary Today, Areas, Tasks, and Lists navigation shell
+- JVM and Compose instrumentation smoke tests
+- GitHub Actions lint, test, assemble, and APK artifact workflow
+
+### Implemented browser-prototype slices
 
 - Simplified Today screen with Due Today, Overdue, Lists, Recent Activity, grading, and Undo
 - Optional Daily Progress and Quick Win preference flags, both off by default
@@ -50,8 +65,31 @@ The interactive browser prototype is live and under active feature-by-feature de
 - Widgets, voice, and Gemini-assisted entry where they add real value
 - Local-first core functionality with optional cloud features later
 
+## Android build
+
+Requirements:
+
+- JDK 17
+- Android SDK platform 37
+- Android SDK build tools 36.0.0
+
+macOS or Linux:
+
+```bash
+bash ./gradlew :app:assembleDebug
+```
+
+Windows:
+
+```bat
+gradlew.bat :app:assembleDebug
+```
+
+The bootstrap scripts download the official Gradle wrapper JAR only when it is missing and verify its published SHA-256 checksum before execution.
+
 ## Documentation
 
+- [Native Android development checklist](docs/progress/android-development.md)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 - [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
@@ -66,9 +104,9 @@ The interactive browser prototype is live and under active feature-by-feature de
 - [Project decisions](docs/adr/README.md)
 - [Interactive prototype source](mockups/prototype/README.md)
 
-## Proposed Android stack
+## Android stack
 
-- Kotlin
+- Kotlin with AGP built-in Kotlin support
 - Jetpack Compose and Material 3
 - Navigation Compose
 - Room
@@ -76,37 +114,38 @@ The interactive browser prototype is live and under active feature-by-feature de
 - WorkManager
 - Hilt
 - Kotlin Serialization
-- Jetpack Glance widgets
-- UsageStatsManager for selected-app usage sessions
-- Optional Gemini backend integration
+- Jetpack Glance widgets later
+- UsageStatsManager for selected-app usage sessions later
+- Optional Gemini backend integration later
 
 ## Repository structure
 
 ```text
 nudge/
-├── app/                         # Android application module (future)
-├── core/                        # Shared model, database, domain, UI (future)
-├── feature/                     # Feature modules (future)
+├── app/                         # Native Android application module
+├── gradle/                      # Version catalog and wrapper configuration
 ├── mockups/
 │   └── prototype/               # Live browser prototype
 ├── docs/
 │   ├── adr/
 │   ├── progress/
+│   │   └── android-development.md
 │   ├── wireframes/
 │   ├── product-requirements.md
 │   ├── screens-and-wireframes.md
 │   ├── technical-architecture.md
 │   ├── roadmap.md
 │   └── open-questions.md
-├── PROJECT-STATUS.md            # Persistent editable progress tracker
-├── .github/ISSUE_TEMPLATE/
-├── CONTRIBUTING.md
+├── PROJECT-STATUS.md            # Master product tracker
+├── .github/workflows/           # Prototype deployment and Android CI
+├── build.gradle.kts
+├── settings.gradle.kts
 └── README.md
 ```
 
 ## Immediate next step
 
-Review the redesigned Areas, House, and Kitchen flows on a phone. The next major build milestone after this review is the Direct Intervention prototype.
+Pass the Phase 1 CI build and verify installation on an emulator or physical phone. Development then moves to Phase 2: the shared Compose app shell and approved Nudge design system.
 
 ## License
 

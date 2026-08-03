@@ -4,8 +4,9 @@
 **Package:** `com.arrow2851.nudge`  
 **Minimum Android:** API 26  
 **Compile and target Android:** API 37  
-**Current milestone:** Phase 2 — Shared app shell and design system  
-**Phase 1 status:** Completed and verified on August 3, 2026
+**Current milestone:** Phase 3 — Local data foundation  
+**Phase 1 status:** Completed and verified on August 3, 2026  
+**Phase 2 status:** Completed and verified on August 3, 2026
 
 This file is the persistent checklist for native application development. Update it whenever a build task changes state or a product decision alters the implementation order.
 
@@ -67,7 +68,7 @@ This file is the persistent checklist for native application development. Update
 - [x] Add temporary four-destination bottom navigation
 - [x] Preserve destination state when switching tabs
 - [x] Verify all four destinations through an emulator instrumentation test
-- [ ] Replace temporary shell styling with the approved design system in Phase 2
+- [x] Replace temporary shell styling with the approved design system in Phase 2
 
 ### Testing and automation
 
@@ -102,29 +103,100 @@ This file is the persistent checklist for native application development. Update
 - [x] Today, Areas, Tasks, and Lists can all be selected from the temporary navigation bar.
 - [x] No product feature logic is coupled directly to `MainActivity`.
 
-**Phase 1 is closed.** Native development proceeds to Phase 2.
+**Phase 1 is closed.**
 
 ## Phase 2 — Shared app shell and design system
 
-- [ ] Translate approved prototype tokens into Compose tokens
-- [ ] Finalize Nudge color roles
-- [ ] Finalize typography scale
-- [ ] Finalize spacing, corner, elevation, and motion tokens
-- [ ] Create shared screen scaffold
-- [ ] Create production bottom navigation
-- [ ] Add common buttons, rows, cards, chips, fields, sheets, dialogs, snackbars, and empty states
-- [ ] Add accessibility semantics and minimum touch targets
-- [ ] Add large-text and dark-theme test states
-- [ ] Add screenshot or visual-regression strategy
+### Theme and tokens
 
-## Implementation order after Phase 2
+- [x] Translate approved browser-prototype tokens into Compose tokens
+- [x] Finalize light and dark Material 3 color roles
+- [x] Add Nudge-specific success and warning semantic roles
+- [x] Finalize the 12–32 sp typography hierarchy with system font scaling
+- [x] Finalize the 4–32 dp spacing scale
+- [x] Finalize shared 12, 16, 24, and 32 dp shape roles
+- [x] Finalize shared elevation levels
+- [x] Finalize 140 ms fast and 220 ms normal motion timings
+- [x] Add JVM contract tests for spacing, touch-target, and motion tokens
 
-1. Local data foundation
-2. Tasks vertical slice
-3. Areas, Sections, and recurring Chores
-4. Reusable Lists
-5. Today aggregation
-6. Recurrence and recommendation engines
-7. Direct Android intervention
-8. Notifications, widgets, shortcuts, and backup
-9. Release hardening
+### Shared app shell
+
+- [x] Create `NudgeScreenScaffold`
+- [x] Create the production four-destination bottom navigation
+- [x] Replace letter placeholders with semantic Material icons
+- [x] Keep destination state restoration and single-top navigation
+- [x] Add the shared top app bar and destination-specific action slot
+- [x] Add shared snackbar hosting
+- [x] Apply the production shell to Today, Areas, Tasks, and Lists
+
+### Shared components
+
+- [x] Add primary, tonal, outlined, and text buttons
+- [x] Add shared bordered surface cards
+- [x] Add reusable list rows with optional leading, trailing, and divider content
+- [x] Add shared chips
+- [x] Add shared outlined text fields
+- [x] Add shared empty states
+- [x] Add shared confirmation dialogs
+- [x] Add shared modal bottom sheets
+- [x] Add shared snackbars
+- [x] Add shared section labels
+
+### Accessibility and visual validation
+
+- [x] Enforce a 48 dp minimum interactive touch target in shared components
+- [x] Add explicit navigation semantics
+- [x] Avoid duplicate descriptions for decorative icons
+- [x] Add canonical light-theme component preview
+- [x] Add canonical dark-theme component preview
+- [x] Add canonical 160% font-scale component preview
+- [x] Document the preview-driven visual-regression baseline strategy
+- [x] Document the future stable-screen screenshot baseline process
+- [x] Verify destination navigation through semantics on an emulator
+- [x] Verify the shared quick-add bottom sheet and field on an emulator
+
+### Phase 2 verification evidence
+
+- [x] [Android CI run 42](https://github.com/arrow2851/Nudge/actions/runs/30821406558) completed successfully
+- [x] Commit tested: `d719f73662c75beaa6c09cb081f3ec0e67a8ee2a`
+- [x] Lint, token tests, and assemble job: `91711982382`
+- [x] Emulator shell and quick-add job: `91713172922`
+- [x] Debug APK artifact: `8859115008`
+- [x] Verification reports artifact: `8859115695`
+- [x] Instrumentation reports artifact: `8859310348`
+
+### Phase 2 exit criteria
+
+- [x] Approved prototype colors, type hierarchy, spacing, shapes, elevation, and motion are represented by reusable Compose tokens.
+- [x] Today, Areas, Tasks, and Lists use one production app scaffold and bottom navigation implementation.
+- [x] Common controls, surfaces, rows, fields, modal surfaces, feedback, and empty states are available as shared components.
+- [x] Interactive shared components meet the 48 dp minimum target and navigation is semantically addressable.
+- [x] Light, dark, and large-text review states exist and the visual-regression process is documented.
+- [x] Lint, JVM tests, debug assembly, emulator installation, navigation, and modal interaction all pass in CI.
+
+**Phase 2 is closed.** Native development proceeds to Phase 3: the local data foundation.
+
+## Phase 3 — Local data foundation
+
+- [ ] Define domain models for Areas, Sections, Chores, Tasks, Lists, and List Items
+- [ ] Define stable IDs, ordering, completion, archive, and timestamp conventions
+- [ ] Create Room entities and relationship models
+- [ ] Create DAOs and observable queries
+- [ ] Create Room database and migrations policy
+- [ ] Create repository interfaces and local implementations
+- [ ] Add Hilt database and repository modules
+- [ ] Add DataStore-backed application preferences
+- [ ] Add WorkManager scheduling boundary for recurrence and reminders
+- [ ] Add deterministic seed fixtures for development and screenshot states
+- [ ] Add repository and migration tests
+
+## Implementation order after Phase 3
+
+1. Tasks vertical slice
+2. Areas, Sections, and recurring Chores
+3. Reusable Lists
+4. Today aggregation
+5. Recurrence and recommendation engines
+6. Direct Android intervention
+7. Notifications, widgets, shortcuts, and backup
+8. Release hardening

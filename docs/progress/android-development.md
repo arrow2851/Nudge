@@ -4,9 +4,10 @@
 **Package:** `com.arrow2851.nudge`  
 **Minimum Android:** API 26  
 **Compile and target Android:** API 37  
-**Current milestone:** Phase 3 — Local data foundation  
+**Current milestone:** Phase 4 — Tasks vertical slice  
 **Phase 1 status:** Completed and verified on August 3, 2026  
-**Phase 2 status:** Completed and verified on August 3, 2026
+**Phase 2 status:** Completed and verified on August 3, 2026  
+**Phase 3 status:** Completed and verified on August 3, 2026
 
 This file is the persistent checklist for native application development. Update it whenever a build task changes state or a product decision alters the implementation order.
 
@@ -174,29 +175,107 @@ This file is the persistent checklist for native application development. Update
 - [x] Light, dark, and large-text review states exist and the visual-regression process is documented.
 - [x] Lint, JVM tests, debug assembly, emulator installation, navigation, and modal interaction all pass in CI.
 
-**Phase 2 is closed.** Native development proceeds to Phase 3: the local data foundation.
+**Phase 2 is closed.**
 
 ## Phase 3 — Local data foundation
 
-- [ ] Define domain models for Areas, Sections, Chores, Tasks, Lists, and List Items
-- [ ] Define stable IDs, ordering, completion, archive, and timestamp conventions
-- [ ] Create Room entities and relationship models
-- [ ] Create DAOs and observable queries
-- [ ] Create Room database and migrations policy
-- [ ] Create repository interfaces and local implementations
-- [ ] Add Hilt database and repository modules
-- [ ] Add DataStore-backed application preferences
-- [ ] Add WorkManager scheduling boundary for recurrence and reminders
-- [ ] Add deterministic seed fixtures for development and screenshot states
-- [ ] Add repository and migration tests
+### Domain and persistence conventions
 
-## Implementation order after Phase 3
+- [x] Define immutable domain models for Areas, Sections, Tasks, Chores, Chore Schedules, Completions, Reusable Lists, List Items, catalog suggestions, and preferences
+- [x] Finalize **Section** as the persisted Area subdivision name
+- [x] Use UUID-compatible string identifiers
+- [x] Use UTC epoch-millisecond timestamps
+- [x] Use sparse `Long` ordering with a 1,024-point insertion gap
+- [x] Represent completion with nullable timestamps and status where applicable
+- [x] Represent normal deletion through nullable archive timestamps
+- [x] Add explicit Room converters for enums and weekday sets
 
-1. Tasks vertical slice
-2. Areas, Sections, and recurring Chores
-3. Reusable Lists
-4. Today aggregation
-5. Recurrence and recommendation engines
-6. Direct Android intervention
-7. Notifications, widgets, shortcuts, and backup
-8. Release hardening
+### Room database
+
+- [x] Create entities and relationship models for all Phase 3 domains
+- [x] Add foreign keys and query indices
+- [x] Create observable DAO queries using `Flow`
+- [x] Add stable ordering and active/archive filtering to UI-facing queries
+- [x] Create `NudgeDatabase` version 1
+- [x] Enable Room schema export through the Room Gradle plugin
+- [x] Commit `app/schemas/com.arrow2851.nudge.core.database.NudgeDatabase/1.json`
+- [x] Create the centralized `NudgeMigrations.All` registration point
+- [x] Document the no-destructive-fallback migration policy
+
+### Repositories and application services
+
+- [x] Create repository interfaces independent of Room
+- [x] Create Room-backed local repository implementations
+- [x] Add entity/domain mappings
+- [x] Add transactional Chore and Schedule persistence
+- [x] Add DataStore-backed application preferences
+- [x] Add injected ID and time providers
+- [x] Add Hilt database, DAO, repository, DataStore, time, ID, and scheduler bindings
+- [x] Add Hilt-enabled WorkManager configuration
+- [x] Add the unique periodic maintenance scheduling boundary
+- [x] Keep recurrence and reminder mutations out of the worker until their domain phase
+
+### Fixtures and verification
+
+- [x] Add deterministic Area, Section, Task, Chore, List, List Item, and catalog fixtures
+- [x] Add transactional and idempotent database seeding
+- [x] Add JVM convention and converter tests
+- [x] Add in-memory Room repository integration tests
+- [x] Test Area/Section ordering and relationships
+- [x] Test Task completion state and timestamps
+- [x] Test reusable-list items and catalog suggestions
+- [x] Test deterministic seed idempotency
+- [x] Add exported-schema creation validation with `MigrationTestHelper`
+- [x] Retain generated Room schemas as a CI artifact
+- [x] Preserve the Phase 2 navigation and modal emulator tests
+
+### Phase 3 verification evidence
+
+- [x] [Android CI run 97](https://github.com/arrow2851/Nudge/actions/runs/30826025127) completed successfully
+- [x] Commit tested: `c5aa9d7d1f45095194f900f56a5a9767e549223e`
+- [x] Lint, JVM tests, schema export, and assemble job: `91727740611`
+- [x] Repository, schema, seed, navigation, and modal emulator job: `91729098110`
+- [x] Debug APK artifact: `8861007957`
+- [x] Room schemas artifact: `8861008650`
+- [x] Verification reports artifact: `8861009401`
+- [x] Instrumentation reports artifact: `8861930353`
+- [x] Downloaded APK SHA-256: `c0a7bb64b3fc0cef9f36bfc3a4360988b514d2f9101f38c3dc9a73ff3ad5b60c`
+
+### Phase 3 exit criteria
+
+- [x] Every approved core item type has a domain model and local persistence representation.
+- [x] Room relations, observable queries, repositories, Hilt bindings, and DataStore preferences compile and pass lint.
+- [x] Database version 1 has a committed exported schema and documented explicit-migration policy.
+- [x] Deterministic fixtures seed transactionally and do not duplicate existing data.
+- [x] WorkManager and Hilt expose a stable boundary for later recurrence and reminder work.
+- [x] Repository behavior and schema creation pass on an Android emulator.
+- [x] The application still installs, launches, navigates, and opens shared modal UI after the data layer is added.
+
+**Phase 3 is closed.** Native development proceeds to Phase 4: the Tasks vertical slice.
+
+## Phase 4 — Tasks vertical slice
+
+- [ ] Replace the Tasks foundation content with repository-backed state
+- [ ] Add top and bottom inline task creation
+- [ ] Add checkbox completion and Undo
+- [ ] Move completed root tasks below active tasks
+- [ ] Add Show/Hide Completed behavior from DataStore preferences
+- [ ] Add tap-to-edit task sheet
+- [ ] Add optional due date and due shorthand
+- [ ] Add Main Task and subtask behavior
+- [ ] Add parent/child completion synchronization
+- [ ] Add hold-to-reorder with sparse ordering and rebalance fallback
+- [ ] Add swipe-right indentation and swipe-left unindentation
+- [ ] Add empty, loading, and recoverable error states
+- [ ] Add ViewModel, repository, and Compose UI tests
+- [ ] Add emulator interaction coverage for the complete Tasks workflow
+
+## Implementation order after Phase 4
+
+1. Areas, Sections, and recurring Chores
+2. Reusable Lists
+3. Today aggregation
+4. Recurrence and recommendation engines
+5. Direct Android intervention
+6. Notifications, widgets, shortcuts, and backup
+7. Release hardening

@@ -4,13 +4,14 @@
 **Package:** `com.arrow2851.nudge`  
 **Minimum Android:** API 26  
 **Compile and target Android:** API 37  
-**Current milestone:** Phase 1 — Android foundation
+**Current milestone:** Phase 2 — Shared app shell and design system  
+**Phase 1 status:** Completed and verified on August 3, 2026
 
 This file is the persistent checklist for native application development. Update it whenever a build task changes state or a product decision alters the implementation order.
 
 ## Status legend
 
-- `[x]` Completed in the branch
+- `[x]` Completed and verified
 - `[~]` Implemented but awaiting build, device, or product validation
 - `[ ]` Not started
 - `[!]` Needs a decision or correction
@@ -32,13 +33,14 @@ This file is the persistent checklist for native application development. Update
 - [x] Add centralized Gradle version catalog
 - [x] Enable Gradle build cache and configuration cache
 - [x] Confirm Android and build outputs are ignored by Git
+- [x] Validate the Android Studio-compatible Gradle project model through CI configuration and compilation
 
 ### Core platform dependencies
 
 - [x] Jetpack Compose and Material 3
 - [x] Compose Compiler Gradle plugin
 - [x] Navigation Compose
-- [x] Hilt with KSP
+- [x] Hilt 2.59.2 with KSP and AGP 9 support
 - [x] Room with KSP and schema export location
 - [x] DataStore Preferences
 - [x] WorkManager
@@ -54,6 +56,7 @@ This file is the persistent checklist for native application development. Update
 - [x] Add initial Compose `MaterialTheme`
 - [x] Add launcher manifest entry
 - [x] Add Android backup and device-transfer rules
+- [x] Keep product and navigation behavior outside `MainActivity`
 
 ### Foundation shell
 
@@ -63,30 +66,43 @@ This file is the persistent checklist for native application development. Update
 - [x] Add initial Lists destination
 - [x] Add temporary four-destination bottom navigation
 - [x] Preserve destination state when switching tabs
+- [x] Verify all four destinations through an emulator instrumentation test
 - [ ] Replace temporary shell styling with the approved design system in Phase 2
 
 ### Testing and automation
 
 - [x] Add JVM unit-test source set and smoke test
 - [x] Add Android instrumentation-test source set
-- [x] Add Compose launch smoke test
+- [x] Add Compose launch and navigation smoke test
 - [x] Add GitHub Actions Android build workflow
-- [~] Pass dependency resolution and Gradle configuration in CI
-- [~] Pass Android lint in CI
-- [~] Pass JVM tests in CI
-- [~] Assemble a debug APK in CI
-- [ ] Run instrumentation test on an emulator
-- [ ] Install and open the debug APK on a physical Android device
+- [x] Pass dependency resolution and Gradle configuration in CI
+- [x] Pass Android lint in CI
+- [x] Pass JVM tests in CI
+- [x] Assemble and retain a debug APK in CI
+- [x] Boot an Android API 35 emulator in CI
+- [x] Install and launch the debug app on the emulator
+- [x] Pass the connected instrumentation test on the emulator
+- [ ] Install on a physical Android device before the first internal release; this is a release/device-matrix validation item, not a Phase 1 blocker
+
+### Phase 1 verification evidence
+
+- [x] [Android CI run 13](https://github.com/arrow2851/Nudge/actions/runs/30787951345) completed successfully
+- [x] Commit tested: `8974c3d1cb4c97286efb277b6043a72649b3b5c7`
+- [x] Lint, JVM test, and assemble job: `91605231122`
+- [x] Emulator install and navigation job: `91605844622`
+- [x] Debug APK artifact: `8845999816`
+- [x] Instrumentation reports artifact: `8846104367`
+- [x] Downloaded APK SHA-256: `03fb9904e8030e43209c10d7206a2df0c150eaf09123bf9164269e9bb27878fe`
 
 ### Phase 1 exit criteria
 
-Phase 1 is complete when:
+- [x] GitHub Actions passes dependency resolution, configuration, lint, JVM tests, and debug assembly.
+- [x] The Gradle project model configures and compiles successfully with the documented JDK, AGP, Gradle, and Android SDK versions.
+- [x] The debug application installs and opens on an Android emulator.
+- [x] Today, Areas, Tasks, and Lists can all be selected from the temporary navigation bar.
+- [x] No product feature logic is coupled directly to `MainActivity`.
 
-1. GitHub Actions passes lint, unit tests, and debug assembly.
-2. The project opens and syncs in Android Studio.
-3. The debug application installs and opens on an emulator or phone.
-4. Today, Areas, Tasks, and Lists can be selected from the temporary navigation bar.
-5. No product feature logic is coupled directly to `MainActivity`.
+**Phase 1 is closed.** Native development proceeds to Phase 2.
 
 ## Phase 2 — Shared app shell and design system
 

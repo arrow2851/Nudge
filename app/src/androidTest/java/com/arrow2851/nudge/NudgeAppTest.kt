@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -88,7 +89,7 @@ class NudgeAppTest {
         composeRule.onNodeWithContentDescription("Add chore").performClick()
         composeRule.onNodeWithTag("chore-name-field").performTextInput("Polish fixtures")
         composeRule.onNodeWithText("As needed").performClick()
-        composeRule.onNodeWithTag("save-chore").performClick()
+        composeRule.onNodeWithTag("save-chore").performScrollTo().performClick()
         waitForText("1 as needed", substring = true, timeoutMillis = 10_000L)
         composeRule.onNodeWithTag("section-detail-Kitchen")
             .performScrollToNode(hasTestTag("chore-row-Polish fixtures"))

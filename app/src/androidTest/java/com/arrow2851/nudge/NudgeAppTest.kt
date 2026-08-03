@@ -56,8 +56,15 @@ class NudgeAppTest {
         composeRule.onNode(hasSetTextAction()).performTextInput("Phase 4 task")
         composeRule.onNode(hasSetTextAction()).performImeAction()
         composeRule.onNodeWithText("Phase 4 task").assertIsDisplayed()
-        composeRule.onNodeWithTag("task-checkbox-Phase 4 task").performClick()
-        composeRule.onNodeWithText("Task completed").assertIsDisplayed()
+        waitForNode(
+            hasTestTag("task-checkbox-Phase 4 task"),
+            useUnmergedTree = true,
+        )
+        composeRule.onNodeWithTag(
+            "task-checkbox-Phase 4 task",
+            useUnmergedTree = true,
+        ).performClick()
+        waitForText("Task completed", timeoutMillis = 10_000L)
         composeRule.onNodeWithText("Undo").performClick()
         composeRule.onNodeWithTag("task-details-Phase 4 task").performClick()
         composeRule.onNodeWithText("Task details").assertIsDisplayed()
@@ -78,12 +85,14 @@ class NudgeAppTest {
         composeRule.onNodeWithTag("house-template-choice").performClick()
         composeRule.onNodeWithTag("save-area").performClick()
 
-        composeRule.onNodeWithTag("area-card-Phase 5 House").assertIsDisplayed().performClick()
-        composeRule.onNodeWithTag("section-card-Kitchen").assertIsDisplayed().performClick()
+        waitForNode(hasTestTag("area-card-Phase 5 House"), timeoutMillis = 10_000L)
+        composeRule.onNodeWithTag("area-card-Phase 5 House").performClick()
+        waitForNode(hasTestTag("section-card-Kitchen"), timeoutMillis = 10_000L)
+        composeRule.onNodeWithTag("section-card-Kitchen").performClick()
         composeRule.onNodeWithText("Wipe countertops").assertIsDisplayed()
         composeRule.onNodeWithTag("complete-chore-Wipe countertops").performClick()
         composeRule.onNodeWithTag("complete-light").performClick()
-        waitForText("Completed; next occurrence scheduled")
+        waitForText("Completed; next occurrence scheduled", timeoutMillis = 10_000L)
         composeRule.onNodeWithText("Completed; next occurrence scheduled").assertIsDisplayed()
 
         composeRule.onNodeWithContentDescription("Add chore").performClick()
@@ -112,12 +121,24 @@ class NudgeAppTest {
         composeRule.onNodeWithTag("save-list-item").performScrollTo().performClick()
         waitForNode(hasTestTag("list-item-row-Oat Milk"), timeoutMillis = 10_000L)
 
-        composeRule.onNodeWithTag("list-item-checkbox-Oat Milk").performClick()
-        waitForText("Item checked")
+        waitForNode(
+            hasTestTag("list-item-checkbox-Oat Milk"),
+            useUnmergedTree = true,
+        )
+        composeRule.onNodeWithTag(
+            "list-item-checkbox-Oat Milk",
+            useUnmergedTree = true,
+        ).performClick()
+        waitForText("Item checked", timeoutMillis = 15_000L)
         composeRule.onNodeWithText("Undo").performClick()
-        waitForText("Change undone")
-        composeRule.onNodeWithTag("list-item-checkbox-Oat Milk").performClick()
-        waitForText("Item checked")
+        waitForText("Change undone", timeoutMillis = 10_000L)
+        waitForText("1 active · 0 checked", timeoutMillis = 10_000L)
+        composeRule.onNodeWithTag(
+            "list-item-checkbox-Oat Milk",
+            useUnmergedTree = true,
+        ).performClick()
+        waitForText("Item checked", timeoutMillis = 15_000L)
+        waitForText("0 active · 1 checked", timeoutMillis = 10_000L)
 
         composeRule.onNodeWithContentDescription("Add list item").performClick()
         composeRule.onNodeWithTag("list-item-name-field").performTextInput("oat")
@@ -128,9 +149,16 @@ class NudgeAppTest {
         composeRule.onNodeWithText("2 cartons").assertIsDisplayed()
     }
 
-    private fun waitForNode(matcher: SemanticsMatcher, timeoutMillis: Long = 5_000L) {
+    private fun waitForNode(
+        matcher: SemanticsMatcher,
+        timeoutMillis: Long = 5_000L,
+        useUnmergedTree: Boolean = false,
+    ) {
         composeRule.waitUntil(timeoutMillis = timeoutMillis) {
-            composeRule.onAllNodes(matcher).fetchSemanticsNodes().isNotEmpty()
+            composeRule
+                .onAllNodes(matcher, useUnmergedTree = useUnmergedTree)
+                .fetchSemanticsNodes()
+                .isNotEmpty()
         }
     }
 

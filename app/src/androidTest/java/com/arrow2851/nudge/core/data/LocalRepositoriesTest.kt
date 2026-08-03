@@ -86,7 +86,7 @@ class LocalRepositoriesTest {
 
     @Test
     fun completingATaskUpdatesStatusAndTimestamp() = runBlocking {
-        val repository = LocalTaskRepository(database.taskDao(), fixedTime)
+        val repository = LocalTaskRepository(database, database.taskDao(), fixedTime)
         repository.saveTask(
             Task(
                 id = "task",

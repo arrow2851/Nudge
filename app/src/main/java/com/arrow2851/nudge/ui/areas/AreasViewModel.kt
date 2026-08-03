@@ -265,7 +265,7 @@ class AreasViewModel @Inject constructor(
             val sortOrder = existing?.chore?.sortOrder ?: SortOrders.after(
                 sameGroup.maxOfOrNull { it.chore.sortOrder } ?: -SortOrders.Gap,
             )
-            val recurrence = normalizeRecurrence(draft, now)
+            val recurrence = normalizeRecurrence(draft, choreId, now)
             val chore = Chore(
                 id = choreId,
                 title = draft.title.trim(),
@@ -342,44 +342,47 @@ class AreasViewModel @Inject constructor(
         recoverableError.value = null
     }
 
-    private fun normalizeRecurrence(draft: ChoreDraft, now: Long): ChoreSchedule {
+    private fun normalizeRecurrence(
+        draft: ChoreDraft,
+        choreId: String,
+        now: Long,
+    ): ChoreSchedule {
         val zone = ZoneId.systemDefault()
         val date = Instant.ofEpochMilli(draft.firstDueAt ?: now).atZone(zone)
         return when (draft.recurrenceType) {
             RecurrenceType.WhenNeeded,
-            RecurrenceType.None,
-            -> ChoreSchedule(
-                choreId = draft.id ?: "pending",
+            RecurrenceType.None -> ChoreSchedule(
+                choreId = choreId,
                 recurrenceType = RecurrenceType.WhenNeeded,
                 scheduleBasis = draft.scheduleBasis,
             )
             RecurrenceType.Interval -> ChoreSchedule(
-                choreId = draft.id ?: "pending",
+                choreId = choreId,
                 recurrenceType = RecurrenceType.Interval,
                 intervalValue = draft.intervalValue.coerceAtLeast(1),
                 intervalUnit = draft.intervalUnit,
                 scheduleBasis = draft.scheduleBasis,
             )
             RecurrenceType.Weekly -> ChoreSchedule(
-                choreId = draft.id ?: "pending",
+                choreId = choreId,
                 recurrenceType = RecurrenceType.Weekly,
                 daysOfWeek = setOf(date.dayOfWeek.value),
                 scheduleBasis = draft.scheduleBasis,
             )
             RecurrenceType.Monthly -> ChoreSchedule(
-                choreId = draft.id ?: "pending",
+                choreId = choreId,
                 recurrenceType = RecurrenceType.Monthly,
                 dayOfMonth = date.dayOfMonth,
                 scheduleBasis = draft.scheduleBasis,
             )
             RecurrenceType.Custom -> ChoreSchedule(
-                choreId = draft.id ?: "pending",
+                choreId = choreId,
                 recurrenceType = RecurrenceType.Custom,
                 intervalValue = draft.intervalValue.coerceAtLeast(1),
                 intervalUnit = draft.intervalUnit,
                 scheduleBasis = draft.scheduleBasis,
             )
-        }.copy(choreId = draft.id ?: "pending")
+        }
     }
 
     private fun ready(): AreasUiState.Ready? = uiState.value as? AreasUiState.Ready

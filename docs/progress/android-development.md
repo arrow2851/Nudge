@@ -4,11 +4,13 @@
 **Package:** `com.arrow2851.nudge`  
 **Minimum Android:** API 26  
 **Compile and target Android:** API 37  
-**Current milestone:** Phase 5 — Areas, Sections, and recurring Chores  
+**Current milestone:** Phase 7 — Today aggregation  
 **Phase 1 status:** Completed and verified on August 3, 2026  
 **Phase 2 status:** Completed and verified on August 3, 2026  
 **Phase 3 status:** Completed and verified on August 3, 2026  
-**Phase 4 status:** Completed and verified on August 3, 2026
+**Phase 4 status:** Completed and verified on August 3, 2026  
+**Phase 5 status:** Completed and verified on August 3, 2026  
+**Phase 6 status:** Completed and verified on August 3, 2026
 
 This file is the persistent checklist for native application development. Update it whenever a build task changes state or a product decision alters the implementation order.
 
@@ -328,26 +330,143 @@ This file is the persistent checklist for native application development. Update
 - [x] Gesture behavior has accessible non-gesture alternatives.
 - [x] Lint, unit tests, schema generation, APK assembly, migration tests, repository tests, navigation, and the complete Tasks workflow pass in CI.
 
-**Phase 4 is closed.** Native development proceeds to Phase 5: Areas, Sections, and recurring Chores.
+**Phase 4 is closed.**
 
 ## Phase 5 — Areas, Sections, and recurring Chores
 
-- [ ] Replace the Areas foundation content with repository-backed state
-- [ ] Implement Area overview attention summaries
-- [ ] Add Area creation, editing, ordering, archiving, and templates
-- [ ] Add optional Section creation, editing, ordering, and archiving
-- [ ] Implement recurring Chore creation and editing
-- [ ] Add Light, Moderate, and Deep completion grading
-- [ ] Add calendar-based and completion-based schedule behavior
-- [ ] Add Area-level quick completion and Section routine lists
-- [ ] Add paused and As Needed states
-- [ ] Add repository, recurrence, migration, ViewModel, and emulator tests
+### Repository-backed recurring care
 
-## Implementation order after Phase 5
+- [x] Replace the Areas foundation content with repository-backed state
+- [x] Implement Area overview attention summaries
+- [x] Add loading, empty, fatal-error, and recoverable-mutation states
+- [x] Keep Area, Section, Chore, Schedule, and Completion mutations transactional
+- [x] Use safe Room upserts so edits preserve schedules and completion history
 
-1. Reusable Lists
-2. Today aggregation
-3. Recurrence and recommendation engines
-4. Direct Android intervention
-5. Notifications, widgets, shortcuts, and backup
-6. Release hardening
+### Areas and Sections
+
+- [x] Add Area creation, editing, ordering, and archiving
+- [x] Add optional Section creation, editing, ordering, and archiving
+- [x] Release Section chores safely to the Area General group when a Section is archived
+- [x] Archive an Area and its recurring-care contents transactionally
+- [x] Add idempotent House and Car templates
+- [x] Keep the Car template Section-free by design
+
+### Recurring Chores and schedules
+
+- [x] Implement recurring Chore creation and editing
+- [x] Support Area-level General chores without a Section
+- [x] Add daily, weekly, monthly, custom interval, and As Needed schedules
+- [x] Add calendar-based and completion-based schedule behavior
+- [x] Preserve calendar cadence while catching up to the next future occurrence
+- [x] Clamp monthly schedules safely for shorter months
+- [x] Add paused, resumed, skipped-occurrence, and As Needed states
+- [x] Make long Chore editor sheets scrollable on compact screens
+
+### Completion and grading
+
+- [x] Add Light, Moderate, and Deep completion grading
+- [x] Record completion history and advance recurrence transactionally
+- [x] Add snackbar Undo for graded completion
+- [x] Add Area-level quick completion before Section navigation
+- [x] Group Section routines into Needs Attention, Coming Up, As Needed, and Paused
+
+### Phase 5 tests and verification
+
+- [x] Add recurrence calendar tests
+- [x] Add Areas ViewModel orchestration tests
+- [x] Add Room repository tests for templates, grading, completion, Undo, Section release, and Area archive
+- [x] Verify migration 1→2 preserves existing Areas, Sections, Chores, schedules, and completion history
+- [x] Add complete House-template, graded-completion, and As Needed emulator workflow
+- [x] Preserve Tasks, navigation, and quick-add regression coverage
+
+### Phase 5 verification evidence
+
+- [x] [Android CI run 219](https://github.com/arrow2851/Nudge/actions/runs/30854956621) completed successfully
+- [x] Commit tested: `82c00934aecccc2c27404c627e4478ac7090b1c9`
+- [x] Lint, unit tests, schema export, and assemble job: `91823691051`
+- [x] Migration, repository, navigation, Tasks, recurring-care, and Lists emulator job: `91824929244`
+- [x] Debug APK artifact: `8872210708`
+- [x] Room schemas artifact: `8872211212`
+- [x] Verification reports artifact: `8872211752`
+- [x] Instrumentation reports artifact: `8872402961`
+
+### Phase 5 exit criteria
+
+- [x] Areas, optional Sections, recurring Chores, schedules, completion history, and templates render from repository-backed Room state.
+- [x] Calendar-based and completion-based cadence behavior is deterministic and tested.
+- [x] Completion grading, recurrence advancement, pause/resume, skip, As Needed, and Undo are persisted.
+- [x] Section and Area archive behavior preserves or archives child data according to the approved product rules.
+- [x] Room remains at version 2 because recurring-care tables already existed; migration-preservation tests verify existing recurring-care data survives 1→2.
+- [x] Lint, JVM tests, schema generation, APK assembly, migration tests, repository tests, navigation, and the complete recurring-care emulator workflow pass in CI.
+
+**Phase 5 is closed.**
+
+## Phase 6 — Reusable Lists
+
+### Repository-backed Lists
+
+- [x] Replace the Lists foundation content with repository-backed state
+- [x] Add reusable and one-off List creation, editing, ordering, and archiving
+- [x] Add destination-specific top app-bar creation for Lists and List Items
+- [x] Add bottom contextual List and Item creation controls
+- [x] Add loading, empty, fatal-error, and recoverable-mutation states
+
+### List Items and hierarchy
+
+- [x] Add List Item creation and editing
+- [x] Add optional quantity or note
+- [x] Add checkbox completion and snackbar Undo
+- [x] Group active and checked items
+- [x] Add one level of subitems
+- [x] Add move, indent, unindent, and accessible non-gesture alternatives
+- [x] Release children safely when a parent item is removed
+- [x] Preserve unchecked children when checked parents are cleared
+- [x] Add reusable-list Return Checked behavior
+- [x] Add Clear Checked behavior
+
+### Learned suggestions
+
+- [x] Learn catalog suggestions only when an item is newly checked
+- [x] Normalize names for cross-list matching
+- [x] Rank suggestions by favorite, use count, recency, and name
+- [x] Restore the preferred quantity when a suggestion is selected
+- [x] Filter active duplicates from the suggestion picker
+- [x] Keep completely new items available without requiring a suggestion
+
+### Phase 6 tests and verification
+
+- [x] Add Lists ViewModel tests for creation and completion events
+- [x] Add Room repository tests for suggestion learning, Undo, hierarchy, ordering, reset, clear, and archive
+- [x] Verify migration 1→2 preserves Lists, catalog history, quantities, and checked state
+- [x] Add complete emulator coverage for reusable List creation, quantity, completion, Undo, learned suggestion, and quantity restoration
+- [x] Preserve Tasks, recurring-care, navigation, and quick-add regression coverage
+
+### Phase 6 verification evidence
+
+- [x] [Android CI run 219](https://github.com/arrow2851/Nudge/actions/runs/30854956621) completed successfully
+- [x] Commit tested: `82c00934aecccc2c27404c627e4478ac7090b1c9`
+- [x] Lint, unit tests, schema export, and assemble job: `91823691051`
+- [x] Twenty-one-test emulator job: `91824929244`
+- [x] Debug APK artifact: `8872210708`
+- [x] Room schemas artifact: `8872211212`
+- [x] Verification reports artifact: `8872211752`
+- [x] Instrumentation reports artifact: `8872402961`
+
+### Phase 6 exit criteria
+
+- [x] Reusable and one-off Lists render entirely from repository-backed Room state.
+- [x] List creation, editing, ordering, archive, item quantities, completion, Undo, hierarchy, reset, and clear are persisted.
+- [x] Checked items populate ranked cross-list suggestions and restore preferred quantities.
+- [x] Parent removal and completed-item clearing preserve unchecked children according to the approved hierarchy rules.
+- [x] Room remains at version 2 because List tables already existed; migration-preservation tests verify existing List data survives 1→2.
+- [x] Lint, JVM tests, schema generation, APK assembly, migration tests, repository tests, navigation, and all 21 emulator tests pass in CI.
+
+**Phase 6 is closed.** Native development proceeds to Phase 7: Today aggregation.
+
+## Implementation order after Phase 6
+
+1. Today aggregation
+2. Recurrence and recommendation engines
+3. Direct Android intervention
+4. Notifications, widgets, shortcuts, and backup
+5. Release hardening

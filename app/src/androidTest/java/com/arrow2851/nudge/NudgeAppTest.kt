@@ -97,6 +97,37 @@ class NudgeAppTest {
         composeRule.onNodeWithText("AS NEEDED").assertIsDisplayed()
     }
 
+    @Test
+    fun completeReusableListsWorkflowLearnsSuggestionsAndSupportsUndo() {
+        composeRule.onNodeWithContentDescription("Lists destination").performClick()
+        composeRule.onNodeWithContentDescription("Add list").performClick()
+        composeRule.onNodeWithTag("list-name-field").performTextInput("Phase 6 Groceries")
+        composeRule.onNodeWithTag("save-list").performClick()
+        waitForNode(hasTestTag("list-card-Phase 6 Groceries"), timeoutMillis = 10_000L)
+        composeRule.onNodeWithTag("list-card-Phase 6 Groceries").performClick()
+
+        composeRule.onNodeWithContentDescription("Add list item").performClick()
+        composeRule.onNodeWithTag("list-item-name-field").performTextInput("Oat Milk")
+        composeRule.onNodeWithTag("list-item-quantity-field").performTextInput("2 cartons")
+        composeRule.onNodeWithTag("save-list-item").performScrollTo().performClick()
+        waitForNode(hasTestTag("list-item-row-Oat Milk"), timeoutMillis = 10_000L)
+
+        composeRule.onNodeWithTag("list-item-checkbox-Oat Milk").performClick()
+        waitForText("Item checked")
+        composeRule.onNodeWithText("Undo").performClick()
+        waitForText("Change undone")
+        composeRule.onNodeWithTag("list-item-checkbox-Oat Milk").performClick()
+        waitForText("Item checked")
+
+        composeRule.onNodeWithContentDescription("Add list item").performClick()
+        composeRule.onNodeWithTag("list-item-name-field").performTextInput("oat")
+        waitForNode(hasTestTag("list-suggestion-oat milk"), timeoutMillis = 10_000L)
+        composeRule.onNodeWithTag("list-suggestion-oat milk").performClick()
+        composeRule.onNodeWithTag("save-list-item").performScrollTo().performClick()
+        waitForText("1 active · 1 checked", timeoutMillis = 10_000L)
+        composeRule.onNodeWithText("2 cartons").assertIsDisplayed()
+    }
+
     private fun waitForNode(matcher: SemanticsMatcher, timeoutMillis: Long = 5_000L) {
         composeRule.waitUntil(timeoutMillis = timeoutMillis) {
             composeRule.onAllNodes(matcher).fetchSemanticsNodes().isNotEmpty()

@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.arrow2851.nudge.core.database.NudgeDatabase
 import com.arrow2851.nudge.core.model.Area
+import com.arrow2851.nudge.core.model.IdGenerator
 import com.arrow2851.nudge.core.model.ListCatalogItem
 import com.arrow2851.nudge.core.model.ListItem
 import com.arrow2851.nudge.core.model.ReusableList
@@ -32,6 +33,9 @@ class LocalRepositoriesTest {
     private val fixedTime = object : TimeProvider {
         override fun nowEpochMillis(): Long = DemoSeedData.Epoch + 999L
     }
+    private val fixedIds = object : IdGenerator {
+        override fun newId(): String = "generated-id"
+    }
 
     @Before
     fun createDatabase() {
@@ -48,7 +52,13 @@ class LocalRepositoriesTest {
 
     @Test
     fun areasAndSectionsAreObservedInSortOrder() = runBlocking {
-        val repository = LocalAreaRepository(database.areaDao())
+        val repository = LocalAreaRepository(
+            database,
+            database.areaDao(),
+            database.choreDao(),
+            fixedIds,
+            fixedTime,
+        )
         val area = Area(
             id = "area",
             name = "House",

@@ -4,10 +4,11 @@
 **Package:** `com.arrow2851.nudge`  
 **Minimum Android:** API 26  
 **Compile and target Android:** API 37  
-**Current milestone:** Phase 4 — Tasks vertical slice  
+**Current milestone:** Phase 5 — Areas, Sections, and recurring Chores  
 **Phase 1 status:** Completed and verified on August 3, 2026  
 **Phase 2 status:** Completed and verified on August 3, 2026  
-**Phase 3 status:** Completed and verified on August 3, 2026
+**Phase 3 status:** Completed and verified on August 3, 2026  
+**Phase 4 status:** Completed and verified on August 3, 2026
 
 This file is the persistent checklist for native application development. Update it whenever a build task changes state or a product decision alters the implementation order.
 
@@ -251,31 +252,102 @@ This file is the persistent checklist for native application development. Update
 - [x] Repository behavior and schema creation pass on an Android emulator.
 - [x] The application still installs, launches, navigates, and opens shared modal UI after the data layer is added.
 
-**Phase 3 is closed.** Native development proceeds to Phase 4: the Tasks vertical slice.
+**Phase 3 is closed.**
 
 ## Phase 4 — Tasks vertical slice
 
-- [ ] Replace the Tasks foundation content with repository-backed state
-- [ ] Add top and bottom inline task creation
-- [ ] Add checkbox completion and Undo
-- [ ] Move completed root tasks below active tasks
-- [ ] Add Show/Hide Completed behavior from DataStore preferences
-- [ ] Add tap-to-edit task sheet
-- [ ] Add optional due date and due shorthand
-- [ ] Add Main Task and subtask behavior
-- [ ] Add parent/child completion synchronization
-- [ ] Add hold-to-reorder with sparse ordering and rebalance fallback
-- [ ] Add swipe-right indentation and swipe-left unindentation
-- [ ] Add empty, loading, and recoverable error states
-- [ ] Add ViewModel, repository, and Compose UI tests
-- [ ] Add emulator interaction coverage for the complete Tasks workflow
+### Repository-backed checklist
 
-## Implementation order after Phase 4
+- [x] Replace the Tasks foundation content with repository-backed observable state
+- [x] Add destination-specific top app-bar task creation
+- [x] Add bottom inline task creation
+- [x] Create an empty editable task immediately and archive abandoned empty rows
+- [x] Add inline title editing with keyboard submission
+- [x] Add checkbox completion and snackbar Undo
+- [x] Move completed root tasks below active tasks
+- [x] Add Show/Hide Completed behavior backed by DataStore preferences
+- [x] Add loading, empty, fatal-error, and recoverable-mutation states
 
-1. Areas, Sections, and recurring Chores
-2. Reusable Lists
-3. Today aggregation
-4. Recurrence and recommendation engines
-5. Direct Android intervention
-6. Notifications, widgets, shortcuts, and backup
-7. Release hardening
+### Task details and hierarchy
+
+- [x] Add task details bottom sheet
+- [x] Add optional due date and gray due shorthand
+- [x] Add explicit Main Task state without overloading the presence of children
+- [x] Add one-level subtasks and contextual subtask creation
+- [x] Add thin subtask progress and completed-count summary
+- [x] Cascade parent completion and reopening to children
+- [x] Recalculate parent completion when children change
+- [x] Release subtasks as regular root tasks when Main Task is disabled
+- [x] Release children safely when a Main Task is archived
+
+### Ordering and gestures
+
+- [x] Add hold-and-drag reordering using sparse ordering values
+- [x] Add repository rebalance fallback after hierarchy changes
+- [x] Add swipe-right indentation under the previous task
+- [x] Add swipe-left unindentation
+- [x] Add accessible move, indent, and unindent custom actions
+- [x] Keep hierarchy and ordering rules transactional in the repository rather than Compose
+
+### Room migration
+
+- [x] Upgrade `NudgeDatabase` from version 1 to version 2
+- [x] Add the additive `task_main_flags` table
+- [x] Commit `app/schemas/com.arrow2851.nudge.core.database.NudgeDatabase/2.json`
+- [x] Add explicit migration 1→2 without destructive fallback
+- [x] Verify migration preserves existing task rows
+- [x] Verify fresh version-2 schema creation
+
+### Tests and verification
+
+- [x] Add ViewModel tests for creation, completion Undo, and due shorthand
+- [x] Add repository tests for completion synchronization
+- [x] Add repository tests for Main Task release behavior
+- [x] Add repository tests for indent and unindent behavior
+- [x] Add emulator coverage for task creation, completion, Undo, Main Task conversion, and subtask creation
+- [x] Preserve navigation and shared quick-add tests
+
+### Phase 4 verification evidence
+
+- [x] [Android CI run 142](https://github.com/arrow2851/Nudge/actions/runs/30834579590) completed successfully
+- [x] Commit tested: `0465385fdb37e71b72d5d85c5b2ab830efd71c08`
+- [x] Lint, JVM tests, schema export, and assemble job: `91756518325`
+- [x] Migration, repository, and complete Tasks workflow emulator job: `91757773903`
+- [x] Debug APK artifact: `8864424313`
+- [x] Room schemas artifact: `8864424608`
+- [x] Verification reports artifact: `8864424865`
+- [x] Instrumentation reports artifact: `8864641748`
+- [x] Downloaded APK SHA-256: `aa96869376872a2e4bfc99117add1560b9d6db6cff63ef39d5e54e63e054b7ad`
+
+### Phase 4 exit criteria
+
+- [x] Tasks render entirely from repository-backed local data and survive process recreation through Room.
+- [x] Creation, editing, completion, Undo, due dates, completed visibility, archive, ordering, and hierarchy mutations are persisted.
+- [x] Main Task and subtask completion rules are transactional and verified.
+- [x] Room migration 1→2 preserves user task data and the version-2 schema is committed.
+- [x] Gesture behavior has accessible non-gesture alternatives.
+- [x] Lint, unit tests, schema generation, APK assembly, migration tests, repository tests, navigation, and the complete Tasks workflow pass in CI.
+
+**Phase 4 is closed.** Native development proceeds to Phase 5: Areas, Sections, and recurring Chores.
+
+## Phase 5 — Areas, Sections, and recurring Chores
+
+- [ ] Replace the Areas foundation content with repository-backed state
+- [ ] Implement Area overview attention summaries
+- [ ] Add Area creation, editing, ordering, archiving, and templates
+- [ ] Add optional Section creation, editing, ordering, and archiving
+- [ ] Implement recurring Chore creation and editing
+- [ ] Add Light, Moderate, and Deep completion grading
+- [ ] Add calendar-based and completion-based schedule behavior
+- [ ] Add Area-level quick completion and Section routine lists
+- [ ] Add paused and As Needed states
+- [ ] Add repository, recurrence, migration, ViewModel, and emulator tests
+
+## Implementation order after Phase 5
+
+1. Reusable Lists
+2. Today aggregation
+3. Recurrence and recommendation engines
+4. Direct Android intervention
+5. Notifications, widgets, shortcuts, and backup
+6. Release hardening

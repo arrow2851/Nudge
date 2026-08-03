@@ -1,6 +1,6 @@
 # Local Data Foundation
 
-Phase 3 establishes Nudge's local-first persistence boundary. Feature screens consume domain repositories and observable flows; they do not depend directly on Room or DataStore.
+Phase 3 established Nudge's local-first persistence boundary. Feature screens consume domain repositories and observable flows; they do not depend directly on Room or DataStore. Phase 4 extended that boundary with transactional Main Task metadata and the first production feature migration.
 
 ## Naming decision
 
@@ -17,13 +17,14 @@ The approved product language is **Area → Section**. Older design documents ma
 - Ordered collections use sparse `Long` values with a default gap of 1,024 so inserts and drag reordering usually avoid rewriting every row.
 - Enum values are persisted by stable enum names through explicit Room converters.
 
-## Room schema version 1
+## Room schema version 2
 
 Tables:
 
 - `areas`
 - `sections`
 - `tasks`
+- `task_main_flags`
 - `chores`
 - `chore_schedules`
 - `completions`
@@ -31,11 +32,12 @@ Tables:
 - `list_catalog_items`
 - `list_items`
 
-Foreign keys protect Area/Section, parent/subitem, Chore/Schedule, List/Item, and completion-history relationships. UI-facing DAO queries return `Flow` and apply active/archive filtering and stable ordering.
+Foreign keys protect Area/Section, task hierarchy, explicit Main Task flags, Chore/Schedule, List/Item, and completion-history relationships. UI-facing DAO queries return `Flow` and apply active/archive filtering and stable ordering.
 
-The generated schema is committed at:
+Generated schemas are committed at:
 
-`app/schemas/com.arrow2851.nudge.core.database.NudgeDatabase/1.json`
+- `app/schemas/com.arrow2851.nudge.core.database.NudgeDatabase/1.json`
+- `app/schemas/com.arrow2851.nudge.core.database.NudgeDatabase/2.json`
 
 ## Migration policy
 
@@ -47,7 +49,7 @@ The generated schema is committed at:
 6. Production database construction never calls destructive-migration fallback.
 7. A migration must preserve user data unless an ADR explicitly approves a destructive development-only reset before public release.
 
-Version 1 has no migration objects because it is the initial schema. `NudgeMigrations.All` is the single registration point for future migrations.
+`NudgeMigrations.All` remains the single registration point. Migration 1→2 adds only `task_main_flags`, preserving all existing task rows and relationships.
 
 ## Repositories
 
@@ -60,9 +62,11 @@ Version 1 has no migration objects because it is the initial schema. `NudgeMigra
 
 Room-backed implementations map entities to immutable domain models. DataStore stores lightweight application preferences such as theme, completed-item visibility, due-date shorthand, optional Daily Progress, optional Quick Win, and demo-data state.
 
+The Task repository now owns transactional hierarchy behavior: parent/child completion synchronization, Main Task release, ordering, indentation, unindentation, and safe archive behavior. Compose never directly mutates task tables.
+
 ## Background-work boundary
 
-`MaintenanceScheduler` owns unique periodic WorkManager registration. `RefreshDerivedDataWorker` is Hilt-created and intentionally performs no recurrence mutation yet. Phase 3 establishes the stable scheduling and injection boundary; the recurrence and reminder phases attach their tested domain actions to this worker later.
+`MaintenanceScheduler` owns unique periodic WorkManager registration. `RefreshDerivedDataWorker` is Hilt-created and intentionally performs no recurrence mutation yet. Later recurrence and reminder phases attach tested domain actions to this worker.
 
 ## Fixtures and tests
 
@@ -70,23 +74,29 @@ Room-backed implementations map entities to immutable domain models. DataStore s
 
 Validation includes:
 
-- JVM convention and converter tests
+- JVM convention, converter, ViewModel, and due-shorthand tests
 - In-memory Room repository integration tests
 - Area/Section ordering and relationship tests
-- Task completion state and timestamp tests
+- Task completion, hierarchy, ordering, and Main Task release tests
 - Reusable-list item and suggestion tests
 - Seed idempotency tests
-- Exported-schema creation validation with `MigrationTestHelper`
-- Existing app-shell navigation and modal interaction tests
+- Fresh schema creation validation with `MigrationTestHelper`
+- Migration 1→2 task-preservation validation
+- App-shell navigation, shared modal, and complete Tasks workflow emulator tests
 
 ## Verified evidence
 
-Phase 3 was verified on August 3, 2026:
+Phase 3 foundation verification:
 
 - Android CI run: `30826025127`
 - Tested code commit: `c5aa9d7d1f45095194f900f56a5a9767e549223e`
-- Lint, JVM tests, schema export, and APK job: `91727740611`
-- Repository, schema, seed, and UI emulator job: `91729098110`
-- Debug APK artifact: `8861007957`
-- Room schemas artifact: `8861008650`
-- Instrumentation reports artifact: `8861930353`
+
+Phase 4 schema and feature migration verification:
+
+- Android CI run: `30834579590`
+- Tested code commit: `0465385fdb37e71b72d5d85c5b2ab830efd71c08`
+- Lint, JVM tests, schema export, and APK job: `91756518325`
+- Migration, repository, and Tasks workflow emulator job: `91757773903`
+- Debug APK artifact: `8864424313`
+- Room schemas artifact: `8864424608`
+- Instrumentation reports artifact: `8864641748`

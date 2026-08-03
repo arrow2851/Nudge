@@ -2,6 +2,7 @@ package com.arrow2851.nudge
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -9,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
@@ -89,7 +91,9 @@ class NudgeAppTest {
         composeRule.onNodeWithTag("chore-name-field").performTextInput("Polish fixtures")
         composeRule.onNodeWithText("As needed").performClick()
         composeRule.onNodeWithTag("save-chore").performClick()
-        composeRule.onNodeWithText("Polish fixtures").assertIsDisplayed()
+        composeRule.onNodeWithTag("section-detail-Kitchen")
+            .performScrollToNode(hasTestTag("chore-row-Polish fixtures"))
+        composeRule.onNodeWithTag("chore-row-Polish fixtures").assertIsDisplayed()
         composeRule.onNodeWithText("AS NEEDED").assertIsDisplayed()
     }
 }

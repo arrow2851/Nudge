@@ -12,6 +12,7 @@ import com.arrow2851.nudge.core.model.ReusableList
 import com.arrow2851.nudge.core.model.ReusableListWithItems
 import com.arrow2851.nudge.core.model.Section
 import com.arrow2851.nudge.core.model.Task
+import com.arrow2851.nudge.core.model.TaskNode
 import com.arrow2851.nudge.core.model.ThemeMode
 import kotlinx.coroutines.flow.Flow
 
@@ -25,11 +26,16 @@ interface AreaRepository {
 }
 
 interface TaskRepository {
+    fun observeTaskNodes(): Flow<List<TaskNode>>
     fun observeRootTasks(): Flow<List<Task>>
     fun observeSubtasks(parentTaskId: String): Flow<List<Task>>
     fun observeTask(taskId: String): Flow<Task?>
     suspend fun saveTask(task: Task)
     suspend fun setCompleted(taskId: String, completedAt: Long?)
+    suspend fun setMainTask(taskId: String, enabled: Boolean)
+    suspend fun moveTask(taskId: String, direction: Int)
+    suspend fun indentTask(taskId: String)
+    suspend fun unindentTask(taskId: String)
     suspend fun archiveTask(taskId: String, archivedAt: Long)
 }
 

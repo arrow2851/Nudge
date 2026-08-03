@@ -4,18 +4,15 @@ Nudge is an Android-first, local-first productivity app that organizes recurring
 
 ## Current status
 
-The interactive browser prototype remains the product and interaction reference. Native Android Phase 1 is complete and verified on `feature/android-app-development`. Development now proceeds to Phase 2: the shared Compose app shell and approved Nudge design system.
+The interactive browser prototype remains the product and interaction reference. Native Android Phases 1 and 2 are complete and verified on `feature/android-app-development`. Development now proceeds to Phase 3: the local data foundation.
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
 - [Native Android development checklist](docs/progress/android-development.md)
-- [Phase 1 pull request](https://github.com/arrow2851/Nudge/pull/2)
-- [Verified Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30787951345)
+- [Compose design system](docs/design-system.md)
+- [Android development pull request](https://github.com/arrow2851/Nudge/pull/2)
+- [Verified Phase 2 Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30821406558)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
-- [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
-- [Task and Chore detail milestone notes](docs/progress/task-and-chore-details.md)
-- [Tasks checklist milestone notes](docs/progress/tasks-destination.md)
-- [Reusable Lists milestone notes](docs/progress/lists-destination.md)
 
 ### Verified native Android foundation
 
@@ -25,13 +22,23 @@ The interactive browser prototype remains the product and interaction reference.
 - Room, DataStore, WorkManager, and Kotlin Serialization dependencies
 - API 26 minimum and API 37 compile/target configuration
 - Java 17, AGP 9.3, and Gradle 9.5 build configuration
-- Verified Gradle bootstrap scripts
 - Hilt-enabled application and single Compose activity
-- Temporary Today, Areas, Tasks, and Lists navigation shell
-- JVM and Compose instrumentation smoke tests
 - GitHub Actions lint, test, assemble, APK artifact, and emulator workflow
-- Debug APK successfully installed and launched on an Android API 35 emulator
-- All four navigation destinations exercised successfully in the connected test
+
+### Verified Compose design system
+
+- Approved prototype colors mapped to light and dark Material 3 roles
+- Nudge-specific success and warning semantic colors
+- Shared 12–32 sp typography hierarchy with system font scaling
+- Shared 4–32 dp spacing scale
+- Shared shapes, elevations, 48 dp touch targets, and motion timings
+- Production Today, Areas, Tasks, and Lists navigation shell
+- Reusable buttons, cards, rows, chips, fields, empty states, dialogs, sheets, snackbars, and section labels
+- Explicit accessibility semantics for primary navigation
+- Canonical light, dark, and 160% font-scale preview states
+- Preview-driven visual-regression strategy documented in `docs/design-system.md`
+- Token contract tests and emulator interaction tests
+- Production shell navigation and quick-add bottom sheet verified on Android API 35
 
 ### Implemented browser-prototype slices
 
@@ -45,12 +52,11 @@ The interactive browser prototype remains the product and interaction reference.
 - Dense Section routine checklists grouped by Needs Attention, Coming Up, As Needed, and Paused
 - Top and bottom chore-add controls with Add & another for rapid setup
 - House and Car templates that add missing Sections and starter chores without duplicating existing setup
-- Staggered starter due dates so applying a template does not make every routine immediately due
 - Reusable As-needed chores that remain available after completion
 - Task and Chore details with recurrence-aware Chore behavior
 - Single checklist-style Tasks destination
 - Reusable Lists collection and list-detail routes
-- Shared Task/List item behavior: inline-only creation, tap-to-edit sheets, hold-to-reorder, and swipe-right indentation
+- Shared Task/List item behavior: inline creation, tap-to-edit sheets, hold-to-reorder, and swipe-right indentation
 - Main Task and Main List item subitems with thin completion progress
 - Parent completion cascades to children; child completion recalculates the parent
 - Completed root items move to the bottom with Show/Hide Completed controls
@@ -100,6 +106,7 @@ The bootstrap scripts download the official Gradle wrapper JAR only when it is m
 ## Documentation
 
 - [Native Android development checklist](docs/progress/android-development.md)
+- [Compose design system](docs/design-system.md)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 - [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
@@ -140,12 +147,10 @@ nudge/
 │   ├── adr/
 │   ├── progress/
 │   │   └── android-development.md
-│   ├── wireframes/
+│   ├── design-system.md
 │   ├── product-requirements.md
-│   ├── screens-and-wireframes.md
 │   ├── technical-architecture.md
-│   ├── roadmap.md
-│   └── open-questions.md
+│   └── roadmap.md
 ├── PROJECT-STATUS.md            # Master product tracker
 ├── .github/workflows/           # Prototype deployment and Android CI
 ├── build.gradle.kts
@@ -155,7 +160,7 @@ nudge/
 
 ## Immediate next step
 
-Begin Phase 2 by translating the approved prototype tokens and navigation behavior into the production Compose design system and shared app shell.
+Begin Phase 3 by defining the local domain model, Room schema, repositories, DataStore preferences, migration policy, deterministic development fixtures, and persistence tests.
 
 ## License
 

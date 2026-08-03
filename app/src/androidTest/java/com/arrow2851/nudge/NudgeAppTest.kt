@@ -3,6 +3,7 @@ package com.arrow2851.nudge
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -76,6 +77,12 @@ class NudgeAppTest {
         composeRule.onNodeWithText("Wipe countertops").assertIsDisplayed()
         composeRule.onNodeWithTag("complete-chore-Wipe countertops").performClick()
         composeRule.onNodeWithTag("complete-light").performClick()
+        composeRule.waitUntil(timeoutMillis = 5_000L) {
+            composeRule
+                .onAllNodesWithText("Completed; next occurrence scheduled")
+                .fetchSemanticsNodes()
+                .isNotEmpty()
+        }
         composeRule.onNodeWithText("Completed; next occurrence scheduled").assertIsDisplayed()
 
         composeRule.onNodeWithContentDescription("Add chore").performClick()

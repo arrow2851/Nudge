@@ -4,14 +4,14 @@ Nudge is an Android-first, local-first productivity app that organizes recurring
 
 ## Current status
 
-The interactive browser prototype remains the product and interaction reference. Native Android Phases 1–3 are complete and verified on `feature/android-app-development`. Development now proceeds to Phase 4: the complete Tasks vertical slice.
+The interactive browser prototype remains the product and interaction reference. Native Android Phases 1–4 are complete and verified on `feature/android-app-development`. Development now proceeds to Phase 5: Areas, Sections, and recurring Chores.
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
 - [Native Android development checklist](docs/progress/android-development.md)
 - [Compose design system](docs/design-system.md)
 - [Local data foundation](docs/local-data-foundation.md)
 - [Android development pull request](https://github.com/arrow2851/Nudge/pull/2)
-- [Verified Phase 3 Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30826025127)
+- [Verified Phase 4 Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30834579590)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 
@@ -39,8 +39,8 @@ The interactive browser prototype remains the product and interaction reference.
 
 - Immutable domain models for Areas, Sections, Tasks, Chores, Schedules, Completions, Lists, List Items, catalog suggestions, and preferences
 - UUID-compatible IDs, UTC epoch-millisecond timestamps, sparse ordering, completion timestamps, and archive conventions
-- Room database version 1 with nine related tables, foreign keys, indices, converters, DAOs, and observable `Flow` queries
-- Committed Room schema at `app/schemas/com.arrow2851.nudge.core.database.NudgeDatabase/1.json`
+- Room database version 2 with explicit schema history and migration 1→2
+- Committed Room schemas under `app/schemas/com.arrow2851.nudge.core.database.NudgeDatabase/`
 - Explicit migration registration and no-destructive-fallback policy
 - Repository interfaces separated from Room-backed implementations
 - DataStore-backed application preferences
@@ -48,6 +48,22 @@ The interactive browser prototype remains the product and interaction reference.
 - Hilt-enabled periodic maintenance boundary for future recurrence and reminders
 - Deterministic transactional seed fixtures
 - JVM convention tests, Room repository integration tests, schema creation validation, and emulator verification
+
+### Verified native Tasks vertical slice
+
+- Repository-backed one-time checklist with process-safe Room persistence
+- Destination-specific task creation from the app bar and bottom of the list
+- Immediate empty-row creation with inline keyboard editing
+- Completion and reopening with snackbar Undo
+- Active and completed grouping with DataStore-backed Show/Hide Completed
+- Task details sheet, optional due date, and gray due shorthand
+- Explicit Main Task state with one level of subtasks
+- Thin subtask progress and parent/child completion synchronization
+- Releasing subtasks as regular tasks when Main Task is disabled
+- Hold-and-drag ordering with repository rebalance fallback
+- Swipe indent and unindent with accessible action alternatives
+- Additive Room migration 1→2 that preserves existing tasks
+- Unit, repository, migration, navigation, and complete emulator workflow tests
 
 ### Implemented browser-prototype slices
 
@@ -171,7 +187,7 @@ nudge/
 
 ## Immediate next step
 
-Begin Phase 4 by replacing the Tasks foundation screen with repository-backed state and implementing the full checklist workflow: inline creation, editing, completion, subtasks, ordering, indentation, due dates, preferences, Undo, and tests.
+Begin Phase 5 by replacing the Areas foundation screen with repository-backed Areas, optional Sections, recurring Chores, completion grading, schedule behavior, templates, and complete persistence tests.
 
 ## License
 

@@ -19,7 +19,7 @@ class NudgeDatabaseMigrationTest {
 
     @Test
     fun versionTwoSchemaCreatesEveryCoreTable() {
-        val database = helper.createDatabase("phase5-schema-test.db", NudgeDatabase.Version)
+        val database = helper.createDatabase("phase6-schema-test.db", NudgeDatabase.Version)
         val tableNames = mutableSetOf<String>()
         database.query("SELECT name FROM sqlite_master WHERE type = 'table'").use { cursor ->
             while (cursor.moveToNext()) tableNames += cursor.getString(0)
@@ -37,8 +37,8 @@ class NudgeDatabaseMigrationTest {
     }
 
     @Test
-    fun migrationOneToTwoPreservesTasksAndRecurringCare() {
-        val name = "phase5-migration-test.db"
+    fun migrationOneToTwoPreservesTasksRecurringCareAndLists() {
+        val name = "phase6-migration-test.db"
         helper.createDatabase(name, 1).apply {
             execSQL("INSERT INTO areas VALUES ('area', 'House', 'home', 0, 1000, 1000, NULL)")
             execSQL("INSERT INTO sections VALUES ('section', 'area', 'Kitchen', NULL, 0, 1000, 1000, NULL)")
@@ -61,6 +61,28 @@ class NudgeDatabaseMigrationTest {
                 """
                 INSERT INTO completions VALUES (
                     'completion', NULL, 'chore', 1500, 'Moderate', 10, NULL, 'App'
+                )
+                """.trimIndent(),
+            )
+            execSQL(
+                """
+                INSERT INTO reusable_lists VALUES (
+                    'list', 'Groceries', 'refresh', 1, 0, 1000, 1000, NULL
+                )
+                """.trimIndent(),
+            )
+            execSQL(
+                """
+                INSERT INTO list_catalog_items VALUES (
+                    'catalog', 'oat milk', 'Oat Milk', 'Dairy', '2 cartons', 3, 1500, 1
+                )
+                """.trimIndent(),
+            )
+            execSQL(
+                """
+                INSERT INTO list_items VALUES (
+                    'item', 'list', NULL, 'catalog', 'Oat Milk', '2 cartons', 1,
+                    0, 1000, 1500, 1500, NULL
                 )
                 """.trimIndent(),
             )
@@ -87,6 +109,22 @@ class NudgeDatabaseMigrationTest {
         migrated.query("SELECT grade FROM completions WHERE id = 'completion'").use { cursor ->
             assertTrue(cursor.moveToFirst())
             assertEquals("Moderate", cursor.getString(0))
+        }
+        migrated.query("SELECT name, is_reusable FROM reusable_lists WHERE id = 'list'").use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            assertEquals("Groceries", cursor.getString(0))
+            assertEquals(1, cursor.getInt(1))
+        }
+        migrated.query("SELECT display_name, times_used FROM list_catalog_items WHERE id = 'catalog'").use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            assertEquals("Oat Milk", cursor.getString(0))
+            assertEquals(3, cursor.getInt(1))
+        }
+        migrated.query("SELECT name, quantity, is_checked FROM list_items WHERE id = 'item'").use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            assertEquals("Oat Milk", cursor.getString(0))
+            assertEquals("2 cartons", cursor.getString(1))
+            assertEquals(1, cursor.getInt(2))
         }
         migrated.query("SELECT COUNT(*) FROM task_main_flags").use { cursor ->
             assertTrue(cursor.moveToFirst())

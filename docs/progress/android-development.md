@@ -12,7 +12,7 @@
 **Phase 5 status:** Completed and verified on August 3, 2026  
 **Phase 6 status:** Completed and verified on August 3, 2026  
 **Phase 7 status:** Completed and verified on August 3, 2026  
-**Phase 8 status:** Completed; final CI verification recorded below
+**Phase 8 status:** Completed and verified on August 3, 2026
 
 This file is the persistent checklist for native application development. Update it whenever a build task changes state or a product decision alters the implementation order.
 
@@ -573,7 +573,15 @@ This file is the persistent checklist for native application development. Update
 
 ### Phase 8 verification evidence
 
-- [~] Final Android CI run is recorded after the branch’s final documentation commit
+- [x] [Android CI run 258](https://github.com/arrow2851/Nudge/actions/runs/30865555953) completed successfully
+- [x] Commit tested: `0eb4cf052feec4324e0e38eef2d3879d5f6d967a`
+- [x] Lint, JVM tests, schema export, and assemble job: `91856513855`
+- [x] Emulator integration and full regression job: `91857489819`
+- [x] Debug APK artifact: `8876058426`
+- [x] Room schemas artifact: `8876058622`
+- [x] Verification reports artifact: `8876058803`
+- [x] Instrumentation reports artifact: `8876195796`
+- [x] Debug APK artifact SHA-256: `b44d9095250a397be5eb7ed1b40ca14082e80e5bb463c9479cb686088ccc388e`
 - [x] Application development version updated to `0.8.0-dev`
 - [x] Detailed design and phase boundary documented in `docs/recurrence-and-recommendations.md`
 
@@ -585,9 +593,9 @@ This file is the persistent checklist for native application development. Update
 - [x] Repository-backed ranking combines both Tasks and recurring Chores.
 - [x] WorkManager performs useful local maintenance without adding intervention side effects.
 - [x] Room remains at version 2 and existing data contracts are preserved.
-- [~] Lint, JVM tests, APK assembly, Room integration, and the complete emulator suite pass in the final CI run recorded below.
+- [x] Lint, JVM tests, APK assembly, Room integration, and the complete emulator suite pass in CI.
 
-**Phase 8 implementation is complete.** Final CI evidence closes verification, after which native development proceeds to Phase 9.
+**Phase 8 is closed.** Native development proceeds to Phase 9: direct Android intervention.
 
 ## Implementation order after Phase 8
 

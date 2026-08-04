@@ -6,6 +6,7 @@ import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNode
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -40,12 +41,19 @@ class NudgeAppTest {
     }
 
     @Test
-    fun quickAddUsesTheSharedBottomSheetAndField() {
+    fun quickAddUsesSharedSheetAndPersistsTask() {
         composeRule.onNodeWithContentDescription("Quick add").performClick()
-        composeRule.onNodeWithText("Capture the thought now. Destination-specific details come next.")
-            .assertIsDisplayed()
-        composeRule.onNodeWithText("Name").assertIsDisplayed()
-        composeRule.onNodeWithText("Save").assertIsDisplayed()
+        composeRule.onNodeWithText(
+            "Add a lightweight one-time Task now. You can add due dates, subtasks, and other details from Tasks later.",
+        ).assertIsDisplayed()
+        composeRule.onNodeWithText("Task name").assertIsDisplayed()
+        composeRule.onNodeWithText("Speak").assertIsDisplayed()
+        composeRule.onNodeWithText("Save task").assertIsDisplayed()
+        composeRule.onNode(hasSetTextAction()).performTextInput("Quick Add persisted task")
+        composeRule.onNodeWithText("Save task").performClick()
+        waitForText("Saved task: Quick Add persisted task", timeoutMillis = 10_000L)
+        composeRule.onNodeWithContentDescription("Tasks destination").performClick()
+        waitForText("Quick Add persisted task", timeoutMillis = 10_000L)
     }
 
     @Test

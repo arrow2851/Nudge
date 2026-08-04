@@ -101,7 +101,7 @@ class InterventionPromptViewModel @Inject constructor(
                 }
                 val settings = settingsRepository.settings.first()
                 val runtime = settingsRepository.runtime.first()
-                recommendationReader.select(
+                val recommendation = recommendationReader.select(
                     RecommendationContext(
                         now = timeProvider.nowEpochMillis(),
                         maximumMinutes = settings.maximumTaskMinutes,
@@ -110,7 +110,8 @@ class InterventionPromptViewModel @Inject constructor(
                         dismissalCounts = runtime.dismissalCounts,
                     ),
                 )
-            }.onSuccess { recommendation ->
+                recommendation to settings.maximumTaskMinutes
+            }.onSuccess { (recommendation, fallbackMinutes) ->
                 if (recommendation == null) {
                     _uiState.update {
                         it.copy(busy = false, message = "No other eligible action right now")
@@ -123,7 +124,7 @@ class InterventionPromptViewModel @Inject constructor(
                             recommendationTitle = recommendation.candidate.title,
                             recommendationKind = recommendation.candidate.kind.name,
                             estimatedMinutes = recommendation.candidate.estimatedMinutes
-                                ?: settingsRepository.settings.first().maximumTaskMinutes,
+                                ?: fallbackMinutes,
                             score = recommendation.score.total,
                             message = null,
                         )

@@ -29,6 +29,14 @@ import com.arrow2851.nudge.core.database.NudgeDatabase
 import com.arrow2851.nudge.core.database.NudgeMigrations
 import com.arrow2851.nudge.core.database.ReusableListDao
 import com.arrow2851.nudge.core.database.TaskDao
+import com.arrow2851.nudge.core.intervention.AndroidInstalledAppReader
+import com.arrow2851.nudge.core.intervention.AndroidUsageAccessController
+import com.arrow2851.nudge.core.intervention.AndroidUsageEventReader
+import com.arrow2851.nudge.core.intervention.DataStoreInterventionSettingsRepository
+import com.arrow2851.nudge.core.intervention.InstalledAppReader
+import com.arrow2851.nudge.core.intervention.InterventionSettingsRepository
+import com.arrow2851.nudge.core.intervention.UsageAccessController
+import com.arrow2851.nudge.core.intervention.UsageEventReader
 import com.arrow2851.nudge.core.model.IdGenerator
 import com.arrow2851.nudge.core.model.SystemTimeProvider
 import com.arrow2851.nudge.core.model.TimeProvider
@@ -134,6 +142,34 @@ abstract class RepositoryModule {
     abstract fun bindPreferencesRepository(
         implementation: DataStorePreferencesRepository,
     ): PreferencesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindInterventionSettingsRepository(
+        implementation: DataStoreInterventionSettingsRepository,
+    ): InterventionSettingsRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class InterventionPlatformModule {
+    @Binds
+    @Singleton
+    abstract fun bindInstalledAppReader(
+        implementation: AndroidInstalledAppReader,
+    ): InstalledAppReader
+
+    @Binds
+    @Singleton
+    abstract fun bindUsageAccessController(
+        implementation: AndroidUsageAccessController,
+    ): UsageAccessController
+
+    @Binds
+    @Singleton
+    abstract fun bindUsageEventReader(
+        implementation: AndroidUsageEventReader,
+    ): UsageEventReader
 }
 
 @Module

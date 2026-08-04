@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.arrow2851.nudge.ui.components.NudgeBottomSheet
 import com.arrow2851.nudge.ui.components.NudgeButton
@@ -36,6 +37,7 @@ fun QuickAddSheet(
     viewModel: QuickAddViewModel = hiltViewModel(),
 ) {
     var value by remember { mutableStateOf("") }
+    val context = LocalContext.current
     val voiceLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
     ) { result ->
@@ -90,7 +92,11 @@ fun QuickAddSheet(
                         putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault().toLanguageTag())
                         putExtra(RecognizerIntent.EXTRA_PROMPT, "What should Nudge add?")
                     }
-                    voiceLauncher.launch(intent)
+                    if (intent.resolveActivity(context.packageManager) == null) {
+                        onError("Voice input is not available on this device")
+                    } else {
+                        voiceLauncher.launch(intent)
+                    }
                 },
                 style = NudgeButtonStyle.Outlined,
                 modifier = Modifier.weight(1f),

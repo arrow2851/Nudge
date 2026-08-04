@@ -39,6 +39,7 @@ import com.arrow2851.nudge.core.intervention.InterventionMode
 @Composable
 fun InterventionSettingsScreen(
     onBack: () -> Unit,
+    onOpenBackup: () -> Unit,
     viewModel: InterventionSettingsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -223,6 +224,15 @@ fun InterventionSettingsScreen(
         state.message?.let {
             Spacer(Modifier.height(8.dp))
             Text(it, color = MaterialTheme.colorScheme.primary)
+        }
+
+        Spacer(Modifier.height(24.dp))
+        SectionTitle("Data")
+        OutlinedButton(
+            onClick = onOpenBackup,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text("Backup and restore")
         }
 
         Spacer(Modifier.height(24.dp))

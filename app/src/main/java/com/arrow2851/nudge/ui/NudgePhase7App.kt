@@ -1,25 +1,19 @@
 package com.arrow2851.nudge.ui
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,23 +29,19 @@ import com.arrow2851.nudge.ui.areas.AreasOverviewScreen
 import com.arrow2851.nudge.ui.areas.AreasViewModel
 import com.arrow2851.nudge.ui.areas.SectionDetailScreen
 import com.arrow2851.nudge.ui.backup.BackupScreen
-import com.arrow2851.nudge.ui.components.NudgeBottomSheet
-import com.arrow2851.nudge.ui.components.NudgeButton
 import com.arrow2851.nudge.ui.components.NudgeDestination
 import com.arrow2851.nudge.ui.components.NudgeScreenScaffold
-import com.arrow2851.nudge.ui.components.NudgeTextField
 import com.arrow2851.nudge.ui.intervention.InterventionSettingsScreen
 import com.arrow2851.nudge.ui.lists.ListDetailScreen
 import com.arrow2851.nudge.ui.lists.ListsEvent
 import com.arrow2851.nudge.ui.lists.ListsOverviewScreen
 import com.arrow2851.nudge.ui.lists.ListsViewModel
+import com.arrow2851.nudge.ui.quickadd.QuickAddSheet
 import com.arrow2851.nudge.ui.tasks.TasksScreen
-import com.arrow2851.nudge.ui.theme.nudgeSpacing
 import com.arrow2851.nudge.ui.today.TodayDueItem
 import com.arrow2851.nudge.ui.today.TodayEvent
 import com.arrow2851.nudge.ui.today.TodayScreen
 import com.arrow2851.nudge.ui.today.TodayViewModel
-import kotlinx.coroutines.launch
 
 private const val Phase7AreaRoute = "area/{areaId}"
 private const val Phase7SectionRoute = "section/{sectionId}"
@@ -89,9 +79,7 @@ fun NudgePhase7App(
     val listsState by listsViewModel.uiState.collectAsStateWithLifecycle()
     val listSuggestions by listsViewModel.suggestions.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
     var showQuickAdd by remember { mutableStateOf(openQuickAddInitially) }
-    var quickAddValue by remember { mutableStateOf("") }
     var taskCreateRequest by remember { mutableIntStateOf(0) }
     var areaCreateRequest by remember { mutableIntStateOf(0) }
     var choreCreateRequest by remember { mutableIntStateOf(0) }
@@ -289,31 +277,20 @@ fun NudgePhase7App(
         }
     }
 
-    NudgeBottomSheet(visible = showQuickAdd, onDismiss = { showQuickAdd = false }) {
-        Text("Quick add", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(MaterialTheme.nudgeSpacing.x2))
-        Text(
-            "Capture the thought now. Destination-specific details come next.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Spacer(Modifier.height(MaterialTheme.nudgeSpacing.x4))
-        NudgeTextField(
-            value = quickAddValue,
-            onValueChange = { quickAddValue = it },
-            label = "Name",
-            placeholder = "What needs attention?",
-        )
-        Spacer(Modifier.height(MaterialTheme.nudgeSpacing.x4))
-        NudgeButton(
-            text = "Save",
-            onClick = {
-                val savedName = quickAddValue.trim().ifEmpty { "New item" }
-                showQuickAdd = false
-                quickAddValue = ""
-                scope.launch { snackbarHostState.showSnackbar("Saved: $savedName") }
-            },
-            modifier = Modifier.fillMaxWidth(),
-        )
-    }
+    QuickAddSheet(
+        visible = showQuickAdd,
+        onDismiss = { showQuickAdd = false },
+        onSaved = { title ->
+            snackbarHostState.currentSnackbarData?.dismiss()
+            showQuickAdd = false
+            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+                snackbarHostState.showSnackbar("Saved task: $title")
+            }
+        },
+        onError = { message ->
+            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+                snackbarHostState.showSnackbar(message)
+            }
+        },
+    )
 }

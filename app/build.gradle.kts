@@ -15,8 +15,8 @@ android {
         applicationId = "com.arrow2851.nudge"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "0.8.0-dev"
+        versionCode = 2
+        versionName = "0.10.0-dev"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

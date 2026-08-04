@@ -100,11 +100,8 @@ class InterventionMonitorService : Service() {
     private suspend fun runCheck(ignoreCooldown: Boolean) {
         when (val evaluation = coordinator.evaluate(ignoreCooldown)) {
             is InterventionEvaluation.Prompt -> notifications.showPrompt(evaluation.value)
-            is InterventionEvaluation.Blocked -> when (evaluation.reason) {
-                InterventionBlockReason.Disabled,
-                InterventionBlockReason.Paused,
-                -> stopMonitoring()
-                else -> Unit
+            is InterventionEvaluation.Blocked -> {
+                if (evaluation.reason == InterventionBlockReason.Disabled) stopMonitoring()
             }
         }
     }

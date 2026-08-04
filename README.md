@@ -4,110 +4,149 @@ Nudge is an Android-first, local-first productivity app that organizes recurring
 
 ## Current status
 
-The interactive browser prototype is live and under active feature-by-feature development. The native Android implementation has not started yet.
+Native Android Phases 1–10 are implemented on `feature/android-app-development`. Phase 11 is complete for the code and emulator-verifiable scope. The remaining work is physical-device compatibility, battery, accessibility, policy, signing, and closed-beta validation.
+
+**Current development version:** `0.10.0-dev`
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
-- [Master project roadmap and progress tracker](PROJECT-STATUS.md)
-- [Current product-direction amendments](docs/progress/product-direction-amendments.md)
-- [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
-- [Task and Chore detail milestone notes](docs/progress/task-and-chore-details.md)
-- [Tasks checklist milestone notes](docs/progress/tasks-destination.md)
-- [Reusable Lists milestone notes](docs/progress/lists-destination.md)
+- [Android development checklist](docs/progress/android-development.md)
+- [Phases 9–11 closeout](docs/progress/android-phases-9-11.md)
+- [Intervention and release boundary](docs/intervention-and-release.md)
+- [Recurrence and recommendation engines](docs/recurrence-and-recommendations.md)
+- [Compose design system](docs/design-system.md)
+- [Local data foundation](docs/local-data-foundation.md)
+- [Android development pull request](https://github.com/arrow2851/Nudge/pull/2)
 
-### Implemented prototype slices
+## Implemented native application
 
-- Simplified Today screen with Due Today, Overdue, Lists, Recent Activity, grading, and Undo
-- Optional Daily Progress and Quick Win preference flags, both off by default
-- Four-destination bottom navigation without a global floating add action
-- Areas redesigned as a recurring-chore and maintenance system
-- One-time Tasks kept separate from Areas
-- Areas overview showing where attention is needed
-- Area-level quick completion before Section navigation
-- Dense Section routine checklists grouped by Needs Attention, Coming Up, As Needed, and Paused
-- Top and bottom chore-add controls with Add & another for rapid setup
-- House and Car templates that add missing Sections and starter chores without duplicating existing setup
-- Staggered starter due dates so applying a template does not make every routine immediately due
-- Reusable As-needed chores that remain available after completion
-- Task and Chore details with recurrence-aware Chore behavior
-- Single checklist-style Tasks destination
-- Reusable Lists collection and list-detail routes
-- Shared Task/List item behavior: inline-only creation, tap-to-edit sheets, hold-to-reorder, and swipe-right indentation
-- Main Task and Main List item subitems with thin completion progress
-- Parent completion cascades to children; child completion recalculates the parent
-- Completed root items move to the bottom with Show/Hide Completed controls
-- Task-only Due Date and optional gray due shorthand
-- List history suggestions during creation and existing-item editing
+### Organizer
+
+- Production Compose navigation for Today, Areas, Tasks, and Lists
+- Repository-backed Room persistence with explicit migrations
+- One-time Tasks with due dates, Main Tasks, subtasks, ordering, indentation, completion, reopening, and Undo
+- Areas and optional Sections for recurring care
+- Daily, weekly, monthly, custom interval, and As Needed Chores
+- Calendar-based and completion-based recurrence
+- Light, Moderate, and Deep completion grading
+- Reusable and one-off Lists
+- List subitems, quantities, checked-item return, learned suggestions, and duplicate-safe behavior
+- Today aggregation for due, overdue, active Lists, and recent activity
+
+### Recurrence and recommendations
+
+- Injectable recurrence service for labels, grouping, and next-occurrence calculations
+- Scheduled-Chore due-date repair without silently moving overdue work forward
+- Deterministic Task and Chore recommendation ranking
+- Urgency, priority, duration, location, quick-win, recency, and dismissal factors
+- Shared recommendation engine for Today Quick Win and interventions
+- Twelve-hour offline WorkManager maintenance
+
+### Direct Android intervention
+
+- Explicit Usage Access and notification onboarding
+- Installed launcher-app selection
+- Local usage-event reading and deterministic continuous-session calculation
+- Optional combined sessions across selected apps
+- Gentle, Balanced, and Strict modes
+- Configurable usage limit and suggested-action size
+- Cooldown, quiet hours, daily maximum, and timed pause
+- Opt-in visible foreground monitoring service
+- Notification-based prompts with Start, Different, Not now, and Pause actions
+- Focus screen with countdown
+- Task or Chore completion from the intervention
+- Compatibility diagnostics
+
+Nudge deliberately does not use an Accessibility Service, a forced overlay, or an unreliable background Activity launch. Android usage data remains on the device.
+
+### Quick access and voice
+
+- Quick Add home-screen widget
+- Pause Interventions home-screen widget
+- Quick Add launcher shortcut
+- Intervention Settings launcher shortcut
+- Persistent global Quick Add that creates a real Task
+- Optional Android system voice transcription with an unavailable-service fallback
+
+### Backup and restore
+
+- Android Auto Backup for the full Room database and DataStore preferences
+- User-controlled portable JSON export
+- Additive JSON restore through Android's document picker
+- Portable backup of active Areas, Sections, Tasks, Main Task flags, Chores, schedules, Lists, List Items, and app preferences
+
+The portable JSON currently excludes completion-history events. Those remain covered by Android's full system backup.
+
+## Verification
+
+Android CI #350, run `30881020756`, passed on commit `0217c67f67f4cf4fde3b1349de2b6124df76c8a6`:
+
+- Lint
+- JVM unit tests
+- Room schema and migration verification
+- Debug APK assembly
+- Complete API 35 emulator installation and regression suite
+- APK, Room schema, verification-report, and instrumentation-report artifacts
+
+The regression covers production navigation and complete Tasks, recurring-care, reusable-Lists, Today, database, recurrence, recommendation, and persistent Quick Add workflows.
+
+## Remaining before public release
+
+The current build is appropriate for physical-device testing and a controlled internal alpha. It is not Play Store ready yet.
+
+Remaining release gates include:
+
+- Samsung, Pixel, Motorola, and another manufacturer test pass
+- Android-version compatibility matrix
+- Foreground-monitoring battery measurement
+- Permission-revocation and notification-disabled testing
+- Manufacturer battery-optimization guidance
+- TalkBack, switch-access, and large-text review
+- Google Play foreground-service and privacy-policy review
+- Release signing and upgrade testing
+- Store assets
+- Closed beta and compatibility-report collection
+
+Additional Today, Next Task, and Grocery widgets and Quick Settings tiles are useful later enhancements rather than blockers for the internal alpha.
+
+## Gemini boundary
+
+Real Gemini or cloud-assisted mutation is intentionally not part of the local completion pass. A production implementation requires a secure backend gateway, protected credentials, rate and cost controls, structured function schemas, privacy copy, and explicit user confirmation. No AI provider key should be embedded in the APK.
+
+## Android build
+
+Requirements:
+
+- JDK 17
+- Android SDK platform 37
+- Android SDK build tools 37.0.0
+
+macOS or Linux:
+
+```bash
+bash ./gradlew :app:assembleDebug
+```
+
+Windows:
+
+```bat
+gradlew.bat :app:assembleDebug
+```
+
+Connected emulator test:
+
+```bash
+bash ./gradlew :app:connectedDebugAndroidTest
+```
+
+The bootstrap scripts download the official Gradle wrapper JAR only when it is missing and verify its published SHA-256 checksum before execution.
 
 ## Product pillars
 
 - Areas and optional Sections for recurring chores and maintenance
 - A separate lightweight checklist for one-time Tasks
-- Recurring chores with calendar-based or completion-based cadence
+- Recurring Chores with calendar-based or completion-based cadence
 - Optional Light, Moderate, and Deep completion grading
-- Reusable lists that remember completed items for future suggestions
-- Direct app-usage intervention with compatibility fallbacks
-- Contextual, destination-specific creation flows instead of one global add action
-- Widgets, voice, and Gemini-assisted entry where they add real value
+- Reusable Lists that remember completed items for future suggestions
+- Direct app-usage intervention with compatibility-safe delivery
+- Contextual creation flows instead of one global floating action button
 - Local-first core functionality with optional cloud features later
-
-## Documentation
-
-- [Master project roadmap and progress tracker](PROJECT-STATUS.md)
-- [Current product-direction amendments](docs/progress/product-direction-amendments.md)
-- [Areas and Sections milestone notes](docs/progress/areas-and-rooms.md)
-- [Task and Chore detail milestone notes](docs/progress/task-and-chore-details.md)
-- [Tasks checklist milestone notes](docs/progress/tasks-destination.md)
-- [Reusable Lists milestone notes](docs/progress/lists-destination.md)
-- [Product requirements](docs/product-requirements.md)
-- [Screens and rough wireframes](docs/screens-and-wireframes.md)
-- [Technical architecture](docs/technical-architecture.md)
-- [Delivery roadmap](docs/roadmap.md)
-- [Open questions](docs/open-questions.md)
-- [Project decisions](docs/adr/README.md)
-- [Interactive prototype source](mockups/prototype/README.md)
-
-## Proposed Android stack
-
-- Kotlin
-- Jetpack Compose and Material 3
-- Navigation Compose
-- Room
-- DataStore
-- WorkManager
-- Hilt
-- Kotlin Serialization
-- Jetpack Glance widgets
-- UsageStatsManager for selected-app usage sessions
-- Optional Gemini backend integration
-
-## Repository structure
-
-```text
-nudge/
-├── app/                         # Android application module (future)
-├── core/                        # Shared model, database, domain, UI (future)
-├── feature/                     # Feature modules (future)
-├── mockups/
-│   └── prototype/               # Live browser prototype
-├── docs/
-│   ├── adr/
-│   ├── progress/
-│   ├── wireframes/
-│   ├── product-requirements.md
-│   ├── screens-and-wireframes.md
-│   ├── technical-architecture.md
-│   ├── roadmap.md
-│   └── open-questions.md
-├── PROJECT-STATUS.md            # Persistent editable progress tracker
-├── .github/ISSUE_TEMPLATE/
-├── CONTRIBUTING.md
-└── README.md
-```
-
-## Immediate next step
-
-Review the redesigned Areas, House, and Kitchen flows on a phone. The next major build milestone after this review is the Direct Intervention prototype.
-
-## License
-
-No license has been selected yet.

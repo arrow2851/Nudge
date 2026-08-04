@@ -4,14 +4,15 @@
 **Package:** `com.arrow2851.nudge`  
 **Minimum Android:** API 26  
 **Compile and target Android:** API 37  
-**Current milestone:** Phase 8 — Recurrence and recommendation engines  
+**Current milestone:** Phase 9 — Direct Android intervention  
 **Phase 1 status:** Completed and verified on August 3, 2026  
 **Phase 2 status:** Completed and verified on August 3, 2026  
 **Phase 3 status:** Completed and verified on August 3, 2026  
 **Phase 4 status:** Completed and verified on August 3, 2026  
 **Phase 5 status:** Completed and verified on August 3, 2026  
 **Phase 6 status:** Completed and verified on August 3, 2026  
-**Phase 7 status:** Completed and verified on August 3, 2026
+**Phase 7 status:** Completed and verified on August 3, 2026  
+**Phase 8 status:** Completed; final CI verification recorded below
 
 This file is the persistent checklist for native application development. Update it whenever a build task changes state or a product decision alters the implementation order.
 
@@ -523,11 +524,73 @@ This file is the persistent checklist for native application development. Update
 - [x] Room remains at version 2 because Today adds only a read model over existing tables.
 - [x] Lint, JVM tests, schema generation, APK assembly, migration tests, repository tests, navigation, and all 22 emulator tests pass in CI.
 
-**Phase 7 is closed.** Native development proceeds to Phase 8: recurrence and recommendation engines.
+**Phase 7 is closed.** No Phase 7 implementation remained when Phase 8 began.
 
-## Implementation order after Phase 7
+## Phase 8 — Recurrence and recommendation engines
 
-1. Recurrence and recommendation engines
-2. Direct Android intervention
-3. Notifications, widgets, shortcuts, and backup
-4. Release hardening
+### Recurrence domain service
+
+- [x] Extract recurrence grouping, advancement, and due-label behavior behind `RecurrenceEngine`
+- [x] Preserve the existing `ChoreRecurrence` API as a compatibility facade
+- [x] Preserve interval, weekly, monthly, custom, calendar-based, completion-based, As Needed, and paused behavior
+- [x] Add deterministic repair planning for scheduled active Chores with a missing `nextDueAt`
+- [x] Keep overdue Chores overdue until completion or explicit skip
+- [x] Apply repairs through the existing transactional `ChoreRepository`
+- [x] Keep Room at version 2 with no schema changes
+
+### Recommendation domain service
+
+- [x] Add normalized Task and Chore recommendation candidates
+- [x] Add recommendation context for time budget, Area, Section, recent suggestions, and dismissal counts
+- [x] Filter completed, cancelled, paused, blocked, disabled, snoozed, and over-budget candidates
+- [x] Score urgency, overdue age, priority, duration fit, Area/Section context, and quick-win value
+- [x] Penalize recent suggestions and repeated dismissals
+- [x] Add stable deterministic tie-breakers
+- [x] Expose inspectable score components for later “Why this task?” behavior
+- [x] Add repository-backed `RecommendationReader` for Tasks and recurring Chores
+
+### Today and background integration
+
+- [x] Replace Today’s local Quick Win selector with the shared recommendation engine
+- [x] Keep Quick Win preference-gated and disabled by default
+- [x] Add `DerivedDataRefreshEngine` for recurrence repair and candidate evaluation
+- [x] Execute the derived-data refresh from the existing unique twelve-hour WorkManager schedule
+- [x] Require no network connection
+- [x] Return scanned, repaired, and recommendation diagnostic output
+- [x] Retry transient failures and expose final failure output
+- [x] Add no Usage Access, app monitoring, foreground launch, notification, or blocking behavior in Phase 8
+
+### Phase 8 tests
+
+- [x] Add JVM tests for recurrence repair and compatibility-facade parity
+- [x] Add JVM tests for candidate eligibility and duration limits
+- [x] Add JVM tests for urgency, quick-win, and context scoring
+- [x] Add JVM tests for recent-suggestion and dismissal rotation
+- [x] Verify deterministic repeated ranking
+- [x] Add an in-memory Room integration test using real Area, Task, and Chore repositories
+- [x] Verify missing-due persistence, overdue ranking, and over-budget exclusion
+- [x] Preserve the existing migration, repository, navigation, Tasks, Areas, Lists, Today, and full emulator regression suites
+
+### Phase 8 verification evidence
+
+- [~] Final Android CI run is recorded after the branch’s final documentation commit
+- [x] Application development version updated to `0.8.0-dev`
+- [x] Detailed design and phase boundary documented in `docs/recurrence-and-recommendations.md`
+
+### Phase 8 exit criteria
+
+- [x] Recurrence calculations are reusable independently of UI and repository implementations.
+- [x] Background maintenance repairs only derived dates that are genuinely missing.
+- [x] Recommendation eligibility and scoring are deterministic, inspectable, and shared by Today and future intervention work.
+- [x] Repository-backed ranking combines both Tasks and recurring Chores.
+- [x] WorkManager performs useful local maintenance without adding intervention side effects.
+- [x] Room remains at version 2 and existing data contracts are preserved.
+- [~] Lint, JVM tests, APK assembly, Room integration, and the complete emulator suite pass in the final CI run recorded below.
+
+**Phase 8 implementation is complete.** Final CI evidence closes verification, after which native development proceeds to Phase 9.
+
+## Implementation order after Phase 8
+
+1. Direct Android intervention
+2. Notifications, widgets, shortcuts, and backup
+3. Release hardening

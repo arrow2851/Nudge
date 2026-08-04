@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Nudge</string>
+    <string name="widget_quick_add_description">Open Nudge directly to Quick Add</string>
+    <string name="widget_pause_description">Pause Nudge interventions for one hour</string>
+    <string name="shortcut_quick_add">Quick Add</string>
+    <string name="shortcut_quick_add_long">Add something to Nudge</string>
+    <string name="shortcut_interventions">Interventions</string>
+    <string name="shortcut_interventions_long">Open intervention settings</string>
 </resources>

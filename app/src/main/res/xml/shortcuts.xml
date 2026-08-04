@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:shortcutId="quick_add"
+        android:shortcutLongLabel="@string/shortcut_quick_add_long"
+        android:shortcutShortLabel="@string/shortcut_quick_add">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="nudge://quick-add"
+            android:targetClass="com.arrow2851.nudge.MainActivity"
+            android:targetPackage="com.arrow2851.nudge" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:shortcutId="interventions"
+        android:shortcutLongLabel="@string/shortcut_interventions_long"
+        android:shortcutShortLabel="@string/shortcut_interventions">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="nudge://interventions"
+            android:targetClass="com.arrow2851.nudge.MainActivity"
+            android:targetPackage="com.arrow2851.nudge" />
+    </shortcut>
+</shortcuts>

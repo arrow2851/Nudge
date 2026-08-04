@@ -8,6 +8,10 @@ import com.arrow2851.nudge.core.data.ListWorkflowRepository
 import com.arrow2851.nudge.core.data.PreferencesRepository
 import com.arrow2851.nudge.core.data.RecentCompletionReader
 import com.arrow2851.nudge.core.data.TaskRepository
+import com.arrow2851.nudge.core.domain.DefaultRecommendationEngine
+import com.arrow2851.nudge.core.domain.RecommendationCandidate
+import com.arrow2851.nudge.core.domain.RecommendationContext
+import com.arrow2851.nudge.core.domain.RecommendationKind
 import com.arrow2851.nudge.core.model.AppPreferences
 import com.arrow2851.nudge.core.model.Area
 import com.arrow2851.nudge.core.model.ChoreCompletionMutation
@@ -37,6 +41,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+
+private val todayRecommendationEngine = DefaultRecommendationEngine()
 
 enum class TodayItemKind {
     Task,
@@ -400,13 +406,12 @@ private fun buildReadyState(
 
     val completedToday = activity.count { it.occurredAt in startOfToday until startOfTomorrow }
     val remaining = overdue.size + dueToday.size
-    val quickWin = (overdue + dueToday)
-        .filter(TodayDueItem::includeInNudges)
-        .minWithOrNull(
-            compareBy<TodayDueItem> { it.estimatedMinutes ?: 15 }
-                .thenBy { it.dueAt }
-                .thenBy { it.title },
-        )
+    val quickWinItems = overdue + dueToday
+    val quickWinById = quickWinItems.associateBy(TodayDueItem::id)
+    val quickWin = todayRecommendationEngine.select(
+        context = RecommendationContext(now = context.now),
+        candidates = quickWinItems.map(TodayDueItem::toRecommendationCandidate),
+    )?.candidate?.id?.let(quickWinById::get)
 
     return TodayUiState.Ready(
         dateLabel = today.format(DateTimeFormatter.ofPattern("EEEE, MMMM d")),
@@ -439,6 +444,21 @@ private fun buildReadyState(
         recoverableError = recoverableError,
     )
 }
+
+private fun TodayDueItem.toRecommendationCandidate(): RecommendationCandidate =
+    RecommendationCandidate(
+        id = id,
+        title = title,
+        kind = when (kind) {
+            TodayItemKind.Task -> RecommendationKind.Task
+            TodayItemKind.Chore -> RecommendationKind.Chore
+        },
+        dueAt = dueAt,
+        estimatedMinutes = estimatedMinutes,
+        includeInNudges = includeInNudges,
+        areaId = areaId,
+        sectionId = sectionId,
+    )
 
 private fun dueLabel(
     dueAt: Long,

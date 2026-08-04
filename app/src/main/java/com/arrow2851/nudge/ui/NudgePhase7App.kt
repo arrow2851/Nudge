@@ -34,6 +34,7 @@ import com.arrow2851.nudge.ui.areas.AreasEvent
 import com.arrow2851.nudge.ui.areas.AreasOverviewScreen
 import com.arrow2851.nudge.ui.areas.AreasViewModel
 import com.arrow2851.nudge.ui.areas.SectionDetailScreen
+import com.arrow2851.nudge.ui.backup.BackupScreen
 import com.arrow2851.nudge.ui.components.NudgeBottomSheet
 import com.arrow2851.nudge.ui.components.NudgeButton
 import com.arrow2851.nudge.ui.components.NudgeDestination
@@ -56,6 +57,7 @@ private const val Phase7AreaRoute = "area/{areaId}"
 private const val Phase7SectionRoute = "section/{sectionId}"
 private const val Phase7ListRoute = "list/{listId}"
 const val InterventionSettingsRoute = "interventions"
+const val BackupRoute = "backup"
 
 @Composable
 fun NudgePhase7App(
@@ -69,17 +71,18 @@ fun NudgePhase7App(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val selectedDestination = when {
-        currentRoute == InterventionSettingsRoute -> NudgeDestination.Today
+        currentRoute == InterventionSettingsRoute || currentRoute == BackupRoute ->
+            NudgeDestination.Today
         currentRoute?.startsWith("area/") == true || currentRoute?.startsWith("section/") == true ->
             NudgeDestination.Areas
         currentRoute?.startsWith("list/") == true -> NudgeDestination.Lists
         else -> NudgeDestination.entries.firstOrNull { it.route == currentRoute }
             ?: NudgeDestination.Today
     }
-    val screenTitle = if (currentRoute == InterventionSettingsRoute) {
-        "Interventions"
-    } else {
-        selectedDestination.label
+    val screenTitle = when (currentRoute) {
+        InterventionSettingsRoute -> "Interventions"
+        BackupRoute -> "Backup"
+        else -> selectedDestination.label
     }
     val todayState by todayViewModel.uiState.collectAsStateWithLifecycle()
     val areasState by areasViewModel.uiState.collectAsStateWithLifecycle()
@@ -179,7 +182,7 @@ fun NudgePhase7App(
                     Icon(Icons.Default.Settings, contentDescription = "Intervention settings")
                 }
             }
-            if (currentRoute != InterventionSettingsRoute) {
+            if (currentRoute != InterventionSettingsRoute && currentRoute != BackupRoute) {
                 IconButton(
                     onClick = {
                         when {
@@ -275,7 +278,13 @@ fun NudgePhase7App(
                 )
             }
             composable(InterventionSettingsRoute) {
-                InterventionSettingsScreen(onBack = { navController.popBackStack() })
+                InterventionSettingsScreen(
+                    onBack = { navController.popBackStack() },
+                    onOpenBackup = { navController.navigate(BackupRoute) },
+                )
+            }
+            composable(BackupRoute) {
+                BackupScreen(onBack = { navController.popBackStack() })
             }
         }
     }

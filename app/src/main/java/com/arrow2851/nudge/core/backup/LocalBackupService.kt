@@ -24,6 +24,8 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+private const val CurrentBackupFormat = 1
+
 @Serializable
 data class BackupTask(
     val task: Task,
@@ -146,7 +148,6 @@ class LocalBackupService @Inject constructor(
     )
 
     companion object {
-        const val CurrentBackupFormat = 1
         const val SuggestedFileName = "nudge-backup.json"
     }
 }

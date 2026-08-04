@@ -45,7 +45,7 @@ class AndroidInstalledAppReader @Inject constructor(
             }
             .filterNot { it.packageName == context.packageName }
             .distinctBy(InstalledApp::packageName)
-            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, InstalledApp::label))
+            .sortedBy { it.label.lowercase() }
             .toList()
     }
 }
@@ -83,7 +83,7 @@ class AndroidUsageEventReader @Inject constructor(
 ) : UsageEventReader {
     override fun read(beginTime: Long, endTime: Long): List<UsageEventSnapshot> {
         val usageStatsManager = context.getSystemService(UsageStatsManager::class.java)
-        val events = usageStatsManager.queryEvents(beginTime, endTime)
+        val events = usageStatsManager.queryEvents(beginTime, endTime) ?: return emptyList()
         val event = UsageEvents.Event()
         return buildList {
             while (events.hasNextEvent()) {

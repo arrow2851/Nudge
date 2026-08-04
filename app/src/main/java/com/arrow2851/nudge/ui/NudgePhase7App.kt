@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +43,7 @@ import com.arrow2851.nudge.ui.today.TodayDueItem
 import com.arrow2851.nudge.ui.today.TodayEvent
 import com.arrow2851.nudge.ui.today.TodayScreen
 import com.arrow2851.nudge.ui.today.TodayViewModel
+import kotlinx.coroutines.launch
 
 private const val Phase7AreaRoute = "area/{areaId}"
 private const val Phase7SectionRoute = "section/{sectionId}"
@@ -79,6 +81,7 @@ fun NudgePhase7App(
     val listsState by listsViewModel.uiState.collectAsStateWithLifecycle()
     val listSuggestions by listsViewModel.suggestions.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     var showQuickAdd by remember { mutableStateOf(openQuickAddInitially) }
     var taskCreateRequest by remember { mutableIntStateOf(0) }
     var areaCreateRequest by remember { mutableIntStateOf(0) }
@@ -281,16 +284,10 @@ fun NudgePhase7App(
         visible = showQuickAdd,
         onDismiss = { showQuickAdd = false },
         onSaved = { title ->
-            snackbarHostState.currentSnackbarData?.dismiss()
-            showQuickAdd = false
-            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-                snackbarHostState.showSnackbar("Saved task: $title")
-            }
+            scope.launch { snackbarHostState.showSnackbar("Saved task: $title") }
         },
         onError = { message ->
-            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-                snackbarHostState.showSnackbar(message)
-            }
+            scope.launch { snackbarHostState.showSnackbar(message) }
         },
     )
 }

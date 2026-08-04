@@ -4,14 +4,14 @@ Nudge is an Android-first, local-first productivity app that organizes recurring
 
 ## Current status
 
-The interactive browser prototype remains the product and interaction reference. Native Android Phases 1–7 are complete and verified on `feature/android-app-development`. Development now proceeds to Phase 8: recurrence and recommendation engines.
+The interactive browser prototype remains the product and interaction reference. Native Android Phases 1–8 are complete on `feature/android-app-development`. Development now proceeds to Phase 9: direct Android intervention.
 
 - [Live interactive prototype](https://arrow2851.github.io/Nudge/)
 - [Native Android development checklist](docs/progress/android-development.md)
+- [Recurrence and recommendation engines](docs/recurrence-and-recommendations.md)
 - [Compose design system](docs/design-system.md)
 - [Local data foundation](docs/local-data-foundation.md)
 - [Android development pull request](https://github.com/arrow2851/Nudge/pull/2)
-- [Verified Phase 7 Android CI run](https://github.com/arrow2851/Nudge/actions/runs/30861757348)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
 - [Current product-direction amendments](docs/progress/product-direction-amendments.md)
 
@@ -45,7 +45,7 @@ The interactive browser prototype remains the product and interaction reference.
 - Repository interfaces separated from Room-backed implementations
 - DataStore-backed application preferences
 - Hilt modules for database, DAOs, repositories, DataStore, time, IDs, and WorkManager
-- Hilt-enabled periodic maintenance boundary for future recurrence and reminders
+- Hilt-enabled periodic maintenance boundary
 - Deterministic transactional seed fixtures
 - JVM convention tests, Room repository integration tests, schema creation validation, and emulator verification
 
@@ -105,9 +105,22 @@ The interactive browser prototype remains the product and interaction reference.
 - Task and Chore completion directly from Today with shared snackbar Undo
 - Light, Moderate, and Deep grading from Today for supported Chores
 - Optional Daily Progress and Quick Win cards controlled by existing preferences and off by default
-- Quick Win selection prioritizes short, nudge-eligible overdue or due-today work
 - Room-backed recent-completion read model without a database schema bump
 - Aggregation, grading, completion, Undo, navigation, and full emulator workflow tests
+
+### Native recurrence and recommendation engines
+
+- Explicit injectable recurrence service for grouping, labels, and next-occurrence calculations
+- Compatibility facade preserving existing Areas, Today, and repository callers
+- Deterministic repair of scheduled active Chores that are missing a derived due date
+- Overdue dates remain overdue until completion or explicit skip
+- Deterministic Task and Chore recommendation eligibility and scoring
+- Urgency, priority, duration, Area, Section, quick-win, recency, and dismissal factors
+- Repository-backed recommendation reader for future intervention coordination
+- Shared recommendation engine now powers Today’s optional Quick Win
+- Twelve-hour offline WorkManager refresh for recurrence repair and candidate evaluation
+- JVM and Room-backed integration tests with no Room schema bump
+- Application development version `0.8.0-dev`
 
 ### Implemented browser-prototype slices
 
@@ -175,6 +188,7 @@ The bootstrap scripts download the official Gradle wrapper JAR only when it is m
 ## Documentation
 
 - [Native Android development checklist](docs/progress/android-development.md)
+- [Recurrence and recommendation engines](docs/recurrence-and-recommendations.md)
 - [Compose design system](docs/design-system.md)
 - [Local data foundation](docs/local-data-foundation.md)
 - [Master project roadmap and progress tracker](PROJECT-STATUS.md)
@@ -219,6 +233,7 @@ nudge/
 │   │   └── android-development.md
 │   ├── design-system.md
 │   ├── local-data-foundation.md
+│   ├── recurrence-and-recommendations.md
 │   ├── product-requirements.md
 │   ├── technical-architecture.md
 │   └── roadmap.md
@@ -231,7 +246,7 @@ nudge/
 
 ## Immediate next step
 
-Begin Phase 8 by extracting recurrence maintenance and recommendation logic into explicit engines, then connect them to the existing WorkManager boundary and Today prioritization model.
+Begin Phase 9 by implementing explicit Usage Access onboarding, selected-app configuration, deterministic session calculation, intervention limits and cooldowns, and an intervention coordinator that consumes the Phase 8 recommendation reader. Keep direct foreground navigation behind compatibility-safe fallbacks.
 
 ## License
 

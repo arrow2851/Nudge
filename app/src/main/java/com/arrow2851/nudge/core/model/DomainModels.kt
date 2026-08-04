@@ -1,5 +1,8 @@
 package com.arrow2851.nudge.core.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class TaskStatus {
     Inbox,
     Planned,
@@ -11,6 +14,7 @@ enum class TaskStatus {
     Someday,
 }
 
+@Serializable
 enum class RecurrenceType {
     None,
     Interval,
@@ -20,6 +24,7 @@ enum class RecurrenceType {
     Custom,
 }
 
+@Serializable
 enum class RecurrenceUnit {
     Days,
     Weeks,
@@ -27,11 +32,13 @@ enum class RecurrenceUnit {
     Years,
 }
 
+@Serializable
 enum class ScheduleBasis {
     Calendar,
     Completion,
 }
 
+@Serializable
 enum class CompletionGrade {
     None,
     Light,
@@ -39,6 +46,7 @@ enum class CompletionGrade {
     Deep,
 }
 
+@Serializable
 enum class CompletionSource {
     App,
     Widget,
@@ -47,12 +55,14 @@ enum class CompletionSource {
     Gemini,
 }
 
+@Serializable
 enum class ThemeMode {
     System,
     Light,
     Dark,
 }
 
+@Serializable
 data class Area(
     val id: String,
     val name: String,
@@ -63,6 +73,7 @@ data class Area(
     val archivedAt: Long? = null,
 )
 
+@Serializable
 data class Section(
     val id: String,
     val areaId: String,
@@ -74,11 +85,13 @@ data class Section(
     val archivedAt: Long? = null,
 )
 
+@Serializable
 data class AreaWithSections(
     val area: Area,
     val sections: List<Section>,
 )
 
+@Serializable
 data class Task(
     val id: String,
     val title: String,
@@ -98,6 +111,7 @@ data class Task(
     val archivedAt: Long? = null,
 )
 
+@Serializable
 data class Chore(
     val id: String,
     val title: String,
@@ -117,6 +131,7 @@ data class Chore(
     val archivedAt: Long? = null,
 )
 
+@Serializable
 data class ChoreSchedule(
     val choreId: String,
     val recurrenceType: RecurrenceType,
@@ -127,11 +142,13 @@ data class ChoreSchedule(
     val scheduleBasis: ScheduleBasis = ScheduleBasis.Calendar,
 )
 
+@Serializable
 data class ChoreWithSchedule(
     val chore: Chore,
     val schedule: ChoreSchedule?,
 )
 
+@Serializable
 data class Completion(
     val id: String,
     val taskId: String? = null,
@@ -143,6 +160,7 @@ data class Completion(
     val source: CompletionSource = CompletionSource.App,
 )
 
+@Serializable
 data class ReusableList(
     val id: String,
     val name: String,
@@ -154,6 +172,7 @@ data class ReusableList(
     val archivedAt: Long? = null,
 )
 
+@Serializable
 data class ListCatalogItem(
     val id: String,
     val normalizedName: String,
@@ -165,6 +184,7 @@ data class ListCatalogItem(
     val favorite: Boolean = false,
 )
 
+@Serializable
 data class ListItem(
     val id: String,
     val listId: String,
@@ -180,11 +200,13 @@ data class ListItem(
     val archivedAt: Long? = null,
 )
 
+@Serializable
 data class ReusableListWithItems(
     val list: ReusableList,
     val items: List<ListItem>,
 )
 
+@Serializable
 data class AppPreferences(
     val themeMode: ThemeMode = ThemeMode.System,
     val showDueShorthand: Boolean = true,

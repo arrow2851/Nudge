@@ -1,27 +1,17 @@
 package com.arrow2851.nudge.ui.tasks
 
-import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,297 +21,191 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.CustomAccessibilityAction
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.customActions
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.arrow2851.nudge.core.model.ItemHandedness
 import com.arrow2851.nudge.core.model.Task
 import com.arrow2851.nudge.core.model.TaskNode
-import com.arrow2851.nudge.ui.components.NudgeCard
-import com.arrow2851.nudge.ui.theme.NudgeTouchTarget
+import com.arrow2851.nudge.ui.checklist.ChecklistMetadataKind
+import com.arrow2851.nudge.ui.checklist.ChecklistRow
 
 @Composable
 internal fun TaskNodeCard(
     node: TaskNode,
+    previousRootId: String?,
+    nextRootId: String?,
     editingTaskId: String?,
     showDueShorthand: Boolean,
     hideCompleted: Boolean,
+    handedness: ItemHandedness,
     onAddSubtask: (String) -> Unit,
     onEditTask: (String) -> Unit,
     onFinishTitleEdit: (String, String) -> Unit,
-    onCancelTitleEdit: (String) -> Unit,
     onToggleCompleted: (String) -> Unit,
-    onOpenDetails: (String) -> Unit,
+    onOpenDueDate: (String) -> Unit,
+    onDelete: (String) -> Unit,
+    onReorder: (String, String) -> Unit,
     onMoveUp: (String) -> Unit,
     onMoveDown: (String) -> Unit,
     onIndent: (String) -> Unit,
     onUnindent: (String) -> Unit,
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Top,
-    ) {
-        NudgeCard(
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(vertical = 4.dp),
-        ) {
-            if (node.isMainTask && node.subtasks.isNotEmpty()) {
-                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Text(
-                            text = "${node.completedSubtaskCount}/${node.subtasks.size} complete",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                        Text(
-                            text = "Main Task",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                    Spacer(Modifier.height(6.dp))
-                    LinearProgressIndicator(
-                        progress = { node.subtaskProgress },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
+    var expanded by rememberSaveable(node.task.id) {
+        mutableStateOf(node.subtasks.isNotEmpty())
+    }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        if (node.subtasks.isNotEmpty()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 48.dp, end = 44.dp, top = 4.dp, bottom = 2.dp),
+            ) {
+                Text(
+                    text = "${node.completedSubtaskCount}/${node.subtasks.size}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.width(8.dp))
+                LinearProgressIndicator(
+                    progress = { node.subtaskProgress },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(3.dp),
+                )
             }
+        }
 
-            TaskRow(
-                task = node.task,
-                isEditing = editingTaskId == node.task.id,
-                showDueShorthand = showDueShorthand,
-                canIndent = true,
-                canUnindent = false,
-                onEdit = { onEditTask(node.task.id) },
-                onFinishTitleEdit = { onFinishTitleEdit(node.task.id, it) },
-                onCancelTitleEdit = { onCancelTitleEdit(node.task.id) },
-                onToggleCompleted = { onToggleCompleted(node.task.id) },
-                onOpenDetails = { onOpenDetails(node.task.id) },
-                onMoveUp = { onMoveUp(node.task.id) },
-                onMoveDown = { onMoveDown(node.task.id) },
-                onIndent = { onIndent(node.task.id) },
-                onUnindent = {},
-            )
+        TaskChecklistRow(
+            task = node.task,
+            previousId = previousRootId,
+            nextId = nextRootId,
+            editing = editingTaskId == node.task.id,
+            showDueShorthand = showDueShorthand,
+            handedness = handedness,
+            expanded = expanded,
+            expandable = true,
+            onExpand = { expanded = !expanded },
+            onEditTask = onEditTask,
+            onFinishTitleEdit = onFinishTitleEdit,
+            onToggleCompleted = onToggleCompleted,
+            onOpenDueDate = onOpenDueDate,
+            onDelete = onDelete,
+            onReorder = onReorder,
+            onMoveUp = onMoveUp,
+            onMoveDown = onMoveDown,
+            onIndent = onIndent,
+            onUnindent = onUnindent,
+        )
 
+        if (expanded) {
             val visibleSubtasks = if (hideCompleted) {
                 node.subtasks.filter { it.completedAt == null }
             } else {
                 node.subtasks
             }
-            visibleSubtasks.forEach { subtask ->
+            visibleSubtasks.forEachIndexed { index, subtask ->
                 HorizontalDivider(
-                    modifier = Modifier.padding(start = 64.dp),
+                    modifier = Modifier.padding(start = 62.dp),
                     color = MaterialTheme.colorScheme.outlineVariant,
                 )
-                TaskRow(
+                TaskChecklistRow(
                     task = subtask,
-                    modifier = Modifier.padding(start = 24.dp),
-                    isEditing = editingTaskId == subtask.id,
+                    previousId = visibleSubtasks.getOrNull(index - 1)?.id,
+                    nextId = visibleSubtasks.getOrNull(index + 1)?.id,
+                    editing = editingTaskId == subtask.id,
                     showDueShorthand = showDueShorthand,
-                    canIndent = false,
-                    canUnindent = true,
-                    onEdit = { onEditTask(subtask.id) },
-                    onFinishTitleEdit = { onFinishTitleEdit(subtask.id, it) },
-                    onCancelTitleEdit = { onCancelTitleEdit(subtask.id) },
-                    onToggleCompleted = { onToggleCompleted(subtask.id) },
-                    onOpenDetails = { onOpenDetails(subtask.id) },
-                    onMoveUp = { onMoveUp(subtask.id) },
-                    onMoveDown = { onMoveDown(subtask.id) },
-                    onIndent = {},
-                    onUnindent = { onUnindent(subtask.id) },
+                    handedness = handedness,
+                    indented = true,
+                    expanded = false,
+                    expandable = false,
+                    onExpand = {},
+                    onEditTask = onEditTask,
+                    onFinishTitleEdit = onFinishTitleEdit,
+                    onToggleCompleted = onToggleCompleted,
+                    onOpenDueDate = onOpenDueDate,
+                    onDelete = onDelete,
+                    onReorder = onReorder,
+                    onMoveUp = onMoveUp,
+                    onMoveDown = onMoveDown,
+                    onIndent = onIndent,
+                    onUnindent = onUnindent,
                 )
             }
-        }
-
-        if (node.isMainTask) {
-            Spacer(Modifier.width(8.dp))
-            IconButton(
-                onClick = { onAddSubtask(node.task.id) },
-                modifier = Modifier
-                    .size(NudgeTouchTarget.Minimum)
-                    .testTag("add-subtask-${node.task.id}"),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add subtask to ${node.task.title.ifBlank { "task" }}",
-                )
-            }
-        }
-    }
-}
-
-@Composable
-internal fun TaskRow(
-    task: Task,
-    modifier: Modifier = Modifier,
-    isEditing: Boolean,
-    showDueShorthand: Boolean,
-    canIndent: Boolean,
-    canUnindent: Boolean,
-    onEdit: () -> Unit,
-    onFinishTitleEdit: (String) -> Unit,
-    onCancelTitleEdit: () -> Unit,
-    onToggleCompleted: () -> Unit,
-    onOpenDetails: () -> Unit,
-    onMoveUp: () -> Unit,
-    onMoveDown: () -> Unit,
-    onIndent: () -> Unit,
-    onUnindent: () -> Unit,
-) {
-    var titleDraft by remember(task.id, isEditing, task.title) { mutableStateOf(task.title) }
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .taskSwipeActions(
-                taskId = task.id,
-                canIndent = canIndent,
-                canUnindent = canUnindent,
-                onIndent = onIndent,
-                onUnindent = onUnindent,
-            )
-            .semantics {
-                contentDescription = "Task ${task.title.ifBlank { "New task" }}"
-                customActions = buildList {
-                    add(CustomAccessibilityAction("Move up") { onMoveUp(); true })
-                    add(CustomAccessibilityAction("Move down") { onMoveDown(); true })
-                    if (canIndent) {
-                        add(CustomAccessibilityAction("Indent as subtask") { onIndent(); true })
-                    }
-                    if (canUnindent) {
-                        add(CustomAccessibilityAction("Unindent task") { onUnindent(); true })
-                    }
-                }
-            }
-            .padding(horizontal = 8.dp, vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        ReorderHandle(onMoveUp = onMoveUp, onMoveDown = onMoveDown)
-        Checkbox(
-            checked = task.completedAt != null,
-            onCheckedChange = { onToggleCompleted() },
-            modifier = Modifier.testTag("task-checkbox-${task.title.ifBlank { task.id }}"),
-        )
-        Spacer(Modifier.width(4.dp))
-
-        if (isEditing) {
-            BasicTextField(
-                value = titleDraft,
-                onValueChange = { titleDraft = it },
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag("task-title-editor-${task.id}"),
-                singleLine = true,
-                textStyle = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface,
-                ),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(
-                    onDone = { onFinishTitleEdit(titleDraft) },
-                ),
-                decorationBox = { inner ->
-                    if (titleDraft.isEmpty()) {
-                        Text(
-                            text = "Task name",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                    inner()
-                },
-            )
-        } else {
             TextButton(
-                onClick = onEdit,
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp),
+                onClick = { onAddSubtask(node.task.id) },
+                modifier = Modifier.padding(start = 54.dp),
             ) {
-                Text(
-                    text = task.title.ifBlank { "New task" },
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = if (task.completedAt == null) {
-                        MaterialTheme.colorScheme.onSurface
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    },
-                    textDecoration = if (task.completedAt == null) null else TextDecoration.LineThrough,
-                )
+                Icon(Icons.Default.Add, contentDescription = null)
+                Spacer(Modifier.width(4.dp))
+                Text("Add subtask")
             }
         }
-
-        if (showDueShorthand && task.dueAt != null) {
-            Text(
-                text = formatDueShorthand(task.dueAt),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Spacer(Modifier.width(4.dp))
-        }
-
-        IconButton(
-            onClick = onOpenDetails,
-            modifier = Modifier
-                .size(NudgeTouchTarget.Minimum)
-                .testTag("task-details-${task.title.ifBlank { task.id }}"),
-        ) {
-            Text(text = "›", style = MaterialTheme.typography.headlineMedium)
-        }
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
     }
 }
 
 @Composable
-internal fun ReorderHandle(
-    onMoveUp: () -> Unit,
-    onMoveDown: () -> Unit,
+private fun TaskChecklistRow(
+    task: Task,
+    previousId: String?,
+    nextId: String?,
+    editing: Boolean,
+    showDueShorthand: Boolean,
+    handedness: ItemHandedness,
+    indented: Boolean = false,
+    expanded: Boolean,
+    expandable: Boolean,
+    onExpand: () -> Unit,
+    onEditTask: (String) -> Unit,
+    onFinishTitleEdit: (String, String) -> Unit,
+    onToggleCompleted: (String) -> Unit,
+    onOpenDueDate: (String) -> Unit,
+    onDelete: (String) -> Unit,
+    onReorder: (String, String) -> Unit,
+    onMoveUp: (String) -> Unit,
+    onMoveDown: (String) -> Unit,
+    onIndent: (String) -> Unit,
+    onUnindent: (String) -> Unit,
 ) {
-    val threshold = with(LocalDensity.current) { 48.dp.toPx() }
-    var accumulated by remember { mutableFloatStateOf(0f) }
-
-    Box(
-        modifier = Modifier
-            .size(NudgeTouchTarget.Minimum)
-            .semantics { contentDescription = "Hold and drag to reorder" }
-            .pointerInput(onMoveUp, onMoveDown) {
-                detectDragGesturesAfterLongPress(
-                    onDragStart = { accumulated = 0f },
-                    onDragCancel = { accumulated = 0f },
-                    onDragEnd = { accumulated = 0f },
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        accumulated += dragAmount.y
-                        if (accumulated > threshold) {
-                            onMoveDown()
-                            accumulated = 0f
-                        } else if (accumulated < -threshold) {
-                            onMoveUp()
-                            accumulated = 0f
-                        }
-                    },
-                )
-            },
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = "≡",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
+    ChecklistRow(
+        id = task.id,
+        title = task.title,
+        checked = task.completedAt != null,
+        handedness = handedness,
+        modifier = Modifier.taskSwipeActions(
+            taskId = task.id,
+            canIndent = task.parentTaskId == null,
+            canUnindent = task.parentTaskId != null,
+            onIndent = { onIndent(task.id) },
+            onUnindent = { onUnindent(task.id) },
+        ),
+        metadata = if (showDueShorthand) task.dueAt?.let(::formatDueShorthand) else null,
+        metadataKind = ChecklistMetadataKind.DueDate,
+        editing = editing,
+        indented = indented,
+        expanded = expanded,
+        expandable = expandable,
+        canMovePrevious = previousId != null,
+        canMoveNext = nextId != null,
+        onTitleClick = { onEditTask(task.id) },
+        onTitleCommitted = { onFinishTitleEdit(task.id, it) },
+        onCheckedChange = { onToggleCompleted(task.id) },
+        onMetadataClick = { onOpenDueDate(task.id) },
+        onExpandClick = onExpand,
+        onDelete = { onDelete(task.id) },
+        onMovePrevious = {
+            previousId?.let { onReorder(task.id, it) } ?: onMoveUp(task.id)
+        },
+        onMoveNext = {
+            nextId?.let { onReorder(task.id, it) } ?: onMoveDown(task.id)
+        },
+    )
 }
 
 @Composable

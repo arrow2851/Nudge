@@ -7,7 +7,9 @@ import com.arrow2851.nudge.core.data.ChoreRepository
 import com.arrow2851.nudge.core.data.ListWorkflowRepository
 import com.arrow2851.nudge.core.data.PreferencesRepository
 import com.arrow2851.nudge.core.data.RecentCompletionReader
+import com.arrow2851.nudge.core.data.TaskCompletionMutation
 import com.arrow2851.nudge.core.data.TaskRepository
+import com.arrow2851.nudge.core.data.TaskWorkflowRepository
 import com.arrow2851.nudge.core.domain.DefaultRecommendationEngine
 import com.arrow2851.nudge.core.domain.RecommendationCandidate
 import com.arrow2851.nudge.core.domain.RecommendationContext
@@ -122,8 +124,7 @@ sealed interface TodayUiState {
 
 sealed interface TodayCompletionUndo {
     data class TaskCompletion(
-        val taskId: String,
-        val previousCompletedAt: Long?,
+        val mutation: TaskCompletionMutation,
     ) : TodayCompletionUndo
 
     data class ChoreCompletion(
@@ -157,6 +158,7 @@ private data class TodayContextSnapshot(
 @HiltViewModel
 class TodayViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
+    private val taskWorkflowRepository: TaskWorkflowRepository,
     private val choreRepository: ChoreRepository,
     private val areaRepository: AreaRepository,
     private val listRepository: ListWorkflowRepository,
@@ -214,11 +216,11 @@ class TodayViewModel @Inject constructor(
             val item = ready()?.dueItem(itemId) ?: return@mutate
             when (item.kind) {
                 TodayItemKind.Task -> {
-                    taskRepository.setCompleted(item.id, timeProvider.nowEpochMillis())
+                    val mutation = taskWorkflowRepository.toggleCompletion(item.id)
                     eventChannel.send(
                         TodayEvent.ItemCompleted(
                             text = "Task completed",
-                            undo = TodayCompletionUndo.TaskCompletion(item.id, null),
+                            undo = TodayCompletionUndo.TaskCompletion(mutation),
                         ),
                     )
                 }
@@ -244,7 +246,7 @@ class TodayViewModel @Inject constructor(
         mutate {
             when (undo) {
                 is TodayCompletionUndo.TaskCompletion ->
-                    taskRepository.setCompleted(undo.taskId, undo.previousCompletedAt)
+                    taskWorkflowRepository.undoCompletion(undo.mutation)
 
                 is TodayCompletionUndo.ChoreCompletion ->
                     choreRepository.undoCompletion(undo.mutation)
@@ -424,7 +426,7 @@ private fun buildReadyState(
                 .filter { it.parentItemId == null }
                 .take(2)
                 .joinToString(" · ") { it.name }
-                .ifEmpty { if (listWithItems.list.isReusable) "Ready to reset" else "All checked" }
+                .ifEmpty { if (listWithItems.list.isReusable) "All checked" else "All checked" }
             TodayListSummary(
                 id = listWithItems.list.id,
                 name = listWithItems.list.name,

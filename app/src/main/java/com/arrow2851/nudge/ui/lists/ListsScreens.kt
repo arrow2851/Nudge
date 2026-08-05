@@ -19,13 +19,12 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -45,11 +44,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.arrow2851.nudge.core.data.normalizeListItemName
 import com.arrow2851.nudge.core.model.ItemHandedness
 import com.arrow2851.nudge.core.model.ListCatalogItem
 import com.arrow2851.nudge.core.model.ListItem
-import com.arrow2851.nudge.ui.checklist.ChecklistMetadataKind
 import com.arrow2851.nudge.ui.checklist.ChecklistRow
+import com.arrow2851.nudge.ui.checklist.ChecklistSelectionBar
+import com.arrow2851.nudge.ui.checklist.ChecklistSelectionMode
+import com.arrow2851.nudge.ui.checklist.ChecklistSuggestion
 import com.arrow2851.nudge.ui.components.NudgeButton
 import com.arrow2851.nudge.ui.components.NudgeButtonStyle
 import com.arrow2851.nudge.ui.components.NudgeCard
@@ -98,7 +100,7 @@ fun ListsOverviewScreen(
                     )
                     Spacer(Modifier.height(MaterialTheme.nudgeSpacing.x1))
                     Text(
-                        "Checked items stay available and become inline suggestions the next time you type.",
+                        "Checked items stay available and return as deduplicated suggestion bubbles.",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Spacer(Modifier.height(8.dp))
@@ -127,7 +129,11 @@ fun ListsOverviewScreen(
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
-                                    if (overview.list.isReusable) Icons.Default.Refresh else Icons.Default.CheckCircle,
+                                    if (overview.list.isReusable) {
+                                        Icons.Default.Refresh
+                                    } else {
+                                        Icons.Default.CheckCircle
+                                    },
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.primary,
                                 )
@@ -212,16 +218,15 @@ fun ListDetailScreen(
     val ready = state as? ListsUiState.Ready
     val overview = ready?.list(listId)
     var showListEditor by rememberSaveable { mutableStateOf(false) }
-    var showAddItem by rememberSaveable { mutableStateOf(false) }
-    var subitemParentId by rememberSaveable { mutableStateOf<String?>(null) }
-    var noteItemId by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectionMode by rememberSaveable { mutableStateOf(ChecklistSelectionMode.None) }
+    var selectedItemIds by rememberSaveable { mutableStateOf(emptyList<String>()) }
+    var showNoteDialog by rememberSaveable { mutableStateOf(false) }
     var lastHandledCreate by rememberSaveable { mutableIntStateOf(0) }
 
     LaunchedEffect(createItemRequest) {
         if (createItemRequest > lastHandledCreate) {
             lastHandledCreate = createItemRequest
-            subitemParentId = null
-            showAddItem = true
+            viewModel.createItem(listId)
         }
     }
 
@@ -230,9 +235,26 @@ fun ListDetailScreen(
         state is ListsUiState.Error -> ListFatalError(state.message)
         overview == null || ready == null -> ListFatalError("List not found.")
         else -> {
-            val parent = subitemParentId?.let(ready::item)
-            val noteItem = noteItemId?.let(ready::item)
             val visibleCompleted = if (ready.hideCompleted) emptyList() else overview.completedNodes
+            val allItems = overview.items
+            val selectableIds = when (selectionMode) {
+                ChecklistSelectionMode.Metadata -> allItems.map(ListItem::id)
+                ChecklistSelectionMode.Delete -> allItems
+                    .filter(ListItem::isChecked)
+                    .map(ListItem::id)
+                ChecklistSelectionMode.None -> emptyList()
+            }
+            val activeNames = allItems
+                .filter { !it.isChecked && it.id != ready.editingItemId }
+                .mapTo(mutableSetOf()) { normalizeListItemName(it.name) }
+            val bubbleSuggestions = suggestions
+                .distinctBy(ListCatalogItem::normalizedName)
+                .filterNot { it.normalizedName in activeNames }
+                .map { ChecklistSuggestion(id = it.id, label = it.displayName) }
+
+            LaunchedEffect(selectionMode, allItems) {
+                selectedItemIds = selectedItemIds.filter { it in selectableIds }
+            }
 
             LazyColumn(
                 modifier = Modifier
@@ -256,38 +278,46 @@ fun ListDetailScreen(
                             if (overview.list.isReusable) "reusable" else "one-off",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        NudgeButton(
-                            text = "Edit List",
-                            onClick = { showListEditor = true },
-                            style = NudgeButtonStyle.Text,
-                        )
-                        if (overview.completedCount > 0) {
-                            IconButton(
-                                onClick = {
-                                    viewModel.setHideCompleted(!ready.hideCompleted)
-                                },
-                                modifier = Modifier.testTag("toggle-checked-visibility"),
-                            ) {
-                                Icon(
-                                    imageVector = if (ready.hideCompleted) {
-                                        Icons.Default.Visibility
-                                    } else {
-                                        Icons.Default.VisibilityOff
-                                    },
-                                    contentDescription = if (ready.hideCompleted) {
-                                        "Show checked items"
-                                    } else {
-                                        "Hide checked items"
-                                    },
-                                )
+                    NudgeButton(
+                        text = "Edit List",
+                        onClick = { showListEditor = true },
+                        style = NudgeButtonStyle.Text,
+                    )
+                    ChecklistSelectionBar(
+                        mode = selectionMode,
+                        metadataActionLabel = "Add note",
+                        checkedCount = overview.completedCount,
+                        selectedCount = selectedItemIds.size,
+                        hideChecked = ready.hideCompleted,
+                        onStartMetadata = {
+                            selectionMode = ChecklistSelectionMode.Metadata
+                            selectedItemIds = emptyList()
+                        },
+                        onStartDelete = {
+                            selectionMode = ChecklistSelectionMode.Delete
+                            selectedItemIds = emptyList()
+                        },
+                        onSelectAll = { selectedItemIds = selectableIds.distinct() },
+                        onApply = {
+                            when (selectionMode) {
+                                ChecklistSelectionMode.Metadata -> showNoteDialog = true
+                                ChecklistSelectionMode.Delete -> {
+                                    viewModel.archiveItems(selectedItemIds.toSet())
+                                    selectionMode = ChecklistSelectionMode.None
+                                    selectedItemIds = emptyList()
+                                }
+                                ChecklistSelectionMode.None -> Unit
                             }
-                        }
-                    }
+                        },
+                        onCancel = {
+                            selectionMode = ChecklistSelectionMode.None
+                            selectedItemIds = emptyList()
+                            showNoteDialog = false
+                        },
+                        onToggleCheckedVisibility = {
+                            viewModel.setHideCompleted(!ready.hideCompleted)
+                        },
+                    )
                     Spacer(Modifier.height(4.dp))
                 }
 
@@ -295,9 +325,9 @@ fun ListDetailScreen(
                     item {
                         NudgeEmptyState(
                             title = "This list is empty",
-                            message = "Add an item. Reused items will appear as gray inline hints while typing.",
+                            message = "Add an item directly. Checked items return as suggestion bubbles.",
                             actionLabel = "Add Item",
-                            onAction = { showAddItem = true },
+                            onAction = { viewModel.createItem(overview.list.id) },
                         )
                     }
                 }
@@ -308,91 +338,97 @@ fun ListDetailScreen(
                         overview.activeNodes,
                         key = { _, node -> "active-${node.item.id}" },
                     ) { index, node ->
-                        ListNodeRowsV2(
+                        ListNodeRows(
                             node = node,
                             previousRootId = overview.activeNodes.getOrNull(index - 1)?.item?.id,
                             nextRootId = overview.activeNodes.getOrNull(index + 1)?.item?.id,
                             editingItemId = ready.editingItemId,
                             handedness = ready.handedness,
+                            selectionMode = selectionMode,
+                            selectedItemIds = selectedItemIds.toSet(),
+                            suggestions = bubbleSuggestions,
+                            onToggleSelection = { itemId ->
+                                selectedItemIds = selectedItemIds.toggle(itemId)
+                            },
                             onToggle = viewModel::toggleItem,
                             onEdit = viewModel::editItem,
+                            onDraftChange = viewModel::setSuggestionQuery,
                             onFinishEdit = viewModel::finishTitleEdit,
-                            onOpenNote = { noteItemId = it },
+                            onAcceptSuggestion = { itemId, suggestionId ->
+                                suggestions.firstOrNull { it.id == suggestionId }?.let { suggestion ->
+                                    viewModel.acceptSuggestion(itemId, suggestion)
+                                }
+                            },
                             onDelete = viewModel::archiveItem,
                             onReorder = viewModel::reorderItem,
                             onMoveUp = { viewModel.moveItem(it, -1) },
                             onMoveDown = { viewModel.moveItem(it, 1) },
                             onIndent = viewModel::indentItem,
                             onUnindent = viewModel::unindentItem,
-                            onAddSubitem = {
-                                subitemParentId = it
-                                showAddItem = true
-                            },
+                            onAddSubitem = { viewModel.createItem(overview.list.id, it) },
                         )
                     }
                 }
 
                 if (overview.completedNodes.isNotEmpty()) {
                     item {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 12.dp, bottom = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            NudgeSectionLabel("CHECKED")
+                        NudgeSectionLabel(
                             if (ready.hideCompleted) {
-                                Text(
-                                    "${overview.completedCount} hidden",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                        }
+                                "CHECKED · ${overview.completedCount} HIDDEN"
+                            } else {
+                                "CHECKED"
+                            },
+                        )
                     }
                     itemsIndexed(
                         visibleCompleted,
                         key = { _, node -> "checked-${node.item.id}" },
                     ) { index, node ->
-                        ListNodeRowsV2(
+                        ListNodeRows(
                             node = node,
                             previousRootId = visibleCompleted.getOrNull(index - 1)?.item?.id,
                             nextRootId = visibleCompleted.getOrNull(index + 1)?.item?.id,
                             editingItemId = ready.editingItemId,
                             handedness = ready.handedness,
+                            selectionMode = selectionMode,
+                            selectedItemIds = selectedItemIds.toSet(),
+                            suggestions = bubbleSuggestions,
+                            onToggleSelection = { itemId ->
+                                selectedItemIds = selectedItemIds.toggle(itemId)
+                            },
                             onToggle = viewModel::toggleItem,
                             onEdit = viewModel::editItem,
+                            onDraftChange = viewModel::setSuggestionQuery,
                             onFinishEdit = viewModel::finishTitleEdit,
-                            onOpenNote = { noteItemId = it },
+                            onAcceptSuggestion = { itemId, suggestionId ->
+                                suggestions.firstOrNull { it.id == suggestionId }?.let { suggestion ->
+                                    viewModel.acceptSuggestion(itemId, suggestion)
+                                }
+                            },
                             onDelete = viewModel::archiveItem,
                             onReorder = viewModel::reorderItem,
                             onMoveUp = { viewModel.moveItem(it, -1) },
                             onMoveDown = { viewModel.moveItem(it, 1) },
                             onIndent = viewModel::indentItem,
                             onUnindent = viewModel::unindentItem,
-                            onAddSubitem = {
-                                subitemParentId = it
-                                showAddItem = true
-                            },
+                            onAddSubitem = { viewModel.createItem(overview.list.id, it) },
                         )
                     }
                 }
 
-                item {
-                    Spacer(Modifier.height(12.dp))
-                    NudgeButton(
-                        text = "Add Item",
-                        onClick = {
-                            subitemParentId = null
-                            showAddItem = true
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag("add-list-item-bottom"),
-                        style = NudgeButtonStyle.Outlined,
-                        leadingIcon = { Icon(Icons.Default.Add, contentDescription = null) },
-                    )
+                if (selectionMode == ChecklistSelectionMode.None) {
+                    item {
+                        Spacer(Modifier.height(12.dp))
+                        NudgeButton(
+                            text = "Add Item",
+                            onClick = { viewModel.createItem(overview.list.id) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("add-list-item-bottom"),
+                            style = NudgeButtonStyle.Outlined,
+                            leadingIcon = { Icon(Icons.Default.Add, contentDescription = null) },
+                        )
+                    }
                 }
             }
 
@@ -411,40 +447,18 @@ fun ListDetailScreen(
                 },
             )
 
-            AddListItemSheetV2(
-                visible = showAddItem,
-                parentItem = parent,
-                suggestions = suggestions.filterNot { suggestion ->
-                    overview.items.any { it.catalogItemId == suggestion.id && !it.isChecked }
-                },
-                onQueryChange = viewModel::setSuggestionQuery,
-                onDismiss = {
-                    showAddItem = false
-                    subitemParentId = null
-                    viewModel.setSuggestionQuery("")
-                },
-                onSave = { name, quantity, catalogId ->
-                    viewModel.addItem(
-                        listId = overview.list.id,
-                        name = name,
-                        quantity = quantity,
-                        parentItemId = parent?.id,
-                        catalogItemId = catalogId,
-                    )
-                    showAddItem = false
-                    subitemParentId = null
-                    viewModel.setSuggestionQuery("")
-                },
-            )
-
-            ListItemNoteSheetV2(
-                item = noteItem,
-                onDismiss = { noteItemId = null },
-                onSave = { value ->
-                    noteItem?.let { viewModel.updateItemNote(it.id, value) }
-                    noteItemId = null
-                },
-            )
+            if (showNoteDialog && selectedItemIds.isNotEmpty()) {
+                NoteAssignmentDialog(
+                    selectedCount = selectedItemIds.size,
+                    onDismiss = { showNoteDialog = false },
+                    onApply = { note ->
+                        viewModel.updateItemNotes(selectedItemIds.toSet(), note)
+                        showNoteDialog = false
+                        selectionMode = ChecklistSelectionMode.None
+                        selectedItemIds = emptyList()
+                    },
+                )
+            }
 
             ready.recoverableError?.let {
                 ListErrorBanner(it, viewModel::dismissRecoverableError)
@@ -454,16 +468,21 @@ fun ListDetailScreen(
 }
 
 @Composable
-private fun ListNodeRowsV2(
+private fun ListNodeRows(
     node: ListItemNode,
     previousRootId: String?,
     nextRootId: String?,
     editingItemId: String?,
     handedness: ItemHandedness,
+    selectionMode: ChecklistSelectionMode,
+    selectedItemIds: Set<String>,
+    suggestions: List<ChecklistSuggestion>,
+    onToggleSelection: (String) -> Unit,
     onToggle: (String) -> Unit,
     onEdit: (String) -> Unit,
+    onDraftChange: (String) -> Unit,
     onFinishEdit: (String, String) -> Unit,
-    onOpenNote: (String) -> Unit,
+    onAcceptSuggestion: (String, String) -> Unit,
     onDelete: (String) -> Unit,
     onReorder: (String, String) -> Unit,
     onMoveUp: (String) -> Unit,
@@ -472,8 +491,11 @@ private fun ListNodeRowsV2(
     onUnindent: (String) -> Unit,
     onAddSubitem: (String) -> Unit,
 ) {
-    var expanded by rememberSaveable(node.item.id) {
-        mutableStateOf(node.children.isNotEmpty())
+    val hasChildren = node.children.isNotEmpty()
+    var expanded by rememberSaveable(node.item.id) { mutableStateOf(hasChildren) }
+
+    LaunchedEffect(hasChildren) {
+        expanded = hasChildren
     }
 
     ListChecklistRow(
@@ -483,12 +505,17 @@ private fun ListNodeRowsV2(
         editing = editingItemId == node.item.id,
         handedness = handedness,
         expanded = expanded,
-        expandable = true,
+        hasChildren = hasChildren,
+        selectionMode = selectionMode,
+        selected = node.item.id in selectedItemIds,
+        suggestions = if (editingItemId == node.item.id) suggestions else emptyList(),
+        onToggleSelection = onToggleSelection,
         onExpand = { expanded = !expanded },
         onToggle = onToggle,
         onEdit = onEdit,
+        onDraftChange = onDraftChange,
         onFinishEdit = onFinishEdit,
-        onOpenNote = onOpenNote,
+        onAcceptSuggestion = onAcceptSuggestion,
         onDelete = onDelete,
         onReorder = onReorder,
         onMoveUp = onMoveUp,
@@ -497,7 +524,7 @@ private fun ListNodeRowsV2(
         onUnindent = onUnindent,
     )
 
-    if (expanded) {
+    if (hasChildren && expanded) {
         node.children.forEachIndexed { index, child ->
             HorizontalDivider(
                 modifier = Modifier.padding(start = 62.dp),
@@ -511,12 +538,17 @@ private fun ListNodeRowsV2(
                 handedness = handedness,
                 indented = true,
                 expanded = false,
-                expandable = false,
+                hasChildren = false,
+                selectionMode = selectionMode,
+                selected = child.id in selectedItemIds,
+                suggestions = if (editingItemId == child.id) suggestions else emptyList(),
+                onToggleSelection = onToggleSelection,
                 onExpand = {},
                 onToggle = onToggle,
                 onEdit = onEdit,
+                onDraftChange = onDraftChange,
                 onFinishEdit = onFinishEdit,
-                onOpenNote = onOpenNote,
+                onAcceptSuggestion = onAcceptSuggestion,
                 onDelete = onDelete,
                 onReorder = onReorder,
                 onMoveUp = onMoveUp,
@@ -528,6 +560,7 @@ private fun ListNodeRowsV2(
         TextButton(
             onClick = { onAddSubitem(node.item.id) },
             modifier = Modifier.padding(start = 54.dp),
+            enabled = selectionMode == ChecklistSelectionMode.None,
         ) {
             Icon(Icons.Default.Add, contentDescription = null)
             Spacer(Modifier.width(4.dp))
@@ -546,12 +579,17 @@ private fun ListChecklistRow(
     handedness: ItemHandedness,
     indented: Boolean = false,
     expanded: Boolean,
-    expandable: Boolean,
+    hasChildren: Boolean,
+    selectionMode: ChecklistSelectionMode,
+    selected: Boolean,
+    suggestions: List<ChecklistSuggestion>,
+    onToggleSelection: (String) -> Unit,
     onExpand: () -> Unit,
     onToggle: (String) -> Unit,
     onEdit: (String) -> Unit,
+    onDraftChange: (String) -> Unit,
     onFinishEdit: (String, String) -> Unit,
-    onOpenNote: (String) -> Unit,
+    onAcceptSuggestion: (String, String) -> Unit,
     onDelete: (String) -> Unit,
     onReorder: (String, String) -> Unit,
     onMoveUp: (String) -> Unit,
@@ -568,23 +606,28 @@ private fun ListChecklistRow(
             .testTag("list-item-row-${item.name}")
             .listItemSwipeActions(
                 itemId = item.id,
+                enabled = selectionMode == ChecklistSelectionMode.None,
                 canIndent = item.parentItemId == null,
                 canUnindent = item.parentItemId != null,
                 onIndent = { onIndent(item.id) },
                 onUnindent = { onUnindent(item.id) },
             ),
         metadata = item.quantity,
-        metadataKind = ChecklistMetadataKind.QuantityOrNote,
         editing = editing,
         indented = indented,
         expanded = expanded,
-        expandable = expandable,
+        hasChildren = hasChildren,
+        selectionMode = selectionMode,
+        selected = selected,
+        suggestions = suggestions,
         canMovePrevious = previousId != null,
         canMoveNext = nextId != null,
         onTitleClick = { onEdit(item.id) },
         onTitleCommitted = { onFinishEdit(item.id, it) },
+        onTitleDraftChanged = onDraftChange,
+        onSuggestionAccepted = { onAcceptSuggestion(item.id, it.id) },
         onCheckedChange = { onToggle(item.id) },
-        onMetadataClick = { onOpenNote(item.id) },
+        onSelectionChange = { onToggleSelection(item.id) },
         onExpandClick = onExpand,
         onDelete = { onDelete(item.id) },
         onMovePrevious = {
@@ -599,11 +642,13 @@ private fun ListChecklistRow(
 @Composable
 private fun Modifier.listItemSwipeActions(
     itemId: String,
+    enabled: Boolean,
     canIndent: Boolean,
     canUnindent: Boolean,
     onIndent: () -> Unit,
     onUnindent: () -> Unit,
 ): Modifier {
+    if (!enabled) return this
     val threshold = with(LocalDensity.current) { 72.dp.toPx() }
     var offset by remember(itemId) { mutableFloatStateOf(0f) }
 
@@ -624,6 +669,45 @@ private fun Modifier.listItemSwipeActions(
                 },
             )
         }
+}
+
+@Composable
+private fun NoteAssignmentDialog(
+    selectedCount: Int,
+    onDismiss: () -> Unit,
+    onApply: (String?) -> Unit,
+) {
+    var note by rememberSaveable { mutableStateOf("") }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Note for $selectedCount item${if (selectedCount == 1) "" else "s"}") },
+        text = {
+            OutlinedTextField(
+                value = note,
+                onValueChange = { note = it },
+                label = { Text("Quantity or note") },
+                placeholder = { Text("2, large, 12 oz, low sodium…") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("bulk-note-field"),
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = { onApply(note.trim().ifEmpty { null }) }) {
+                Text("Apply")
+            }
+        },
+        dismissButton = {
+            Row {
+                TextButton(onClick = { onApply(null) }) {
+                    Text("Remove notes")
+                }
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel")
+                }
+            }
+        },
+    )
 }
 
 @Composable
@@ -657,3 +741,6 @@ private fun ListErrorBanner(message: String, onDismiss: () -> Unit) {
         TextButton(onClick = onDismiss) { Text("Dismiss") }
     }
 }
+
+private fun List<String>.toggle(value: String): List<String> =
+    if (value in this) filterNot { it == value } else this + value

@@ -71,6 +71,7 @@ fun ChecklistRow(
     checked: Boolean,
     handedness: ItemHandedness,
     modifier: Modifier = Modifier,
+    checkboxTestTag: String = "checklist-checkbox-$id",
     metadata: String? = null,
     metadataKind: ChecklistMetadataKind? = null,
     editing: Boolean = false,
@@ -147,7 +148,7 @@ fun ChecklistRow(
             Checkbox(
                 checked = checked,
                 onCheckedChange = { onCheckedChange() },
-                modifier = Modifier.testTag("checklist-checkbox-$id"),
+                modifier = Modifier.testTag(checkboxTestTag),
             )
         }
 
@@ -215,7 +216,7 @@ fun ChecklistRow(
             Checkbox(
                 checked = checked,
                 onCheckedChange = { onCheckedChange() },
-                modifier = Modifier.testTag("checklist-checkbox-$id"),
+                modifier = Modifier.testTag(checkboxTestTag),
             )
             ImmediateDragHandle(
                 dragOffset = dragOffset,

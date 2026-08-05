@@ -164,16 +164,27 @@ class TasksViewModel @Inject constructor(
         }
     }
 
-    fun updateDueDate(taskId: String, dueAt: Long?) {
-        launchMutation { _ ->
-            val task = currentTask(taskId) ?: return@launchMutation
-            taskRepository.saveTask(
-                task.copy(
-                    dueAt = dueAt,
-                    updatedAt = timeProvider.nowEpochMillis(),
-                ),
+    fun updateDueDates(taskIds: Set<String>, dueAt: Long?) {
+        if (taskIds.isEmpty()) return
+        launchMutation { ticket ->
+            val now = timeProvider.nowEpochMillis()
+            val updated = taskIds.mapNotNull(::currentTask).map { task ->
+                task.copy(dueAt = dueAt, updatedAt = now)
+            }
+            taskRepository.saveTasks(updated)
+            mutationCoordinator.showMessage(
+                ticket,
+                if (dueAt == null) {
+                    "Dates removed from ${updated.size} task${if (updated.size == 1) "" else "s"}"
+                } else {
+                    "Date assigned to ${updated.size} task${if (updated.size == 1) "" else "s"}"
+                },
             )
         }
+    }
+
+    fun updateDueDate(taskId: String, dueAt: Long?) {
+        updateDueDates(setOf(taskId), dueAt)
     }
 
     fun reorder(taskId: String, targetTaskId: String) {
@@ -198,9 +209,27 @@ class TasksViewModel @Inject constructor(
 
     fun archive(taskId: String) {
         launchMutation { ticket ->
+            val task = currentTask(taskId) ?: return@launchMutation
+            if (task.completedAt == null && task.title.isNotEmpty()) return@launchMutation
             val mutation = taskWorkflowRepository.archiveTask(taskId)
             if (editingTaskId.value == taskId) editingTaskId.value = null
             mutationCoordinator.registerUndo(ticket, "Task deleted") {
+                taskWorkflowRepository.undoArchive(mutation)
+            }
+        }
+    }
+
+    fun archiveTasks(taskIds: Set<String>) {
+        if (taskIds.isEmpty()) return
+        launchMutation { ticket ->
+            val completedIds = taskIds.filterTo(linkedSetOf()) { currentTask(it)?.completedAt != null }
+            if (completedIds.isEmpty()) return@launchMutation
+            val mutation = taskWorkflowRepository.archiveTasks(completedIds)
+            if (editingTaskId.value in completedIds) editingTaskId.value = null
+            mutationCoordinator.registerUndo(
+                ticket,
+                "${mutation.mutations.size} tasks deleted",
+            ) {
                 taskWorkflowRepository.undoArchive(mutation)
             }
         }

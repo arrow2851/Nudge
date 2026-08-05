@@ -33,7 +33,7 @@ class NudgeAppTest {
 
     @Test
     fun shellNavigationAndSettingsAlwaysReturnToTodayRoot() {
-        composeRule.onNodeWithText("Small steps, right now.").assertIsDisplayed()
+        waitForText("Small steps, right now.")
         listOf(
             "Areas" to "Keep recurring care visible.",
             "Tasks" to "Capture it, check it off, and keep moving.",
@@ -41,33 +41,18 @@ class NudgeAppTest {
             "Today" to "Small steps, right now.",
         ).forEach { (destination, expectedText) ->
             composeRule.onNodeWithContentDescription("$destination destination").performClick()
-            composeRule.onNodeWithText(expectedText).assertIsDisplayed()
+            waitForText(expectedText)
         }
 
         composeRule.onNodeWithContentDescription("Settings").performClick()
-        composeRule.onNodeWithText("Display and item behavior").assertIsDisplayed()
+        waitForText("Display and item behavior")
         composeRule.onNodeWithContentDescription("Today destination").performClick()
-        composeRule.onNodeWithText("Small steps, right now.").assertIsDisplayed()
+        waitForText("Small steps, right now.")
     }
 
     @Test
     fun taskRowsSupportAtomicUndoInvalidationInlineDatesAndAutomaticChildren() {
         createTask("Atomic parent")
-
-        composeRule.onNodeWithTag("task-checkbox-Atomic parent", useUnmergedTree = true)
-            .performClick()
-        waitForText("Task completed")
-        composeRule.onNodeWithText("Undo").performClick()
-        waitForText("Undone")
-
-        composeRule.onNodeWithTag("task-checkbox-Atomic parent", useUnmergedTree = true)
-            .performClick()
-        waitForText("Task completed")
-        composeRule.onNodeWithContentDescription("Add task").performClick()
-        composeRule.waitUntil(5_000L) {
-            composeRule.onAllNodesWithText("Undo").fetchSemanticsNodes().isEmpty()
-        }
-        completeOpenTextEditor("Mutation after completion")
 
         val row = hasContentDescription("Checklist item Atomic parent")
         firstNode(
@@ -83,8 +68,24 @@ class NudgeAppTest {
         ).performClick()
         composeRule.onNodeWithText("Add subtask").performClick()
         completeOpenTextEditor("Atomic child")
-        composeRule.onNodeWithText("Atomic child").assertIsDisplayed()
-        composeRule.onNodeWithText("0/1").assertIsDisplayed()
+        waitForText("Atomic child")
+        waitForText("0/1")
+
+        composeRule.onNodeWithTag("task-checkbox-Atomic parent", useUnmergedTree = true)
+            .performClick()
+        waitForText("Task completed")
+        composeRule.onNodeWithText("Undo").performClick()
+        waitForText("Undone")
+
+        composeRule.onNodeWithTag("task-checkbox-Atomic parent", useUnmergedTree = true)
+            .performClick()
+        waitForText("Task completed")
+        composeRule.onNodeWithContentDescription("Add task").performClick()
+        composeRule.waitUntil(5_000L) {
+            composeRule.onAllNodesWithText("Undo").fetchSemanticsNodes().isEmpty()
+        }
+        completeOpenTextEditor("Mutation after completion")
+        waitForText("Mutation after completion")
     }
 
     @Test
@@ -145,7 +146,8 @@ class NudgeAppTest {
         listItemToggle("Oat Milk").performClick()
         waitForText("0 active · 1 checked", substring = true)
         composeRule.onNodeWithContentDescription("Add list item").performClick()
-        composeRule.onNodeWithTag("list-item-name-field").performTextInput("oat")
+        composeRule.onNodeWithTag("list-item-name-input", useUnmergedTree = true)
+            .performTextInput("oat")
         waitForText("Swipe right across the name", substring = true)
         composeRule.onNodeWithTag("list-item-name-field").performTouchInput { swipeRight() }
         composeRule.onNodeWithTag("list-item-quantity-field").assertTextContains("2 cartons")
@@ -235,14 +237,15 @@ class NudgeAppTest {
     }
 
     private fun completeOpenTextEditor(text: String) {
-        waitForNode(hasSetTextAction())
-        firstNode(hasSetTextAction()).performTextInput(text)
-        firstNode(hasSetTextAction()).performImeAction()
+        waitForNode(hasSetTextAction(), useUnmergedTree = true)
+        firstNode(hasSetTextAction(), useUnmergedTree = true).performTextInput(text)
+        firstNode(hasSetTextAction(), useUnmergedTree = true).performImeAction()
     }
 
     private fun addListItem(name: String, quantity: String) {
         composeRule.onNodeWithContentDescription("Add list item").performClick()
-        composeRule.onNodeWithTag("list-item-name-field").performTextInput(name)
+        composeRule.onNodeWithTag("list-item-name-input", useUnmergedTree = true)
+            .performTextInput(name)
         composeRule.onNodeWithTag("list-item-quantity-field").performTextInput(quantity)
         composeRule.onNodeWithTag("save-list-item").performScrollTo().performClick()
     }

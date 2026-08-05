@@ -63,6 +63,24 @@ enum class ThemeMode {
 }
 
 @Serializable
+enum class ItemHandedness {
+    Standard,
+    RightHanded,
+}
+
+@Serializable
+enum class HistoryItemType {
+    Task,
+    ListItem,
+}
+
+@Serializable
+enum class HistoryEventType {
+    Completed,
+    Deleted,
+}
+
+@Serializable
 data class Area(
     val id: String,
     val name: String,
@@ -207,6 +225,18 @@ data class ReusableListWithItems(
 )
 
 @Serializable
+data class ItemHistoryEntry(
+    val id: String,
+    val itemType: HistoryItemType,
+    val eventType: HistoryEventType,
+    val sourceItemId: String?,
+    val title: String,
+    val detail: String? = null,
+    val containerName: String? = null,
+    val occurredAt: Long,
+)
+
+@Serializable
 data class AppPreferences(
     val themeMode: ThemeMode = ThemeMode.System,
     val showDueShorthand: Boolean = true,
@@ -214,4 +244,5 @@ data class AppPreferences(
     val dailyProgressEnabled: Boolean = false,
     val quickWinEnabled: Boolean = false,
     val demoDataEnabled: Boolean = false,
+    val itemHandedness: ItemHandedness = ItemHandedness.Standard,
 )

@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.arrow2851.nudge.ui.InterventionSettingsRoute
 import com.arrow2851.nudge.ui.NudgePhase7App
+import com.arrow2851.nudge.ui.components.NudgeDestination
 import com.arrow2851.nudge.ui.theme.NudgeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,6 +18,9 @@ class MainActivity : ComponentActivity() {
         val destination = intent?.data?.host
         val requestedRoute = when (destination) {
             "interventions" -> InterventionSettingsRoute
+            "tasks" -> NudgeDestination.Tasks.route
+            "lists" -> NudgeDestination.Lists.route
+            "list" -> intent?.data?.pathSegments?.firstOrNull()?.let { "list/$it" }
             else -> null
         }
         val openQuickAdd = destination == "quick-add" ||

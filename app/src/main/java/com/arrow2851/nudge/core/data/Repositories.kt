@@ -26,6 +26,7 @@ data class TaskCompletionMutation(
     val taskId: String,
     val previousCompletedAt: Long?,
     val completedAt: Long?,
+    val affectedTaskIds: List<String>,
     val createdHistoryIds: List<String> = emptyList(),
 )
 
@@ -56,13 +57,19 @@ interface TaskRepository {
     fun observeSubtasks(parentTaskId: String): Flow<List<Task>>
     fun observeTask(taskId: String): Flow<Task?>
     suspend fun saveTask(task: Task)
-    suspend fun setCompleted(taskId: String, completedAt: Long?): TaskCompletionMutation
-    suspend fun undoCompletion(mutation: TaskCompletionMutation)
-    suspend fun reorderTask(taskId: String, targetTaskId: String)
+    suspend fun setCompleted(taskId: String, completedAt: Long?)
+    suspend fun setMainTask(taskId: String, enabled: Boolean)
     suspend fun moveTask(taskId: String, direction: Int)
     suspend fun indentTask(taskId: String)
     suspend fun unindentTask(taskId: String)
-    suspend fun archiveTask(taskId: String, archivedAt: Long): TaskArchiveMutation
+    suspend fun archiveTask(taskId: String, archivedAt: Long)
+}
+
+interface TaskWorkflowRepository {
+    suspend fun toggleCompletion(taskId: String): TaskCompletionMutation
+    suspend fun undoCompletion(mutation: TaskCompletionMutation)
+    suspend fun reorderTask(taskId: String, targetTaskId: String)
+    suspend fun archiveTask(taskId: String): TaskArchiveMutation
     suspend fun undoArchive(mutation: TaskArchiveMutation)
 }
 

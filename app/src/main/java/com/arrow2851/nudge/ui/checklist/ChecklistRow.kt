@@ -15,16 +15,18 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material.icons.filled.DragHandle
-import androidx.compose.material.icons.filled.Notes
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -59,10 +61,16 @@ import androidx.compose.ui.zIndex
 import com.arrow2851.nudge.core.model.ItemHandedness
 import kotlinx.coroutines.launch
 
-enum class ChecklistMetadataKind {
-    DueDate,
-    QuantityOrNote,
+enum class ChecklistSelectionMode {
+    None,
+    Metadata,
+    Delete,
 }
+
+data class ChecklistSuggestion(
+    val id: String,
+    val label: String,
+)
 
 @Composable
 fun ChecklistRow(
@@ -73,17 +81,21 @@ fun ChecklistRow(
     modifier: Modifier = Modifier,
     checkboxTestTag: String = "checklist-checkbox-$id",
     metadata: String? = null,
-    metadataKind: ChecklistMetadataKind? = null,
     editing: Boolean = false,
     indented: Boolean = false,
     expanded: Boolean = false,
-    expandable: Boolean = false,
+    hasChildren: Boolean = false,
+    selectionMode: ChecklistSelectionMode = ChecklistSelectionMode.None,
+    selected: Boolean = false,
+    suggestions: List<ChecklistSuggestion> = emptyList(),
     canMovePrevious: Boolean = false,
     canMoveNext: Boolean = false,
     onTitleClick: () -> Unit,
     onTitleCommitted: (String) -> Unit,
+    onTitleDraftChanged: (String) -> Unit = {},
+    onSuggestionAccepted: (ChecklistSuggestion) -> Unit = {},
     onCheckedChange: () -> Unit,
-    onMetadataClick: (() -> Unit)? = null,
+    onSelectionChange: () -> Unit = {},
     onExpandClick: (() -> Unit)? = null,
     onDelete: () -> Unit,
     onMovePrevious: () -> Unit,
@@ -93,19 +105,34 @@ fun ChecklistRow(
     val isRightHanded = handedness == ItemHandedness.RightHanded
     val dragOffset = remember(id) { Animatable(0f) }
     val dragging = dragOffset.value != 0f
+    val isSelectable = when (selectionMode) {
+        ChecklistSelectionMode.None -> false
+        ChecklistSelectionMode.Metadata -> true
+        ChecklistSelectionMode.Delete -> checked
+    }
+    val showSelectionCheckbox = selectionMode != ChecklistSelectionMode.None && isSelectable
+    val showDelete = checked && selectionMode == ChecklistSelectionMode.None
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(start = if (indented) 24.dp else 0.dp)
-            .heightIn(min = 52.dp)
+            .heightIn(min = 50.dp)
             .zIndex(if (dragging) 2f else 0f)
             .graphicsLayer {
                 translationY = dragOffset.value
-                scaleX = if (dragging) 1.015f else 1f
-                scaleY = if (dragging) 1.015f else 1f
-                shadowElevation = if (dragging) 10.dp.toPx() else 0f
+                scaleX = if (dragging) 1.012f else 1f
+                scaleY = if (dragging) 1.012f else 1f
+                shadowElevation = if (dragging) 8.dp.toPx() else 0f
             }
+            .wholeRowReorder(
+                enabled = selectionMode == ChecklistSelectionMode.None,
+                dragOffset = dragOffset,
+                canMovePrevious = canMovePrevious,
+                canMoveNext = canMoveNext,
+                onMovePrevious = onMovePrevious,
+                onMoveNext = onMoveNext,
+            )
             .semantics {
                 contentDescription = "Checklist item ${title.ifBlank { "New item" }}"
                 customActions = buildList {
@@ -121,46 +148,49 @@ fun ChecklistRow(
                             true
                         })
                     }
-                    add(CustomAccessibilityAction("Delete item") {
-                        onDelete()
-                        true
-                    })
+                    if (showDelete) {
+                        add(CustomAccessibilityAction("Delete item") {
+                            onDelete()
+                            true
+                        })
+                    }
                 }
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (isRightHanded) {
-            DetailsButton(
+            if (showDelete) {
+                DeleteButton(title = title, onDelete = onDelete)
+            }
+            ExpandButton(
                 expanded = expanded,
-                expandable = expandable,
-                mirrored = true,
+                hasChildren = hasChildren,
                 onClick = onExpandClick,
             )
-            MetadataButton(metadataKind, metadata, onMetadataClick)
         } else {
-            ImmediateDragHandle(
-                dragOffset = dragOffset,
-                canMovePrevious = canMovePrevious,
-                canMoveNext = canMoveNext,
-                onMovePrevious = onMovePrevious,
-                onMoveNext = onMoveNext,
-            )
-            Checkbox(
+            ChecklistCheckbox(
                 checked = checked,
-                onCheckedChange = { onCheckedChange() },
-                modifier = Modifier.testTag(checkboxTestTag),
+                selected = selected,
+                selectionMode = selectionMode,
+                selectable = isSelectable,
+                testTag = checkboxTestTag,
+                onCheckedChange = onCheckedChange,
+                onSelectionChange = onSelectionChange,
             )
         }
 
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 2.dp, vertical = 3.dp),
+                .padding(horizontal = 4.dp, vertical = 2.dp),
         ) {
             if (editing) {
                 BasicTextField(
                     value = titleDraft,
-                    onValueChange = { titleDraft = it },
+                    onValueChange = {
+                        titleDraft = it
+                        onTitleDraftChanged(it)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("checklist-title-editor-$id"),
@@ -183,11 +213,23 @@ fun ChecklistRow(
                         inner()
                     },
                 )
+                if (suggestions.isNotEmpty()) {
+                    SuggestionBubbles(
+                        suggestions = suggestions,
+                        onSuggestionAccepted = { suggestion ->
+                            titleDraft = suggestion.label
+                            onTitleDraftChanged(suggestion.label)
+                            onSuggestionAccepted(suggestion)
+                        },
+                    )
+                }
             } else {
                 TextButton(
-                    onClick = onTitleClick,
+                    onClick = {
+                        if (showSelectionCheckbox) onSelectionChange() else onTitleClick()
+                    },
                     modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 2.dp, vertical = 2.dp),
+                    contentPadding = PaddingValues(horizontal = 2.dp, vertical = 1.dp),
                 ) {
                     Text(
                         text = title.ifBlank { "New item" },
@@ -202,6 +244,7 @@ fun ChecklistRow(
                     )
                 }
             }
+
             metadata?.takeIf { it.isNotBlank() }?.let { value ->
                 Text(
                     text = value,
@@ -213,91 +256,159 @@ fun ChecklistRow(
         }
 
         if (isRightHanded) {
-            Checkbox(
+            ChecklistCheckbox(
                 checked = checked,
-                onCheckedChange = { onCheckedChange() },
-                modifier = Modifier.testTag(checkboxTestTag),
-            )
-            ImmediateDragHandle(
-                dragOffset = dragOffset,
-                canMovePrevious = canMovePrevious,
-                canMoveNext = canMoveNext,
-                onMovePrevious = onMovePrevious,
-                onMoveNext = onMoveNext,
+                selected = selected,
+                selectionMode = selectionMode,
+                selectable = isSelectable,
+                testTag = checkboxTestTag,
+                onCheckedChange = onCheckedChange,
+                onSelectionChange = onSelectionChange,
             )
         } else {
-            MetadataButton(metadataKind, metadata, onMetadataClick)
-            DetailsButton(
+            ExpandButton(
                 expanded = expanded,
-                expandable = expandable,
-                mirrored = false,
+                hasChildren = hasChildren,
                 onClick = onExpandClick,
             )
-        }
-
-        IconButton(
-            onClick = onDelete,
-            modifier = Modifier
-                .size(40.dp)
-                .testTag("delete-checklist-item-$id"),
-        ) {
-            Icon(
-                imageVector = Icons.Default.DeleteOutline,
-                contentDescription = "Delete ${title.ifBlank { "item" }}",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            if (showDelete) {
+                DeleteButton(title = title, onDelete = onDelete)
+            }
         }
     }
 }
 
 @Composable
-private fun MetadataButton(
-    kind: ChecklistMetadataKind?,
-    metadata: String?,
-    onClick: (() -> Unit)?,
+fun ChecklistSelectionBar(
+    mode: ChecklistSelectionMode,
+    metadataActionLabel: String,
+    checkedCount: Int,
+    selectedCount: Int,
+    hideChecked: Boolean,
+    onStartMetadata: () -> Unit,
+    onStartDelete: () -> Unit,
+    onSelectAll: () -> Unit,
+    onApply: () -> Unit,
+    onCancel: () -> Unit,
+    onToggleCheckedVisibility: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    if (kind == null || onClick == null) return
-    IconButton(
-        onClick = onClick,
-        modifier = Modifier.size(40.dp),
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            imageVector = when (kind) {
-                ChecklistMetadataKind.DueDate -> Icons.Default.CalendarMonth
-                ChecklistMetadataKind.QuantityOrNote -> Icons.Default.Notes
-            },
-            contentDescription = when (kind) {
-                ChecklistMetadataKind.DueDate -> if (metadata == null) "Set due date" else "Change due date"
-                ChecklistMetadataKind.QuantityOrNote ->
-                    if (metadata == null) "Add quantity or note" else "Change quantity or note"
-            },
-            tint = if (metadata == null) {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            } else {
-                MaterialTheme.colorScheme.primary
-            },
+        when (mode) {
+            ChecklistSelectionMode.None -> {
+                TextButton(onClick = onStartMetadata) {
+                    Text(metadataActionLabel)
+                }
+                if (checkedCount > 0) {
+                    TextButton(onClick = onStartDelete) {
+                        Text("Select to delete")
+                    }
+                    Spacer(Modifier.weight(1f))
+                    IconButton(onClick = onToggleCheckedVisibility) {
+                        Icon(
+                            imageVector = if (hideChecked) {
+                                Icons.Default.Visibility
+                            } else {
+                                Icons.Default.VisibilityOff
+                            },
+                            contentDescription = if (hideChecked) {
+                                "Show checked items"
+                            } else {
+                                "Hide checked items"
+                            },
+                        )
+                    }
+                } else {
+                    Spacer(Modifier.weight(1f))
+                }
+            }
+
+            ChecklistSelectionMode.Metadata -> {
+                Text(
+                    text = "Select items",
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                Spacer(Modifier.weight(1f))
+                TextButton(onClick = onSelectAll) { Text("Select all") }
+                TextButton(onClick = onApply, enabled = selectedCount > 0) {
+                    Text("Continue ($selectedCount)")
+                }
+                TextButton(onClick = onCancel) { Text("Cancel") }
+            }
+
+            ChecklistSelectionMode.Delete -> {
+                Text(
+                    text = "Select checked items",
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                Spacer(Modifier.weight(1f))
+                TextButton(onClick = onSelectAll) { Text("Select all") }
+                TextButton(onClick = onApply, enabled = selectedCount > 0) {
+                    Text("Delete ($selectedCount)")
+                }
+                TextButton(onClick = onCancel) { Text("Cancel") }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChecklistCheckbox(
+    checked: Boolean,
+    selected: Boolean,
+    selectionMode: ChecklistSelectionMode,
+    selectable: Boolean,
+    testTag: String,
+    onCheckedChange: () -> Unit,
+    onSelectionChange: () -> Unit,
+) {
+    if (selectionMode != ChecklistSelectionMode.None && selectable) {
+        Checkbox(
+            checked = selected,
+            onCheckedChange = { onSelectionChange() },
+            modifier = Modifier.testTag("selection-$testTag"),
+        )
+    } else {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = { onCheckedChange() },
+            modifier = Modifier.testTag(testTag),
         )
     }
 }
 
 @Composable
-private fun DetailsButton(
+private fun DeleteButton(title: String, onDelete: () -> Unit) {
+    IconButton(
+        onClick = onDelete,
+        modifier = Modifier
+            .size(40.dp)
+            .testTag("delete-checklist-item-$title"),
+    ) {
+        Icon(
+            imageVector = Icons.Default.DeleteOutline,
+            contentDescription = "Delete ${title.ifBlank { "item" }}",
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun ExpandButton(
     expanded: Boolean,
-    expandable: Boolean,
-    mirrored: Boolean,
+    hasChildren: Boolean,
     onClick: (() -> Unit)?,
 ) {
-    if (!expandable || onClick == null) {
-        Spacer(Modifier.width(8.dp))
-        return
-    }
+    if (!hasChildren || onClick == null) return
     IconButton(onClick = onClick, modifier = Modifier.size(40.dp)) {
         Icon(
-            imageVector = when {
-                expanded && mirrored -> Icons.Default.ChevronRight
-                expanded -> Icons.Default.ChevronLeft
-                mirrored -> Icons.Default.ChevronLeft
-                else -> Icons.Default.ChevronRight
+            imageVector = if (expanded) {
+                Icons.Default.KeyboardArrowDown
+            } else {
+                Icons.Default.KeyboardArrowRight
             },
             contentDescription = if (expanded) "Collapse subitems" else "Expand subitems",
         )
@@ -305,68 +416,86 @@ private fun DetailsButton(
 }
 
 @Composable
-private fun ImmediateDragHandle(
+private fun SuggestionBubbles(
+    suggestions: List<ChecklistSuggestion>,
+    onSuggestionAccepted: (ChecklistSuggestion) -> Unit,
+) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 6.dp),
+    ) {
+        items(
+            items = suggestions,
+            key = ChecklistSuggestion::id,
+        ) { suggestion ->
+            AssistChip(
+                onClick = { onSuggestionAccepted(suggestion) },
+                label = { Text(suggestion.label) },
+                modifier = Modifier.padding(end = 6.dp),
+            )
+        }
+    }
+}
+
+@Composable
+private fun Modifier.wholeRowReorder(
+    enabled: Boolean,
     dragOffset: Animatable<Float, AnimationVector1D>,
     canMovePrevious: Boolean,
     canMoveNext: Boolean,
     onMovePrevious: () -> Unit,
     onMoveNext: () -> Unit,
-) {
+): Modifier {
+    if (!enabled || (!canMovePrevious && !canMoveNext)) return this
+
     val density = LocalDensity.current
     val haptics = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
     val threshold = with(density) { 30.dp.toPx() }
     var accumulated by remember { mutableFloatStateOf(0f) }
 
-    Box(
-        modifier = Modifier
-            .size(40.dp)
-            .semantics { contentDescription = "Drag to reorder" }
-            .pointerInput(canMovePrevious, canMoveNext) {
-                detectDragGestures(
-                    onDragStart = {
-                        accumulated = 0f
-                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                    },
-                    onDragCancel = {
-                        accumulated = 0f
-                        scope.launch { dragOffset.animateTo(0f, spring()) }
-                    },
-                    onDragEnd = {
-                        accumulated = 0f
-                        scope.launch { dragOffset.animateTo(0f, spring()) }
-                    },
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        accumulated += dragAmount.y
-                        scope.launch {
-                            dragOffset.snapTo(
-                                accumulated.coerceIn(-threshold * 1.5f, threshold * 1.5f),
-                            )
-                        }
-                        when {
-                            accumulated <= -threshold && canMovePrevious -> {
-                                onMovePrevious()
-                                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                                accumulated = 0f
-                                scope.launch { dragOffset.snapTo(0f) }
-                            }
-                            accumulated >= threshold && canMoveNext -> {
-                                onMoveNext()
-                                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                                accumulated = 0f
-                                scope.launch { dragOffset.snapTo(0f) }
-                            }
-                        }
-                    },
-                )
+    return pointerInput(canMovePrevious, canMoveNext) {
+        detectDragGestures(
+            onDragStart = {
+                accumulated = 0f
+                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
             },
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            imageVector = Icons.Default.DragHandle,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            onDragCancel = {
+                accumulated = 0f
+                scope.launch { dragOffset.animateTo(0f, spring()) }
+            },
+            onDragEnd = {
+                accumulated = 0f
+                scope.launch { dragOffset.animateTo(0f, spring()) }
+            },
+            onDrag = { change, dragAmount ->
+                if (kotlin.math.abs(dragAmount.y) < kotlin.math.abs(dragAmount.x)) {
+                    return@detectDragGestures
+                }
+                change.consume()
+                accumulated += dragAmount.y
+                scope.launch {
+                    dragOffset.snapTo(
+                        accumulated.coerceIn(-threshold * 1.5f, threshold * 1.5f),
+                    )
+                }
+                when {
+                    accumulated <= -threshold && canMovePrevious -> {
+                        onMovePrevious()
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        accumulated = 0f
+                        scope.launch { dragOffset.snapTo(0f) }
+                    }
+
+                    accumulated >= threshold && canMoveNext -> {
+                        onMoveNext()
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                        accumulated = 0f
+                        scope.launch { dragOffset.snapTo(0f) }
+                    }
+                }
+            },
         )
     }
 }

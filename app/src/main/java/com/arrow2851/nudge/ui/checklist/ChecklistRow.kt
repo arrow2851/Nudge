@@ -1,6 +1,7 @@
 package com.arrow2851.nudge.ui.checklist
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -304,7 +305,7 @@ private fun DetailsButton(
 
 @Composable
 private fun ImmediateDragHandle(
-    dragOffset: Animatable<Float, *>,
+    dragOffset: Animatable<Float, AnimationVector1D>,
     canMovePrevious: Boolean,
     canMoveNext: Boolean,
     onMovePrevious: () -> Unit,
@@ -324,7 +325,7 @@ private fun ImmediateDragHandle(
                 detectDragGestures(
                     onDragStart = {
                         accumulated = 0f
-                        haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     },
                     onDragCancel = {
                         accumulated = 0f
@@ -345,13 +346,13 @@ private fun ImmediateDragHandle(
                         when {
                             accumulated <= -threshold && canMovePrevious -> {
                                 onMovePrevious()
-                                haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                                 accumulated = 0f
                                 scope.launch { dragOffset.snapTo(0f) }
                             }
                             accumulated >= threshold && canMoveNext -> {
                                 onMoveNext()
-                                haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                                 accumulated = 0f
                                 scope.launch { dragOffset.snapTo(0f) }
                             }

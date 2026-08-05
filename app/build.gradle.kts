@@ -15,8 +15,8 @@ android {
         applicationId = "com.arrow2851.nudge"
         minSdk = 26
         targetSdk = 37
-        versionCode = 2
-        versionName = "0.10.0-dev"
+        versionCode = 3
+        versionName = "0.11.0-dev"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -72,6 +72,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
+
+    implementation(libs.androidx.glance)
+    implementation(libs.androidx.glance.appwidget)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

@@ -19,12 +19,10 @@ import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
-import androidx.glance.layout.defaultWeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
@@ -132,30 +130,29 @@ private fun ChecklistWidgetFrame(
             .background(WidgetBackground)
             .padding(14.dp),
     ) {
-        Row(
+        Column(
             modifier = GlanceModifier
                 .fillMaxWidth()
                 .clickable(actionStartActivity(openIntent)),
         ) {
-            Column(modifier = GlanceModifier.defaultWeight()) {
-                Text(
-                    text = title,
-                    style = TextStyle(
-                        color = WidgetText,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                )
-                Text(
-                    text = subtitle,
-                    style = TextStyle(color = WidgetMuted, fontSize = 12.sp),
-                )
-            }
-            Button(
-                text = "+",
-                onClick = actionStartActivity(addIntent),
+            Text(
+                text = title,
+                style = TextStyle(
+                    color = WidgetText,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                ),
+            )
+            Text(
+                text = subtitle,
+                style = TextStyle(color = WidgetMuted, fontSize = 12.sp),
             )
         }
+        Spacer(GlanceModifier.height(6.dp))
+        Button(
+            text = "+ Add",
+            onClick = actionStartActivity(addIntent),
+        )
         Spacer(GlanceModifier.height(8.dp))
         content()
     }
@@ -180,7 +177,6 @@ private fun TaskWidgetRow(task: Task) {
         Spacer(GlanceModifier.width(8.dp))
         Text(
             text = task.title.ifBlank { "New task" },
-            modifier = GlanceModifier.defaultWeight(),
             style = TextStyle(color = WidgetText, fontSize = 14.sp),
         )
     }
@@ -209,7 +205,7 @@ private fun ListWidgetRow(item: ListItem) {
             ),
         )
         Spacer(GlanceModifier.width(8.dp))
-        Column(modifier = GlanceModifier.defaultWeight()) {
+        Column {
             Text(
                 text = item.name,
                 style = TextStyle(

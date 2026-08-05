@@ -12,6 +12,7 @@ import com.arrow2851.nudge.core.model.Task
 import com.arrow2851.nudge.core.model.TaskNode
 import com.arrow2851.nudge.core.model.TimeProvider
 import com.arrow2851.nudge.core.mutation.AppMutationCoordinator
+import com.arrow2851.nudge.core.mutation.MutationTicket
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -89,7 +90,7 @@ class TasksViewModel @Inject constructor(
         )
 
     fun createTask(parentTaskId: String? = null) {
-        launchMutation {
+        launchMutation { _ ->
             val current = uiState.value as? TasksUiState.Ready
             val allTasks = current?.nodes.orEmpty().flatMap { node -> listOf(node.task) + node.subtasks }
             val nextOrder = SortOrders.after(
@@ -115,13 +116,13 @@ class TasksViewModel @Inject constructor(
     }
 
     fun finishTitleEdit(taskId: String, title: String) {
-        launchMutation {
+        launchMutation { ticket ->
             val task = currentTask(taskId) ?: return@launchMutation
             val normalized = title.trim()
             if (normalized.isEmpty()) {
                 if (task.title.isEmpty()) {
                     val mutation = taskWorkflowRepository.archiveTask(taskId)
-                    mutationCoordinator.registerUndo("Empty task removed") {
+                    mutationCoordinator.registerUndo(ticket, "Empty task removed") {
                         taskWorkflowRepository.undoArchive(mutation)
                     }
                 }
@@ -138,11 +139,11 @@ class TasksViewModel @Inject constructor(
     }
 
     fun cancelTitleEdit(taskId: String) {
-        launchMutation {
+        launchMutation { ticket ->
             val task = currentTask(taskId)
             if (task?.title.isNullOrEmpty() && task != null) {
                 val mutation = taskWorkflowRepository.archiveTask(taskId)
-                mutationCoordinator.registerUndo("Empty task removed") {
+                mutationCoordinator.registerUndo(ticket, "Empty task removed") {
                     taskWorkflowRepository.undoArchive(mutation)
                 }
             }
@@ -151,10 +152,11 @@ class TasksViewModel @Inject constructor(
     }
 
     fun toggleCompleted(taskId: String) {
-        launchMutation {
+        launchMutation { ticket ->
             val task = currentTask(taskId) ?: return@launchMutation
             val mutation = taskWorkflowRepository.toggleCompletion(taskId)
             mutationCoordinator.registerUndo(
+                ticket,
                 if (task.completedAt == null) "Task completed" else "Task reopened",
             ) {
                 taskWorkflowRepository.undoCompletion(mutation)
@@ -163,7 +165,7 @@ class TasksViewModel @Inject constructor(
     }
 
     fun updateDueDate(taskId: String, dueAt: Long?) {
-        launchMutation {
+        launchMutation { _ ->
             val task = currentTask(taskId) ?: return@launchMutation
             taskRepository.saveTask(
                 task.copy(
@@ -175,37 +177,37 @@ class TasksViewModel @Inject constructor(
     }
 
     fun reorder(taskId: String, targetTaskId: String) {
-        launchMutation { taskWorkflowRepository.reorderTask(taskId, targetTaskId) }
+        launchMutation { _ -> taskWorkflowRepository.reorderTask(taskId, targetTaskId) }
     }
 
     fun moveUp(taskId: String) {
-        launchMutation { taskRepository.moveTask(taskId, -1) }
+        launchMutation { _ -> taskRepository.moveTask(taskId, -1) }
     }
 
     fun moveDown(taskId: String) {
-        launchMutation { taskRepository.moveTask(taskId, 1) }
+        launchMutation { _ -> taskRepository.moveTask(taskId, 1) }
     }
 
     fun indent(taskId: String) {
-        launchMutation { taskRepository.indentTask(taskId) }
+        launchMutation { _ -> taskRepository.indentTask(taskId) }
     }
 
     fun unindent(taskId: String) {
-        launchMutation { taskRepository.unindentTask(taskId) }
+        launchMutation { _ -> taskRepository.unindentTask(taskId) }
     }
 
     fun archive(taskId: String) {
-        launchMutation {
+        launchMutation { ticket ->
             val mutation = taskWorkflowRepository.archiveTask(taskId)
             if (editingTaskId.value == taskId) editingTaskId.value = null
-            mutationCoordinator.registerUndo("Task deleted") {
+            mutationCoordinator.registerUndo(ticket, "Task deleted") {
                 taskWorkflowRepository.undoArchive(mutation)
             }
         }
     }
 
     fun setHideCompleted(hide: Boolean) {
-        launchMutation { preferencesRepository.setHideCompletedItems(hide) }
+        launchMutation { _ -> preferencesRepository.setHideCompletedItems(hide) }
     }
 
     fun dismissRecoverableError() {
@@ -215,10 +217,10 @@ class TasksViewModel @Inject constructor(
     private fun currentTask(taskId: String): Task? =
         (uiState.value as? TasksUiState.Ready)?.findTask(taskId)
 
-    private fun launchMutation(block: suspend () -> Unit) {
+    private fun launchMutation(block: suspend (MutationTicket) -> Unit) {
         viewModelScope.launch {
-            mutationCoordinator.beginMutation()
-            runCatching { block() }
+            val ticket = mutationCoordinator.beginMutation()
+            runCatching { block(ticket) }
                 .onFailure { throwable ->
                     recoverableError.value = throwable.message ?: "That change could not be saved."
                 }

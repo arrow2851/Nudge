@@ -80,6 +80,7 @@ internal fun AddListItemSheetV2(
                     quantity = suggestion?.defaultQuantity.orEmpty()
                     selectedCatalogId = suggestion?.id
                 },
+                inputTestTag = "list-item-name-input",
                 placeholder = "What belongs on the list?",
             )
             if (suggestion != null) {

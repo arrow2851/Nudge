@@ -54,14 +54,11 @@ class NudgeAppTest {
     fun taskRowsSupportAtomicUndoInvalidationInlineDatesAndAutomaticChildren() {
         createTask("Atomic parent")
 
-        val row = hasContentDescription("Checklist item Atomic parent")
-        firstNode(
-            hasContentDescription("Set due date") and hasAnyAncestor(row),
-            useUnmergedTree = true,
-        ).performClick()
+        composeRule.onNodeWithContentDescription("Set due date").performClick()
         composeRule.onNodeWithText("Set date").assertIsDisplayed()
         composeRule.onNodeWithText("Cancel").performClick()
 
+        val row = hasContentDescription("Checklist item Atomic parent")
         firstNode(
             hasContentDescription("Expand subitems") and hasAnyAncestor(row),
             useUnmergedTree = true,
@@ -134,7 +131,7 @@ class NudgeAppTest {
                 hasAnyAncestor(hasTestTag("list-item-row-Oat Milk")),
             useUnmergedTree = true,
         ).performClick()
-        composeRule.onNodeWithText("Quantity or note").assertIsDisplayed()
+        composeRule.onNodeWithTag("list-item-note-editor").assertIsDisplayed()
         composeRule.onNodeWithText("Save").performClick()
 
         listItemToggle("Oat Milk").performClick()

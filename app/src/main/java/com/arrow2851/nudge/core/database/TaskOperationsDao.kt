@@ -3,8 +3,30 @@ package com.arrow2851.nudge.core.database
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.PrimaryKey
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
+
+@Entity(
+    tableName = "task_main_flags",
+    foreignKeys = [
+        ForeignKey(
+            entity = TaskEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["task_id"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+)
+data class TaskMainFlagEntity(
+    @PrimaryKey
+    @ColumnInfo(name = "task_id")
+    val taskId: String,
+)
 
 data class TaskRecordEntity(
     @Embedded val task: TaskEntity,
@@ -61,6 +83,12 @@ interface TaskOperationsDao {
         """,
     )
     suspend fun getMaxSortOrder(parentTaskId: String?): Long?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun setMainTask(flag: TaskMainFlagEntity)
+
+    @Query("DELETE FROM task_main_flags WHERE task_id = :taskId")
+    suspend fun clearMainTask(taskId: String)
 
     @Query(
         """

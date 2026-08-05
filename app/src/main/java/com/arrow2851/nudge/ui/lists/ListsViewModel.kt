@@ -155,6 +155,18 @@ class ListsViewModel @Inject constructor(
         }
     }
 
+    fun createItem(listId: String, parentItemId: String? = null) {
+        mutate { _ ->
+            val item = repository.addItem(
+                listId = listId,
+                name = "",
+                parentItemId = parentItemId,
+            )
+            suggestionQuery.value = ""
+            editingItemId.value = item.id
+        }
+    }
+
     fun addItem(
         listId: String,
         name: String,
@@ -169,6 +181,8 @@ class ListsViewModel @Inject constructor(
     }
 
     fun editItem(itemId: String) {
+        val current = ready()?.item(itemId) ?: return
+        suggestionQuery.value = current.name
         editingItemId.value = itemId
     }
 
@@ -176,33 +190,65 @@ class ListsViewModel @Inject constructor(
         mutate { ticket ->
             val current = ready()?.item(itemId) ?: return@mutate
             val normalized = name.trim()
-            if (normalized.isEmpty()) {
-                val mutation = repository.archiveItem(itemId)
-                mutationCoordinator.registerUndo(ticket, "Item deleted") {
-                    repository.undoArchive(mutation)
+            when {
+                normalized.isEmpty() && current.name.isEmpty() -> {
+                    val mutation = repository.archiveItem(itemId)
+                    mutationCoordinator.registerUndo(ticket, "Empty item removed") {
+                        repository.undoArchive(mutation)
+                    }
                 }
-            } else if (normalized != current.name) {
-                repository.saveItem(
-                    current.copy(
-                        name = normalized,
-                        updatedAt = timeProvider.nowEpochMillis(),
-                    ),
-                )
+                normalized.isNotEmpty() && normalized != current.name -> {
+                    repository.saveItem(
+                        current.copy(
+                            name = normalized,
+                            updatedAt = timeProvider.nowEpochMillis(),
+                        ),
+                    )
+                }
             }
             if (editingItemId.value == itemId) editingItemId.value = null
+            suggestionQuery.value = ""
         }
     }
 
-    fun updateItemNote(itemId: String, quantity: String?) {
+    fun acceptSuggestion(itemId: String, suggestion: ListCatalogItem) {
         mutate { _ ->
             val current = ready()?.item(itemId) ?: return@mutate
             repository.saveItem(
                 current.copy(
-                    quantity = quantity?.trim()?.ifEmpty { null },
+                    name = suggestion.displayName,
+                    quantity = current.quantity ?: suggestion.defaultQuantity,
+                    catalogItemId = suggestion.id,
                     updatedAt = timeProvider.nowEpochMillis(),
                 ),
             )
+            editingItemId.value = null
+            suggestionQuery.value = ""
         }
+    }
+
+    fun updateItemNotes(itemIds: Set<String>, note: String?) {
+        if (itemIds.isEmpty()) return
+        mutate { ticket ->
+            val normalized = note?.trim()?.ifEmpty { null }
+            val now = timeProvider.nowEpochMillis()
+            val items = itemIds.mapNotNull { ready()?.item(it) }.map { item ->
+                item.copy(quantity = normalized, updatedAt = now)
+            }
+            repository.saveItems(items)
+            mutationCoordinator.showMessage(
+                ticket,
+                if (normalized == null) {
+                    "Notes removed from ${items.size} item${if (items.size == 1) "" else "s"}"
+                } else {
+                    "Note assigned to ${items.size} item${if (items.size == 1) "" else "s"}"
+                },
+            )
+        }
+    }
+
+    fun updateItemNote(itemId: String, quantity: String?) {
+        updateItemNotes(setOf(itemId), quantity)
     }
 
     fun toggleItem(itemId: String) {
@@ -236,9 +282,27 @@ class ListsViewModel @Inject constructor(
 
     fun archiveItem(itemId: String) {
         mutate { ticket ->
+            val current = ready()?.item(itemId) ?: return@mutate
+            if (!current.isChecked && current.name.isNotEmpty()) return@mutate
             val mutation = repository.archiveItem(itemId)
             editingItemId.compareAndSet(itemId, null)
             mutationCoordinator.registerUndo(ticket, "Item deleted") {
+                repository.undoArchive(mutation)
+            }
+        }
+    }
+
+    fun archiveItems(itemIds: Set<String>) {
+        if (itemIds.isEmpty()) return
+        mutate { ticket ->
+            val checkedIds = itemIds.filterTo(linkedSetOf()) { ready()?.item(it)?.isChecked == true }
+            if (checkedIds.isEmpty()) return@mutate
+            val mutation = repository.archiveItems(checkedIds)
+            if (editingItemId.value in checkedIds) editingItemId.value = null
+            mutationCoordinator.registerUndo(
+                ticket,
+                "${mutation.mutations.size} items deleted",
+            ) {
                 repository.undoArchive(mutation)
             }
         }

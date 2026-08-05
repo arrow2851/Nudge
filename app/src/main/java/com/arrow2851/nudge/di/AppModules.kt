@@ -10,10 +10,12 @@ import com.arrow2851.nudge.core.data.AreaRepository
 import com.arrow2851.nudge.core.data.ChoreRepository
 import com.arrow2851.nudge.core.data.CompletionRepository
 import com.arrow2851.nudge.core.data.DataStorePreferencesRepository
+import com.arrow2851.nudge.core.data.HistoryRepository
 import com.arrow2851.nudge.core.data.ListWorkflowRepository
 import com.arrow2851.nudge.core.data.LocalAreaRepository
 import com.arrow2851.nudge.core.data.LocalChoreRepository
 import com.arrow2851.nudge.core.data.LocalCompletionRepository
+import com.arrow2851.nudge.core.data.LocalHistoryRepository
 import com.arrow2851.nudge.core.data.LocalReusableListRepository
 import com.arrow2851.nudge.core.data.LocalTaskRepository
 import com.arrow2851.nudge.core.data.PreferencesRepository
@@ -21,10 +23,13 @@ import com.arrow2851.nudge.core.data.RecentCompletionReader
 import com.arrow2851.nudge.core.data.ReusableListRepository
 import com.arrow2851.nudge.core.data.RoomListWorkflowRepository
 import com.arrow2851.nudge.core.data.RoomRecentCompletionReader
+import com.arrow2851.nudge.core.data.RoomTaskWorkflowRepository
 import com.arrow2851.nudge.core.data.TaskRepository
+import com.arrow2851.nudge.core.data.TaskWorkflowRepository
 import com.arrow2851.nudge.core.database.AreaDao
 import com.arrow2851.nudge.core.database.ChoreDao
 import com.arrow2851.nudge.core.database.CompletionDao
+import com.arrow2851.nudge.core.database.HistoryDao
 import com.arrow2851.nudge.core.database.NudgeDatabase
 import com.arrow2851.nudge.core.database.NudgeMigrations
 import com.arrow2851.nudge.core.database.ReusableListDao
@@ -83,6 +88,9 @@ object PersistenceModule {
     fun provideCompletionDao(database: NudgeDatabase): CompletionDao = database.completionDao()
 
     @Provides
+    fun provideHistoryDao(database: NudgeDatabase): HistoryDao = database.historyDao()
+
+    @Provides
     fun provideReusableListDao(database: NudgeDatabase): ReusableListDao = database.reusableListDao()
 
     @Provides
@@ -111,6 +119,12 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindTaskWorkflowRepository(
+        implementation: RoomTaskWorkflowRepository,
+    ): TaskWorkflowRepository
+
+    @Binds
+    @Singleton
     abstract fun bindChoreRepository(implementation: LocalChoreRepository): ChoreRepository
 
     @Binds
@@ -118,6 +132,12 @@ abstract class RepositoryModule {
     abstract fun bindCompletionRepository(
         implementation: LocalCompletionRepository,
     ): CompletionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindHistoryRepository(
+        implementation: LocalHistoryRepository,
+    ): HistoryRepository
 
     @Binds
     @Singleton

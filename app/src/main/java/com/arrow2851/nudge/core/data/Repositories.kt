@@ -9,6 +9,8 @@ import com.arrow2851.nudge.core.model.ChoreCompletionMutation
 import com.arrow2851.nudge.core.model.ChoreWithSchedule
 import com.arrow2851.nudge.core.model.Completion
 import com.arrow2851.nudge.core.model.CompletionGrade
+import com.arrow2851.nudge.core.model.ItemHandedness
+import com.arrow2851.nudge.core.model.ItemHistoryEntry
 import com.arrow2851.nudge.core.model.ListCatalogItem
 import com.arrow2851.nudge.core.model.ListItem
 import com.arrow2851.nudge.core.model.ReusableList
@@ -19,6 +21,22 @@ import com.arrow2851.nudge.core.model.TaskNode
 import com.arrow2851.nudge.core.model.TemplateApplyResult
 import com.arrow2851.nudge.core.model.ThemeMode
 import kotlinx.coroutines.flow.Flow
+
+data class TaskCompletionMutation(
+    val previousCompletedAtByTask: Map<String, Long?>,
+    val completedAtByTask: Map<String, Long?>,
+    val createdHistoryIds: List<String> = emptyList(),
+)
+
+data class TaskArchiveMutation(
+    val task: Task,
+    val childSortOrders: Map<String, Long>,
+    val historyId: String,
+)
+
+data class TaskBulkArchiveMutation(
+    val mutations: List<TaskArchiveMutation>,
+)
 
 interface AreaRepository {
     fun observeAreas(): Flow<List<Area>>
@@ -41,12 +59,30 @@ interface TaskRepository {
     fun observeSubtasks(parentTaskId: String): Flow<List<Task>>
     fun observeTask(taskId: String): Flow<Task?>
     suspend fun saveTask(task: Task)
+    suspend fun saveTasks(tasks: List<Task>) {
+        tasks.forEach { saveTask(it) }
+    }
     suspend fun setCompleted(taskId: String, completedAt: Long?)
     suspend fun setMainTask(taskId: String, enabled: Boolean)
     suspend fun moveTask(taskId: String, direction: Int)
     suspend fun indentTask(taskId: String)
     suspend fun unindentTask(taskId: String)
     suspend fun archiveTask(taskId: String, archivedAt: Long)
+}
+
+interface TaskWorkflowRepository {
+    suspend fun toggleCompletion(taskId: String): TaskCompletionMutation
+    suspend fun undoCompletion(mutation: TaskCompletionMutation)
+    suspend fun reorderTask(taskId: String, targetTaskId: String)
+    suspend fun archiveTask(taskId: String): TaskArchiveMutation
+    suspend fun undoArchive(mutation: TaskArchiveMutation)
+
+    suspend fun archiveTasks(taskIds: Set<String>): TaskBulkArchiveMutation =
+        TaskBulkArchiveMutation(taskIds.map { archiveTask(it) })
+
+    suspend fun undoArchive(mutation: TaskBulkArchiveMutation) {
+        mutation.mutations.asReversed().forEach { undoArchive(it) }
+    }
 }
 
 interface ChoreRepository {
@@ -71,6 +107,13 @@ interface CompletionRepository {
     suspend fun recordCompletion(completion: Completion)
 }
 
+interface HistoryRepository {
+    fun observeHistory(): Flow<List<ItemHistoryEntry>>
+    suspend fun saveEntry(entry: ItemHistoryEntry)
+    suspend fun deleteEntry(historyId: String)
+    suspend fun clearAll()
+}
+
 interface ReusableListRepository {
     fun observeLists(): Flow<List<ReusableList>>
     fun observeList(listId: String): Flow<ReusableListWithItems?>
@@ -91,4 +134,5 @@ interface PreferencesRepository {
     suspend fun setDailyProgressEnabled(value: Boolean)
     suspend fun setQuickWinEnabled(value: Boolean)
     suspend fun setDemoDataEnabled(value: Boolean)
+    suspend fun setItemHandedness(value: ItemHandedness) = Unit
 }

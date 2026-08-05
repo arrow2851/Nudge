@@ -3,6 +3,8 @@ package com.arrow2851.nudge.core.database
 import androidx.room.TypeConverter
 import com.arrow2851.nudge.core.model.CompletionGrade
 import com.arrow2851.nudge.core.model.CompletionSource
+import com.arrow2851.nudge.core.model.HistoryEventType
+import com.arrow2851.nudge.core.model.HistoryItemType
 import com.arrow2851.nudge.core.model.RecurrenceType
 import com.arrow2851.nudge.core.model.RecurrenceUnit
 import com.arrow2851.nudge.core.model.ScheduleBasis
@@ -44,6 +46,18 @@ class DatabaseConverters {
 
     @TypeConverter
     fun stringToCompletionSource(value: String): CompletionSource = CompletionSource.valueOf(value)
+
+    @TypeConverter
+    fun historyItemTypeToString(value: HistoryItemType): String = value.name
+
+    @TypeConverter
+    fun stringToHistoryItemType(value: String): HistoryItemType = HistoryItemType.valueOf(value)
+
+    @TypeConverter
+    fun historyEventTypeToString(value: HistoryEventType): String = value.name
+
+    @TypeConverter
+    fun stringToHistoryEventType(value: String): HistoryEventType = HistoryEventType.valueOf(value)
 
     @TypeConverter
     fun daysOfWeekToString(value: Set<Int>): String = value.sorted().joinToString(",")

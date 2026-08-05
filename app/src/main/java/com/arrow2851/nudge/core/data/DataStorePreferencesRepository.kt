@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.arrow2851.nudge.core.model.AppPreferences
+import com.arrow2851.nudge.core.model.ItemHandedness
 import com.arrow2851.nudge.core.model.ThemeMode
 import java.io.IOException
 import javax.inject.Inject
@@ -35,6 +36,9 @@ class DataStorePreferencesRepository @Inject constructor(
                 dailyProgressEnabled = values[Keys.DailyProgressEnabled] ?: false,
                 quickWinEnabled = values[Keys.QuickWinEnabled] ?: false,
                 demoDataEnabled = values[Keys.DemoDataEnabled] ?: false,
+                itemHandedness = values[Keys.ItemHandedness]
+                    ?.let { runCatching { ItemHandedness.valueOf(it) }.getOrNull() }
+                    ?: ItemHandedness.Standard,
             )
         }
 
@@ -62,6 +66,10 @@ class DataStorePreferencesRepository @Inject constructor(
         dataStore.edit { it[Keys.DemoDataEnabled] = value }
     }
 
+    override suspend fun setItemHandedness(value: ItemHandedness) {
+        dataStore.edit { it[Keys.ItemHandedness] = value.name }
+    }
+
     private object Keys {
         val ThemeMode = stringPreferencesKey("theme_mode")
         val ShowDueShorthand = booleanPreferencesKey("show_due_shorthand")
@@ -69,5 +77,6 @@ class DataStorePreferencesRepository @Inject constructor(
         val DailyProgressEnabled = booleanPreferencesKey("daily_progress_enabled")
         val QuickWinEnabled = booleanPreferencesKey("quick_win_enabled")
         val DemoDataEnabled = booleanPreferencesKey("demo_data_enabled")
+        val ItemHandedness = stringPreferencesKey("item_handedness")
     }
 }

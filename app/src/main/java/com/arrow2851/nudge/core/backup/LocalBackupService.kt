@@ -4,12 +4,14 @@ import android.content.Context
 import android.net.Uri
 import com.arrow2851.nudge.core.data.AreaRepository
 import com.arrow2851.nudge.core.data.ChoreRepository
+import com.arrow2851.nudge.core.data.HistoryRepository
 import com.arrow2851.nudge.core.data.PreferencesRepository
 import com.arrow2851.nudge.core.data.ReusableListRepository
 import com.arrow2851.nudge.core.data.TaskRepository
 import com.arrow2851.nudge.core.model.AppPreferences
 import com.arrow2851.nudge.core.model.Area
 import com.arrow2851.nudge.core.model.ChoreWithSchedule
+import com.arrow2851.nudge.core.model.ItemHistoryEntry
 import com.arrow2851.nudge.core.model.ReusableListWithItems
 import com.arrow2851.nudge.core.model.Section
 import com.arrow2851.nudge.core.model.Task
@@ -24,7 +26,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-private const val CurrentBackupFormat = 1
+private const val CurrentBackupFormat = 2
 
 @Serializable
 data class BackupTask(
@@ -42,6 +44,7 @@ data class NudgeBackup(
     val chores: List<ChoreWithSchedule>,
     val lists: List<ReusableListWithItems>,
     val preferences: AppPreferences,
+    val history: List<ItemHistoryEntry> = emptyList(),
 )
 
 data class BackupSummary(
@@ -51,9 +54,10 @@ data class BackupSummary(
     val chores: Int,
     val lists: Int,
     val listItems: Int,
+    val historyEntries: Int,
 ) {
     val itemCount: Int
-        get() = areas + sections + tasks + chores + lists + listItems
+        get() = areas + sections + tasks + chores + lists + listItems + historyEntries
 }
 
 class LocalBackupService @Inject constructor(
@@ -63,6 +67,7 @@ class LocalBackupService @Inject constructor(
     private val choreRepository: ChoreRepository,
     private val reusableListRepository: ReusableListRepository,
     private val preferencesRepository: PreferencesRepository,
+    private val historyRepository: HistoryRepository,
     private val timeProvider: TimeProvider,
 ) {
     private val json = Json {
@@ -109,6 +114,7 @@ class LocalBackupService @Inject constructor(
             chores = choreRepository.observeChoresWithSchedules().first(),
             lists = lists,
             preferences = preferencesRepository.preferences.first(),
+            history = historyRepository.observeHistory().first(),
         )
     }
 
@@ -118,9 +124,6 @@ class LocalBackupService @Inject constructor(
         backup.tasks
             .sortedBy { it.task.parentTaskId != null }
             .forEach { taskRepository.saveTask(it.task) }
-        backup.tasks
-            .filter { it.isMainTask && it.task.parentTaskId == null }
-            .forEach { taskRepository.setMainTask(it.task.id, true) }
         backup.chores.forEach { choreRepository.saveChore(it) }
         backup.lists.forEach { listWithItems ->
             reusableListRepository.saveList(listWithItems.list)
@@ -128,6 +131,7 @@ class LocalBackupService @Inject constructor(
                 .sortedBy { it.parentItemId != null }
                 .forEach { reusableListRepository.saveItem(it) }
         }
+        backup.history.forEach { historyRepository.saveEntry(it) }
         backup.preferences.let { preferences ->
             preferencesRepository.setThemeMode(preferences.themeMode)
             preferencesRepository.setShowDueShorthand(preferences.showDueShorthand)
@@ -135,6 +139,7 @@ class LocalBackupService @Inject constructor(
             preferencesRepository.setDailyProgressEnabled(preferences.dailyProgressEnabled)
             preferencesRepository.setQuickWinEnabled(preferences.quickWinEnabled)
             preferencesRepository.setDemoDataEnabled(preferences.demoDataEnabled)
+            preferencesRepository.setItemHandedness(preferences.itemHandedness)
         }
     }
 
@@ -145,6 +150,7 @@ class LocalBackupService @Inject constructor(
         chores = chores.size,
         lists = lists.size,
         listItems = lists.sumOf { it.items.size },
+        historyEntries = history.size,
     )
 
     companion object {

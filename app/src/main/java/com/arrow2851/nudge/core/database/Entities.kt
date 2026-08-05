@@ -9,6 +9,8 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.arrow2851.nudge.core.model.CompletionGrade
 import com.arrow2851.nudge.core.model.CompletionSource
+import com.arrow2851.nudge.core.model.HistoryEventType
+import com.arrow2851.nudge.core.model.HistoryItemType
 import com.arrow2851.nudge.core.model.RecurrenceType
 import com.arrow2851.nudge.core.model.RecurrenceUnit
 import com.arrow2851.nudge.core.model.ScheduleBasis
@@ -274,6 +276,26 @@ data class ListItemEntity(
     @ColumnInfo(name = "updated_at") val updatedAt: Long,
     @ColumnInfo(name = "checked_at") val checkedAt: Long?,
     @ColumnInfo(name = "archived_at") val archivedAt: Long?,
+)
+
+@Entity(
+    tableName = "item_history",
+    indices = [
+        Index(value = ["occurred_at"]),
+        Index(value = ["item_type"]),
+        Index(value = ["event_type"]),
+        Index(value = ["source_item_id"]),
+    ],
+)
+data class ItemHistoryEntity(
+    @PrimaryKey val id: String,
+    @ColumnInfo(name = "item_type") val itemType: HistoryItemType,
+    @ColumnInfo(name = "event_type") val eventType: HistoryEventType,
+    @ColumnInfo(name = "source_item_id") val sourceItemId: String?,
+    val title: String,
+    val detail: String?,
+    @ColumnInfo(name = "container_name") val containerName: String?,
+    @ColumnInfo(name = "occurred_at") val occurredAt: Long,
 )
 
 data class AreaWithSectionsEntity(

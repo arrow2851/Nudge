@@ -130,26 +130,8 @@ interface ListOperationsDao {
     @Query("UPDATE list_items SET archived_at = :archivedAt, updated_at = :archivedAt WHERE id = :itemId")
     suspend fun archiveItem(itemId: String, archivedAt: Long)
 
-    @Query(
-        """
-        UPDATE list_items
-        SET is_checked = 0,
-            checked_at = NULL,
-            updated_at = :updatedAt
-        WHERE list_id = :listId AND archived_at IS NULL AND is_checked = 1
-        """,
-    )
-    suspend fun resetCheckedItems(listId: String, updatedAt: Long)
-
-    @Query(
-        """
-        UPDATE list_items
-        SET archived_at = :archivedAt,
-            updated_at = :archivedAt
-        WHERE list_id = :listId AND archived_at IS NULL AND is_checked = 1
-        """,
-    )
-    suspend fun archiveCheckedItems(listId: String, archivedAt: Long)
+    @Query("UPDATE list_items SET archived_at = NULL, updated_at = :updatedAt WHERE id = :itemId")
+    suspend fun restoreItem(itemId: String, updatedAt: Long)
 
     @Query("UPDATE reusable_lists SET archived_at = :archivedAt, updated_at = :archivedAt WHERE id = :listId")
     suspend fun archiveList(listId: String, archivedAt: Long)

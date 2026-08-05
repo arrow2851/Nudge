@@ -16,16 +16,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val destination = intent?.data?.host
-        val initialRoute = when (destination) {
+        val requestedRoute = when (destination) {
             "interventions" -> InterventionSettingsRoute
-            else -> NudgeDestination.Today.route
+            "tasks" -> NudgeDestination.Tasks.route
+            "lists" -> NudgeDestination.Lists.route
+            "list" -> intent?.data?.pathSegments?.firstOrNull()?.let { "list/$it" }
+            else -> null
         }
         val openQuickAdd = destination == "quick-add" ||
             intent?.getBooleanExtra(ExtraOpenQuickAdd, false) == true
         setContent {
             NudgeTheme {
                 NudgePhase7App(
-                    initialRoute = initialRoute,
+                    requestedRoute = requestedRoute,
                     openQuickAddInitially = openQuickAdd,
                 )
             }

@@ -5,22 +5,14 @@
     android:background="#FFF8F3"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="16dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nudge"
+        android:text="Loading Nudge…"
         android:textColor="#4E3A32"
         android:textSize="14sp"
         android:textStyle="bold" />
-
-    <Button
-        android:id="@+id/widget_quick_add_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="+ Quick Add"
-        android:textAllCaps="false" />
 
 </LinearLayout>

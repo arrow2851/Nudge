@@ -38,9 +38,12 @@ interface TaskOperationsDao {
     @Query(
         """
         SELECT tasks.*,
-               CASE WHEN task_main_flags.task_id IS NULL THEN 0 ELSE 1 END AS is_main_task
+               CASE WHEN EXISTS(
+                   SELECT 1 FROM tasks AS children
+                   WHERE children.parent_task_id = tasks.id
+                     AND children.archived_at IS NULL
+               ) THEN 1 ELSE 0 END AS is_main_task
         FROM tasks
-        LEFT JOIN task_main_flags ON task_main_flags.task_id = tasks.id
         WHERE tasks.archived_at IS NULL
         ORDER BY CASE WHEN tasks.completed_at IS NULL THEN 0 ELSE 1 END,
                  tasks.parent_task_id,
@@ -142,4 +145,14 @@ interface TaskOperationsDao {
         """,
     )
     suspend fun archiveTask(taskId: String, archivedAt: Long)
+
+    @Query(
+        """
+        UPDATE tasks
+        SET archived_at = NULL,
+            updated_at = :updatedAt
+        WHERE id = :taskId
+        """,
+    )
+    suspend fun restoreTask(taskId: String, updatedAt: Long)
 }

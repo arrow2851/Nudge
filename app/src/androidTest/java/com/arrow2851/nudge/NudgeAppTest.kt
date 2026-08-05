@@ -59,7 +59,8 @@ class NudgeAppTest {
             useUnmergedTree = true,
         ).performClick()
         composeRule.onNodeWithText("Continue (1)").performClick()
-        composeRule.onNodeWithText("Cancel").performClick()
+        val cancelNodes = composeRule.onAllNodesWithText("Cancel")
+        cancelNodes[cancelNodes.fetchSemanticsNodes().lastIndex].performClick()
 
         assertNoNode(hasContentDescription("Expand subitems"))
         composeRule.onNodeWithContentDescription("Add task").performClick()
@@ -252,6 +253,7 @@ class NudgeAppTest {
         composeRule.onNodeWithContentDescription("Add task").performClick()
         completeOpenTextEditor(title)
         waitForText(title)
+        waitForNode(hasTestTag("task-checkbox-$title"), useUnmergedTree = true)
     }
 
     private fun completeOpenTextEditor(text: String) {

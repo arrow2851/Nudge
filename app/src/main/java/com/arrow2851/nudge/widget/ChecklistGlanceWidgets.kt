@@ -21,10 +21,10 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.background
-import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
+import androidx.glance.layout.defaultWeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
@@ -33,6 +33,7 @@ import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider
 import com.arrow2851.nudge.MainActivity
 import com.arrow2851.nudge.core.model.ListItem
 import com.arrow2851.nudge.core.model.Task
@@ -41,10 +42,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
-private val WidgetBackground = ColorProvider(Color(0xFFFFF8F3), Color(0xFF211D19))
-private val WidgetText = ColorProvider(Color(0xFF27211E), Color(0xFFF4EEE8))
-private val WidgetMuted = ColorProvider(Color(0xFF6D625C), Color(0xFFB8AAA0))
-private val WidgetAccent = ColorProvider(Color(0xFF7B4D36), Color(0xFFD69B7B))
+private val WidgetBackground = ColorProvider(Color(0xFFFFF8F3))
+private val WidgetText = ColorProvider(Color(0xFF27211E))
+private val WidgetMuted = ColorProvider(Color(0xFF6D625C))
+private val WidgetAccent = ColorProvider(Color(0xFF7B4D36))
 
 private val TaskIdKey = ActionParameters.Key<String>("task_id")
 private val ListIdKey = ActionParameters.Key<String>("list_id")
@@ -82,11 +83,8 @@ class ReusableListChecklistWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val entryPoint = widgetEntryPoint(context)
         val list = withContext(Dispatchers.IO) {
-            entryPoint.listWorkflowRepository()
-                .observeLists()
-                .first()
-                .firstOrNull { it.list.isReusable }
-                ?: entryPoint.listWorkflowRepository().observeLists().first().firstOrNull()
+            val lists = entryPoint.listWorkflowRepository().observeLists().first()
+            lists.firstOrNull { it.list.isReusable } ?: lists.firstOrNull()
         }
         provideContent {
             val listId = list?.list?.id
@@ -168,7 +166,7 @@ private fun TaskWidgetRow(task: Task) {
     Row(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .padding(vertical = 5.dp)
+            .padding(top = 5.dp, bottom = 5.dp)
             .clickable(
                 actionRunCallback<ToggleTaskWidgetAction>(
                     actionParametersOf(TaskIdKey to task.id),
@@ -184,7 +182,6 @@ private fun TaskWidgetRow(task: Task) {
             text = task.title.ifBlank { "New task" },
             modifier = GlanceModifier.defaultWeight(),
             style = TextStyle(color = WidgetText, fontSize = 14.sp),
-            maxLines = 1,
         )
     }
 }
@@ -194,7 +191,7 @@ private fun ListWidgetRow(item: ListItem) {
     Row(
         modifier = GlanceModifier
             .fillMaxWidth()
-            .padding(vertical = 5.dp)
+            .padding(top = 5.dp, bottom = 5.dp)
             .clickable(
                 actionRunCallback<ToggleListItemWidgetAction>(
                     actionParametersOf(
@@ -219,13 +216,11 @@ private fun ListWidgetRow(item: ListItem) {
                     color = if (item.isChecked) WidgetMuted else WidgetText,
                     fontSize = 14.sp,
                 ),
-                maxLines = 1,
             )
             item.quantity?.let {
                 Text(
                     text = it,
                     style = TextStyle(color = WidgetMuted, fontSize = 11.sp),
-                    maxLines = 1,
                 )
             }
         }
@@ -240,7 +235,7 @@ class ToggleTaskWidgetAction : ActionCallback {
     ) {
         val taskId = parameters[TaskIdKey] ?: return
         widgetEntryPoint(context).taskWorkflowRepository().toggleCompletion(taskId)
-        TasksChecklistWidget().updateAll(context)
+        TasksChecklistWidget().update(context, glanceId)
     }
 }
 
@@ -256,7 +251,7 @@ class ToggleListItemWidgetAction : ActionCallback {
         val item = repository.observeList(listId).first()?.items?.firstOrNull { it.id == itemId }
             ?: return
         repository.setItemChecked(itemId, !item.isChecked)
-        ReusableListChecklistWidget().updateAll(context)
+        ReusableListChecklistWidget().update(context, glanceId)
     }
 }
 

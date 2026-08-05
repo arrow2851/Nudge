@@ -44,6 +44,14 @@ class AppShellViewModel @Inject constructor(
         }
     }
 
+    @Deprecated("Use the repository-level task or chore undo registration methods")
+    fun registerUndo(message: String, action: () -> Unit) {
+        viewModelScope.launch {
+            mutationCoordinator.beginMutation()
+            mutationCoordinator.registerUndo(message) { action() }
+        }
+    }
+
     fun mutationMessage(message: String) {
         viewModelScope.launch {
             mutationCoordinator.beginMutation()

@@ -59,15 +59,14 @@ jobs:
       - name: Verify wrapper bootstrap
         run: bash ./gradlew --version
 
-      - name: Compile application and test sources
+      - name: Compile application sources
+        timeout-minutes: 12
         shell: bash
         run: |
           set -o pipefail
-          bash ./gradlew \
-            :app:compileDebugKotlin \
-            :app:compileDebugUnitTestKotlin \
-            :app:compileDebugAndroidTestKotlin \
-            --stacktrace --console=plain 2>&1 | tee android-compile-console.log
+          bash ./gradlew :app:compileDebugKotlin \
+            --no-daemon --max-workers=2 --stacktrace --console=plain \
+            2>&1 | tee android-compile-console.log
 
       - name: Upload compiler console log
         if: always()
@@ -78,10 +77,13 @@ jobs:
           if-no-files-found: error
 
       - name: Run Android verification
+        timeout-minutes: 15
         shell: bash
         run: |
           set -o pipefail
-          bash ./gradlew :app:lintDebug :app:testDebugUnitTest :app:assembleDebug --stacktrace --console=plain 2>&1 | tee android-verification-console.log
+          bash ./gradlew :app:lintDebug :app:testDebugUnitTest :app:assembleDebug \
+            --no-daemon --max-workers=2 --stacktrace --console=plain \
+            2>&1 | tee android-verification-console.log
 
       - name: Upload debug APK
         if: success()
@@ -151,7 +153,7 @@ jobs:
           profile: pixel_7
           disable-animations: true
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: bash ./gradlew :app:connectedDebugAndroidTest --stacktrace --console=plain
+          script: bash ./gradlew :app:connectedDebugAndroidTest --no-daemon --max-workers=2 --stacktrace --console=plain
 
       - name: Upload instrumentation reports
         if: always()

@@ -44,6 +44,7 @@ import com.arrow2851.nudge.ui.settings.DisplayBehaviorScreen
 import com.arrow2851.nudge.ui.settings.SettingsHomeScreen
 import com.arrow2851.nudge.ui.settings.WidgetSettingsScreen
 import com.arrow2851.nudge.ui.tasks.TasksScreen
+import com.arrow2851.nudge.ui.today.TodayCompletionUndo
 import com.arrow2851.nudge.ui.today.TodayDueItem
 import com.arrow2851.nudge.ui.today.TodayEvent
 import com.arrow2851.nudge.ui.today.TodayScreen
@@ -145,8 +146,11 @@ fun NudgePhase7App(
         todayViewModel.events.collect { event ->
             when (event) {
                 is TodayEvent.Message -> shellViewModel.mutationMessage(event.text)
-                is TodayEvent.ItemCompleted -> shellViewModel.registerUndo(event.text) {
-                    todayViewModel.undoCompletion(event.undo)
+                is TodayEvent.ItemCompleted -> when (val undo = event.undo) {
+                    is TodayCompletionUndo.TaskCompletion ->
+                        shellViewModel.registerTaskUndo(event.text, undo.mutation)
+                    is TodayCompletionUndo.ChoreCompletion ->
+                        shellViewModel.registerChoreUndo(event.text, undo.mutation)
                 }
             }
         }
@@ -156,9 +160,8 @@ fun NudgePhase7App(
         areasViewModel.events.collect { event ->
             when (event) {
                 is AreasEvent.Message -> shellViewModel.mutationMessage(event.text)
-                is AreasEvent.ChoreCompleted -> shellViewModel.registerUndo(event.text) {
-                    areasViewModel.undoCompletion(event.mutation)
-                }
+                is AreasEvent.ChoreCompleted ->
+                    shellViewModel.registerChoreUndo(event.text, event.mutation)
             }
         }
     }
@@ -271,8 +274,14 @@ fun NudgePhase7App(
                     state = areasState,
                     createChoreRequest = choreCreateRequest,
                     viewModel = areasViewModel,
-                    onBack = { navController.popBackStack() },
-                    onOpenSection = { sectionId -> navController.navigate("section/$sectionId") },
+                    onBack = {
+                        shellViewModel.invalidateUndo()
+                        navController.popBackStack()
+                    },
+                    onOpenSection = { sectionId ->
+                        shellViewModel.invalidateUndo()
+                        navController.navigate("section/$sectionId")
+                    },
                 )
             }
             composable(Phase7SectionRoute) { entry ->
@@ -282,7 +291,10 @@ fun NudgePhase7App(
                     state = areasState,
                     createChoreRequest = choreCreateRequest,
                     viewModel = areasViewModel,
-                    onBack = { navController.popBackStack() },
+                    onBack = {
+                        shellViewModel.invalidateUndo()
+                        navController.popBackStack()
+                    },
                 )
             }
             composable(NudgeDestination.Tasks.route) {
@@ -293,7 +305,10 @@ fun NudgePhase7App(
                     state = listsState,
                     createRequest = listCreateRequest,
                     viewModel = listsViewModel,
-                    onOpenList = { listId -> navController.navigate("list/$listId") },
+                    onOpenList = { listId ->
+                        shellViewModel.invalidateUndo()
+                        navController.navigate("list/$listId")
+                    },
                 )
             }
             composable(Phase7ListRoute) { entry ->
@@ -304,7 +319,10 @@ fun NudgePhase7App(
                     createItemRequest = listItemCreateRequest,
                     suggestions = listSuggestions,
                     viewModel = listsViewModel,
-                    onBack = { navController.popBackStack() },
+                    onBack = {
+                        shellViewModel.invalidateUndo()
+                        navController.popBackStack()
+                    },
                 )
             }
             navigation(
@@ -313,28 +331,71 @@ fun NudgePhase7App(
             ) {
                 composable(SettingsHomeRoute) {
                     SettingsHomeScreen(
-                        onBack = { navController.popBackStack() },
-                        onOpenInterventions = { navController.navigate(InterventionSettingsRoute) },
-                        onOpenHistory = { navController.navigate(HistoryRoute) },
-                        onOpenDisplay = { navController.navigate(DisplayBehaviorRoute) },
-                        onOpenBackup = { navController.navigate(BackupRoute) },
-                        onOpenWidgets = { navController.navigate(WidgetSettingsRoute) },
+                        onBack = {
+                            shellViewModel.invalidateUndo()
+                            navController.popBackStack()
+                        },
+                        onOpenInterventions = {
+                            shellViewModel.invalidateUndo()
+                            navController.navigate(InterventionSettingsRoute)
+                        },
+                        onOpenHistory = {
+                            shellViewModel.invalidateUndo()
+                            navController.navigate(HistoryRoute)
+                        },
+                        onOpenDisplay = {
+                            shellViewModel.invalidateUndo()
+                            navController.navigate(DisplayBehaviorRoute)
+                        },
+                        onOpenBackup = {
+                            shellViewModel.invalidateUndo()
+                            navController.navigate(BackupRoute)
+                        },
+                        onOpenWidgets = {
+                            shellViewModel.invalidateUndo()
+                            navController.navigate(WidgetSettingsRoute)
+                        },
                     )
                 }
                 composable(InterventionSettingsRoute) {
-                    InterventionSettingsScreen(onBack = { navController.popBackStack() })
+                    InterventionSettingsScreen(
+                        onBack = {
+                            shellViewModel.invalidateUndo()
+                            navController.popBackStack()
+                        },
+                    )
                 }
                 composable(HistoryRoute) {
-                    HistoryScreen(onBack = { navController.popBackStack() })
+                    HistoryScreen(
+                        onBack = {
+                            shellViewModel.invalidateUndo()
+                            navController.popBackStack()
+                        },
+                    )
                 }
                 composable(DisplayBehaviorRoute) {
-                    DisplayBehaviorScreen(onBack = { navController.popBackStack() })
+                    DisplayBehaviorScreen(
+                        onBack = {
+                            shellViewModel.invalidateUndo()
+                            navController.popBackStack()
+                        },
+                    )
                 }
                 composable(BackupRoute) {
-                    BackupScreen(onBack = { navController.popBackStack() })
+                    BackupScreen(
+                        onBack = {
+                            shellViewModel.invalidateUndo()
+                            navController.popBackStack()
+                        },
+                    )
                 }
                 composable(WidgetSettingsRoute) {
-                    WidgetSettingsScreen(onBack = { navController.popBackStack() })
+                    WidgetSettingsScreen(
+                        onBack = {
+                            shellViewModel.invalidateUndo()
+                            navController.popBackStack()
+                        },
+                    )
                 }
             }
         }
@@ -342,7 +403,10 @@ fun NudgePhase7App(
 
     QuickAddSheet(
         visible = showQuickAdd,
-        onDismiss = { showQuickAdd = false },
+        onDismiss = {
+            shellViewModel.invalidateUndo()
+            showQuickAdd = false
+        },
         onSaved = { title -> shellViewModel.mutationMessage("Saved task: $title") },
         onError = { message -> shellViewModel.mutationMessage(message) },
     )

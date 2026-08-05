@@ -32,7 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +54,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.arrow2851.nudge.core.model.ItemHandedness
 import kotlinx.coroutines.launch
 
@@ -89,12 +89,21 @@ fun ChecklistRow(
 ) {
     var titleDraft by remember(id, editing, title) { mutableStateOf(title) }
     val isRightHanded = handedness == ItemHandedness.RightHanded
+    val dragOffset = remember(id) { Animatable(0f) }
+    val dragging = dragOffset.value != 0f
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(start = if (indented) 24.dp else 0.dp)
             .heightIn(min = 52.dp)
+            .zIndex(if (dragging) 2f else 0f)
+            .graphicsLayer {
+                translationY = dragOffset.value
+                scaleX = if (dragging) 1.015f else 1f
+                scaleY = if (dragging) 1.015f else 1f
+                shadowElevation = if (dragging) 10.dp.toPx() else 0f
+            }
             .semantics {
                 contentDescription = "Checklist item ${title.ifBlank { "New item" }}"
                 customActions = buildList {
@@ -128,6 +137,7 @@ fun ChecklistRow(
             MetadataButton(metadataKind, metadata, onMetadataClick)
         } else {
             ImmediateDragHandle(
+                dragOffset = dragOffset,
                 canMovePrevious = canMovePrevious,
                 canMoveNext = canMoveNext,
                 onMovePrevious = onMovePrevious,
@@ -207,6 +217,7 @@ fun ChecklistRow(
                 modifier = Modifier.testTag("checklist-checkbox-$id"),
             )
             ImmediateDragHandle(
+                dragOffset = dragOffset,
                 canMovePrevious = canMovePrevious,
                 canMoveNext = canMoveNext,
                 onMovePrevious = onMovePrevious,
@@ -293,6 +304,7 @@ private fun DetailsButton(
 
 @Composable
 private fun ImmediateDragHandle(
+    dragOffset: Animatable<Float, *>,
     canMovePrevious: Boolean,
     canMoveNext: Boolean,
     onMovePrevious: () -> Unit,
@@ -301,18 +313,12 @@ private fun ImmediateDragHandle(
     val density = LocalDensity.current
     val haptics = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
-    val offset = remember { Animatable(0f) }
     val threshold = with(density) { 30.dp.toPx() }
     var accumulated by remember { mutableFloatStateOf(0f) }
 
     Box(
         modifier = Modifier
             .size(40.dp)
-            .graphicsLayer {
-                translationY = offset.value
-                scaleX = if (offset.value == 0f) 1f else 1.08f
-                scaleY = if (offset.value == 0f) 1f else 1.08f
-            }
             .semantics { contentDescription = "Drag to reorder" }
             .pointerInput(canMovePrevious, canMoveNext) {
                 detectDragGestures(
@@ -322,28 +328,32 @@ private fun ImmediateDragHandle(
                     },
                     onDragCancel = {
                         accumulated = 0f
-                        scope.launch { offset.animateTo(0f, spring()) }
+                        scope.launch { dragOffset.animateTo(0f, spring()) }
                     },
                     onDragEnd = {
                         accumulated = 0f
-                        scope.launch { offset.animateTo(0f, spring()) }
+                        scope.launch { dragOffset.animateTo(0f, spring()) }
                     },
                     onDrag = { change, dragAmount ->
                         change.consume()
                         accumulated += dragAmount.y
-                        scope.launch { offset.snapTo(accumulated.coerceIn(-threshold * 1.5f, threshold * 1.5f)) }
+                        scope.launch {
+                            dragOffset.snapTo(
+                                accumulated.coerceIn(-threshold * 1.5f, threshold * 1.5f),
+                            )
+                        }
                         when {
                             accumulated <= -threshold && canMovePrevious -> {
                                 onMovePrevious()
                                 haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                 accumulated = 0f
-                                scope.launch { offset.snapTo(0f) }
+                                scope.launch { dragOffset.snapTo(0f) }
                             }
                             accumulated >= threshold && canMoveNext -> {
                                 onMoveNext()
                                 haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                 accumulated = 0f
-                                scope.launch { offset.snapTo(0f) }
+                                scope.launch { dragOffset.snapTo(0f) }
                             }
                         }
                     },

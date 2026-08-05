@@ -59,6 +59,24 @@ jobs:
       - name: Verify wrapper bootstrap
         run: bash ./gradlew --version
 
+      - name: Compile application and test sources
+        shell: bash
+        run: |
+          set -o pipefail
+          bash ./gradlew \
+            :app:compileDebugKotlin \
+            :app:compileDebugUnitTestKotlin \
+            :app:compileDebugAndroidTestKotlin \
+            --stacktrace --console=plain 2>&1 | tee android-compile-console.log
+
+      - name: Upload compiler console log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-compile-console
+          path: android-compile-console.log
+          if-no-files-found: error
+
       - name: Run Android verification
         shell: bash
         run: |
@@ -87,7 +105,7 @@ jobs:
         with:
           name: android-verification-console
           path: android-verification-console.log
-          if-no-files-found: error
+          if-no-files-found: ignore
 
       - name: Upload verification reports
         if: always()

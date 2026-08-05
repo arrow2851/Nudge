@@ -13,14 +13,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arrow2851.nudge.core.model.Task
+import com.arrow2851.nudge.ui.checklist.ChecklistSelectionBar
+import com.arrow2851.nudge.ui.checklist.ChecklistSelectionMode
 import com.arrow2851.nudge.ui.components.NudgeButton
 import com.arrow2851.nudge.ui.components.NudgeButtonStyle
 import com.arrow2851.nudge.ui.components.NudgeEmptyState
@@ -57,7 +56,9 @@ fun TasksScreen(
     viewModel: TasksViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    var dueDateTaskId by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectionMode by rememberSaveable { mutableStateOf(ChecklistSelectionMode.None) }
+    var selectedTaskIds by rememberSaveable { mutableStateOf(emptyList<String>()) }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(createRequest) {
         if (createRequest > 0) viewModel.createTask()
@@ -69,15 +70,58 @@ fun TasksScreen(
             message = current.message,
             onRetry = viewModel::dismissRecoverableError,
         )
+
         is TasksUiState.Ready -> {
+            val allTasks = current.nodes.flatMap { node -> listOf(node.task) + node.subtasks }
+            val selectableIds = when (selectionMode) {
+                ChecklistSelectionMode.Metadata -> allTasks.map(Task::id)
+                ChecklistSelectionMode.Delete -> allTasks
+                    .filter { it.completedAt != null }
+                    .map(Task::id)
+                ChecklistSelectionMode.None -> emptyList()
+            }
+
+            LaunchedEffect(selectionMode, allTasks) {
+                selectedTaskIds = selectedTaskIds.filter { it in selectableIds }
+            }
+
             TasksContent(
                 state = current,
+                selectionMode = selectionMode,
+                selectedTaskIds = selectedTaskIds.toSet(),
+                onToggleSelection = { taskId ->
+                    selectedTaskIds = selectedTaskIds.toggle(taskId)
+                },
+                onStartDateSelection = {
+                    selectionMode = ChecklistSelectionMode.Metadata
+                    selectedTaskIds = emptyList()
+                },
+                onStartDeleteSelection = {
+                    selectionMode = ChecklistSelectionMode.Delete
+                    selectedTaskIds = emptyList()
+                },
+                onSelectAll = { selectedTaskIds = selectableIds.distinct() },
+                onApplySelection = {
+                    when (selectionMode) {
+                        ChecklistSelectionMode.Metadata -> showDatePicker = true
+                        ChecklistSelectionMode.Delete -> {
+                            viewModel.archiveTasks(selectedTaskIds.toSet())
+                            selectionMode = ChecklistSelectionMode.None
+                            selectedTaskIds = emptyList()
+                        }
+                        ChecklistSelectionMode.None -> Unit
+                    }
+                },
+                onCancelSelection = {
+                    selectionMode = ChecklistSelectionMode.None
+                    selectedTaskIds = emptyList()
+                    showDatePicker = false
+                },
                 onAddTask = { viewModel.createTask() },
                 onAddSubtask = viewModel::createTask,
                 onEditTask = viewModel::editTask,
                 onFinishTitleEdit = viewModel::finishTitleEdit,
                 onToggleCompleted = viewModel::toggleCompleted,
-                onOpenDueDate = { dueDateTaskId = it },
                 onDelete = viewModel::archive,
                 onReorder = viewModel::reorder,
                 onMoveUp = viewModel::moveUp,
@@ -96,37 +140,47 @@ fun TasksScreen(
                 )
             }
 
-            val dueTask = dueDateTaskId?.let(current::findTask)
-            if (dueTask != null) {
+            if (showDatePicker && selectedTaskIds.isNotEmpty()) {
+                val selectedTasks = selectedTaskIds.mapNotNull(current::findTask)
                 val datePickerState = rememberDatePickerState(
-                    initialSelectedDateMillis = dueTask.dueAt,
+                    initialSelectedDateMillis = selectedTasks
+                        .mapNotNull(Task::dueAt)
+                        .distinct()
+                        .singleOrNull(),
                 )
                 DatePickerDialog(
-                    onDismissRequest = { dueDateTaskId = null },
+                    onDismissRequest = { showDatePicker = false },
                     confirmButton = {
                         TextButton(
                             onClick = {
-                                viewModel.updateDueDate(dueTask.id, datePickerState.selectedDateMillis)
-                                dueDateTaskId = null
+                                viewModel.updateDueDates(
+                                    selectedTaskIds.toSet(),
+                                    datePickerState.selectedDateMillis,
+                                )
+                                showDatePicker = false
+                                selectionMode = ChecklistSelectionMode.None
+                                selectedTaskIds = emptyList()
                             },
                             enabled = datePickerState.selectedDateMillis != null,
                         ) {
-                            Text(if (dueTask.dueAt == null) "Set date" else "Change date")
+                            Text("Set date")
                         }
                     },
                     dismissButton = {
                         Row {
-                            if (dueTask.dueAt != null) {
+                            if (selectedTasks.any { it.dueAt != null }) {
                                 TextButton(
                                     onClick = {
-                                        viewModel.updateDueDate(dueTask.id, null)
-                                        dueDateTaskId = null
+                                        viewModel.updateDueDates(selectedTaskIds.toSet(), null)
+                                        showDatePicker = false
+                                        selectionMode = ChecklistSelectionMode.None
+                                        selectedTaskIds = emptyList()
                                     },
                                 ) {
-                                    Text("Remove date")
+                                    Text("Remove dates")
                                 }
                             }
-                            TextButton(onClick = { dueDateTaskId = null }) {
+                            TextButton(onClick = { showDatePicker = false }) {
                                 Text("Cancel")
                             }
                         }
@@ -142,12 +196,19 @@ fun TasksScreen(
 @Composable
 private fun TasksContent(
     state: TasksUiState.Ready,
+    selectionMode: ChecklistSelectionMode,
+    selectedTaskIds: Set<String>,
+    onToggleSelection: (String) -> Unit,
+    onStartDateSelection: () -> Unit,
+    onStartDeleteSelection: () -> Unit,
+    onSelectAll: () -> Unit,
+    onApplySelection: () -> Unit,
+    onCancelSelection: () -> Unit,
     onAddTask: () -> Unit,
     onAddSubtask: (String) -> Unit,
     onEditTask: (String) -> Unit,
     onFinishTitleEdit: (String, String) -> Unit,
     onToggleCompleted: (String) -> Unit,
-    onOpenDueDate: (String) -> Unit,
     onDelete: (String) -> Unit,
     onReorder: (String, String) -> Unit,
     onMoveUp: (String) -> Unit,
@@ -158,6 +219,9 @@ private fun TasksContent(
 ) {
     val visibleActive = state.activeNodes
     val visibleCompleted = if (state.hideCompleted) emptyList() else state.completedNodes
+    val completedCount = state.nodes.sumOf { node ->
+        listOf(node.task).plus(node.subtasks).count { it.completedAt != null }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -180,7 +244,20 @@ private fun TasksContent(
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Spacer(Modifier.height(14.dp))
+            ChecklistSelectionBar(
+                mode = selectionMode,
+                metadataActionLabel = "Set date",
+                checkedCount = completedCount,
+                selectedCount = selectedTaskIds.size,
+                hideChecked = state.hideCompleted,
+                onStartMetadata = onStartDateSelection,
+                onStartDelete = onStartDeleteSelection,
+                onSelectAll = onSelectAll,
+                onApply = onApplySelection,
+                onCancel = onCancelSelection,
+                onToggleCheckedVisibility = onToggleCompletedVisibility,
+            )
+            Spacer(Modifier.height(4.dp))
         }
 
         if (visibleActive.isEmpty() && visibleCompleted.isEmpty()) {
@@ -206,11 +283,13 @@ private fun TasksContent(
                     showDueShorthand = state.showDueShorthand,
                     hideCompleted = state.hideCompleted,
                     handedness = state.handedness,
+                    selectionMode = selectionMode,
+                    selectedTaskIds = selectedTaskIds,
+                    onSelectionChange = onToggleSelection,
                     onAddSubtask = onAddSubtask,
                     onEditTask = onEditTask,
                     onFinishTitleEdit = onFinishTitleEdit,
                     onToggleCompleted = onToggleCompleted,
-                    onOpenDueDate = onOpenDueDate,
                     onDelete = onDelete,
                     onReorder = onReorder,
                     onMoveUp = onMoveUp,
@@ -223,32 +302,13 @@ private fun TasksContent(
 
         if (state.completedNodes.isNotEmpty()) {
             item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp, bottom = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    NudgeSectionLabel(text = "COMPLETED")
-                    IconButton(
-                        onClick = onToggleCompletedVisibility,
-                        modifier = Modifier.testTag("toggle-completed-visibility"),
-                    ) {
-                        Icon(
-                            imageVector = if (state.hideCompleted) {
-                                Icons.Default.Visibility
-                            } else {
-                                Icons.Default.VisibilityOff
-                            },
-                            contentDescription = if (state.hideCompleted) {
-                                "Show completed tasks"
-                            } else {
-                                "Hide completed tasks"
-                            },
-                        )
-                    }
-                }
+                NudgeSectionLabel(
+                    text = if (state.hideCompleted) {
+                        "COMPLETED · $completedCount HIDDEN"
+                    } else {
+                        "COMPLETED"
+                    },
+                )
             }
 
             itemsIndexed(
@@ -263,11 +323,13 @@ private fun TasksContent(
                     showDueShorthand = state.showDueShorthand,
                     hideCompleted = false,
                     handedness = state.handedness,
+                    selectionMode = selectionMode,
+                    selectedTaskIds = selectedTaskIds,
+                    onSelectionChange = onToggleSelection,
                     onAddSubtask = onAddSubtask,
                     onEditTask = onEditTask,
                     onFinishTitleEdit = onFinishTitleEdit,
                     onToggleCompleted = onToggleCompleted,
-                    onOpenDueDate = onOpenDueDate,
                     onDelete = onDelete,
                     onReorder = onReorder,
                     onMoveUp = onMoveUp,
@@ -278,17 +340,19 @@ private fun TasksContent(
             }
         }
 
-        item {
-            Spacer(Modifier.height(12.dp))
-            NudgeButton(
-                text = "Add task",
-                onClick = onAddTask,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("add-task-bottom"),
-                style = NudgeButtonStyle.Outlined,
-                leadingIcon = { Icon(Icons.Default.Add, contentDescription = null) },
-            )
+        if (selectionMode == ChecklistSelectionMode.None) {
+            item {
+                Spacer(Modifier.height(12.dp))
+                NudgeButton(
+                    text = "Add task",
+                    onClick = onAddTask,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("add-task-bottom"),
+                    style = NudgeButtonStyle.Outlined,
+                    leadingIcon = { Icon(Icons.Default.Add, contentDescription = null) },
+                )
+            }
         }
     }
 }
@@ -351,3 +415,6 @@ internal fun formatLongDate(dueAt: Long): String =
         .atZone(ZoneId.systemDefault())
         .toLocalDate()
         .format(DateTimeFormatter.ofPattern("MMM d, yyyy"))
+
+private fun List<String>.toggle(value: String): List<String> =
+    if (value in this) filterNot { it == value } else this + value

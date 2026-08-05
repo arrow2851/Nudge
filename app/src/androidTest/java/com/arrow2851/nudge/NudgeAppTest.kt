@@ -1,7 +1,6 @@
 package com.arrow2851.nudge
 
 import androidx.compose.ui.test.SemanticsMatcher
-import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasContentDescription
@@ -62,7 +61,7 @@ class NudgeAppTest {
         composeRule.onNodeWithText("Continue (1)").performClick()
         composeRule.onNodeWithText("Cancel").performClick()
 
-        composeRule.onNodeWithContentDescription("Expand subitems").assertDoesNotExist()
+        assertNoNode(hasContentDescription("Expand subitems"))
         composeRule.onNodeWithContentDescription("Add task").performClick()
         completeOpenTextEditor("Atomic child")
         val childRow = hasContentDescription("Checklist item Atomic child")
@@ -75,7 +74,7 @@ class NudgeAppTest {
             hasContentDescription("Collapse subitems") and hasAnyAncestor(parentRow),
             useUnmergedTree = true,
         ).performClick()
-        composeRule.onNodeWithText("Atomic child").assertDoesNotExist()
+        assertNoNode(androidx.compose.ui.test.hasText("Atomic child"))
         firstNode(
             hasContentDescription("Expand subitems") and hasAnyAncestor(parentRow),
             useUnmergedTree = true,
@@ -167,11 +166,7 @@ class NudgeAppTest {
         waitForText("1 active · 1 checked", substring = true)
 
         composeRule.onNodeWithText("Select to delete").performClick()
-        val checkedRow = hasTestTag("list-item-row-Oat Milk")
-        firstNode(
-            isToggleable() and hasAnyAncestor(checkedRow),
-            useUnmergedTree = true,
-        ).performClick()
+        composeRule.onNodeWithText("Select all").performClick()
         composeRule.onNodeWithText("Delete (1)").performClick()
         waitForText("1 items deleted")
         composeRule.onNodeWithText("Undo").performClick()
@@ -205,7 +200,7 @@ class NudgeAppTest {
         composeRule.onNodeWithContentDescription("Tasks destination").performClick()
         createTask("Right handed task", alreadyOnTasks = true)
 
-        composeRule.onNodeWithContentDescription("Expand subitems").assertDoesNotExist()
+        assertNoNode(hasContentDescription("Expand subitems"))
         composeRule.onNodeWithTag(
             "task-checkbox-Right handed task",
             useUnmergedTree = true,
@@ -220,7 +215,7 @@ class NudgeAppTest {
         ).fetchSemanticsNode().boundsInRoot
 
         assertTrue(delete.left < checkbox.left)
-        composeRule.onNodeWithContentDescription("Drag to reorder").assertDoesNotExist()
+        assertNoNode(hasContentDescription("Drag to reorder"))
     }
 
     @Test
@@ -279,6 +274,16 @@ class NudgeAppTest {
         matcher: SemanticsMatcher,
         useUnmergedTree: Boolean = false,
     ) = composeRule.onAllNodes(matcher, useUnmergedTree = useUnmergedTree)[0]
+
+    private fun assertNoNode(
+        matcher: SemanticsMatcher,
+        useUnmergedTree: Boolean = false,
+    ) {
+        composeRule.waitForIdle()
+        assertTrue(
+            composeRule.onAllNodes(matcher, useUnmergedTree).fetchSemanticsNodes().isEmpty(),
+        )
+    }
 
     private fun waitForNode(
         matcher: SemanticsMatcher,

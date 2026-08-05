@@ -23,16 +23,14 @@ import com.arrow2851.nudge.core.model.ThemeMode
 import kotlinx.coroutines.flow.Flow
 
 data class TaskCompletionMutation(
-    val taskId: String,
-    val previousCompletedAt: Long?,
-    val completedAt: Long?,
-    val affectedTaskIds: List<String>,
+    val previousCompletedAtByTask: Map<String, Long?>,
+    val completedAtByTask: Map<String, Long?>,
     val createdHistoryIds: List<String> = emptyList(),
 )
 
 data class TaskArchiveMutation(
     val task: Task,
-    val childParentIds: Map<String, String?>,
+    val childSortOrders: Map<String, Long>,
     val historyId: String,
 )
 

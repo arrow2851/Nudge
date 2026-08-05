@@ -1,11 +1,17 @@
 package com.arrow2851.nudge
 
 import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNode
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -14,7 +20,10 @@ import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeRight
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,7 +34,7 @@ class NudgeAppTest {
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun productionShellLaunchesAndSwitchesDestinations() {
+    fun productionShellLaunchesSwitchesDestinationsAndReturnsHomeFromSettings() {
         composeRule.onNodeWithText("Small steps, right now.").assertIsDisplayed()
         val destinations = listOf(
             "Areas" to "Keep recurring care visible.",
@@ -37,16 +46,17 @@ class NudgeAppTest {
             composeRule.onNodeWithContentDescription("$destination destination").performClick()
             composeRule.onNodeWithText(expectedText).assertIsDisplayed()
         }
+
+        composeRule.onNodeWithContentDescription("Settings").performClick()
+        composeRule.onNodeWithText("Display and item behavior").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Today destination").performClick()
+        composeRule.onNodeWithText("Small steps, right now.").assertIsDisplayed()
     }
 
     @Test
     fun quickAddUsesSharedSheetAndPersistsTask() {
         composeRule.onNodeWithContentDescription("Quick add").performClick()
-        composeRule.onNodeWithText(
-            "Add a lightweight one-time Task now. You can add due dates, subtasks, and other details from Tasks later.",
-        ).assertIsDisplayed()
         composeRule.onNodeWithText("Task name").assertIsDisplayed()
-        composeRule.onNodeWithText("Speak").assertIsDisplayed()
         composeRule.onNodeWithText("Save task").assertIsDisplayed()
         composeRule.onNode(hasSetTextAction()).performTextInput("Quick Add persisted task")
         composeRule.onNodeWithText("Save task").performClick()
@@ -56,51 +66,69 @@ class NudgeAppTest {
     }
 
     @Test
-    fun completeTasksWorkflowPersistsAndSupportsUndoAndSubtasks() {
-        composeRule.onNodeWithContentDescription("Tasks destination").performClick()
-        composeRule.onNodeWithContentDescription("Add task").performClick()
-        waitForNode(hasSetTextAction())
-        composeRule.onNode(hasSetTextAction()).performTextInput("Phase 4 task")
-        composeRule.onNode(hasSetTextAction()).performImeAction()
-        composeRule.onNodeWithText("Phase 4 task").assertIsDisplayed()
-        waitForNode(
-            hasTestTag("task-checkbox-Phase 4 task"),
-            useUnmergedTree = true,
-        )
-        composeRule.onNodeWithTag(
-            "task-checkbox-Phase 4 task",
-            useUnmergedTree = true,
-        ).performClick()
+    fun taskCompletionUndoAndNextMutationInvalidationAreSingleUse() {
+        createTask("Atomic task")
+
+        composeRule.onNodeWithTag("task-checkbox-Atomic task", useUnmergedTree = true)
+            .performClick()
         waitForText("Task completed", timeoutMillis = 10_000L)
         composeRule.onNodeWithText("Undo").performClick()
-        composeRule.onNodeWithTag("task-details-Phase 4 task").performClick()
-        composeRule.onNodeWithText("Task details").assertIsDisplayed()
-        composeRule.onNodeWithTag("main-task-switch-Phase 4 task").performClick()
-        composeRule.onNodeWithText("Add subtask").performClick()
+        waitForText("Undone", timeoutMillis = 10_000L)
+        waitForNode(hasTestTag("task-checkbox-Atomic task"), useUnmergedTree = true)
+
+        composeRule.onNodeWithTag("task-checkbox-Atomic task", useUnmergedTree = true)
+            .performClick()
+        waitForText("Task completed", timeoutMillis = 10_000L)
+        composeRule.onNodeWithContentDescription("Add task").performClick()
+        composeRule.onNodeWithText("Undo").assertDoesNotExist()
         waitForNode(hasSetTextAction())
-        composeRule.onNode(hasSetTextAction()).performTextInput("Phase 4 child")
+        composeRule.onNode(hasSetTextAction()).performTextInput("Mutation after completion")
         composeRule.onNode(hasSetTextAction()).performImeAction()
-        composeRule.onNodeWithText("Phase 4 child").assertIsDisplayed()
-        composeRule.onNodeWithText("0/1 complete").assertIsDisplayed()
+        composeRule.onNodeWithText("Mutation after completion").assertIsDisplayed()
     }
 
     @Test
-    fun completeRecurringCareWorkflowCreatesTemplateGradesAndAddsAsNeededChore() {
+    fun taskRowSupportsInlineDueDateAndAutomaticMainTaskChildren() {
+        createTask("Inline parent")
+        val parentRow = hasContentDescription("Checklist item Inline parent")
+        composeRule.onNode(
+            hasContentDescription("Set due date") and hasAnyAncestor(parentRow),
+            useUnmergedTree = true,
+        ).performClick()
+        composeRule.onNodeWithText("Set date").assertIsDisplayed()
+        composeRule.onNodeWithText("Cancel").performClick()
+
+        composeRule.onNode(
+            hasContentDescription("Expand subitems") and hasAnyAncestor(parentRow),
+            useUnmergedTree = true,
+        ).performClick()
+        composeRule.onNodeWithText("Add subtask").performClick()
+        waitForNode(hasSetTextAction())
+        composeRule.onNode(hasSetTextAction()).performTextInput("Inline child")
+        composeRule.onNode(hasSetTextAction()).performImeAction()
+        composeRule.onNodeWithText("Inline child").assertIsDisplayed()
+        composeRule.onNodeWithText("0/1").assertIsDisplayed()
+    }
+
+    @Test
+    fun recurringCareCreatesTemplateGradesAndSupportsAtomicUndo() {
         composeRule.onNodeWithContentDescription("Areas destination").performClick()
         composeRule.onNodeWithContentDescription("Add area").performClick()
-        composeRule.onNodeWithTag("area-name-field").performTextInput("Phase 5 House")
+        composeRule.onNodeWithTag("area-name-field").performTextInput("Refactor House")
         composeRule.onNodeWithTag("house-template-choice").performClick()
         composeRule.onNodeWithTag("save-area").performClick()
 
-        waitForNode(hasTestTag("area-card-Phase 5 House"), timeoutMillis = 10_000L)
-        composeRule.onNodeWithTag("area-card-Phase 5 House").performClick()
+        waitForNode(hasTestTag("area-card-Refactor House"), timeoutMillis = 10_000L)
+        composeRule.onNodeWithTag("area-card-Refactor House").performClick()
         waitForNode(hasTestTag("section-card-Kitchen"), timeoutMillis = 10_000L)
         composeRule.onNodeWithTag("section-card-Kitchen").performClick()
         composeRule.onNodeWithText("Wipe countertops").assertIsDisplayed()
         composeRule.onNodeWithTag("complete-chore-Wipe countertops").performClick()
         composeRule.onNodeWithTag("complete-light").performClick()
         waitForText("Completed; next occurrence scheduled", timeoutMillis = 10_000L)
-        composeRule.onNodeWithText("Completed; next occurrence scheduled").assertIsDisplayed()
+        composeRule.onNodeWithText("Undo").performClick()
+        waitForText("Undone", timeoutMillis = 10_000L)
+        composeRule.onNodeWithText("Wipe countertops").assertIsDisplayed()
 
         composeRule.onNodeWithContentDescription("Add chore").performClick()
         composeRule.onNodeWithTag("chore-name-field").performTextInput("Polish fixtures")
@@ -110,86 +138,146 @@ class NudgeAppTest {
         composeRule.onNodeWithTag("section-detail-Kitchen")
             .performScrollToNode(hasTestTag("chore-row-Polish fixtures"))
         composeRule.onNodeWithTag("chore-row-Polish fixtures").assertIsDisplayed()
-        composeRule.onNodeWithText("AS NEEDED").assertIsDisplayed()
     }
 
     @Test
-    fun completeReusableListsWorkflowLearnsSuggestionsAndSupportsUndo() {
+    fun reusableListUsesInlineNotesSwipeSuggestionAndAtomicUndo() {
         composeRule.onNodeWithContentDescription("Lists destination").performClick()
         composeRule.onNodeWithContentDescription("Add list").performClick()
-        composeRule.onNodeWithTag("list-name-field").performTextInput("Phase 6 Groceries")
+        composeRule.onNodeWithTag("list-name-field").performTextInput("Refactor Groceries")
         composeRule.onNodeWithTag("save-list").performClick()
-        waitForNode(hasTestTag("list-card-Phase 6 Groceries"), timeoutMillis = 10_000L)
-        composeRule.onNodeWithTag("list-card-Phase 6 Groceries").performClick()
+        waitForNode(hasTestTag("list-card-Refactor Groceries"), timeoutMillis = 10_000L)
+        composeRule.onNodeWithTag("list-card-Refactor Groceries").performClick()
 
-        composeRule.onNodeWithContentDescription("Add list item").performClick()
-        composeRule.onNodeWithTag("list-item-name-field").performTextInput("Oat Milk")
-        composeRule.onNodeWithTag("list-item-quantity-field").performTextInput("2 cartons")
-        composeRule.onNodeWithTag("save-list-item").performScrollTo().performClick()
+        addListItem("Oat Milk", "2 cartons")
         waitForNode(hasTestTag("list-item-row-Oat Milk"), timeoutMillis = 10_000L)
 
-        waitForNode(
-            hasTestTag("list-item-checkbox-Oat Milk"),
-            useUnmergedTree = true,
-        )
-        composeRule.onNodeWithTag(
-            "list-item-checkbox-Oat Milk",
+        composeRule.onNode(
+            hasContentDescription("Change quantity or note") and
+                hasAnyAncestor(hasTestTag("list-item-row-Oat Milk")),
             useUnmergedTree = true,
         ).performClick()
-        waitForText("Item checked", timeoutMillis = 15_000L)
+        composeRule.onNodeWithText("Quantity or note").assertIsDisplayed()
+        composeRule.onNodeWithText("Cancel").assertDoesNotExist()
+        composeRule.onNodeWithText("Save").performClick()
+
+        listItemToggle("Oat Milk").performClick()
+        waitForText("Item checked", timeoutMillis = 10_000L)
         composeRule.onNodeWithText("Undo").performClick()
-        waitForText("Change undone", timeoutMillis = 10_000L)
+        waitForText("Undone", timeoutMillis = 10_000L)
         waitForText("1 active · 0 checked", substring = true, timeoutMillis = 10_000L)
-        composeRule.onNodeWithTag(
-            "list-item-checkbox-Oat Milk",
-            useUnmergedTree = true,
-        ).performClick()
-        waitForText("Item checked", timeoutMillis = 15_000L)
+
+        listItemToggle("Oat Milk").performClick()
         waitForText("0 active · 1 checked", substring = true, timeoutMillis = 10_000L)
 
         composeRule.onNodeWithContentDescription("Add list item").performClick()
         composeRule.onNodeWithTag("list-item-name-field").performTextInput("oat")
-        waitForNode(hasTestTag("list-suggestion-oat milk"), timeoutMillis = 10_000L)
-        composeRule.onNodeWithTag("list-suggestion-oat milk").performClick()
+        waitForText("Swipe right across the name", substring = true, timeoutMillis = 10_000L)
+        composeRule.onNodeWithTag("list-item-name-field").performTouchInput { swipeRight() }
+        composeRule.onNodeWithTag("list-item-quantity-field").assertTextContains("2 cartons")
         composeRule.onNodeWithTag("save-list-item").performScrollTo().performClick()
         waitForText("1 active · 1 checked", substring = true, timeoutMillis = 10_000L)
         waitForTextCount("2 cartons", minimumCount = 2, timeoutMillis = 10_000L)
     }
 
     @Test
+    fun completedTaskAppearsInHistoryAndHistoryCanBeClearedWithoutTouchingTask() {
+        createTask("History task")
+        composeRule.onNodeWithTag("task-checkbox-History task", useUnmergedTree = true)
+            .performClick()
+        waitForText("Task completed", timeoutMillis = 10_000L)
+
+        composeRule.onNodeWithContentDescription("Today destination").performClick()
+        composeRule.onNodeWithContentDescription("Settings").performClick()
+        composeRule.onNodeWithText("History").performClick()
+        waitForText("History task", timeoutMillis = 10_000L)
+        composeRule.onNodeWithText("Clear All").performClick()
+        waitForText("No completed or deleted items yet", timeoutMillis = 10_000L)
+
+        composeRule.onNodeWithContentDescription("Tasks destination").performClick()
+        composeRule.onNodeWithText("History task").assertIsDisplayed()
+    }
+
+    @Test
+    fun rightHandedLayoutMirrorsMetadataCheckboxAndDragControls() {
+        composeRule.onNodeWithContentDescription("Settings").performClick()
+        composeRule.onNodeWithText("Display and item behavior").performClick()
+        composeRule.onNodeWithText("Right-handed").performClick()
+        composeRule.onNodeWithContentDescription("Tasks destination").performClick()
+        createTask("Right handed task", alreadyOnTasks = true)
+
+        val row = hasContentDescription("Checklist item Right handed task")
+        val metadata = composeRule.onNode(
+            hasContentDescription("Set due date") and hasAnyAncestor(row),
+            useUnmergedTree = true,
+        ).fetchSemanticsNode().boundsInRoot
+        val checkbox = composeRule.onNodeWithTag(
+            "task-checkbox-Right handed task",
+            useUnmergedTree = true,
+        ).fetchSemanticsNode().boundsInRoot
+        val drag = composeRule.onNode(
+            hasContentDescription("Drag to reorder") and hasAnyAncestor(row),
+            useUnmergedTree = true,
+        ).fetchSemanticsNode().boundsInRoot
+
+        assertTrue(metadata.left < checkbox.left)
+        assertTrue(checkbox.left < drag.left)
+    }
+
+    @Test
     fun todayAggregatesDueChoreAndSupportsCompletionUndo() {
         composeRule.onNodeWithContentDescription("Areas destination").performClick()
         composeRule.onNodeWithContentDescription("Add area").performClick()
-        composeRule.onNodeWithTag("area-name-field").performTextInput("Phase 7 Area")
+        composeRule.onNodeWithTag("area-name-field").performTextInput("Today Area")
         composeRule.onNodeWithTag("save-area").performClick()
-        waitForNode(hasTestTag("area-card-Phase 7 Area"), timeoutMillis = 10_000L)
-        composeRule.onNodeWithTag("area-card-Phase 7 Area").performClick()
+        waitForNode(hasTestTag("area-card-Today Area"), timeoutMillis = 10_000L)
+        composeRule.onNodeWithTag("area-card-Today Area").performClick()
 
         composeRule.onNodeWithContentDescription("Add chore").performClick()
-        composeRule.onNodeWithTag("chore-name-field").performTextInput("Phase 7 due chore")
+        composeRule.onNodeWithTag("chore-name-field").performTextInput("Today due chore")
         composeRule.onNodeWithTag("save-chore").performScrollTo().performClick()
-        waitForNode(hasTestTag("chore-row-Phase 7 due chore"), timeoutMillis = 10_000L)
+        waitForNode(hasTestTag("chore-row-Today due chore"), timeoutMillis = 10_000L)
 
         composeRule.onNodeWithContentDescription("Today destination").performClick()
-        waitForNode(hasTestTag("today-due-Phase 7 due chore"), timeoutMillis = 10_000L)
+        waitForNode(hasTestTag("today-due-Today due chore"), timeoutMillis = 10_000L)
         composeRule.onNodeWithText("Due today").assertIsDisplayed()
-        waitForText("Lists")
-        composeRule.onNodeWithText("Recent Activity").assertIsDisplayed()
-
         waitForNode(
-            hasTestTag("today-complete-Phase 7 due chore"),
+            hasTestTag("today-complete-Today due chore"),
             timeoutMillis = 10_000L,
             useUnmergedTree = true,
         )
         composeRule.onNodeWithTag(
-            "today-complete-Phase 7 due chore",
+            "today-complete-Today due chore",
             useUnmergedTree = true,
         ).performClick()
         waitForText("Completed; next occurrence scheduled", timeoutMillis = 10_000L)
         composeRule.onNodeWithText("Undo").performClick()
-        waitForText("Completion undone", timeoutMillis = 10_000L)
-        waitForNode(hasTestTag("today-due-Phase 7 due chore"), timeoutMillis = 10_000L)
+        waitForText("Undone", timeoutMillis = 10_000L)
+        waitForNode(hasTestTag("today-due-Today due chore"), timeoutMillis = 10_000L)
     }
+
+    private fun createTask(title: String, alreadyOnTasks: Boolean = false) {
+        if (!alreadyOnTasks) {
+            composeRule.onNodeWithContentDescription("Tasks destination").performClick()
+        }
+        composeRule.onNodeWithContentDescription("Add task").performClick()
+        waitForNode(hasSetTextAction())
+        composeRule.onNode(hasSetTextAction()).performTextInput(title)
+        composeRule.onNode(hasSetTextAction()).performImeAction()
+        waitForText(title, timeoutMillis = 10_000L)
+    }
+
+    private fun addListItem(name: String, quantity: String) {
+        composeRule.onNodeWithContentDescription("Add list item").performClick()
+        composeRule.onNodeWithTag("list-item-name-field").performTextInput(name)
+        composeRule.onNodeWithTag("list-item-quantity-field").performTextInput(quantity)
+        composeRule.onNodeWithTag("save-list-item").performScrollTo().performClick()
+    }
+
+    private fun listItemToggle(name: String) = composeRule.onNode(
+        isToggleable() and hasAnyAncestor(hasTestTag("list-item-row-$name")),
+        useUnmergedTree = true,
+    )
 
     private fun waitForNode(
         matcher: SemanticsMatcher,

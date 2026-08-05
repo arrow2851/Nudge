@@ -378,6 +378,7 @@ fun InlineAutocompleteField(
     onValueChange: (String) -> Unit,
     onSuggestionAccepted: (String) -> Unit,
     modifier: Modifier = Modifier,
+    inputTestTag: String? = null,
     placeholder: String = "Item name",
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
 ) {
@@ -410,7 +411,11 @@ fun InlineAutocompleteField(
             BasicTextField(
                 value = value,
                 onValueChange = onValueChange,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .then(
+                        inputTestTag?.let { Modifier.testTag(it) } ?: Modifier,
+                    ),
                 singleLine = true,
                 textStyle = textStyle.copy(color = LocalContentColor.current),
                 decorationBox = { inner ->

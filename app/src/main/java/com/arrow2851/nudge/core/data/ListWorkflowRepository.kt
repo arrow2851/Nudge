@@ -29,6 +29,10 @@ data class ListItemArchiveMutation(
     val historyId: String,
 )
 
+data class ListItemBulkArchiveMutation(
+    val mutations: List<ListItemArchiveMutation>,
+)
+
 interface ListWorkflowRepository {
     fun observeLists(): Flow<List<ReusableListWithItems>>
     fun observeList(listId: String): Flow<ReusableListWithItems?>
@@ -48,6 +52,9 @@ interface ListWorkflowRepository {
         catalogItemId: String? = null,
     ): ListItem
     suspend fun saveItem(item: ListItem)
+    suspend fun saveItems(items: List<ListItem>) {
+        items.forEach { saveItem(it) }
+    }
     suspend fun setItemChecked(itemId: String, checked: Boolean): ListItemCheckMutation
     suspend fun undoCheck(mutation: ListItemCheckMutation)
     suspend fun moveItem(itemId: String, direction: Int)
@@ -56,6 +63,13 @@ interface ListWorkflowRepository {
     suspend fun unindentItem(itemId: String)
     suspend fun archiveItem(itemId: String): ListItemArchiveMutation
     suspend fun undoArchive(mutation: ListItemArchiveMutation)
+
+    suspend fun archiveItems(itemIds: Set<String>): ListItemBulkArchiveMutation =
+        ListItemBulkArchiveMutation(itemIds.map { archiveItem(it) })
+
+    suspend fun undoArchive(mutation: ListItemBulkArchiveMutation) {
+        mutation.mutations.asReversed().forEach { undoArchive(it) }
+    }
 
     @Deprecated("Checked items should be hidden or individually restored")
     suspend fun resetCheckedItems(listId: String)
@@ -81,7 +95,10 @@ class RoomListWorkflowRepository @Inject constructor(
         dao.observeActiveListWithItems(listId).map { it?.toDomain() }
 
     override fun observeSuggestions(query: String, limit: Int): Flow<List<ListCatalogItem>> =
-        dao.observeCatalogSuggestions(normalizeName(query), limit).map { rows -> rows.map { it.toDomain() } }
+        dao.observeCatalogSuggestions(normalizeName(query), limit).map { rows ->
+            rows.map { it.toDomain() }
+                .distinctBy(ListCatalogItem::normalizedName)
+        }
 
     override suspend fun createList(name: String, isReusable: Boolean): ReusableList =
         database.withTransaction {
@@ -110,7 +127,12 @@ class RoomListWorkflowRepository @Inject constructor(
             val index = lists.indexOfFirst { it.id == listId }
             val targetIndex = index + direction.coerceIn(-1, 1)
             if (index < 0 || targetIndex !in lists.indices) return@withTransaction
-            swapListOrders(lists[index].id, lists[index].sortOrder, lists[targetIndex].id, lists[targetIndex].sortOrder)
+            swapListOrders(
+                lists[index].id,
+                lists[index].sortOrder,
+                lists[targetIndex].id,
+                lists[targetIndex].sortOrder,
+            )
         }
     }
 
@@ -161,6 +183,13 @@ class RoomListWorkflowRepository @Inject constructor(
 
     override suspend fun saveItem(item: ListItem) {
         dao.upsertItem(item.copy(updatedAt = timeProvider.nowEpochMillis()).toEntity())
+    }
+
+    override suspend fun saveItems(items: List<ListItem>) {
+        database.withTransaction {
+            val now = timeProvider.nowEpochMillis()
+            items.forEach { dao.upsertItem(it.copy(updatedAt = now).toEntity()) }
+        }
     }
 
     override suspend fun setItemChecked(
@@ -245,7 +274,9 @@ class RoomListWorkflowRepository @Inject constructor(
             val item = dao.getItem(itemId) ?: return@withTransaction
             val target = dao.getItem(targetItemId) ?: return@withTransaction
             if (item.archivedAt != null || target.archivedAt != null) return@withTransaction
-            if (item.listId != target.listId || item.parentItemId != target.parentItemId) return@withTransaction
+            if (item.listId != target.listId || item.parentItemId != target.parentItemId) {
+                return@withTransaction
+            }
             if (item.isChecked != target.isChecked) return@withTransaction
             swapItemOrders(item, target)
         }
@@ -288,58 +319,75 @@ class RoomListWorkflowRepository @Inject constructor(
     }
 
     override suspend fun archiveItem(itemId: String): ListItemArchiveMutation =
+        database.withTransaction { archiveItemInternal(itemId) }
+
+    override suspend fun archiveItems(itemIds: Set<String>): ListItemBulkArchiveMutation =
         database.withTransaction {
-            val itemEntity = requireNotNull(dao.getItem(itemId)) { "List item not found" }
-            require(itemEntity.archivedAt == null) { "List item is already deleted" }
-            val item = itemEntity.toDomain()
-            val list = requireNotNull(dao.getList(item.listId)) { "List not found" }
-            val children = dao.getChildren(item.id)
-            val now = timeProvider.nowEpochMillis()
-            val historyId = idGenerator.newId()
-            history.upsert(
-                ItemHistoryEntry(
-                    id = historyId,
-                    itemType = HistoryItemType.ListItem,
-                    eventType = HistoryEventType.Deleted,
-                    sourceItemId = item.id,
-                    title = item.name,
-                    detail = item.quantity,
-                    containerName = list.name,
-                    occurredAt = now,
-                ).toEntity(),
-            )
-            children.forEachIndexed { index, child ->
-                dao.updateParentAndOrder(
-                    itemId = child.id,
-                    parentItemId = null,
-                    sortOrder = item.sortOrder + index + 1L,
-                    updatedAt = now,
-                )
-            }
-            dao.archiveItem(itemId, now)
-            if (children.isNotEmpty()) rebalance(item.listId, null)
-            ListItemArchiveMutation(
-                item = item,
-                childSortOrders = children.associate { it.id to it.sortOrder },
-                historyId = historyId,
+            ListItemBulkArchiveMutation(
+                itemIds.toList().sorted().map { archiveItemInternal(it) },
             )
         }
 
     override suspend fun undoArchive(mutation: ListItemArchiveMutation) {
+        database.withTransaction { undoArchiveInternal(mutation) }
+    }
+
+    override suspend fun undoArchive(mutation: ListItemBulkArchiveMutation) {
         database.withTransaction {
-            val now = timeProvider.nowEpochMillis()
-            dao.restoreItem(mutation.item.id, now)
-            mutation.childSortOrders.forEach { (childId, sortOrder) ->
-                dao.updateParentAndOrder(
-                    itemId = childId,
-                    parentItemId = mutation.item.id,
-                    sortOrder = sortOrder,
-                    updatedAt = now,
-                )
-            }
-            history.delete(mutation.historyId)
-            rebalance(mutation.item.listId, mutation.item.parentItemId)
+            mutation.mutations.asReversed().forEach { undoArchiveInternal(it) }
         }
+    }
+
+    private suspend fun archiveItemInternal(itemId: String): ListItemArchiveMutation {
+        val itemEntity = requireNotNull(dao.getItem(itemId)) { "List item not found" }
+        require(itemEntity.archivedAt == null) { "List item is already deleted" }
+        val item = itemEntity.toDomain()
+        val list = requireNotNull(dao.getList(item.listId)) { "List not found" }
+        val children = dao.getChildren(item.id)
+        val now = timeProvider.nowEpochMillis()
+        val historyId = idGenerator.newId()
+        history.upsert(
+            ItemHistoryEntry(
+                id = historyId,
+                itemType = HistoryItemType.ListItem,
+                eventType = HistoryEventType.Deleted,
+                sourceItemId = item.id,
+                title = item.name,
+                detail = item.quantity,
+                containerName = list.name,
+                occurredAt = now,
+            ).toEntity(),
+        )
+        children.forEachIndexed { index, child ->
+            dao.updateParentAndOrder(
+                itemId = child.id,
+                parentItemId = null,
+                sortOrder = item.sortOrder + index + 1L,
+                updatedAt = now,
+            )
+        }
+        dao.archiveItem(itemId, now)
+        if (children.isNotEmpty()) rebalance(item.listId, null)
+        return ListItemArchiveMutation(
+            item = item,
+            childSortOrders = children.associate { it.id to it.sortOrder },
+            historyId = historyId,
+        )
+    }
+
+    private suspend fun undoArchiveInternal(mutation: ListItemArchiveMutation) {
+        val now = timeProvider.nowEpochMillis()
+        dao.restoreItem(mutation.item.id, now)
+        mutation.childSortOrders.forEach { (childId, sortOrder) ->
+            dao.updateParentAndOrder(
+                itemId = childId,
+                parentItemId = mutation.item.id,
+                sortOrder = sortOrder,
+                updatedAt = now,
+            )
+        }
+        history.delete(mutation.historyId)
+        rebalance(mutation.item.listId, mutation.item.parentItemId)
     }
 
     @Suppress("DEPRECATION")
@@ -355,11 +403,10 @@ class RoomListWorkflowRepository @Inject constructor(
 
     @Suppress("DEPRECATION")
     override suspend fun clearCheckedItems(listId: String) {
-        database.withTransaction {
-            dao.getActiveItems(listId)
-                .filter { it.isChecked && it.parentItemId == null }
-                .forEach { archiveItem(it.id) }
-        }
+        val checked = dao.getActiveItems(listId)
+            .filter { it.isChecked && it.parentItemId == null }
+            .mapTo(linkedSetOf()) { it.id }
+        archiveItems(checked)
     }
 
     private suspend fun swapListOrders(

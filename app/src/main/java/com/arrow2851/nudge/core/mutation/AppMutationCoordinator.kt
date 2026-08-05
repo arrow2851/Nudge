@@ -12,6 +12,9 @@ import kotlinx.coroutines.sync.withLock
 @JvmInline
 value class UndoToken(val value: String)
 
+@JvmInline
+value class MutationTicket internal constructor(internal val generation: Long)
+
 sealed interface AppFeedbackEvent {
     data object DismissCurrent : AppFeedbackEvent
     data class Message(val text: String) : AppFeedbackEvent
@@ -35,33 +38,39 @@ class AppMutationCoordinator @Inject constructor() {
     private val mutableEvents = MutableSharedFlow<AppFeedbackEvent>(extraBufferCapacity = 16)
     val events: SharedFlow<AppFeedbackEvent> = mutableEvents.asSharedFlow()
 
-    suspend fun beginMutation() {
-        mutex.withLock {
+    suspend fun beginMutation(): MutationTicket {
+        val ticket = mutex.withLock {
             generation += 1L
             pendingUndo = null
+            MutationTicket(generation)
         }
         mutableEvents.emit(AppFeedbackEvent.DismissCurrent)
+        return ticket
     }
 
     suspend fun registerUndo(
+        ticket: MutationTicket,
         message: String,
         action: suspend () -> Unit,
-    ): UndoToken {
+    ): UndoToken? {
         val token = mutex.withLock {
+            if (ticket.generation != generation) return@withLock null
             val created = UndoToken(UUID.randomUUID().toString())
             pendingUndo = PendingUndo(
                 token = created,
-                generation = generation,
+                generation = ticket.generation,
                 action = action,
             )
             created
-        }
+        } ?: return null
         mutableEvents.emit(AppFeedbackEvent.UndoAvailable(message, token))
         return token
     }
 
-    suspend fun showMessage(message: String) {
-        mutableEvents.emit(AppFeedbackEvent.Message(message))
+    suspend fun showMessage(ticket: MutationTicket, message: String): Boolean {
+        val current = mutex.withLock { ticket.generation == generation }
+        if (current) mutableEvents.emit(AppFeedbackEvent.Message(message))
+        return current
     }
 
     suspend fun performUndo(token: UndoToken): Boolean {

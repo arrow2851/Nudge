@@ -3,30 +3,8 @@ package com.arrow2851.nudge.core.database
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.PrimaryKey
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-
-@Entity(
-    tableName = "task_main_flags",
-    foreignKeys = [
-        ForeignKey(
-            entity = TaskEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["task_id"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-    ],
-)
-data class TaskMainFlagEntity(
-    @PrimaryKey
-    @ColumnInfo(name = "task_id")
-    val taskId: String,
-)
 
 data class TaskRecordEntity(
     @Embedded val task: TaskEntity,
@@ -38,9 +16,12 @@ interface TaskOperationsDao {
     @Query(
         """
         SELECT tasks.*,
-               CASE WHEN task_main_flags.task_id IS NULL THEN 0 ELSE 1 END AS is_main_task
+               CASE WHEN EXISTS(
+                   SELECT 1 FROM tasks AS children
+                   WHERE children.parent_task_id = tasks.id
+                     AND children.archived_at IS NULL
+               ) THEN 1 ELSE 0 END AS is_main_task
         FROM tasks
-        LEFT JOIN task_main_flags ON task_main_flags.task_id = tasks.id
         WHERE tasks.archived_at IS NULL
         ORDER BY CASE WHEN tasks.completed_at IS NULL THEN 0 ELSE 1 END,
                  tasks.parent_task_id,
@@ -80,12 +61,6 @@ interface TaskOperationsDao {
         """,
     )
     suspend fun getMaxSortOrder(parentTaskId: String?): Long?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun setMainTask(flag: TaskMainFlagEntity)
-
-    @Query("DELETE FROM task_main_flags WHERE task_id = :taskId")
-    suspend fun clearMainTask(taskId: String)
 
     @Query(
         """
@@ -142,4 +117,14 @@ interface TaskOperationsDao {
         """,
     )
     suspend fun archiveTask(taskId: String, archivedAt: Long)
+
+    @Query(
+        """
+        UPDATE tasks
+        SET archived_at = NULL,
+            updated_at = :updatedAt
+        WHERE id = :taskId
+        """,
+    )
+    suspend fun restoreTask(taskId: String, updatedAt: Long)
 }

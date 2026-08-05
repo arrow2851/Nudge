@@ -168,10 +168,13 @@ fun NudgePhase7App(
 
     val navigateTo: (NudgeDestination) -> Unit = { destination ->
         shellViewModel.invalidateUndo()
+        val returningHome = destination == NudgeDestination.Today
         navController.navigate(destination.route) {
-            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = !returningHome
+            }
             launchSingleTop = true
-            restoreState = true
+            restoreState = !returningHome
         }
     }
 

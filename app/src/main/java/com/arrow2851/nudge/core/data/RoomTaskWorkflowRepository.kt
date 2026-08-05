@@ -130,55 +130,74 @@ class RoomTaskWorkflowRepository @Inject constructor(
     }
 
     override suspend fun archiveTask(taskId: String): TaskArchiveMutation =
+        database.withTransaction { archiveTaskInternal(taskId) }
+
+    override suspend fun archiveTasks(taskIds: Set<String>): TaskBulkArchiveMutation =
         database.withTransaction {
-            val taskEntity = requireNotNull(tasks.getTask(taskId)) { "Task not found" }
-            require(taskEntity.archivedAt == null) { "Task is already deleted" }
-            val task = taskEntity.toDomain()
-            val children = tasks.getChildren(taskId)
-            val now = timeProvider.nowEpochMillis()
-            val historyId = idGenerator.newId()
-            history.upsert(
-                ItemHistoryEntry(
-                    id = historyId,
-                    itemType = HistoryItemType.Task,
-                    eventType = HistoryEventType.Deleted,
-                    sourceItemId = task.id,
-                    title = task.title,
-                    occurredAt = now,
-                ).toEntity(),
-            )
-            children.forEachIndexed { index, child ->
-                tasks.updateParentAndOrder(
-                    taskId = child.id,
-                    parentTaskId = null,
-                    sortOrder = task.sortOrder + index + 1L,
-                    updatedAt = now,
-                )
-            }
-            tasks.archiveTask(taskId, now)
-            if (children.isNotEmpty()) rebalance(parentTaskId = null)
-            TaskArchiveMutation(
-                task = task,
-                childSortOrders = children.associate { it.id to it.sortOrder },
-                historyId = historyId,
-            )
+            val mutations = taskIds
+                .toList()
+                .sorted()
+                .map { archiveTaskInternal(it) }
+            TaskBulkArchiveMutation(mutations)
         }
 
     override suspend fun undoArchive(mutation: TaskArchiveMutation) {
+        database.withTransaction { undoArchiveInternal(mutation) }
+    }
+
+    override suspend fun undoArchive(mutation: TaskBulkArchiveMutation) {
         database.withTransaction {
-            val now = timeProvider.nowEpochMillis()
-            tasks.restoreTask(mutation.task.id, now)
-            mutation.childSortOrders.forEach { (childId, sortOrder) ->
-                tasks.updateParentAndOrder(
-                    taskId = childId,
-                    parentTaskId = mutation.task.id,
-                    sortOrder = sortOrder,
-                    updatedAt = now,
-                )
-            }
-            history.delete(mutation.historyId)
-            rebalance(mutation.task.parentTaskId)
+            mutation.mutations.asReversed().forEach { undoArchiveInternal(it) }
         }
+    }
+
+    private suspend fun archiveTaskInternal(taskId: String): TaskArchiveMutation {
+        val taskEntity = requireNotNull(tasks.getTask(taskId)) { "Task not found" }
+        require(taskEntity.archivedAt == null) { "Task is already deleted" }
+        val task = taskEntity.toDomain()
+        val children = tasks.getChildren(taskId)
+        val now = timeProvider.nowEpochMillis()
+        val historyId = idGenerator.newId()
+        history.upsert(
+            ItemHistoryEntry(
+                id = historyId,
+                itemType = HistoryItemType.Task,
+                eventType = HistoryEventType.Deleted,
+                sourceItemId = task.id,
+                title = task.title,
+                occurredAt = now,
+            ).toEntity(),
+        )
+        children.forEachIndexed { index, child ->
+            tasks.updateParentAndOrder(
+                taskId = child.id,
+                parentTaskId = null,
+                sortOrder = task.sortOrder + index + 1L,
+                updatedAt = now,
+            )
+        }
+        tasks.archiveTask(taskId, now)
+        if (children.isNotEmpty()) rebalance(parentTaskId = null)
+        return TaskArchiveMutation(
+            task = task,
+            childSortOrders = children.associate { it.id to it.sortOrder },
+            historyId = historyId,
+        )
+    }
+
+    private suspend fun undoArchiveInternal(mutation: TaskArchiveMutation) {
+        val now = timeProvider.nowEpochMillis()
+        tasks.restoreTask(mutation.task.id, now)
+        mutation.childSortOrders.forEach { (childId, sortOrder) ->
+            tasks.updateParentAndOrder(
+                taskId = childId,
+                parentTaskId = mutation.task.id,
+                sortOrder = sortOrder,
+                updatedAt = now,
+            )
+        }
+        history.delete(mutation.historyId)
+        rebalance(mutation.task.parentTaskId)
     }
 
     private suspend fun rebalance(parentTaskId: String?) {

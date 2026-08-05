@@ -12,6 +12,10 @@ class LocalHistoryRepository @Inject constructor(
     override fun observeHistory(): Flow<List<ItemHistoryEntry>> =
         historyDao.observeHistory().map { rows -> rows.map { it.toDomain() } }
 
+    override suspend fun saveEntry(entry: ItemHistoryEntry) {
+        historyDao.upsert(entry.toEntity())
+    }
+
     override suspend fun deleteEntry(historyId: String) {
         historyDao.delete(historyId)
     }

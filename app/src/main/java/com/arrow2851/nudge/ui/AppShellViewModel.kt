@@ -2,6 +2,10 @@ package com.arrow2851.nudge.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.arrow2851.nudge.core.data.ChoreRepository
+import com.arrow2851.nudge.core.data.TaskCompletionMutation
+import com.arrow2851.nudge.core.data.TaskWorkflowRepository
+import com.arrow2851.nudge.core.model.ChoreCompletionMutation
 import com.arrow2851.nudge.core.mutation.AppFeedbackEvent
 import com.arrow2851.nudge.core.mutation.AppMutationCoordinator
 import com.arrow2851.nudge.core.mutation.UndoToken
@@ -13,6 +17,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class AppShellViewModel @Inject constructor(
     private val mutationCoordinator: AppMutationCoordinator,
+    private val taskWorkflowRepository: TaskWorkflowRepository,
+    private val choreRepository: ChoreRepository,
 ) : ViewModel() {
     val feedback: SharedFlow<AppFeedbackEvent> = mutationCoordinator.events
 
@@ -20,10 +26,21 @@ class AppShellViewModel @Inject constructor(
         viewModelScope.launch { mutationCoordinator.performUndo(token) }
     }
 
-    fun registerUndo(message: String, action: () -> Unit) {
+    fun registerTaskUndo(message: String, mutation: TaskCompletionMutation) {
         viewModelScope.launch {
             mutationCoordinator.beginMutation()
-            mutationCoordinator.registerUndo(message) { action() }
+            mutationCoordinator.registerUndo(message) {
+                taskWorkflowRepository.undoCompletion(mutation)
+            }
+        }
+    }
+
+    fun registerChoreUndo(message: String, mutation: ChoreCompletionMutation) {
+        viewModelScope.launch {
+            mutationCoordinator.beginMutation()
+            mutationCoordinator.registerUndo(message) {
+                choreRepository.undoCompletion(mutation)
+            }
         }
     }
 

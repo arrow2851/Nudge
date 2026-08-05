@@ -57,6 +57,7 @@ sealed interface ListsUiState {
         val lists: List<ListOverviewItem>,
         val hideCompleted: Boolean,
         val handedness: ItemHandedness,
+        val editingItemId: String?,
         val recoverableError: String? = null,
     ) : ListsUiState {
         fun list(listId: String): ListOverviewItem? = lists.firstOrNull { it.list.id == listId }
@@ -77,16 +78,19 @@ class ListsViewModel @Inject constructor(
 ) : ViewModel() {
     private val recoverableError = MutableStateFlow<String?>(null)
     private val suggestionQuery = MutableStateFlow("")
+    private val editingItemId = MutableStateFlow<String?>(null)
 
     val uiState: StateFlow<ListsUiState> = combine(
         repository.observeLists(),
         preferencesRepository.preferences,
+        editingItemId,
         recoverableError,
-    ) { lists, preferences, error ->
+    ) { lists, preferences, editingId, error ->
         ListsUiState.Ready(
             lists = lists.map { ListOverviewItem(it.list, it.items) },
             hideCompleted = preferences.hideCompletedItems,
             handedness = preferences.itemHandedness,
+            editingItemId = editingId,
             recoverableError = error,
         ) as ListsUiState
     }
@@ -163,12 +167,36 @@ class ListsViewModel @Inject constructor(
         }
     }
 
-    fun updateItem(itemId: String, name: String, quantity: String?) {
+    fun editItem(itemId: String) {
+        editingItemId.value = itemId
+    }
+
+    fun finishTitleEdit(itemId: String, name: String) {
+        mutate {
+            val current = ready()?.item(itemId) ?: return@mutate
+            val normalized = name.trim()
+            if (normalized.isEmpty()) {
+                val mutation = repository.archiveItem(itemId)
+                mutationCoordinator.registerUndo("Item deleted") {
+                    repository.undoArchive(mutation)
+                }
+            } else if (normalized != current.name) {
+                repository.saveItem(
+                    current.copy(
+                        name = normalized,
+                        updatedAt = timeProvider.nowEpochMillis(),
+                    ),
+                )
+            }
+            if (editingItemId.value == itemId) editingItemId.value = null
+        }
+    }
+
+    fun updateItemNote(itemId: String, quantity: String?) {
         mutate {
             val current = ready()?.item(itemId) ?: return@mutate
             repository.saveItem(
                 current.copy(
-                    name = name.trim(),
                     quantity = quantity?.trim()?.ifEmpty { null },
                     updatedAt = timeProvider.nowEpochMillis(),
                 ),
@@ -207,6 +235,7 @@ class ListsViewModel @Inject constructor(
     fun archiveItem(itemId: String) {
         mutate {
             val mutation = repository.archiveItem(itemId)
+            editingItemId.compareAndSet(itemId, null)
             mutationCoordinator.registerUndo("Item deleted") {
                 repository.undoArchive(mutation)
             }

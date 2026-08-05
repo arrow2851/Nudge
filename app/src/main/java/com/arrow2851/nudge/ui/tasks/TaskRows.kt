@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -31,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import com.arrow2851.nudge.core.model.ItemHandedness
 import com.arrow2851.nudge.core.model.Task
 import com.arrow2851.nudge.core.model.TaskNode
-import com.arrow2851.nudge.ui.checklist.ChecklistMetadataKind
 import com.arrow2851.nudge.ui.checklist.ChecklistRow
+import com.arrow2851.nudge.ui.checklist.ChecklistSelectionMode
 
 @Composable
 internal fun TaskNodeCard(
@@ -43,11 +44,13 @@ internal fun TaskNodeCard(
     showDueShorthand: Boolean,
     hideCompleted: Boolean,
     handedness: ItemHandedness,
+    selectionMode: ChecklistSelectionMode,
+    selectedTaskIds: Set<String>,
+    onSelectionChange: (String) -> Unit,
     onAddSubtask: (String) -> Unit,
     onEditTask: (String) -> Unit,
     onFinishTitleEdit: (String, String) -> Unit,
     onToggleCompleted: (String) -> Unit,
-    onOpenDueDate: (String) -> Unit,
     onDelete: (String) -> Unit,
     onReorder: (String, String) -> Unit,
     onMoveUp: (String) -> Unit,
@@ -55,12 +58,15 @@ internal fun TaskNodeCard(
     onIndent: (String) -> Unit,
     onUnindent: (String) -> Unit,
 ) {
-    var expanded by rememberSaveable(node.task.id) {
-        mutableStateOf(node.subtasks.isNotEmpty())
+    val hasChildren = node.subtasks.isNotEmpty()
+    var expanded by rememberSaveable(node.task.id) { mutableStateOf(hasChildren) }
+
+    LaunchedEffect(hasChildren) {
+        expanded = hasChildren
     }
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        if (node.subtasks.isNotEmpty()) {
+        if (hasChildren) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -89,12 +95,14 @@ internal fun TaskNodeCard(
             showDueShorthand = showDueShorthand,
             handedness = handedness,
             expanded = expanded,
-            expandable = true,
+            hasChildren = hasChildren,
+            selectionMode = selectionMode,
+            selected = node.task.id in selectedTaskIds,
+            onSelectionChange = onSelectionChange,
             onExpand = { expanded = !expanded },
             onEditTask = onEditTask,
             onFinishTitleEdit = onFinishTitleEdit,
             onToggleCompleted = onToggleCompleted,
-            onOpenDueDate = onOpenDueDate,
             onDelete = onDelete,
             onReorder = onReorder,
             onMoveUp = onMoveUp,
@@ -103,7 +111,7 @@ internal fun TaskNodeCard(
             onUnindent = onUnindent,
         )
 
-        if (expanded) {
+        if (hasChildren && expanded) {
             val visibleSubtasks = if (hideCompleted) {
                 node.subtasks.filter { it.completedAt == null }
             } else {
@@ -123,12 +131,14 @@ internal fun TaskNodeCard(
                     handedness = handedness,
                     indented = true,
                     expanded = false,
-                    expandable = false,
+                    hasChildren = false,
+                    selectionMode = selectionMode,
+                    selected = subtask.id in selectedTaskIds,
+                    onSelectionChange = onSelectionChange,
                     onExpand = {},
                     onEditTask = onEditTask,
                     onFinishTitleEdit = onFinishTitleEdit,
                     onToggleCompleted = onToggleCompleted,
-                    onOpenDueDate = onOpenDueDate,
                     onDelete = onDelete,
                     onReorder = onReorder,
                     onMoveUp = onMoveUp,
@@ -140,6 +150,7 @@ internal fun TaskNodeCard(
             TextButton(
                 onClick = { onAddSubtask(node.task.id) },
                 modifier = Modifier.padding(start = 54.dp),
+                enabled = selectionMode == ChecklistSelectionMode.None,
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)
                 Spacer(Modifier.width(4.dp))
@@ -160,12 +171,14 @@ private fun TaskChecklistRow(
     handedness: ItemHandedness,
     indented: Boolean = false,
     expanded: Boolean,
-    expandable: Boolean,
+    hasChildren: Boolean,
+    selectionMode: ChecklistSelectionMode,
+    selected: Boolean,
+    onSelectionChange: (String) -> Unit,
     onExpand: () -> Unit,
     onEditTask: (String) -> Unit,
     onFinishTitleEdit: (String, String) -> Unit,
     onToggleCompleted: (String) -> Unit,
-    onOpenDueDate: (String) -> Unit,
     onDelete: (String) -> Unit,
     onReorder: (String, String) -> Unit,
     onMoveUp: (String) -> Unit,
@@ -180,24 +193,28 @@ private fun TaskChecklistRow(
         handedness = handedness,
         modifier = Modifier.taskSwipeActions(
             taskId = task.id,
+            enabled = selectionMode == ChecklistSelectionMode.None,
             canIndent = task.parentTaskId == null,
             canUnindent = task.parentTaskId != null,
             onIndent = { onIndent(task.id) },
             onUnindent = { onUnindent(task.id) },
         ),
         checkboxTestTag = "task-checkbox-${task.title}",
-        metadata = if (showDueShorthand) task.dueAt?.let(::formatDueShorthand) else null,
-        metadataKind = ChecklistMetadataKind.DueDate,
+        metadata = if (showDueShorthand) task.dueAt?.let(::formatDueShorthand) else {
+            task.dueAt?.let(::formatLongDate)
+        },
         editing = editing,
         indented = indented,
         expanded = expanded,
-        expandable = expandable,
+        hasChildren = hasChildren,
+        selectionMode = selectionMode,
+        selected = selected,
         canMovePrevious = previousId != null,
         canMoveNext = nextId != null,
         onTitleClick = { onEditTask(task.id) },
         onTitleCommitted = { onFinishTitleEdit(task.id, it) },
         onCheckedChange = { onToggleCompleted(task.id) },
-        onMetadataClick = { onOpenDueDate(task.id) },
+        onSelectionChange = { onSelectionChange(task.id) },
         onExpandClick = onExpand,
         onDelete = { onDelete(task.id) },
         onMovePrevious = {
@@ -212,11 +229,13 @@ private fun TaskChecklistRow(
 @Composable
 internal fun Modifier.taskSwipeActions(
     taskId: String,
+    enabled: Boolean,
     canIndent: Boolean,
     canUnindent: Boolean,
     onIndent: () -> Unit,
     onUnindent: () -> Unit,
 ): Modifier {
+    if (!enabled) return this
     val threshold = with(LocalDensity.current) { 72.dp.toPx() }
     var offset by remember(taskId) { mutableFloatStateOf(0f) }
 

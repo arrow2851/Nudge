@@ -34,6 +34,10 @@ data class TaskArchiveMutation(
     val historyId: String,
 )
 
+data class TaskBulkArchiveMutation(
+    val mutations: List<TaskArchiveMutation>,
+)
+
 interface AreaRepository {
     fun observeAreas(): Flow<List<Area>>
     fun observeSections(): Flow<List<Section>>
@@ -55,6 +59,9 @@ interface TaskRepository {
     fun observeSubtasks(parentTaskId: String): Flow<List<Task>>
     fun observeTask(taskId: String): Flow<Task?>
     suspend fun saveTask(task: Task)
+    suspend fun saveTasks(tasks: List<Task>) {
+        tasks.forEach { saveTask(it) }
+    }
     suspend fun setCompleted(taskId: String, completedAt: Long?)
     suspend fun setMainTask(taskId: String, enabled: Boolean)
     suspend fun moveTask(taskId: String, direction: Int)
@@ -69,6 +76,13 @@ interface TaskWorkflowRepository {
     suspend fun reorderTask(taskId: String, targetTaskId: String)
     suspend fun archiveTask(taskId: String): TaskArchiveMutation
     suspend fun undoArchive(mutation: TaskArchiveMutation)
+
+    suspend fun archiveTasks(taskIds: Set<String>): TaskBulkArchiveMutation =
+        TaskBulkArchiveMutation(taskIds.map { archiveTask(it) })
+
+    suspend fun undoArchive(mutation: TaskBulkArchiveMutation) {
+        mutation.mutations.asReversed().forEach { undoArchive(it) }
+    }
 }
 
 interface ChoreRepository {

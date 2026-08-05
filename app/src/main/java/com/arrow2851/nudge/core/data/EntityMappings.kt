@@ -6,6 +6,7 @@ import com.arrow2851.nudge.core.database.ChoreEntity
 import com.arrow2851.nudge.core.database.ChoreScheduleEntity
 import com.arrow2851.nudge.core.database.ChoreWithScheduleEntity
 import com.arrow2851.nudge.core.database.CompletionEntity
+import com.arrow2851.nudge.core.database.ItemHistoryEntity
 import com.arrow2851.nudge.core.database.ListCatalogItemEntity
 import com.arrow2851.nudge.core.database.ListItemEntity
 import com.arrow2851.nudge.core.database.ReusableListEntity
@@ -18,6 +19,7 @@ import com.arrow2851.nudge.core.model.Chore
 import com.arrow2851.nudge.core.model.ChoreSchedule
 import com.arrow2851.nudge.core.model.ChoreWithSchedule
 import com.arrow2851.nudge.core.model.Completion
+import com.arrow2851.nudge.core.model.ItemHistoryEntry
 import com.arrow2851.nudge.core.model.ListCatalogItem
 import com.arrow2851.nudge.core.model.ListItem
 import com.arrow2851.nudge.core.model.ReusableList
@@ -270,6 +272,28 @@ internal fun ListCatalogItemEntity.toDomain() = ListCatalogItem(
     timesUsed = timesUsed,
     lastUsedAt = lastUsedAt,
     favorite = favorite,
+)
+
+internal fun ItemHistoryEntry.toEntity() = ItemHistoryEntity(
+    id = id,
+    itemType = itemType,
+    eventType = eventType,
+    sourceItemId = sourceItemId,
+    title = title,
+    detail = detail,
+    containerName = containerName,
+    occurredAt = occurredAt,
+)
+
+internal fun ItemHistoryEntity.toDomain() = ItemHistoryEntry(
+    id = id,
+    itemType = itemType,
+    eventType = eventType,
+    sourceItemId = sourceItemId,
+    title = title,
+    detail = detail,
+    containerName = containerName,
+    occurredAt = occurredAt,
 )
 
 internal fun ReusableListWithItemsEntity.toDomain() = ReusableListWithItems(

@@ -65,8 +65,10 @@ class NudgeAppTest {
         assertNoNode(hasContentDescription("Expand subitems"))
         composeRule.onNodeWithContentDescription("Add task").performClick()
         completeOpenTextEditor("Atomic child")
-        val childRow = hasContentDescription("Checklist item Atomic child")
-        firstNode(childRow, useUnmergedTree = true).performTouchInput { swipeRight() }
+        val childCheckboxTag = "task-checkbox-Atomic child"
+        waitForNode(hasTestTag(childCheckboxTag), useUnmergedTree = true)
+        composeRule.onNodeWithTag(childCheckboxTag, useUnmergedTree = true)
+            .performTouchInput { swipeRight() }
 
         waitForText("0/1")
         waitForText("Atomic child")

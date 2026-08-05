@@ -18,8 +18,8 @@ class NudgeDatabaseMigrationTest {
     )
 
     @Test
-    fun versionTwoSchemaCreatesEveryCoreTable() {
-        val database = helper.createDatabase("phase6-schema-test.db", NudgeDatabase.Version)
+    fun versionThreeSchemaCreatesEveryCoreTable() {
+        val database = helper.createDatabase("phase11-schema-test.db", NudgeDatabase.Version)
         val tableNames = mutableSetOf<String>()
         database.query("SELECT name FROM sqlite_master WHERE type = 'table'").use { cursor ->
             while (cursor.moveToNext()) tableNames += cursor.getString(0)
@@ -30,7 +30,7 @@ class NudgeDatabaseMigrationTest {
                 setOf(
                     "areas", "sections", "tasks", "task_main_flags", "chores",
                     "chore_schedules", "completions", "reusable_lists",
-                    "list_catalog_items", "list_items",
+                    "list_catalog_items", "list_items", "item_history",
                 ),
             ),
         )
@@ -126,7 +126,36 @@ class NudgeDatabaseMigrationTest {
             assertEquals("2 cartons", cursor.getString(1))
             assertEquals(1, cursor.getInt(2))
         }
-        migrated.query("SELECT COUNT(*) FROM task_main_flags").use { cursor ->
+        migrated.close()
+    }
+
+    @Test
+    fun migrationTwoToThreeAddsChecklistHistoryWithoutLosingData() {
+        val name = "phase11-history-migration-test.db"
+        helper.createDatabase(name, 2).apply {
+            execSQL(
+                """
+                INSERT INTO tasks VALUES (
+                    'task', 'Existing task', NULL, NULL, NULL, NULL, 'Inbox', 0,
+                    NULL, NULL, 1, 0, 1000, 1000, NULL, NULL
+                )
+                """.trimIndent(),
+            )
+            close()
+        }
+
+        val migrated = helper.runMigrationsAndValidate(
+            name,
+            3,
+            true,
+            NudgeMigrations.Migration2To3,
+        )
+
+        migrated.query("SELECT title FROM tasks WHERE id = 'task'").use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            assertEquals("Existing task", cursor.getString(0))
+        }
+        migrated.query("SELECT COUNT(*) FROM item_history").use { cursor ->
             assertTrue(cursor.moveToFirst())
             assertEquals(0, cursor.getInt(0))
         }

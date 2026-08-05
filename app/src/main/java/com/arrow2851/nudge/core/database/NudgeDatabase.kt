@@ -10,6 +10,7 @@ import androidx.room.migration.Migration
         AreaEntity::class,
         SectionEntity::class,
         TaskEntity::class,
+        TaskMainFlagEntity::class,
         ChoreEntity::class,
         ChoreScheduleEntity::class,
         CompletionEntity::class,
@@ -54,7 +55,6 @@ object NudgeMigrations {
     }
 
     val Migration2To3 = Migration(2, 3) { database ->
-        database.execSQL("DROP TABLE IF EXISTS `task_main_flags`")
         database.execSQL(
             """
             CREATE TABLE IF NOT EXISTS `item_history` (

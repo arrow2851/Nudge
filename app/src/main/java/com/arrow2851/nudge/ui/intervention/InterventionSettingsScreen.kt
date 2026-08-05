@@ -25,25 +25,29 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arrow2851.nudge.core.intervention.InterventionMode
 
 @Composable
 fun InterventionSettingsScreen(
     onBack: () -> Unit,
-    onOpenBackup: () -> Unit,
     viewModel: InterventionSettingsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) {
@@ -51,6 +55,17 @@ fun InterventionSettingsScreen(
     }
 
     LaunchedEffect(Unit) { viewModel.refreshPermissions() }
+    DisposableEffect(lifecycleOwner, viewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) viewModel.refreshPermissions()
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    val readyToMonitor = state.usageAccessGranted &&
+        state.notificationPermissionGranted &&
+        state.settings.selectedPackages.isNotEmpty()
 
     Column(
         modifier = Modifier
@@ -66,16 +81,41 @@ fun InterventionSettingsScreen(
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "Choose the apps that tend to absorb time. Nudge reads usage events locally and suggests one useful action after your limit.",
+            text = "Choose apps that absorb time. Usage events stay local and Nudge suggests one useful action after your limit.",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(16.dp))
+
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = if (readyToMonitor) "Ready to monitor" else "Setup incomplete",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = if (readyToMonitor) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.error
+                    },
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = when {
+                        !state.usageAccessGranted -> "Grant Usage Access."
+                        !state.notificationPermissionGranted -> "Allow notifications."
+                        state.settings.selectedPackages.isEmpty() -> "Choose at least one distracting app."
+                        else -> "Usage Access, notifications, and app selection are ready."
+                    },
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+        Spacer(Modifier.height(12.dp))
 
         PermissionCard(
             title = "Usage Access",
             granted = state.usageAccessGranted,
-            explanation = "Required to see which selected app is active and how long the current session has lasted.",
+            explanation = "Required to determine which selected app is active and how long the current session has lasted.",
             actionLabel = if (state.usageAccessGranted) "Refresh" else "Open Android settings",
             onAction = {
                 if (state.usageAccessGranted) {
@@ -89,7 +129,7 @@ fun InterventionSettingsScreen(
         PermissionCard(
             title = "Notifications",
             granted = state.notificationPermissionGranted,
-            explanation = "Nudge uses a visible monitoring notification and user-tapped suggestions instead of forcing itself over another app.",
+            explanation = "Required for the visible monitoring service and user-tapped intervention prompts.",
             actionLabel = if (state.notificationPermissionGranted) "Granted" else "Allow notifications",
             onAction = {
                 if (Build.VERSION.SDK_INT >= 33 && !state.notificationPermissionGranted) {
@@ -227,15 +267,6 @@ fun InterventionSettingsScreen(
         }
 
         Spacer(Modifier.height(24.dp))
-        SectionTitle("Data")
-        OutlinedButton(
-            onClick = onOpenBackup,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text("Backup and restore")
-        }
-
-        Spacer(Modifier.height(24.dp))
         if (state.settings.enabled) {
             OutlinedButton(
                 onClick = viewModel::stopMonitoring,
@@ -246,6 +277,7 @@ fun InterventionSettingsScreen(
         } else {
             Button(
                 onClick = viewModel::startMonitoring,
+                enabled = readyToMonitor,
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text("Start monitoring")

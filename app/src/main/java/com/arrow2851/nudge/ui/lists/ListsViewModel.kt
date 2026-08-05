@@ -10,6 +10,7 @@ import com.arrow2851.nudge.core.model.ListItem
 import com.arrow2851.nudge.core.model.ReusableList
 import com.arrow2851.nudge.core.model.TimeProvider
 import com.arrow2851.nudge.core.mutation.AppMutationCoordinator
+import com.arrow2851.nudge.core.mutation.MutationTicket
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -118,14 +119,14 @@ class ListsViewModel @Inject constructor(
     }
 
     fun createList(name: String, isReusable: Boolean) {
-        mutate {
+        mutate { ticket ->
             repository.createList(name, isReusable)
-            mutationCoordinator.showMessage("List added")
+            mutationCoordinator.showMessage(ticket, "List added")
         }
     }
 
     fun updateList(listId: String, name: String, isReusable: Boolean) {
-        mutate {
+        mutate { ticket ->
             val current = ready()?.list(listId)?.list ?: return@mutate
             repository.saveList(
                 current.copy(
@@ -135,22 +136,22 @@ class ListsViewModel @Inject constructor(
                     updatedAt = timeProvider.nowEpochMillis(),
                 ),
             )
-            mutationCoordinator.showMessage("List updated")
+            mutationCoordinator.showMessage(ticket, "List updated")
         }
     }
 
     fun moveList(listId: String, direction: Int) {
-        mutate { repository.moveList(listId, direction) }
+        mutate { _ -> repository.moveList(listId, direction) }
     }
 
     fun reorderList(listId: String, targetListId: String) {
-        mutate { repository.reorderList(listId, targetListId) }
+        mutate { _ -> repository.reorderList(listId, targetListId) }
     }
 
     fun archiveList(listId: String) {
-        mutate {
+        mutate { ticket ->
             repository.archiveList(listId)
-            mutationCoordinator.showMessage("List archived")
+            mutationCoordinator.showMessage(ticket, "List archived")
         }
     }
 
@@ -161,9 +162,9 @@ class ListsViewModel @Inject constructor(
         parentItemId: String? = null,
         catalogItemId: String? = null,
     ) {
-        mutate {
+        mutate { ticket ->
             repository.addItem(listId, name, quantity, parentItemId, catalogItemId)
-            mutationCoordinator.showMessage("Item added")
+            mutationCoordinator.showMessage(ticket, "Item added")
         }
     }
 
@@ -172,12 +173,12 @@ class ListsViewModel @Inject constructor(
     }
 
     fun finishTitleEdit(itemId: String, name: String) {
-        mutate {
+        mutate { ticket ->
             val current = ready()?.item(itemId) ?: return@mutate
             val normalized = name.trim()
             if (normalized.isEmpty()) {
                 val mutation = repository.archiveItem(itemId)
-                mutationCoordinator.registerUndo("Item deleted") {
+                mutationCoordinator.registerUndo(ticket, "Item deleted") {
                     repository.undoArchive(mutation)
                 }
             } else if (normalized != current.name) {
@@ -193,7 +194,7 @@ class ListsViewModel @Inject constructor(
     }
 
     fun updateItemNote(itemId: String, quantity: String?) {
-        mutate {
+        mutate { _ ->
             val current = ready()?.item(itemId) ?: return@mutate
             repository.saveItem(
                 current.copy(
@@ -205,10 +206,11 @@ class ListsViewModel @Inject constructor(
     }
 
     fun toggleItem(itemId: String) {
-        mutate {
+        mutate { ticket ->
             val current = ready()?.item(itemId) ?: return@mutate
             val mutation = repository.setItemChecked(itemId, !current.isChecked)
             mutationCoordinator.registerUndo(
+                ticket,
                 if (current.isChecked) "Item restored" else "Item checked",
             ) {
                 repository.undoCheck(mutation)
@@ -217,33 +219,33 @@ class ListsViewModel @Inject constructor(
     }
 
     fun moveItem(itemId: String, direction: Int) {
-        mutate { repository.moveItem(itemId, direction) }
+        mutate { _ -> repository.moveItem(itemId, direction) }
     }
 
     fun reorderItem(itemId: String, targetItemId: String) {
-        mutate { repository.reorderItem(itemId, targetItemId) }
+        mutate { _ -> repository.reorderItem(itemId, targetItemId) }
     }
 
     fun indentItem(itemId: String) {
-        mutate { repository.indentItem(itemId) }
+        mutate { _ -> repository.indentItem(itemId) }
     }
 
     fun unindentItem(itemId: String) {
-        mutate { repository.unindentItem(itemId) }
+        mutate { _ -> repository.unindentItem(itemId) }
     }
 
     fun archiveItem(itemId: String) {
-        mutate {
+        mutate { ticket ->
             val mutation = repository.archiveItem(itemId)
             editingItemId.compareAndSet(itemId, null)
-            mutationCoordinator.registerUndo("Item deleted") {
+            mutationCoordinator.registerUndo(ticket, "Item deleted") {
                 repository.undoArchive(mutation)
             }
         }
     }
 
     fun setHideCompleted(hide: Boolean) {
-        mutate { preferencesRepository.setHideCompletedItems(hide) }
+        mutate { _ -> preferencesRepository.setHideCompletedItems(hide) }
     }
 
     fun dismissRecoverableError() {
@@ -252,10 +254,10 @@ class ListsViewModel @Inject constructor(
 
     private fun ready(): ListsUiState.Ready? = uiState.value as? ListsUiState.Ready
 
-    private fun mutate(block: suspend () -> Unit) {
+    private fun mutate(block: suspend (MutationTicket) -> Unit) {
         viewModelScope.launch {
-            mutationCoordinator.beginMutation()
-            runCatching { block() }
+            val ticket = mutationCoordinator.beginMutation()
+            runCatching { block(ticket) }
                 .onFailure { throwable ->
                     recoverableError.value = throwable.message ?: "That list change could not be saved."
                 }

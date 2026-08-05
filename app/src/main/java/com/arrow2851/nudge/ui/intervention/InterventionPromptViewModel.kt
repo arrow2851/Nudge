@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arrow2851.nudge.InterventionActivity
 import com.arrow2851.nudge.core.data.ChoreRepository
-import com.arrow2851.nudge.core.data.TaskRepository
+import com.arrow2851.nudge.core.data.TaskWorkflowRepository
 import com.arrow2851.nudge.core.domain.RecommendationContext
 import com.arrow2851.nudge.core.domain.RecommendationReader
 import com.arrow2851.nudge.core.intervention.InterventionSettingsRepository
@@ -36,7 +36,7 @@ data class InterventionPromptUiState(
 @HiltViewModel
 class InterventionPromptViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val taskRepository: TaskRepository,
+    private val taskWorkflowRepository: TaskWorkflowRepository,
     private val choreRepository: ChoreRepository,
     private val settingsRepository: InterventionSettingsRepository,
     private val recommendationReader: RecommendationReader,
@@ -73,10 +73,7 @@ class InterventionPromptViewModel @Inject constructor(
                     }
                     choreRepository.completeChore(current.recommendationId, grade)
                 } else {
-                    taskRepository.setCompleted(
-                        current.recommendationId,
-                        timeProvider.nowEpochMillis(),
-                    )
+                    taskWorkflowRepository.toggleCompletion(current.recommendationId)
                 }
             }.onSuccess {
                 _uiState.update {

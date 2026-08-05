@@ -139,7 +139,8 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-        
+          java-version: "17"
+
       - name: Set up Gradle cache
         uses: gradle/actions/setup-gradle@v4
 

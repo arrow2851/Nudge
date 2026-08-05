@@ -28,8 +28,8 @@ class AppShellViewModel @Inject constructor(
 
     fun registerTaskUndo(message: String, mutation: TaskCompletionMutation) {
         viewModelScope.launch {
-            mutationCoordinator.beginMutation()
-            mutationCoordinator.registerUndo(message) {
+            val ticket = mutationCoordinator.beginMutation()
+            mutationCoordinator.registerUndo(ticket, message) {
                 taskWorkflowRepository.undoCompletion(mutation)
             }
         }
@@ -37,25 +37,25 @@ class AppShellViewModel @Inject constructor(
 
     fun registerChoreUndo(message: String, mutation: ChoreCompletionMutation) {
         viewModelScope.launch {
-            mutationCoordinator.beginMutation()
-            mutationCoordinator.registerUndo(message) {
+            val ticket = mutationCoordinator.beginMutation()
+            mutationCoordinator.registerUndo(ticket, message) {
                 choreRepository.undoCompletion(mutation)
             }
         }
     }
 
-    @Deprecated("Use the repository-level task or chore undo registration methods")
+    @Deprecated("Use repository-level task or chore undo registration")
     fun registerUndo(message: String, action: () -> Unit) {
         viewModelScope.launch {
-            mutationCoordinator.beginMutation()
-            mutationCoordinator.registerUndo(message) { action() }
+            val ticket = mutationCoordinator.beginMutation()
+            mutationCoordinator.registerUndo(ticket, message) { action() }
         }
     }
 
     fun mutationMessage(message: String) {
         viewModelScope.launch {
-            mutationCoordinator.beginMutation()
-            mutationCoordinator.showMessage(message)
+            val ticket = mutationCoordinator.beginMutation()
+            mutationCoordinator.showMessage(ticket, message)
         }
     }
 

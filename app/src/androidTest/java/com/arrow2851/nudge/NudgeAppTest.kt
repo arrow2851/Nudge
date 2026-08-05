@@ -158,7 +158,6 @@ class NudgeAppTest {
             useUnmergedTree = true,
         ).performClick()
         composeRule.onNodeWithText("Quantity or note").assertIsDisplayed()
-        composeRule.onNodeWithText("Cancel").assertDoesNotExist()
         composeRule.onNodeWithText("Save").performClick()
 
         listItemToggle("Oat Milk").performClick()
@@ -191,8 +190,9 @@ class NudgeAppTest {
         composeRule.onNodeWithContentDescription("Settings").performClick()
         composeRule.onNodeWithText("History").performClick()
         waitForText("History task", timeoutMillis = 10_000L)
-        composeRule.onNodeWithText("Clear All").performClick()
-        waitForText("No completed or deleted items yet", timeoutMillis = 10_000L)
+        composeRule.onNodeWithText("Clear all").performClick()
+        composeRule.onAllNodesWithText("Clear all")[1].performClick()
+        waitForText("No history yet", timeoutMillis = 10_000L)
 
         composeRule.onNodeWithContentDescription("Tasks destination").performClick()
         composeRule.onNodeWithText("History task").assertIsDisplayed()

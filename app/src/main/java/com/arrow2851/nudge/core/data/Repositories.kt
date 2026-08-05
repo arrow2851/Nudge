@@ -95,6 +95,7 @@ interface CompletionRepository {
 
 interface HistoryRepository {
     fun observeHistory(): Flow<List<ItemHistoryEntry>>
+    suspend fun saveEntry(entry: ItemHistoryEntry)
     suspend fun deleteEntry(historyId: String)
     suspend fun clearAll()
 }

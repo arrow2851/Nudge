@@ -185,6 +185,7 @@ private fun TaskChecklistRow(
             onIndent = { onIndent(task.id) },
             onUnindent = { onUnindent(task.id) },
         ),
+        checkboxTestTag = "task-checkbox-${task.title}",
         metadata = if (showDueShorthand) task.dueAt?.let(::formatDueShorthand) else null,
         metadataKind = ChecklistMetadataKind.DueDate,
         editing = editing,

@@ -23,7 +23,9 @@ import com.arrow2851.nudge.core.data.RecentCompletionReader
 import com.arrow2851.nudge.core.data.ReusableListRepository
 import com.arrow2851.nudge.core.data.RoomListWorkflowRepository
 import com.arrow2851.nudge.core.data.RoomRecentCompletionReader
+import com.arrow2851.nudge.core.data.RoomTaskWorkflowRepository
 import com.arrow2851.nudge.core.data.TaskRepository
+import com.arrow2851.nudge.core.data.TaskWorkflowRepository
 import com.arrow2851.nudge.core.database.AreaDao
 import com.arrow2851.nudge.core.database.ChoreDao
 import com.arrow2851.nudge.core.database.CompletionDao
@@ -114,6 +116,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindTaskRepository(implementation: LocalTaskRepository): TaskRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTaskWorkflowRepository(
+        implementation: RoomTaskWorkflowRepository,
+    ): TaskWorkflowRepository
 
     @Binds
     @Singleton

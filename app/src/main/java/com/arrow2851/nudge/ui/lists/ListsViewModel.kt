@@ -2,16 +2,17 @@ package com.arrow2851.nudge.ui.lists
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arrow2851.nudge.core.data.ListItemCheckMutation
 import com.arrow2851.nudge.core.data.ListWorkflowRepository
+import com.arrow2851.nudge.core.data.PreferencesRepository
+import com.arrow2851.nudge.core.model.ItemHandedness
 import com.arrow2851.nudge.core.model.ListCatalogItem
 import com.arrow2851.nudge.core.model.ListItem
 import com.arrow2851.nudge.core.model.ReusableList
 import com.arrow2851.nudge.core.model.TimeProvider
+import com.arrow2851.nudge.core.mutation.AppMutationCoordinator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -55,6 +55,8 @@ sealed interface ListsUiState {
     data object Loading : ListsUiState
     data class Ready(
         val lists: List<ListOverviewItem>,
+        val hideCompleted: Boolean,
+        val handedness: ItemHandedness,
         val recoverableError: String? = null,
     ) : ListsUiState {
         fun list(listId: String): ListOverviewItem? = lists.firstOrNull { it.list.id == listId }
@@ -65,32 +67,26 @@ sealed interface ListsUiState {
     data class Error(val message: String) : ListsUiState
 }
 
-sealed interface ListsEvent {
-    data class Message(val text: String) : ListsEvent
-    data class ItemChecked(
-        val text: String,
-        val mutation: ListItemCheckMutation,
-    ) : ListsEvent
-}
-
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ListsViewModel @Inject constructor(
     private val repository: ListWorkflowRepository,
+    private val preferencesRepository: PreferencesRepository,
+    private val mutationCoordinator: AppMutationCoordinator,
     private val timeProvider: TimeProvider,
 ) : ViewModel() {
     private val recoverableError = MutableStateFlow<String?>(null)
     private val suggestionQuery = MutableStateFlow("")
-    private val eventChannel = Channel<ListsEvent>(Channel.BUFFERED)
-
-    val events = eventChannel.receiveAsFlow()
 
     val uiState: StateFlow<ListsUiState> = combine(
         repository.observeLists(),
+        preferencesRepository.preferences,
         recoverableError,
-    ) { lists, error ->
+    ) { lists, preferences, error ->
         ListsUiState.Ready(
             lists = lists.map { ListOverviewItem(it.list, it.items) },
+            hideCompleted = preferences.hideCompletedItems,
+            handedness = preferences.itemHandedness,
             recoverableError = error,
         ) as ListsUiState
     }
@@ -120,7 +116,7 @@ class ListsViewModel @Inject constructor(
     fun createList(name: String, isReusable: Boolean) {
         mutate {
             repository.createList(name, isReusable)
-            eventChannel.send(ListsEvent.Message("List added"))
+            mutationCoordinator.showMessage("List added")
         }
     }
 
@@ -135,7 +131,7 @@ class ListsViewModel @Inject constructor(
                     updatedAt = timeProvider.nowEpochMillis(),
                 ),
             )
-            eventChannel.send(ListsEvent.Message("List updated"))
+            mutationCoordinator.showMessage("List updated")
         }
     }
 
@@ -143,10 +139,14 @@ class ListsViewModel @Inject constructor(
         mutate { repository.moveList(listId, direction) }
     }
 
+    fun reorderList(listId: String, targetListId: String) {
+        mutate { repository.reorderList(listId, targetListId) }
+    }
+
     fun archiveList(listId: String) {
         mutate {
             repository.archiveList(listId)
-            eventChannel.send(ListsEvent.Message("List archived"))
+            mutationCoordinator.showMessage("List archived")
         }
     }
 
@@ -159,7 +159,7 @@ class ListsViewModel @Inject constructor(
     ) {
         mutate {
             repository.addItem(listId, name, quantity, parentItemId, catalogItemId)
-            eventChannel.send(ListsEvent.Message("Item added"))
+            mutationCoordinator.showMessage("Item added")
         }
     }
 
@@ -173,7 +173,6 @@ class ListsViewModel @Inject constructor(
                     updatedAt = timeProvider.nowEpochMillis(),
                 ),
             )
-            eventChannel.send(ListsEvent.Message("Item updated"))
         }
     }
 
@@ -181,24 +180,20 @@ class ListsViewModel @Inject constructor(
         mutate {
             val current = ready()?.item(itemId) ?: return@mutate
             val mutation = repository.setItemChecked(itemId, !current.isChecked)
-            eventChannel.send(
-                ListsEvent.ItemChecked(
-                    text = if (current.isChecked) "Item restored" else "Item checked",
-                    mutation = mutation,
-                ),
-            )
-        }
-    }
-
-    fun undoCheck(mutation: ListItemCheckMutation) {
-        mutate {
-            repository.undoCheck(mutation)
-            eventChannel.send(ListsEvent.Message("Change undone"))
+            mutationCoordinator.registerUndo(
+                if (current.isChecked) "Item restored" else "Item checked",
+            ) {
+                repository.undoCheck(mutation)
+            }
         }
     }
 
     fun moveItem(itemId: String, direction: Int) {
         mutate { repository.moveItem(itemId, direction) }
+    }
+
+    fun reorderItem(itemId: String, targetItemId: String) {
+        mutate { repository.reorderItem(itemId, targetItemId) }
     }
 
     fun indentItem(itemId: String) {
@@ -211,23 +206,15 @@ class ListsViewModel @Inject constructor(
 
     fun archiveItem(itemId: String) {
         mutate {
-            repository.archiveItem(itemId)
-            eventChannel.send(ListsEvent.Message("Item removed"))
+            val mutation = repository.archiveItem(itemId)
+            mutationCoordinator.registerUndo("Item deleted") {
+                repository.undoArchive(mutation)
+            }
         }
     }
 
-    fun resetCheckedItems(listId: String) {
-        mutate {
-            repository.resetCheckedItems(listId)
-            eventChannel.send(ListsEvent.Message("Checked items returned"))
-        }
-    }
-
-    fun clearCheckedItems(listId: String) {
-        mutate {
-            repository.clearCheckedItems(listId)
-            eventChannel.send(ListsEvent.Message("Checked items cleared"))
-        }
+    fun setHideCompleted(hide: Boolean) {
+        mutate { preferencesRepository.setHideCompletedItems(hide) }
     }
 
     fun dismissRecoverableError() {
@@ -238,6 +225,7 @@ class ListsViewModel @Inject constructor(
 
     private fun mutate(block: suspend () -> Unit) {
         viewModelScope.launch {
+            mutationCoordinator.beginMutation()
             runCatching { block() }
                 .onFailure { throwable ->
                     recoverableError.value = throwable.message ?: "That list change could not be saved."

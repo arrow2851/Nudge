@@ -20,6 +20,20 @@ class AppShellViewModel @Inject constructor(
         viewModelScope.launch { mutationCoordinator.performUndo(token) }
     }
 
+    fun registerUndo(message: String, action: () -> Unit) {
+        viewModelScope.launch {
+            mutationCoordinator.beginMutation()
+            mutationCoordinator.registerUndo(message) { action() }
+        }
+    }
+
+    fun mutationMessage(message: String) {
+        viewModelScope.launch {
+            mutationCoordinator.beginMutation()
+            mutationCoordinator.showMessage(message)
+        }
+    }
+
     fun invalidateUndo() {
         viewModelScope.launch { mutationCoordinator.invalidateUndo() }
     }

@@ -120,5 +120,5 @@ interface PreferencesRepository {
     suspend fun setDailyProgressEnabled(value: Boolean)
     suspend fun setQuickWinEnabled(value: Boolean)
     suspend fun setDemoDataEnabled(value: Boolean)
-    suspend fun setItemHandedness(value: ItemHandedness)
+    suspend fun setItemHandedness(value: ItemHandedness) = Unit
 }
